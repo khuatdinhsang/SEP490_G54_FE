@@ -1,11 +1,13 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Navigator from './src/navigator';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import 'react-native-gesture-handler';
 import './src/config/translation.config';
-import { useTranslation } from 'react-i18next';
 import colors from './src/constant/color';
+import Navigator from './src/navigator';
+import { Provider } from 'react-redux';
+import { persistor, store } from './src/store/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -32,7 +34,11 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer theme={MyTheme}>
-      <Navigator />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Navigator />
+        </PersistGate>
+      </Provider>
     </NavigationContainer>
   );
 }

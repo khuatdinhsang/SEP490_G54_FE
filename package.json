@@ -24,6 +24,9 @@
     "react-i18next": "^14.1.1",
     "react-native-date-picker": "^5.0.2",
     "yup": "^1.4.0",
+    "react-redux": "^9.1.2",
+    "redux-persist": "^6.0.0",
+    "axios": "^1.7.2",
     "spoqa-han-sans": "^3.3.0"
   },
   "devDependencies": {
