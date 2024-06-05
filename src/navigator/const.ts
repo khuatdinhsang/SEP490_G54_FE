@@ -1,10 +1,23 @@
 import Home from "../page/home";
 import Login from "../page/login";
-
+import Register from '../page/register';
+import RegisterRules from "../page/register/RegisterRules";
+import RegisterStep2 from "../page/register/RegisterStep2";
+import RegisterStep3 from "../page/register/RegisterStep3";
+import RegisterStep4 from "../page/register/RegisterStep4";
+import RegisterSuccess from "../page/register/RegisterSuccess";
 
 export const SCREENS_NAME = {
     LOGIN: {
         MAIN: 'Main Login',
+    },
+    REGISTER: {
+        STEP1: 'Register Step 1',
+        STEP2: 'Register Step 2',
+        STEP3: 'Register Step 3',
+        STEP4: 'Register Step 4',
+        RULES: 'Register Rules',
+        SUCCESS: 'Register Success',
     },
     HOME: {
         MAIN: 'Main Home',
@@ -24,10 +37,37 @@ const SCREENS_STACK_HOME = [
         component: Home,
     },
 ];
+const SCREENS_STACK_REGISTER = [
+    {
+        name: SCREENS_NAME.REGISTER.STEP1,
+        component: Register,
+    },
+    {
+        name: SCREENS_NAME.REGISTER.STEP2,
+        component: RegisterStep2,
+    },
+    {
+        name: SCREENS_NAME.REGISTER.STEP3,
+        component: RegisterStep3,
+    },
+    {
+        name: SCREENS_NAME.REGISTER.STEP4,
+        component: RegisterStep4,
+    },
+    {
+        name: SCREENS_NAME.REGISTER.RULES,
+        component: RegisterRules,
+    },
+    {
+        name: SCREENS_NAME.REGISTER.SUCCESS,
+        component: RegisterSuccess,
+    },
+];
 
 const SCREENS_STACK = [
     ...SCREENS_STACK_HOME,
-    ...SCREENS_STACK_LOGIN
+    ...SCREENS_STACK_LOGIN,
+    ...SCREENS_STACK_REGISTER,
 
 ];
 export { SCREENS_STACK };

@@ -16,10 +16,15 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "react-native-gesture-handler": "^2.16.2",
     "react": "18.2.0",
+    "formik": "^2.4.6",
     "i18next": "^23.11.5",
     "react-native": "0.74.1",
     "react-native-safe-area-context": "^4.10.1",
-    "react-i18next": "^14.1.1"
+    "moment-timezone": "^0.5.45",
+    "react-i18next": "^14.1.1",
+    "react-native-date-picker": "^5.0.2",
+    "yup": "^1.4.0",
+    "spoqa-han-sans": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
