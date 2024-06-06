@@ -1,3 +1,6 @@
+import ForgotPassword from "../page/forgotPassword";
+import ForgotSuccess from "../page/forgotPassword/ForgotSuccess";
+import VerifyEmail from "../page/forgotPassword/VerifyEmail";
 import Home from "../page/home";
 import Login from "../page/login";
 import Register from '../page/register';
@@ -21,7 +24,12 @@ export const SCREENS_NAME = {
     },
     HOME: {
         MAIN: 'Main Home',
-    }
+    },
+    FORGOT_PASSWORD: {
+        VERIFY_EMAIL: 'Verify ForgotPassword',
+        MAIN: 'Main ForgotPassword',
+        SUCCESS: 'Forgot Password Success',
+    },
 }
 
 const SCREENS_STACK_LOGIN = [
@@ -63,11 +71,26 @@ const SCREENS_STACK_REGISTER = [
         component: RegisterSuccess,
     },
 ];
+const SCREENS_STACK_FORGOT_PASSWORD = [
+    {
+        name: SCREENS_NAME.FORGOT_PASSWORD.VERIFY_EMAIL,
+        component: VerifyEmail,
+    },
+    {
+        name: SCREENS_NAME.FORGOT_PASSWORD.MAIN,
+        component: ForgotPassword,
+    },
+    {
+        name: SCREENS_NAME.FORGOT_PASSWORD.SUCCESS,
+        component: ForgotSuccess,
+    },
+];
 
 const SCREENS_STACK = [
     ...SCREENS_STACK_HOME,
     ...SCREENS_STACK_LOGIN,
     ...SCREENS_STACK_REGISTER,
+    ...SCREENS_STACK_FORGOT_PASSWORD,
 
 ];
 export { SCREENS_STACK };
