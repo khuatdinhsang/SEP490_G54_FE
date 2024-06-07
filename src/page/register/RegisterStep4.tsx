@@ -74,23 +74,25 @@ const RegisterStep4 = () => {
     }
 
     return (
-        <ScrollView>
-            <SafeAreaView style={styles.container} >
-                <Pressable onPress={loginPage}>
-                    <Image style={styles.buttonCancel} source={require('../../assets/image/register/icon_X.png')} />
-                </Pressable>
-                <ProgressHeader index={[0, 1, 2, 3]} length={4} style={{ marginTop: 45 }} />
-                <View style={{ marginTop: 20 }}>
-                    <View style={[flexRow, { marginBottom: 20, width: 200, alignItems: 'flex-start' }]}>
-                        <Text style={[styles.hightLight, { color: colors.primary }]}>04.</Text>
-                        <Text style={[styles.hightLight, { color: colors.black }]} >{t("common.text.fillIllness")}</Text>
+        <View style={{ flex: 1 }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+                <SafeAreaView style={styles.container}>
+                    <Pressable onPress={loginPage}>
+                        <Image
+                            style={styles.buttonCancel}
+                            source={require('../../assets/image/register/icon_X.png')}
+                        />
+                    </Pressable>
+                    <ProgressHeader index={[0, 1, 2, 3]} length={4} style={{ marginTop: 45 }} />
+                    <View style={{ marginTop: 20 }}>
+                        <View style={[flexRow, { marginBottom: 20, width: 200, alignItems: 'flex-start' }]}>
+                            <Text style={[styles.hightLight, { color: colors.primary }]}>04.</Text>
+                            <Text style={[styles.hightLight, { color: colors.black }]} >{t("common.text.fillIllness")}</Text>
+                        </View>
                     </View>
-                </View>
-                <Text style={styles.textField}>{t("common.diseases.anamnesis")}</Text>
-
-                <View style={[flexRowSpaceBetween, { width: WidthDevice - 40, flexWrap: 'wrap' }]}>
-                    {
-                        data && data.map((item: ItemType) => {
+                    <Text style={styles.textField}>{t("common.diseases.anamnesis")}</Text>
+                    <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
+                        {data && data.map((item: ItemType) => {
                             const isSelected = selectedItems.includes(item.id);
                             return (
                                 <Pressable key={item.id} style={styles.box} onPress={() => handleSelectItem(item.id)} >
@@ -99,55 +101,57 @@ const RegisterStep4 = () => {
                                         <Text style={[styles.nameItemBox, { color: isSelected ? colors.primary : colors.gray }]}>{item.name}</Text>
                                     </View>
                                 </Pressable >
-                            )
-                        })
-                    }
-                </View>
-                <View style={{ marginBottom: 20 }}>
-                    <Text style={styles.textField}>{t("common.text.infoHealth")}</Text>
-                    <View>
-                        <Text style={[styles.textField, { marginBottom: 15 }]}>{t("common.text.smoke")}</Text>
-                        <View style={[flexRowSpaceBetween, { width: WidthDevice - 40 }]}>
-                            <Pressable onPress={() => chooseAlcohol(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isAlcohol ? colors.primary : colors.gray, backgroundColor: isAlcohol ? colors.orange_02 : colors.white }]}>
-                                <Text style={{ color: isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
-                            </Pressable>
-                            <Pressable onPress={() => chooseAlcohol(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: !isAlcohol ? colors.primary : colors.gray, backgroundColor: !isAlcohol ? colors.orange_02 : colors.white }]}>
-                                <Text style={{ color: !isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
-                            </Pressable>
+                            );
+                        })}
+                    </View>
+                    <View style={{ marginBottom: 20 }}>
+                        <Text style={styles.textField}>{t("common.text.infoHealth")}</Text>
+                        <View>
+                            <Text style={[styles.textField, { marginBottom: 15 }]}>{t("common.text.smoke")}</Text>
+                            <View style={[flexRowSpaceBetween,]}>
+                                <Pressable onPress={() => chooseAlcohol(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isAlcohol ? colors.primary : colors.gray, backgroundColor: isAlcohol ? colors.orange_02 : colors.white }]}>
+                                    <Text style={{ color: isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
+                                </Pressable>
+                                <Pressable onPress={() => chooseAlcohol(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: !isAlcohol ? colors.primary : colors.gray, backgroundColor: !isAlcohol ? colors.orange_02 : colors.white }]}>
+                                    <Text style={{ color: !isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                        <View>
+                            <Text style={[styles.textField, { marginVertical: 15 }]}>{t("common.text.alcohol")}</Text>
+                            <View style={[flexRowSpaceBetween, { width: WidthDevice - 40 }]}>
+                                <Pressable onPress={() => chooseSmoke(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isSmoke ? colors.primary : colors.gray, backgroundColor: isSmoke ? colors.orange_02 : colors.white }]}>
+                                    <Text style={{ color: isSmoke ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
+                                </Pressable>
+                                <Pressable onPress={() => chooseSmoke(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderRadius: 8, borderWidth: 1, borderColor: !isSmoke ? colors.primary : colors.gray, backgroundColor: !isSmoke ? colors.orange_02 : colors.white }]}>
+                                    <Text style={{ color: !isSmoke ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
+                                </Pressable>
+                            </View>
                         </View>
                     </View>
-                    <View>
-                        <Text style={[styles.textField, { marginVertical: 15 }]}>{t("common.text.alcohol")}</Text>
-                        <View style={[flexRowSpaceBetween, { width: WidthDevice - 40 }]}>
-                            <Pressable onPress={() => chooseSmoke(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isSmoke ? colors.primary : colors.gray, backgroundColor: isSmoke ? colors.orange_02 : colors.white }]}>
-                                <Text style={{ color: isSmoke ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
-                            </Pressable>
-                            <Pressable onPress={() => chooseSmoke(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderRadius: 8, borderWidth: 1, borderColor: !isSmoke ? colors.primary : colors.gray, backgroundColor: !isSmoke ? colors.orange_02 : colors.white }]}>
-                                <Text style={{ color: !isSmoke ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray }]} >
+                </SafeAreaView>
+            </ScrollView>
+            <View style={styles.buttonContainer}>
+                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray }]}>
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
-            </SafeAreaView >
-        </ScrollView >
+            </View>
+        </View>
     );
 };
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
     buttonCancel: {
         position: 'absolute',
         right: 0,
-        top: 15
+        top: 15,
     },
     box: {
         width: '45%',
-        marginBottom: 20
+        marginBottom: 20,
     },
     boxItem: {
         height: 120,
@@ -175,27 +179,33 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
         color: colors.black,
-        marginBottom: 10
+        marginBottom: 10,
     },
     text: {
         color: colors.white,
-        textAlign: "center",
-        lineHeight: 62,
-        fontWeight: "500",
-        fontSize: 18
+        textAlign: 'center',
+        lineHeight: 60,
+        fontWeight: '500',
+        fontSize: 18,
     },
     button: {
         height: 60,
         borderRadius: 12,
-        marginTop: 15,
-        marginBottom: 15
+
     },
     buttonBox: {
         borderRadius: 8,
         borderWidth: 1,
         height: 60,
-    }
-
-})
+    },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        paddingHorizontal: 20,
+        backgroundColor: colors.white,
+        paddingVertical: 20,
+    },
+});
 
 export default RegisterStep4;

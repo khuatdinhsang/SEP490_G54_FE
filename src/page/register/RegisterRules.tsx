@@ -9,7 +9,6 @@ import colors from '../../constant/color';
 import { Formik } from 'formik';
 import { flexRow } from '../../styles/flex';
 import DatePicker from 'react-native-date-picker';
-import { dataDiseases, illnessHistoryData } from '../../constant/data/diseases';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
 
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 12,
         position: 'absolute',
-        bottom: 15,
+        bottom: 20,
         width: WidthDevice - 40,
         left: 20,
         // transform: [
