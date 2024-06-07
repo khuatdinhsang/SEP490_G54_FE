@@ -71,36 +71,54 @@ const RegisterStep3 = () => {
         }
     };
     return (
-        <ScrollView>
-            <SafeAreaView style={styles.container}>
-                <Pressable onPress={loginPage}>
-                    <Image style={styles.buttonCancel} source={require('../../assets/image/register/icon_X.png')} />
-                </Pressable>
-                <ProgressHeader index={[0, 1, 2]} length={4} style={{ marginTop: 45 }} />
-                <View style={{ marginTop: 20 }}>
-                    <View style={[flexRow, { marginBottom: 30, width: 200, alignItems: 'flex-start' }]}>
-                        <Text style={[styles.hightLight, { color: colors.primary }]}>03.</Text>
-                        <Text style={[styles.hightLight, { color: colors.black }]}>{t("common.text.fillIllness")}</Text>
+        <View style={{ flex: 1 }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+                <SafeAreaView style={styles.container}>
+                    <Pressable onPress={loginPage}>
+                        <Image
+                            style={styles.buttonCancel}
+                            source={require('../../assets/image/register/icon_X.png')}
+                        />
+                    </Pressable>
+                    <ProgressHeader index={[0, 1, 2]} length={4} style={{ marginTop: 45 }} />
+                    <View style={{ marginTop: 20 }}>
+                        <View style={[flexRow, { marginBottom: 30, width: 200, alignItems: 'flex-start' }]}>
+                            <Text style={[styles.hightLight, { color: colors.primary }]}>03.</Text>
+                            <Text style={[styles.hightLight, { color: colors.black }]}>
+                                {t("common.text.fillIllness")}
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                <View style={{ marginBottom: 70 }}>
-                    {data && data.map((section: any) => {
-                        return (<CategoryDisease key={section.title} section={section} handleSelectItem={handleSelectItem} selectedItems={selectedItems} />)
-                    }
-                    )}
-                </View>
-                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray }]}>
+                    <View>
+                        {data &&
+                            data.map((section: any) => (
+                                <CategoryDisease
+                                    key={section.title}
+                                    section={section}
+                                    handleSelectItem={handleSelectItem}
+                                    selectedItems={selectedItems}
+                                />
+                            ))}
+                    </View>
+                </SafeAreaView>
+            </ScrollView>
+            <View style={styles.buttonContainer}>
+                <Pressable
+                    onPress={handleSubmit}
+                    style={[
+                        styles.button,
+                        { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray },
+                    ]}>
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
-            </SafeAreaView>
-        </ScrollView>
+            </View>
+        </View>
     );
 };
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         paddingHorizontal: 20,
-        height: HeightDevice,
+        flex: 1
     },
     buttonCancel: {
         position: 'absolute',
@@ -126,15 +144,19 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
     },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        paddingHorizontal: 20,
+        backgroundColor: colors.white,
+        paddingVertical: 20,
+    },
     button: {
         height: 60,
         borderRadius: 12,
-        position: 'absolute',
-        bottom: 20,
-        width: WidthDevice - 40,
-        left: 20,
+        justifyContent: 'center',
     },
-
 });
 
 export default RegisterStep3;
