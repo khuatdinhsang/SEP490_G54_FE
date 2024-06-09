@@ -4,5 +4,24 @@
       "firstStep": "The first step to taking control of my chronic illness",
       "fillInfo": "Please enter the information below"
     }
+  },
+  "placeholder": {
+    "field": {
+      "email": "Please enter your email",
+      "password": "Please enter your password"
+    },
+    "err": {
+      "email": "Please enter your correct email",
+      "password": "Please enter your correct password"
+    }
+  },
+  "authentication": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "register": "Register",
+    "findId": "Find ID",
+    "findPassword": "Find Password"
   }
 }
