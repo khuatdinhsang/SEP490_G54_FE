@@ -1,11 +1,11 @@
-package com.fe_smash;
+package com.smash_health;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.fe_smash.counter_step_module.CounterStepModule;
-import com.fe_smash.timer_module.ScheduleAlarmModule;
+import com.smash_health.counter_step_module.CounterStepModule;
+import com.smash_health.timer_module.ScheduleAlarmModule;
 
 import java.util.ArrayList;
 import java.util.Collections;

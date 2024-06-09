@@ -1,4 +1,4 @@
-package com.fe_smash.timer_module;
+package com.smash_health.timer_module;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -7,8 +7,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
-import com.fe_smash.R;
+
+import com.smash_health.R;
+
 import java.util.Date;
 
 public class AlarmReceiver extends BroadcastReceiver {

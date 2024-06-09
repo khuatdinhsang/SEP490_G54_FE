@@ -1,4 +1,4 @@
-package com.fe_smash.timer_module;
+package com.smash_health.timer_module;
 
 import java.util.ArrayList;
 

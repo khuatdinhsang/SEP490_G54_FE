@@ -1,4 +1,4 @@
-package com.fe_smash.counter_step_module;
+package com.smash_health.counter_step_module;
 
 import android.content.Context;
 import android.hardware.Sensor;

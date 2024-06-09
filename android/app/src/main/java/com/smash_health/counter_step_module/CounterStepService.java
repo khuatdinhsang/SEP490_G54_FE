@@ -1,4 +1,4 @@
-package com.fe_smash.counter_step_module;
+package com.smash_health.counter_step_module;
 
 import android.app.ForegroundServiceStartNotAllowedException;
 import android.app.Notification;
@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
-import com.fe_smash.R;
+import com.smash_health.R;
 
 public class CounterStepService extends Service {
     private final String CHANNEL_ID = "COUNTER_STEP";
