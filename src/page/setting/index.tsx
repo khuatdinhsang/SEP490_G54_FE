@@ -7,7 +7,6 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import colors from '../../constant/color';
 import {paddingHorizontalScreen} from '../../styles/padding';
 import {HeightDevice} from '../../util/Dimenssion';
-import LineChart from '../../component/line-chart';
 
 const Setting = () => {
   const {t, i18n} = useTranslation();
@@ -31,8 +30,7 @@ const Setting = () => {
           }}
         />
         <View style={{marginTop: 40}} />
-        <LineChart />
-        {/* <CategoryComponent
+        <CategoryComponent
           text="푸시알림"
           handleOnPress={() => {
             navigation.navigate(SCREENS_NAME.SETTING.SETTING_NOTIFICATION);
@@ -53,7 +51,7 @@ const Setting = () => {
           handleOnPress={() => {
             navigation.navigate(SCREENS_NAME.SETTING.SETTING_LOGOUT);
           }}
-        /> */}
+        />
       </View>
     </SafeAreaView>
   );
