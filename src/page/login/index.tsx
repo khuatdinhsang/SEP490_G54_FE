@@ -37,9 +37,10 @@ const Login = () => {
     }
 
     const handleSubmit = async (values: LoginValues): Promise<any> => {
-        console.log("41", values)
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
-        console.log("43", response.data)
+        // console.log("41", values)
+        // const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+        // console.log("43", response.data)
+        navigation.navigate(SCREENS_NAME.HOME.MAIN)
     }
 
     const clearEmail = (setFieldValue: (field: string, value: any) => void) => {
@@ -68,7 +69,6 @@ const Login = () => {
                     onSubmit={handleSubmit}
                 >
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
-                        console.log("ew", touched)
                         return (
                             <View>
                                 <View style={{ marginTop: 40 }}>

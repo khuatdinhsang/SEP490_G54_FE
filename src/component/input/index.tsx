@@ -9,8 +9,8 @@ interface InputComponentProps {
   secureTextEntry?: boolean;
   onPressIconRight?: () => void;
   isIconRight?: boolean;
-  value: string;
-  onChangeText: (text: string) => void;
+  value: string | undefined;
+  onChangeText?: (text: string) => void;
   label?: string;
   textError?: string;
   keyboardType?: KeyboardTypeOptions;

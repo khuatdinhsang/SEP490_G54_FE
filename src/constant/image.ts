@@ -11,6 +11,20 @@ export const IMAGE = {
         CLOCK: require('assets/image/home/clock.png'),
         WARNING_ORANGE: require('assets/image/planmanagement/warning-orange.png'),
         WARNING: require('assets/image/planmanagement/warning.png'),
+        SIDEBAR: {
+            프로필이미지: require('assets/image/home/sidebar/프로필이미지.png'),
+            ICON_PLAN: require('assets/icon/home/icon-plan.png'),
+            ICON_RECORD: require('assets/icon/home/icon-record.png'),
+            ICON_REPORT: require('assets/icon/home/icon-report.png'),
+            ICON_STUDY: require('assets/icon/home/icon-study.png'),
+            ICON_MESSAGE: require('assets/icon/home/icon-message.png'),
+            ICON_SETTING: require('assets/icon/home/icon-setting.png'),
+        },
+        GUIDE: {
+            GUIDE1: require('assets/image/home/guide/guide1.png'),
+            POLYGON3: require('assets/image/home/guide/polygon-3.png'),
+            ICON_DOCTOR: require('assets/image/home/guide/icon-doctor.png'),
+        },
     },
     REGISTER: {
         BRAIN: require('assets/image/register/brain.png'),
@@ -32,5 +46,28 @@ export const IMAGE = {
     ICON_ARROW_LEFT_BLACK: require('assets/icon/icon-arrow_left-black.png'),
     ICON_ARROW_RIGHT: require('assets/icon/icon-arrow_right.png'),
     ICON_ARROW_RIGHT_GRAY: require('assets/icon/icon-arrow_right_gray.png'),
-
+    ICON_PLUS_ORANGE: require('assets/icon/icon_plus_orange.png'),
+    PLAN_MANAGEMENT: {
+        ARROW_LEFT: require('assets/image/planmanagement/arrow-left.png'),
+        HUMAN: require('assets/image/planmanagement/person-running.png'),
+        HEART: require('assets/image/planmanagement/heart.png'),
+        VEGETABLE: require('assets/image/planmanagement/vegetable.png'),
+        MEDICATION: require('assets/image/planmanagement/medication.png'),
+        SHOES: require('assets/image/planmanagement/shoes.png'),
+        SOCCER: require('assets/image/planmanagement/soccer.png'),
+        BOLLING: require('assets/image/planmanagement/bolling.png'),
+        BADMINTON: require('assets/image/planmanagement/badminton.png'),
+        FORK_KNIFE: require('assets/image/planmanagement/fork-and-knife.png'),
+        PEN_BOOK: require('assets/image/planmanagement/pen-and-book.png'),
+    },
+    PROFILE: {
+        HOSPITAL_SCHEDULE: {
+            TYPE1: require('assets/image/profile/anatomical-heart_1fac0_type1.png'),
+            TYPE2: require('assets/image/profile/anatomical-heart_1fac0_type2.png'),
+        },
+    },
+    QUESTION: {
+        TEXT: require('assets/image/question/texting.png'),
+        ICON_CHECK: require('assets/image/question/icon_check.png'),
+    }
 };

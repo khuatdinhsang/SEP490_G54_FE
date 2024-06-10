@@ -14,13 +14,15 @@ const colors = {
     gray_G02: '#E7EDF7',
     gray_G03: '#D9E1ED',
     gray_G04: '#A7B2C3',
-    gray_G09: '#1F2126',
+    gray_G05: '#7D8694',
     gray_G06: '#5E646F',
     gray_G07: '#3E424A',
     gray_G08: '#2B2F37',
+    gray_G09: '#1F2126',
     gray_G10: '#17191E',
     green: '#49DFCA',
     blue_01: '#5653FF',
+    blue_background: '#EEEEFF',
     background: '#F6F8FC',
 };
 
