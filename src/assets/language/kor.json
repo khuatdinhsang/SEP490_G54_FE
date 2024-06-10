@@ -231,5 +231,17 @@
       "title": "제목을 입력해주세요",
       "content": "내용을 입력해주세요"
     }
+  },
+  "recordHealthData": {
+    "record": "건강수치 기록",
+    "myToday": "오늘 나의",
+    "healthActives": "건강 수치/건강 활동",
+    "letRecord": "을 기록해봅시다",
+    "glycatedHemoglobin": "당화혈색소",
+    "cholesterol": "콜레스테롤",
+    "bloodSugar": "혈당",
+    "bloodPressure": "혈압",
+    "weight": "체중",
+    "diet": "식이"
   }
 }

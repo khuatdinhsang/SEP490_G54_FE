@@ -4,7 +4,7 @@ import { SCREENS_NAME, SCREENS_STACK } from './const';
 const Stack = createStackNavigator();
 const Navigator = () => {
     return (
-        <Stack.Navigator initialRouteName={SCREENS_NAME.LOGIN.MAIN} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={SCREENS_NAME.RECORD_HEALTH_DATA.MAIN} screenOptions={{ headerShown: false }}>
             {SCREENS_STACK.map(screen => (
                 <Stack.Screen
                     key={screen.name}
