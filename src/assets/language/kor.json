@@ -69,6 +69,29 @@
       "cancel": "취소",
       "step": "걸음",
       "retrieveAgain": "불러오기"
+    },
+    "diseases": {
+      "chronic": "만성질환",
+      "cholesterol": "고지혈증",
+      "highBlood": "고혈압",
+      "diabetes": "당뇨",
+      "osteoporosis": "골다고증",
+      "kidney": "만성콩밭병",
+      "chronicRespiratory": "만성 호흡기 질환",
+      "congestedLungs": "만성 폐쇠성 폐질환",
+      "asthma": "기관지 천식",
+      "pulmonaryFibrosis": "특발성 폐섬유증",
+      "tuberculosis": "결핵 후 폐 손상",
+      "others": "기타",
+      "chronicArthritis": "만성 관절엽",
+      "rheumatoidArthritis": "류마티스 관절염",
+      "gout": "통풍",
+      "osteoarthritis": "골관절염 (고관절, 무릎, 손)",
+      "anamnesis": "타질환 과거력",
+      "heart": "심장질환",
+      "liver": "간 질환",
+      "brain": "뇌졸중/뇌출혈",
+      "cancer": "5년 내 암 과거력"
     }
   },
   "placeholder": {
@@ -100,5 +123,113 @@
     "register": "회원가입",
     "findId": "아이디 찾기",
     "findPassword": "비밀번호 찾기"
+  },
+  "planManagement": {
+    "text": {
+      //page 1
+      "implementationPlan": "실천계획 관리",
+      "under": "아래의",
+      "5Items": " 5가지 항목",
+      "descPlan": "에 대해 이번주에 실천할 건강 습관을 계획해 봅시다",
+      "positiveMind": "긍정적인 마음",
+      "workout": "운동",
+      "foodIntake": "음식섭취",
+      "takingMedication": "약물복용",
+      "numberSteps": "걸음수",
+      "clickToStart": "이 버튼을 눌러 시작해볼까요?",
+      // page 2
+      "mentalRules": "내가 이번주 실천할 마음 수칙은?",
+      "bottom": "하단의 상자",
+      "three": "3개",
+      "select": "를 선택해주세요",
+      "threeItemsSelected": "이미 3가지 선택이 완료되었습니다.",
+      "changeSelected": "다른 선택지를 원할 경우 하나를 취소해주세요.",
+
+      // page 3
+      "workoutPlan": "이번주 운동하고자 하는 ‘요일/시간/강도’는?",
+      "pleaseChooseDay": "요일은 선택해주세요",
+      "timeWorkoutInDay": "하루당 운동할 시간을 정해주세요",
+      "movementIntensity": "운동강도를 선택해주세요",
+      "insertData": "이 부분을 눌러 입력해주세요",
+      "recommendation": "*권장 사항: 암생존자에게 권장되는 운동량은 일주일에 중강도 운동 150분 이상 또는 고강도 운동의 경우 75분 이상입니다.",
+      "highIntensity": "고강도 운동",
+      "examplesHighIntensity": "예시: 달리기, 축구, 스쿼시, 농구, 스키, 롤러 스케이팅, 격렬한 수용, 격렬한 자전거 등",
+      "mediumIntensity": "중강도 운동",
+      "exampleMediumIntensity": "예시: 빠른 걷기, 야구, 테니스, 가벼운 자전거 , 배구, 배드민턴, 가벼운 수영, 포크댄스 등",
+      "lowIntensity": "저강도 운동",
+      "examplesLowIntensity": "예시: 요가, 볼링, 골프, 가벼운 걷기 등",
+
+      //page 4
+      "pleaseChooseVegetable": "매일 먹는 야채, 과일의 양(접시)를 선택해주세요",
+      "diskSize": "(접시크기: 손바닥)",
+      "disk": "접시",
+      // table
+      "type": "종류",
+      "exampleFruit": "야채/과일 예시",
+      "consumptionAmount": "섭취량",
+      "boiled/blanchedVegetables": "삶거나 데친 야채",
+      "vegetables": "생야채",
+      "driedFruit": "건조과일",
+      "examplesBoiled/BlanchedVegetables": "콩나물 무침, 시금치 나물",
+      "examplesVegetables": "쌈야채, 양상추, 오이, 당근",
+      "apple/melon": "사과, 참외",
+      "tangerine": "귤",
+      "grape": "포도",
+      "cannedFruit": "과일 통조림",
+      "grape/bananaDried": "건포도, 건조 바나나",
+      "fruit": "과일",
+      // page 5  đăng kí dùng thuốc
+      "registerMedication": "매일 섭취하는 약물 복용 스캐줄을 등록해주세요",
+      "addSchedule": "약물복용 스케줄 추가하기",
+      "typesMedication": "매일 섭취하는 약물의 종류와 ",
+      "selectDayTime": "요일/시간을 선택해주세요",
+      "pleaseChooseMedication": "약의 종류를 선택해주세요",
+      "pleaseSetTime": "시간을 정해주세요",
+      "stepGoal": "매일 실천할 걸음 수 목표를 정해주세요",
+      "planCompleted": "실천계획을 완료했습니다!",
+      "tryHardImplementPlan": "한주동안 세운 계획을 열심히 실천해보세요",
+      "gotoHome": "홈으로 돌아가기",
+      "questionMedicationNotChange": "약물복용 내용이 달라지지 않았다면",
+      "retrieveHistoryLastWeek": "지난주 내역을 불러올까요?",
+      "drugHistoryLastWeek": "지난주 약물기록"
+    },
+    "advice": {
+      // page 2
+      "worry": "걱정되거나 두려운 일이 있으면 \"이 또한지나가리라\"고 스스로에게 말하기",
+      "felling": "긍정적인 사건, 부정적인 사건에서 느끼는 감정을 모두 한발 물러서서 살펴보기",
+      "share": "나의 문제와 고민을 지인들과 솔직하게 이야기 하는 기회 만들기",
+      "regret": "이미 일어난 일들을 후회하지 말고 새로운 일을 시작하기 위한 기회로 생각하기",
+      "negativeMind": "부정적인 생각이 들 때 음악을 들으며 잠시 판단을 멈추기"
+    },
+    "medication": {
+      "highBloodPressure": "고혈압약",
+      "hyperlipidemia": "고지혈증약",
+      "diabetes": "당뇨약",
+      "other": "기타약"
+    }
+  },
+  "questionManagement": {
+    "makeQuestion": "문의작성",
+    "contactUs": "문의하기",
+    "regularQuestion": "자주하는 질문",
+    "waitForReply": "답변대기",
+    "answered": "답변완료",
+    "write": "글쓰기",
+    "title": "문의 제목",
+    "content": "문의 내용",
+    "noRequest": "아직 문의한 내용이 없습니다",
+    "typeToRequest": "아래 버튼을 눌러 문의를 작성해보세요",
+    "questionSuccess": "글 등록이 완료되었습니다.",
+    "answerResponse": "문의 답변",
+    "answer": "답변",
+
+    "placeholder": {
+      "title": "제목을 입력해주세요",
+      "content": "문의내용을 작성해주세요"
+    },
+    "error": {
+      "title": "제목을 입력해주세요",
+      "content": "내용을 입력해주세요"
+    }
   }
 }

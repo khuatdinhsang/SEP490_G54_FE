@@ -53,15 +53,15 @@ const AddMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
     };
     const nextPage = () => {
-        TimerModule.createSchedule({
-            id: '1',
-            title: 'DucAnh',
-            description: 'DucAnh',
-            hour: 23,
-            minute: 5,
-            daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
-        });
-        // navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
+        // TimerModule.createSchedule({
+        //     id: '1',
+        //     title: 'DucAnh',
+        //     description: 'DucAnh',
+        //     hour: 23,
+        //     minute: 5,
+        //     daysOfWeek: [1, 2, 3, 4, 5, 6, 7],
+        // });
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
     };
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {

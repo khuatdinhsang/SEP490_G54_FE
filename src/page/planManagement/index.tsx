@@ -16,7 +16,7 @@ const PlanManagement = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { t, i18n } = useTranslation();
   const goBackPreviousPage = () => {
-    // quay lai dau do
+    navigation.goBack();
   }
   return (
     <SafeAreaView>
