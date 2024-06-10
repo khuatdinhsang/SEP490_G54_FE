@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 0,
     marginTop: 16,
+    marginBottom: 22,
   },
   left: {
     position: 'absolute',
