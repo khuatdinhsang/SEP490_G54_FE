@@ -13,12 +13,14 @@ type itemAdviceProps = {
 };
 const ItemAdviceSelect: React.FC<itemAdviceProps> = ({ item, handleSelectItem }) => {
     return (
-        <View style={styles.itemAdvice}>
+        <Pressable
+            onPress={() => handleSelectItem(item.id, false)}
+            style={styles.itemAdvice}>
             <Text style={styles.textItemAdvice}>{item.name}</Text>
-            <Pressable onPress={() => handleSelectItem(item.id, false)} style={styles.add}>
+            <View style={styles.add}>
                 <Text style={{ textAlign: 'center', color: colors.white }}>-</Text>
-            </Pressable>
-        </View>
+            </View>
+        </Pressable>
     );
 };
 

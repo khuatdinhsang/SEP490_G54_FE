@@ -97,7 +97,7 @@ const AddMedication = () => {
                         handleClickIconRight={nextPage}
                     />
                 </View>
-                <ProgressHeader index={[0, 1, 2, 3]} length={5} style={{ marginVertical: 16 }} />
+                <ProgressHeader index={[0, 1, 2, 3]} length={5} />
                 <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
                     <Text style={styles.textPlan}>{t("planManagement.text.typesMedication")}</Text>
                     <Text style={styles.textPlan}>{t("planManagement.text.selectDayTime")}</Text>

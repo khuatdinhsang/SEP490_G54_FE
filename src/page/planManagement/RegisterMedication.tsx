@@ -154,7 +154,7 @@ const RegisterMedication = () => {
                         handleClickIconRight={nextPage}
                     />
                 </View>
-                <ProgressHeader index={[0, 1, 2, 3]} length={5} style={{ marginVertical: 16 }} />
+                <ProgressHeader index={[0, 1, 2, 3]} length={5} />
                 <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
                     <Text style={styles.textPlan}>{t("planManagement.text.registerMedication")}</Text>
                     <View style={{ marginVertical: 20 }}>

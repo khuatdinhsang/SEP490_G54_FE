@@ -113,7 +113,7 @@ const WorkOut = () => {
                         textRightStyle={{ color: !isNextButtonDisabled ? colors.primary : colors.gray_G04 }}
                     />
                 </View>
-                <ProgressHeader index={[0, 1]} length={5} style={{ marginVertical: 16 }} />
+                <ProgressHeader index={[0, 1]} length={5} />
                 <View style={{ marginTop: 20, marginHorizontal: 20 }}>
                     <Text style={styles.textPlan}>{t("planManagement.text.workoutPlan")}</Text>
                     <View style={[flexRowSpaceBetween, { marginTop: 30, marginBottom: 10 }]}>

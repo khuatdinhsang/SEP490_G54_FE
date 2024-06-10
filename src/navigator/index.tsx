@@ -22,9 +22,9 @@ const Navigator = () => {
     if (isLoading) {
         return <LoadingScreen />;
     }
-
+    //  initialRouteName={initialRoute}
     return (
-        <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName={SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND} screenOptions={{ headerShown: false }}>
             {SCREENS_STACK.map(screen => (
                 <Stack.Screen
                     key={screen.name}
