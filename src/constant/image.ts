@@ -69,5 +69,11 @@ export const IMAGE = {
     QUESTION: {
         TEXT: require('assets/image/question/texting.png'),
         ICON_CHECK: require('assets/image/question/icon_check.png'),
+    },
+    RECORD_DATA: {
+        BLOOD: require('assets/image/recordData/blood.png'),
+        THERMOMETER: require('assets/image/recordData/thermometer.png'),
+        CHART: require('assets/image/recordData/chart.png'),
+        HEART_ORANGE: require('assets/image/recordData/heart_orange.png'),
     }
 };

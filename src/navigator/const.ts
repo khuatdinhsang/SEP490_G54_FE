@@ -20,6 +20,7 @@ import AddQuestion from '../page/question/AddQuestion';
 import ListQuestion from '../page/question/ListQuestion';
 import QuestionDetail from '../page/question/QuestionDetail';
 import RegularQuestion from '../page/question/RegularQuestion';
+import RecordHealthData from '../page/recordHealthData';
 import Register from '../page/register';
 import RegisterRules from '../page/register/RegisterRules';
 import RegisterStep2 from '../page/register/RegisterStep2';
@@ -79,6 +80,9 @@ export const SCREENS_NAME = {
         LIST: 'List Question',
         DETAIL: 'Detail Question',
         REGULAR: 'Regular Question',
+    },
+    RECORD_HEALTH_DATA: {
+        MAIN: 'Main Record Health',
     }
 };
 
@@ -228,8 +232,14 @@ const SCREENS_STACK_QUESTION = [
         component: RegularQuestion,
     },
 ];
+const SCREENS_STACK_RECORD_DATA = [
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
+        component: RecordHealthData,
+    },
 
-// const SCREENS_STACK = [...SCREENS_STACK_LOGIN, ...SCREENS_STACK_HOME, ...SCREENS_STACK_REGISTER];
+];
+
 const SCREENS_STACK = [
     ...SCREENS_STACK_LOGIN,
     ...SCREENS_STACK_HOME,
@@ -238,6 +248,7 @@ const SCREENS_STACK = [
     ...SCREENS_STACK_FORGOT_PASSWORD,
     ...SCREENS_STACK_PLAN_MANAGEMENT,
     ...SCREENS_STACK_PROFILE,
-    ...SCREENS_STACK_QUESTION
+    ...SCREENS_STACK_QUESTION,
+    ...SCREENS_STACK_RECORD_DATA
 ];
 export { SCREENS_STACK };
