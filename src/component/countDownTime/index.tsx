@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 
-const CountdownTimer = ({ setTimeUp, time, checkResetTime }: { setTimeUp: Function, time: number, checkResetTime: boolean }) => {
+interface CountdownProps {
+    setTimeUp: Function,
+    time: number,
+    checkResetTime: boolean,
+    isTimerRunning: boolean
+}
+const CountdownTimer = ({ setTimeUp, time, checkResetTime, isTimerRunning }: CountdownProps) => {
     const [remainingTime, setRemainingTime] = useState(time * 60); // Convert minutes to seconds
 
     useEffect(() => {
@@ -12,18 +18,18 @@ const CountdownTimer = ({ setTimeUp, time, checkResetTime }: { setTimeUp: Functi
     useEffect(() => {
         const interval = setInterval(() => {
             setRemainingTime((prevTime) => {
-                if (prevTime > 0) {
+                if (prevTime > 0 && isTimerRunning) {
                     return prevTime - 1;
                 } else {
-                    setTimeUp(true)
+                    if (prevTime === 0) setTimeUp(true);
                     clearInterval(interval);
-                    return 0;
+                    return prevTime;
                 }
             });
         }, 1000);
 
-        return () => clearInterval(interval); // Clear interval on component unmount
-    }, [checkResetTime]);
+        return () => clearInterval(interval);
+    }, [checkResetTime, isTimerRunning]);
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

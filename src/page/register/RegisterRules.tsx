@@ -11,23 +11,35 @@ import { flexRow } from '../../styles/flex';
 import DatePicker from 'react-native-date-picker';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+import { authService } from '../../services/auth';
+import axios from 'axios';
 
-const RegisterRules = () => {
+const RegisterRules = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checked, setChecked] = useState<boolean>(false)
+    const { data } = route.params;
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
     const handleCheck = () => {
         setChecked(checked => !checked)
     }
-    const handleSubmit = () => {
-        if (true) {
-            navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
+    const handleSubmit = async (): Promise<void> => {
+        if (checked) {
+            try {
+                const res = await authService.register(data)
+                if (res.code === 201) {
+                    navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
+                }
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    console.log("r", error.response.data.message)
+                    // console.log("r", error.response.data.code)
+                }
+            }
         }
     }
-    console.log(checked)
     return (
         <ScrollView>
             <SafeAreaView style={styles.container} >
@@ -93,9 +105,10 @@ const RegisterRules = () => {
                         </View>
                         <Text>{t("common.text.view")}</Text>
                     </View>
-
                 </View>
-                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: checked ? colors.primary : colors.gray }]} >
+                <Pressable
+                    disabled={checked ? false : true}
+                    onPress={handleSubmit} style={[styles.button, { backgroundColor: checked ? colors.primary : colors.gray }]} >
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
             </SafeAreaView >

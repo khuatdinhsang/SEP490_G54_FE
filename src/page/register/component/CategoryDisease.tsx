@@ -3,7 +3,7 @@ import { flexRow } from "../../../styles/flex";
 import colors from "../../../constant/color";
 import ItemDisease from "./ItemDisease";
 type SectionType = {
-    title: string;
+    type: string;
     data: {
         id: number,
         name: string
@@ -26,7 +26,7 @@ const CategoryDisease: React.FC<CategoryDiseaseProps> = ({
 }) => {
     return (
         <View style={{ marginBottom: 15 }} >
-            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <Text style={styles.sectionTitle}>{section.type}</Text>
             <View style={[flexRow, { flexWrap: 'wrap' }]}>
                 {section.data && section.data.map((item: ItemType) => {
                     const isSelected = selectedItems.includes(item.id);

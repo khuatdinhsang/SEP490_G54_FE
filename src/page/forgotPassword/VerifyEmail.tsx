@@ -24,6 +24,8 @@ const VerifyEmail = () => {
     const [checkResetTime, setCheckResetTime] = useState<boolean>(false);
     const [checkCode, setCheckCode] = useState<string>('')
     const [timeUp, setTimeUp] = useState<boolean>(false)
+    const [error, setError] = useState<string>();
+    const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true)
     const handleResetTime = () => {
         setCheckResetTime((pre) => !pre);
         setTimeUp(false);
@@ -206,6 +208,7 @@ const VerifyEmail = () => {
                                             setTimeUp={setTimeUp}
                                             time={time}
                                             checkResetTime={checkResetTime}
+                                            isTimerRunning={isTimerRunning}
                                         />
                                     </Text>
                                 )}

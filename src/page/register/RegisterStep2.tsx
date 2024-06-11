@@ -26,8 +26,15 @@ import InputComponent from '../../component/input';
 import ProgressHeader from '../../component/progessHeader';
 import SelectDate from '../../component/inputSelectDate';
 import InputNumber from '../../component/inputNumber';
+import { authService } from '../../services/auth';
+import axios from 'axios';
+interface RegisterValues {
+    email: string,
+    code: string
+}
 
-const RegisterStep2 = () => {
+const RegisterStep2 = ({ route }: any) => {
+    const [isTimerRunning, setIsTimerRunning] = useState(true)
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const [gender, setGender] = useState<boolean>(true);
     const [weight, setWeight] = useState<string>('');
@@ -38,7 +45,7 @@ const RegisterStep2 = () => {
     const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
     const [day, setDay] = useState<number>(new Date().getDate());
     const [isValidDate, setIsValidDate] = useState(true);
-    const currentYear = new Date().getFullYear();
+    const [dob, setDob] = useState<Date>(new Date())
     const [showYearScroll, setShowYearScroll] = useState(false);
     const [showMonthScroll, setShowMonthScroll] = useState(false);
     const [showDayScroll, setShowDayScroll] = useState(false);
@@ -46,6 +53,9 @@ const RegisterStep2 = () => {
     const [checkResetTime, setCheckResetTime] = useState<boolean>(false);
     const [checkCode, setCheckCode] = useState<string>('');
     const [timeUp, setTimeUp] = useState<boolean>(false);
+    const [isEmailExits, setIsEmailExits] = useState<string>("");
+    const [codeResponse, setCodeResponse] = useState<string>("")
+    const { valuesStep1 } = route.params;
     useEffect(() => {
         const isValid = isValidDateForYearMonthDay(year, month, day);
         setIsValidDate(isValid);
@@ -58,7 +68,9 @@ const RegisterStep2 = () => {
     const toggleYearScroll = () => setShowYearScroll(!showYearScroll);
     const toggleMonthScroll = () => setShowMonthScroll(!showMonthScroll);
     const toggleDayScroll = () => setShowDayScroll(!showDayScroll);
-
+    useEffect(() => {
+        setDob(new Date(year, month - 1, day + 1));
+    }, [day, month, year])
     const isLeapYear = (year: number): boolean => {
         return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
     };
@@ -84,22 +96,37 @@ const RegisterStep2 = () => {
         return day >= 1 && day <= maxDays;
     };
 
-    // const getSelectedDate = () => {
-    //     return new Date(year, month - 1, day + 1);
-    // };
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN);
     };
     const chooseGender = (value: boolean) => {
         setGender(value);
     };
-    const handleSubmit = () => {
-        navigation.navigate(SCREENS_NAME.REGISTER.STEP3);
+    const handleSubmit = (values: RegisterValues): void => {
+        const data = { weight: Number(weight), height: Number(height), dob: dob.toISOString().split('T')[0], email: values.email }
+        navigation.navigate(SCREENS_NAME.REGISTER.STEP3, { valuesStep2: { ...data, ...valuesStep1 } });
     };
 
-    const handleResetTime = () => {
-        setCheckResetTime(pre => !pre);
-        setTimeUp(false);
+    const handleResetTime = async (values: RegisterValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
+        try {
+            const res = await authService.verifyEmailApi(values.email);
+            console.log("118", res)
+            if (res.code == 200) {
+                setIsEmailExits("")
+                setCodeResponse(res.result)
+                setIsTimerRunning(true)
+                clearField('code', setFieldValue)
+                setCheckCode("loading")
+                setCheckResetTime(pre => !pre);
+                setTimeUp(false)
+            }
+        } catch (error: any) {
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.data.code == 400) {
+                    setIsEmailExits(error.response.data.message)
+                }
+            }
+        }
     };
     const clearField = (
         field: string,
@@ -142,20 +169,27 @@ const RegisterStep2 = () => {
             setError(t('placeholder.err.number'));
         }
     };
-    const fotgotPasswordSchema = yup.object().shape({
+    const forgotPasswordSchema = yup.object().shape({
         email: yup
             .string()
             .email(t('placeholder.err.email'))
             .required(t('placeholder.err.blank')),
         code: yup.string().required(t('placeholder.err.blank')),
     });
-    const handleCheckCode = () => {
-        //thanh cong
-        setCheckCode('success');
-
-        //that bai
-        // setCheckCode('error')
+    const handleCheckCode = async (values: RegisterValues): Promise<void> => {
+        if (values.code === codeResponse) {
+            setCheckCode('success');
+            setIsTimerRunning(false);
+        } else {
+            setCheckCode('error');
+            setIsTimerRunning(true)
+        }
     };
+    const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
+        setFieldValue(field, text);
+        setIsEmailExits(''); // Clear the error message
+    };
+
     const renderMessage = () => {
         if (timeUp) {
             return (
@@ -194,156 +228,157 @@ const RegisterStep2 = () => {
         }
     };
     return (
-        <View style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false} >
-                <SafeAreaView style={[styles.container]}>
-                    {(showDayScroll || showMonthScroll || showYearScroll) && (
-                        <View style={styles.boxShadow}></View>
-                    )}
-                    <Pressable onPress={loginPage}>
-                        <Image
-                            style={styles.buttonCancel}
-                            source={require('../../assets/image/register/icon_X.png')}
-                        />
-                    </Pressable>
-                    <ProgressHeader index={[0, 1]} length={4} style={{ marginTop: 45 }} />
-                    <View style={{ marginTop: 20 }}>
-                        <View style={[flexRow, { marginBottom: 20 }]}>
-                            <Text style={[styles.hightLight, { color: colors.primary }]}>
-                                02.
-                            </Text>
-                            <Text style={[styles.hightLight, { color: colors.black }]}>
-                                {t('common.text.fillInfo')}
-                            </Text>
-                        </View>
-                        <View style={{ marginTop: 15 }}>
-                            <Text style={styles.titleField}>
-                                {t('common.text.dateOfBirth')}
-                            </Text>
-                            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
-                                <View style={{ width: '31%' }}>
-                                    <SelectDate
-                                        value={year}
-                                        text={t('common.text.year')}
-                                        textButton={t('common.text.next')}
-                                        toggleModalScroll={toggleYearScroll}
-                                        handleChange={handleYearChange}
-                                        showScroll={showYearScroll}
-                                        length={150}
-                                        type={'year'}
-                                    />
+        <Formik
+            initialValues={{ email: '', code: '' }}
+            validationSchema={forgotPasswordSchema}
+            onSubmit={handleSubmit}
+        >
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                values,
+                errors,
+                touched,
+            }) => (
+                <SafeAreaView style={{ flex: 1 }}>
+                    <ScrollView contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+                        <View style={[styles.container]}>
+                            {(showDayScroll || showMonthScroll || showYearScroll) && (
+                                <View style={styles.boxShadow}></View>
+                            )}
+                            <Pressable onPress={loginPage}>
+                                <Image
+                                    style={styles.buttonCancel}
+                                    source={require('../../assets/image/register/icon_X.png')}
+                                />
+                            </Pressable>
+                            <ProgressHeader index={[0, 1]} length={4} style={{ marginTop: 45 }} />
+                            <View style={{ marginTop: 20 }}>
+                                <View style={[flexRow, { marginBottom: 20 }]}>
+                                    <Text style={[styles.hightLight, { color: colors.primary }]}>
+                                        02.
+                                    </Text>
+                                    <Text style={[styles.hightLight, { color: colors.black }]}>
+                                        {t('common.text.fillInfo')}
+                                    </Text>
                                 </View>
-                                <View style={{ width: '31%' }}>
-                                    <SelectDate
-                                        value={month}
-                                        text={t('common.text.month')}
-                                        textButton={t('common.text.next')}
-                                        toggleModalScroll={toggleMonthScroll}
-                                        handleChange={handleMonthChange}
-                                        showScroll={showMonthScroll}
-                                        length={12}
-                                        type={'month'}
-                                    />
-                                </View>
-                                <View style={{ width: '31%' }}>
-                                    <SelectDate
-                                        value={day}
-                                        text={t('common.text.day')}
-                                        textButton={t('common.text.next')}
-                                        toggleModalScroll={toggleDayScroll}
-                                        handleChange={handleDayChange}
-                                        showScroll={showDayScroll}
-                                        length={getMaxDaysInMonth(year, month)}
-                                        type={'day'}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 15 }}>
-                            <Text style={styles.textField}>{t('common.text.gender')}</Text>
-                            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
-                                <Pressable
-                                    onPress={() => chooseGender(true)}
-                                    style={{ width: '47%' }}>
-                                    <View
-                                        style={[
-                                            styles.box,
-                                            {
-                                                borderColor: gender ? colors.primary : colors.gray,
-                                                backgroundColor: gender ? colors.primary : 'white',
-                                            },
-                                        ]}>
-                                        <Text
-                                            style={[
-                                                styles.textInput,
-                                                { color: gender ? colors.white : colors.black },
-                                            ]}>
-                                            {t('common.text.male')}
-                                        </Text>
+                                <View style={{ marginTop: 15 }}>
+                                    <Text style={styles.titleField}>
+                                        {t('common.text.dateOfBirth')}
+                                    </Text>
+                                    <View style={[flexRowSpaceBetween, { width: '100%' }]}>
+                                        <View style={{ width: '31%' }}>
+                                            <SelectDate
+                                                value={year}
+                                                text={t('common.text.year')}
+                                                textButton={t('common.text.next')}
+                                                toggleModalScroll={toggleYearScroll}
+                                                handleChange={handleYearChange}
+                                                showScroll={showYearScroll}
+                                                length={150}
+                                                type={'year'}
+                                            />
+                                        </View>
+                                        <View style={{ width: '31%' }}>
+                                            <SelectDate
+                                                value={month}
+                                                text={t('common.text.month')}
+                                                textButton={t('common.text.next')}
+                                                toggleModalScroll={toggleMonthScroll}
+                                                handleChange={handleMonthChange}
+                                                showScroll={showMonthScroll}
+                                                length={12}
+                                                type={'month'}
+                                            />
+                                        </View>
+                                        <View style={{ width: '31%' }}>
+                                            <SelectDate
+                                                value={day}
+                                                text={t('common.text.day')}
+                                                textButton={t('common.text.next')}
+                                                toggleModalScroll={toggleDayScroll}
+                                                handleChange={handleDayChange}
+                                                showScroll={showDayScroll}
+                                                length={getMaxDaysInMonth(year, month)}
+                                                type={'day'}
+                                            />
+                                        </View>
                                     </View>
-                                </Pressable>
-                                <Pressable
-                                    onPress={() => chooseGender(false)}
-                                    style={{ width: '47%' }}>
-                                    <View
-                                        style={{
-                                            borderRadius: 8,
-                                            borderColor: !gender ? colors.primary : colors.gray,
-                                            borderWidth: 1,
-                                            height: 56,
-                                            backgroundColor: !gender ? colors.primary : 'white',
-                                        }}>
-                                        <Text
-                                            style={[
-                                                styles.textInput,
-                                                { color: !gender ? colors.white : colors.black },
-                                            ]}>
-                                            {t('common.text.male')}
-                                        </Text>
+                                </View>
+                                <View style={{ marginTop: 15 }}>
+                                    <Text style={styles.textField}>{t('common.text.gender')}</Text>
+                                    <View style={[flexRowSpaceBetween, { width: '100%' }]}>
+                                        <Pressable
+                                            onPress={() => chooseGender(true)}
+                                            style={{ width: '47%' }}>
+                                            <View
+                                                style={[
+                                                    styles.box,
+                                                    {
+                                                        borderColor: gender ? colors.primary : colors.gray,
+                                                        backgroundColor: gender ? colors.primary : 'white',
+                                                    },
+                                                ]}>
+                                                <Text
+                                                    style={[
+                                                        styles.textInput,
+                                                        { color: gender ? colors.white : colors.black },
+                                                    ]}>
+                                                    {t('common.text.male')}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
+                                        <Pressable
+                                            onPress={() => chooseGender(false)}
+                                            style={{ width: '47%' }}>
+                                            <View
+                                                style={{
+                                                    borderRadius: 8,
+                                                    borderColor: !gender ? colors.primary : colors.gray,
+                                                    borderWidth: 1,
+                                                    height: 56,
+                                                    backgroundColor: !gender ? colors.primary : 'white',
+                                                }}>
+                                                <Text
+                                                    style={[
+                                                        styles.textInput,
+                                                        { color: !gender ? colors.white : colors.black },
+                                                    ]}>
+                                                    {t('common.text.male')}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
                                     </View>
-                                </Pressable>
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 15 }}>
-                            <Text style={styles.textField}>
-                                {t('common.text.heightAndWeight')}
-                            </Text>
-                            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
-                                <Pressable style={{ width: '47%' }}>
-                                    <InputNumber
-                                        textRight="cm"
-                                        value={height}
-                                        keyboardType="numeric"
-                                        error={error}
-                                        handleSetValue={handleSetHeight}
-                                    />
-                                </Pressable>
-                                <Pressable style={{ width: '47%' }}>
-                                    <InputNumber
-                                        textRight="kg"
-                                        value={weight}
-                                        keyboardType="numeric"
-                                        error={error}
-                                        handleSetValue={handleSetWeight}
-                                    />
-                                </Pressable>
-                            </View>
-                            <Text style={styles.errorText}>{error}</Text>
-                        </View>
-                        <Formik
-                            initialValues={{ email: '', code: '' }}
-                            validationSchema={fotgotPasswordSchema}
-                            onSubmit={handleSubmit}>
-                            {({
-                                handleChange,
-                                handleBlur,
-                                handleSubmit,
-                                setFieldValue,
-                                values,
-                                errors,
-                                touched,
-                            }) => (
-                                <View style={{ marginTop: 30 }}>
+                                </View>
+                                <View style={{ marginTop: 15 }}>
+                                    <Text style={styles.textField}>
+                                        {t('common.text.heightAndWeight')}
+                                    </Text>
+                                    <View style={[flexRowSpaceBetween, { width: '100%' }]}>
+                                        <Pressable style={{ width: '47%' }}>
+                                            <InputNumber
+                                                textRight="cm"
+                                                value={height}
+                                                keyboardType="numeric"
+                                                error={error}
+                                                handleSetValue={handleSetHeight}
+                                            />
+                                        </Pressable>
+                                        <Pressable style={{ width: '47%' }}>
+                                            <InputNumber
+                                                textRight="kg"
+                                                value={weight}
+                                                keyboardType="numeric"
+                                                error={error}
+                                                handleSetValue={handleSetWeight}
+                                            />
+                                        </Pressable>
+                                    </View>
+                                    <Text style={styles.errorText}>{error}</Text>
+                                </View>
+                                <View style={{ marginTop: 20 }}>
                                     <View style={[flexRowSpaceBetween]}>
                                         <View style={{ width: '70%' }}>
                                             <InputComponent
@@ -351,17 +386,14 @@ const RegisterStep2 = () => {
                                                 onPressIconRight={() => clearField('email', setFieldValue)}
                                                 isIconRight={true}
                                                 value={values.email}
-                                                onChangeText={handleChange('email')}
+                                                onChangeText={handleChangeText('email', setFieldValue)}
                                                 label={t('common.text.email')}
                                                 textError={errors.email}
                                             />
                                         </View>
                                         <Pressable
                                             disabled={errors.email ? true : false}
-                                            onPress={() => {
-                                                handleResetTime();
-                                                setCheckCode('loading');
-                                            }}
+                                            onPress={() => handleResetTime(values, setFieldValue)}
                                             style={{
                                                 width: '25%',
                                                 marginTop: errors.email ? 10 : 30,
@@ -387,6 +419,7 @@ const RegisterStep2 = () => {
                                             </Text>
                                         </Pressable>
                                     </View>
+                                    {isEmailExits && <Text style={styles.textError}>{isEmailExits}</Text>}
                                     <View style={{ marginTop: 10 }}>
                                         <InputComponent
                                             placeholder={t('common.text.getCodePassword')}
@@ -395,7 +428,7 @@ const RegisterStep2 = () => {
                                             textError={errors.code}
                                         />
                                         {values.code && (
-                                            <Pressable onPress={handleCheckCode}>
+                                            <Pressable onPress={() => handleCheckCode(values)}>
                                                 <Text
                                                     style={[
                                                         styles.verification,
@@ -425,32 +458,35 @@ const RegisterStep2 = () => {
                                                 setTimeUp={setTimeUp}
                                                 time={time}
                                                 checkResetTime={checkResetTime}
+                                                isTimerRunning={isTimerRunning}
                                             />
                                         </Text>
                                     )}
                                 </View>
-                            )}
-                        </Formik>
+                            </View>
+                        </View>
+                    </ScrollView>
+                    <View style={styles.buttonContainer}>
+                        <Pressable
+                            disabled={height && weight && checkCode === 'success' ? false : true}
+                            onPress={() => handleSubmit()}
+                            style={[
+                                styles.button,
+                                {
+                                    backgroundColor:
+                                        height && weight && checkCode === 'success'
+                                            ? colors.primary
+                                            : colors.gray,
+                                },
+                            ]}
+                        >
+                            <Text style={styles.text}>{t('common.text.next')}</Text>
+                        </Pressable>
                     </View>
                 </SafeAreaView>
-            </ScrollView>
-            <View style={styles.buttonContainer}>
-                <Pressable
-                    disabled={height && weight && checkCode === 'success' ? false : true}
-                    onPress={() => handleSubmit()}
-                    style={[
-                        styles.button,
-                        {
-                            backgroundColor:
-                                height && weight && checkCode === 'success'
-                                    ? colors.primary
-                                    : colors.gray,
-                        },
-                    ]}>
-                    <Text style={styles.text}>{t('common.text.next')}</Text>
-                </Pressable>
-            </View>
-        </View>
+            )
+            }
+        </Formik >
     );
 };
 const styles = StyleSheet.create({
@@ -468,7 +504,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         paddingHorizontal: 20,
-        backgroundColor: colors.white,
     },
     navigate: {
         justifyContent: 'space-between',

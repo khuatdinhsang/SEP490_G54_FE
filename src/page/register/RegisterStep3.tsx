@@ -10,48 +10,59 @@ import { IMAGE } from '../../constant/image';
 import CategoryDisease from './component/CategoryDisease';
 import { SCREENS_NAME } from '../../navigator/const';
 import ProgressHeader from '../../component/progessHeader';
-
-type dataTypes = {
-    title: string,
-    data: {
-        id: number,
-        name: string
-    }[]
-}[]
-const RegisterStep3 = () => {
+import { HistoryMedicalResponse } from '../../constant/type/medical';
+import { medicalService } from '../../services/medicalHistory';
+import { transformData } from '../../util';
+const RegisterStep3 = ({ route }: any) => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const { t } = useTranslation();
-    const [data, setData] = useState<dataTypes>([
-        {
-            title: t("common.diseases.chronic"),
-            data: [
-                { id: 1, name: t("common.diseases.cholesterol") },
-                { id: 2, name: t("common.diseases.highBlood") },
-                { id: 3, name: t("common.diseases.diabetes") },
-                { id: 4, name: t("common.diseases.osteoporosis") },
-                { id: 5, name: t("common.diseases.kidney") },
-            ]
-        },
-        {
-            title: t("common.diseases.chronicRespiratory"),
-            data: [
-                { id: 6, name: t("common.diseases.congestedLungs") },
-                { id: 7, name: t("common.diseases.asthma") },
-                { id: 8, name: t("common.diseases.pulmonaryFibrosis") },
-                { id: 9, name: t("common.diseases.tuberculosis") },
-                { id: 10, name: t("common.diseases.others") },
-            ]
-        },
-        {
-            title: t("common.diseases.chronicArthritis"),
-            data: [
-                { id: 11, name: t("common.diseases.rheumatoidArthritis") },
-                { id: 12, name: t("common.diseases.gout") },
-                { id: 13, name: t("common.diseases.gout") },
-                { id: 14, name: t("common.diseases.osteoarthritis") },
-            ]
-        }
-    ]);
+    const { valuesStep2 } = route.params;
+    // const [data, setData] = useState<dataTypes>([
+    //     {
+    //         title: t("common.diseases.chronic"),
+    //         data: [
+    //             { id: 1, name: t("common.diseases.cholesterol") },
+    //             { id: 2, name: t("common.diseases.highBlood") },
+    //             { id: 3, name: t("common.diseases.diabetes") },
+    //             { id: 4, name: t("common.diseases.osteoporosis") },
+    //             { id: 5, name: t("common.diseases.kidney") },
+    //         ]
+    //     },
+    //     {
+    //         title: t("common.diseases.chronicRespiratory"),
+    //         data: [
+    //             { id: 6, name: t("common.diseases.congestedLungs") },
+    //             { id: 7, name: t("common.diseases.asthma") },
+    //             { id: 8, name: t("common.diseases.pulmonaryFibrosis") },
+    //             { id: 9, name: t("common.diseases.tuberculosis") },
+    //             { id: 10, name: t("common.diseases.others") },
+    //         ]
+    //     },
+    //     {
+    //         title: t("common.diseases.chronicArthritis"),
+    //         data: [
+    //             { id: 11, name: t("common.diseases.rheumatoidArthritis") },
+    //             { id: 12, name: t("common.diseases.gout") },
+    //             { id: 13, name: t("common.diseases.gout") },
+    //             { id: 14, name: t("common.diseases.osteoarthritis") },
+    //         ]
+    //     }
+    // ]);
+    const [data, setData] = useState<DataType[]>([])
+    useEffect(() => {
+        const fetchMedicalHistory = async () => {
+            try {
+                const res = await medicalService.getMedicalHistory();
+                if (res.code == 200 && Array.isArray(res.result)) {
+                    setData(transformData(res.result))
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchMedicalHistory();
+    }, [])
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN);
@@ -67,7 +78,7 @@ const RegisterStep3 = () => {
     };
     const handleSubmit = () => {
         if (selectedItems.length > 0) {
-            navigation.navigate(SCREENS_NAME.REGISTER.STEP4);
+            navigation.navigate(SCREENS_NAME.REGISTER.STEP4, { valuesStep3: { ...valuesStep2, listMedicalHistory: selectedItems }, dataMedical: data.slice(3) });
         }
     };
     return (
@@ -91,9 +102,9 @@ const RegisterStep3 = () => {
                     </View>
                     <View>
                         {data &&
-                            data.map((section: any) => (
+                            data.slice(0, 3).map((section: any) => (
                                 <CategoryDisease
-                                    key={section.title}
+                                    key={section.type}
                                     section={section}
                                     handleSelectItem={handleSelectItem}
                                     selectedItems={selectedItems}

@@ -41,7 +41,13 @@ const Login = () => {
     const handleRegister = () => {
         navigation.navigate(SCREENS_NAME.REGISTER.STEP1)
     }
+    const clearEmail = (setFieldValue: (field: string, value: any) => void) => {
+        setFieldValue('email', '');
+    };
 
+    const clearPassword = (setFieldValue: (field: string, value: any) => void) => {
+        setFieldValue('password', '');
+    };
     const handleSubmit = async (values: LoginValues): Promise<void> => {
         setIsLoading(true)
         try {
@@ -62,13 +68,7 @@ const Login = () => {
 
     }
 
-    const clearEmail = (setFieldValue: (field: string, value: any) => void) => {
-        setFieldValue('email', '');
-    };
 
-    const clearPassword = (setFieldValue: (field: string, value: any) => void) => {
-        setFieldValue('password', '');
-    };
 
     const handleFindId = () => {
         // Handle find ID logic
@@ -102,7 +102,6 @@ const Login = () => {
                                             isIconRight={true}
                                             value={values.email}
                                             onChangeText={handleChangeText('email', setFieldValue)}
-
                                             label={t("authentication.email")}
                                             textError={errors.email}
                                         />
