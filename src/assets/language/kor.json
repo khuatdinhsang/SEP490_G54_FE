@@ -246,6 +246,24 @@
     "bloodSugar": "혈당",
     "bloodPressure": "혈압",
     "weight": "체중",
-    "diet": "식이"
+    "diet": "식이",
+    "bloodCountRecord": "혈액 수치 기록",
+    "viewChart": "그래프보기",
+    "chooseMeal": "입력할 끼니와 식전",
+    "chooseMealTime": "식후를 선택해주세요",
+    "beforeBreakfast": "아침 식전",
+    "afterBreakfast": "아침 식후",
+    "beforeLunch": "점심 식전",
+    "afterLunch": "점심 식후",
+    "beforeDinner": "저녁 식전",
+    "afterDinner": "저녁 식후",
+    "unknown": "모름",
+    "goToViewChart": "그래프 보러가기",
+    "recordComplete": "기록완료",
+    "unableEnterNumber": "수치를 입력할 수 없습니다",
+    "pleaseUnCheck": "수치를 입력하시려면 체크를 풀어주세요",
+    "haven'tEnteredAnyNumbers": "아직 수치를 입력하지 않았어요",
+    "enterNumberFirst": "수치를 먼저 입력해주세요",
+    "enterRecord": "입력하러 가기"
   }
 }

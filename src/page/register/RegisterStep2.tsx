@@ -112,13 +112,15 @@ const RegisterStep2 = ({ route }: any) => {
             const res = await authService.verifyEmailApi(values.email);
             console.log("118", res)
             if (res.code == 200) {
-                setIsEmailExits("")
                 setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
                 setCheckCode("loading")
+                //resetTime
                 setCheckResetTime(pre => !pre);
                 setTimeUp(false)
+                setIsEmailExits("")
+
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {

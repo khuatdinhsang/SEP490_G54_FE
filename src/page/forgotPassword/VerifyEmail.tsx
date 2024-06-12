@@ -16,7 +16,13 @@ import moment from 'moment';
 import { paddingHorizontalScreen } from '../../styles/padding';
 import CountdownTimer from '../../component/countDownTime';
 import InputComponent from '../../component/input';
+import { authService } from '../../services/auth';
+import axios from 'axios';
 
+interface typeValues {
+    email: string,
+    code: string
+}
 const VerifyEmail = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
@@ -25,10 +31,31 @@ const VerifyEmail = () => {
     const [checkCode, setCheckCode] = useState<string>('')
     const [timeUp, setTimeUp] = useState<boolean>(false)
     const [error, setError] = useState<string>();
+    const [codeResponse, setCodeResponse] = useState<string>("")
     const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true)
-    const handleResetTime = () => {
-        setCheckResetTime((pre) => !pre);
-        setTimeUp(false);
+    const handleResetTime = async (values: typeValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
+        try {
+            const res = await authService.verifyEmailApi(values.email);
+            console.log("118", res)
+            if (res.code == 200) {
+                setCodeResponse(res.result)
+                setIsTimerRunning(true)
+                clearField('code', setFieldValue)
+                setCheckCode("loading")
+                //resetTime
+                setCheckResetTime(pre => !pre);
+                setTimeUp(false)
+
+            }
+        } catch (error: any) {
+            if (axios.isAxiosError(error) && error.response) {
+                console.log("52", error.response.data.code)
+                console.log("53", error.response.data.message)
+                if (error.response.data.code == 400) {
+                    setError(error.response.data.message)
+                }
+            }
+        }
     };
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
@@ -141,10 +168,7 @@ const VerifyEmail = () => {
                                     </View>
                                     <Pressable
                                         disabled={errors.email ? true : false}
-                                        onPress={() => {
-                                            handleResetTime();
-                                            setCheckCode('loading');
-                                        }}
+                                        onPress={() => handleResetTime(values, setFieldValue)}
                                         style={{
                                             width: '25%',
                                             marginTop: errors.email ? 10 : 30,
