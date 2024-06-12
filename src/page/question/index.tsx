@@ -47,6 +47,7 @@ const Question = () => {
                         </Text>
                     </Pressable>
                 </View>
+
                 <View style={[flexCenter, { height: '60%' }]}>
                     <Image source={IMAGE.QUESTION.TEXT} />
                     <Text style={styles.textTitle}>{t('questionManagement.noRequest')}</Text>

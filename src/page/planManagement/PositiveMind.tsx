@@ -99,7 +99,7 @@ const PositiveMind: React.FC = () => {
                             handleClickIconRight={nextPage}
                         />
                     </View>
-                    <ProgressHeader index={[0]} length={5} style={{ marginVertical: 16 }} />
+                    <ProgressHeader index={[0]} length={5} />
                     <View>
                         <Text style={styles.mentalRules}>{t("planManagement.text.mentalRules")}</Text>
                         <View style={{ marginTop: 10 }}>

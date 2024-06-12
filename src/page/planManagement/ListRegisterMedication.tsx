@@ -152,7 +152,7 @@ const ListRegisterMedication = () => {
                             textRightStyle={{ color: colors.primary }}
                         />
                     </View>
-                    <View style={{ paddingTop: 16, backgroundColor: colors.white }}>
+                    <View style={{ backgroundColor: colors.white }}>
                         <ProgressHeader index={[0, 1, 2, 3]} length={5} />
                     </View>
                     <View >

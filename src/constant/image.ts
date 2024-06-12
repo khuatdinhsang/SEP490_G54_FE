@@ -75,5 +75,8 @@ export const IMAGE = {
         THERMOMETER: require('assets/image/recordData/thermometer.png'),
         CHART: require('assets/image/recordData/chart.png'),
         HEART_ORANGE: require('assets/image/recordData/heart_orange.png'),
+        ICON_CHECK: require('assets/image/recordData/icon_check.png'),
+        ICON_CHECK_ORANGE: require('assets/image/recordData/icon_check_orange.png'),
+        ICON_FACE_SMILES: require('assets/image/recordData/icon_face.png'),
     }
 };

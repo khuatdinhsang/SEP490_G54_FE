@@ -9,12 +9,12 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
     async (config: any) => {
         const accessToken = await AsyncStorage.getItem('accessToken');
-        if (accessToken) {
-            config.headers = {
-                ...config.headers,
-                authorization: `Bearer ${accessToken}`,
-            };
-        }
+        // if (accessToken) {
+        //     config.headers = {
+        //         ...config.headers,
+        //         authorization: `Bearer ${accessToken}`,
+        //     };
+        // }
         return config;
     },
     (error) => Promise.reject(error)
@@ -23,6 +23,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
     (response) => response.data,
     async (error) => {
+        console.log("26", error);
         return Promise.reject(error);
     }
 );

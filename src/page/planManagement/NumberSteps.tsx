@@ -41,8 +41,8 @@ const NumberSteps = () => {
                         textRightStyle={{ color: numberSteps ? colors.primary : colors.gray_G04 }}
                     />
                 </View>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    <ProgressHeader index={[0, 1, 2, 3, 4]} length={5} style={{ marginVertical: 16 }} />
+                <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+                    <ProgressHeader index={[0, 1, 2, 3, 4]} length={5} />
                     <Text style={styles.textPlan}>{t("planManagement.text.stepGoal")}</Text>
                     <View style={[flexCenter, { flexDirection: 'column' }]}>
                         <Image style={{ marginTop: 30, height: 100, width: 100, marginBottom: 20 }} source={IMAGE.PLAN_MANAGEMENT.SHOES} />

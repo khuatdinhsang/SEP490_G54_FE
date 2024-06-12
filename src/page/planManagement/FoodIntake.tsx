@@ -41,7 +41,7 @@ const FoodIntake = () => {
                         handleClickIconRight={nextPage}
                     />
                 </View>
-                <ProgressHeader index={[0, 1, 2]} length={5} style={styles.progressHeader} />
+                <ProgressHeader index={[0, 1, 2]} length={5} />
                 <View style={styles.content}>
                     <Text style={styles.textTitle}>{t("planManagement.text.pleaseChooseVegetable")}</Text>
                     <Text style={styles.textDescription}>{t("planManagement.text.diskSize")}</Text>
@@ -92,13 +92,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        flexGrow: 1,
+        paddingBottom: 100
     },
     header: {
         paddingHorizontal: 20,
-    },
-    progressHeader: {
-        marginVertical: 16,
     },
     content: {
         paddingHorizontal: 20,

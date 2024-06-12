@@ -1,77 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import * as yup from "yup";
-import { Button, FlatList, Image, Pressable, SafeAreaView, ScrollView, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useState } from 'react';
+import { Button, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
 import { useTranslation } from 'react-i18next';
 import colors from '../../constant/color';
-import { Formik } from 'formik';
-import DatePicker from 'react-native-date-picker';
-import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
 import { flexRow, flexRowCenter, flexRowSpaceBetween } from '../../styles/flex';
 import ProgressHeader from '../../component/progessHeader';
+import { authService } from '../../services/auth';
+import axios from 'axios';
+
 type ItemType = {
+    type: string;
+    data: ItemTypeChild[],
+};
+
+type ItemTypeChild = {
     id: number;
     name: string,
-    icon: string
 };
-const RegisterStep4 = () => {
-    const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const [data, setData] = useState<ItemType[]>([])
-    const [isAlcohol, setIsAlcohol] = useState<boolean>(false)
-    const [isSmoke, setIsSmoke] = useState<boolean>(false)
-    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const { t, i18n } = useTranslation();
-    useEffect(() => {
-        setData([
-            {
-                id: 1,
-                name: t("common.diseases.heart"),
-                icon: IMAGE.REGISTER.HEART
-            },
-            {
-                id: 2,
-                name: t("common.diseases.liver"),
-                icon: IMAGE.REGISTER.LUNGS
-            },
-            {
-                id: 3,
-                name: t("common.diseases.brain"),
-                icon: IMAGE.REGISTER.BRAIN
-            },
-            {
-                id: 4,
-                name: t("common.diseases.cancer"),
-                icon: IMAGE.REGISTER.STETHOSCOPE
-            },
-        ])
-    }, [])
 
+const RegisterStep4 = ({ route }: any) => {
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+    const { t } = useTranslation();
+    const { valuesStep3, dataMedical } = route.params;
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
-    }
+    };
+
     const handleSubmit = () => {
+        const data = { ...valuesStep3, listMedicalHistory: [...valuesStep3.listMedicalHistory, ...selectedItems] }
         if (selectedItems.length > 0) {
-            navigation.navigate(SCREENS_NAME.REGISTER.RULES)
+            navigation.navigate(SCREENS_NAME.REGISTER.RULES, { data })
         }
-    }
-    const handleSelectItem = (itemId: number) => {
+    };
+
+    const handleSelectItem = (itemId: number, isSelected: boolean) => {
         setSelectedItems((prevSelectedItems) => {
-            if (prevSelectedItems.includes(itemId)) {
-                return prevSelectedItems.filter(item => item !== itemId);
+            if (isSelected) {
+                if (!prevSelectedItems.includes(itemId)) {
+                    return [...prevSelectedItems, itemId];
+                }
             } else {
-                return [...prevSelectedItems, itemId];
+                return prevSelectedItems.filter(item => item !== itemId);
             }
+            return prevSelectedItems;
         });
     };
-    const chooseAlcohol = (value: boolean) => {
-        setIsAlcohol(value)
-    }
-    const chooseSmoke = (value: boolean) => {
-        setIsSmoke(value)
-    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -87,47 +64,72 @@ const RegisterStep4 = () => {
                     <View style={{ marginTop: 20 }}>
                         <View style={[flexRow, { marginBottom: 20, width: 200, alignItems: 'flex-start' }]}>
                             <Text style={[styles.hightLight, { color: colors.primary }]}>04.</Text>
-                            <Text style={[styles.hightLight, { color: colors.black }]} >{t("common.text.fillIllness")}</Text>
+                            <Text style={[styles.hightLight, { color: colors.black }]}>{t("common.text.fillIllness")}</Text>
                         </View>
                     </View>
-                    <Text style={styles.textField}>{t("common.diseases.anamnesis")}</Text>
+                    <Text style={styles.textField}>{dataMedical[0].type}</Text>
                     <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
-                        {data && data.map((item: ItemType) => {
-                            const isSelected = selectedItems.includes(item.id);
-                            return (
-                                <Pressable key={item.id} style={styles.box} onPress={() => handleSelectItem(item.id)} >
-                                    <View style={[flexRowCenter, styles.boxItem, { borderColor: isSelected ? colors.primary : colors.gray, flexDirection: 'column' }]}>
-                                        <Image source={item.icon || IMAGE.REGISTER.BRAIN} />
-                                        <Text style={[styles.nameItemBox, { color: isSelected ? colors.primary : colors.gray }]}>{item.name}</Text>
-                                    </View>
-                                </Pressable >
-                            );
+                        {dataMedical && dataMedical.slice(0, 1).map((item: ItemType) => {
+                            return item.data.map((itemChild: ItemTypeChild) => {
+                                const isSelected = selectedItems.includes(itemChild.id);
+                                return (
+                                    <Pressable key={itemChild.id} style={styles.box} onPress={() => handleSelectItem(itemChild.id, !isSelected)}>
+                                        <View style={[flexRowCenter, styles.boxItem, { borderColor: isSelected ? colors.primary : colors.gray, flexDirection: 'column' }]}>
+                                            <Image source={IMAGE.REGISTER.BRAIN} />
+                                            <Text style={[styles.nameItemBox, { color: isSelected ? colors.primary : colors.gray }]}>{itemChild.name}</Text>
+                                        </View>
+                                    </Pressable>
+                                );
+                            })
                         })}
                     </View>
                     <View style={{ marginBottom: 20 }}>
-                        <Text style={styles.textField}>{t("common.text.infoHealth")}</Text>
-                        <View>
-                            <Text style={[styles.textField, { marginBottom: 15 }]}>{t("common.text.smoke")}</Text>
-                            <View style={[flexRowSpaceBetween,]}>
-                                <Pressable onPress={() => chooseAlcohol(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isAlcohol ? colors.primary : colors.gray, backgroundColor: isAlcohol ? colors.orange_02 : colors.white }]}>
-                                    <Text style={{ color: isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
-                                </Pressable>
-                                <Pressable onPress={() => chooseAlcohol(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: !isAlcohol ? colors.primary : colors.gray, backgroundColor: !isAlcohol ? colors.orange_02 : colors.white }]}>
-                                    <Text style={{ color: !isAlcohol ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
-                                </Pressable>
-                            </View>
-                        </View>
-                        <View>
-                            <Text style={[styles.textField, { marginVertical: 15 }]}>{t("common.text.alcohol")}</Text>
-                            <View style={[flexRowSpaceBetween, { width: WidthDevice - 40 }]}>
-                                <Pressable onPress={() => chooseSmoke(true)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderColor: isSmoke ? colors.primary : colors.gray, backgroundColor: isSmoke ? colors.orange_02 : colors.white }]}>
-                                    <Text style={{ color: isSmoke ? colors.primary : colors.textGray }}>{t("common.text.yes")}</Text>
-                                </Pressable>
-                                <Pressable onPress={() => chooseSmoke(false)} style={[flexRowCenter, styles.buttonBox, { width: '47%', borderRadius: 8, borderWidth: 1, borderColor: !isSmoke ? colors.primary : colors.gray, backgroundColor: !isSmoke ? colors.orange_02 : colors.white }]}>
-                                    <Text style={{ color: !isSmoke ? colors.primary : colors.textGray }}>{t("common.text.no")}</Text>
-                                </Pressable>
-                            </View>
-                        </View>
+                        <Text style={styles.textField}>{dataMedical[1].type}</Text>
+                        {dataMedical && dataMedical.slice(1).map((item: ItemType) => {
+                            return item.data.map((itemChild) => {
+                                const isSelected = selectedItems.includes(itemChild.id);
+                                return (
+                                    <View key={itemChild.id}>
+                                        <Text style={[styles.textField, { marginBottom: 15 }]}>{itemChild.name}</Text>
+                                        <View style={[flexRowSpaceBetween]}>
+                                            <Pressable
+                                                onPress={() => handleSelectItem(itemChild.id, true)}
+                                                style={[
+                                                    flexRowCenter,
+                                                    styles.buttonBox,
+                                                    {
+                                                        width: '47%',
+                                                        borderColor: selectedItems.includes(itemChild.id) ? colors.primary : colors.gray,
+                                                        backgroundColor: selectedItems.includes(itemChild.id) ? colors.orange_02 : colors.white
+                                                    }
+                                                ]}
+                                            >
+                                                <Text style={{ color: selectedItems.includes(itemChild.id) ? colors.primary : colors.textGray }}>
+                                                    {t("common.text.yes")}
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={() => handleSelectItem(itemChild.id, false)}
+                                                style={[
+                                                    flexRowCenter,
+                                                    styles.buttonBox,
+                                                    {
+                                                        width: '47%',
+                                                        borderColor: !selectedItems.includes(itemChild.id) ? colors.primary : colors.gray,
+                                                        backgroundColor: !selectedItems.includes(itemChild.id) ? colors.orange_02 : colors.white
+                                                    }
+                                                ]}
+                                            >
+                                                <Text style={{ color: !selectedItems.includes(itemChild.id) ? colors.primary : colors.textGray }}>
+                                                    {t("common.text.no")}
+                                                </Text>
+                                            </Pressable>
+                                        </View>
+                                    </View>
+
+                                )
+                            })
+                        })}
                     </View>
                 </SafeAreaView>
             </ScrollView>
@@ -139,6 +141,7 @@ const RegisterStep4 = () => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -168,13 +171,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 18,
     },
-    field: {
-        borderColor: colors.primary,
-        borderWidth: 1,
-        marginTop: 10,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-    },
     textField: {
         fontWeight: '500',
         fontSize: 18,
@@ -191,7 +187,6 @@ const styles = StyleSheet.create({
     button: {
         height: 60,
         borderRadius: 12,
-
     },
     buttonBox: {
         borderRadius: 8,

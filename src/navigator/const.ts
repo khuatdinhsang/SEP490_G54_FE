@@ -21,6 +21,9 @@ import ListQuestion from '../page/question/ListQuestion';
 import QuestionDetail from '../page/question/QuestionDetail';
 import RegularQuestion from '../page/question/RegularQuestion';
 import RecordHealthData from '../page/recordHealthData';
+import FillRecord from '../page/recordHealthData/FillRecord';
+import NumericalRecord from '../page/recordHealthData/NumericalRecord';
+import NumericalRecordChart from '../page/recordHealthData/chart/NumericalRecordChart';
 import Register from '../page/register';
 import RegisterRules from '../page/register/RegisterRules';
 import RegisterStep2 from '../page/register/RegisterStep2';
@@ -83,6 +86,9 @@ export const SCREENS_NAME = {
     },
     RECORD_HEALTH_DATA: {
         MAIN: 'Main Record Health',
+        NUMERICAL_RECORD: 'Numerical Record',
+        FILL_RECORD: "Fill Record",
+        NUMERICAL_RECORD_CHART: 'Number Record Chart'
     }
 };
 
@@ -236,6 +242,18 @@ const SCREENS_STACK_RECORD_DATA = [
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
         component: RecordHealthData,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
+        component: NumericalRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD,
+        component: FillRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
+        component: NumericalRecordChart,
     },
 
 ];

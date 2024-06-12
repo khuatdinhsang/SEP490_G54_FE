@@ -11,19 +11,38 @@ import { ScrollView } from 'react-native-gesture-handler';
 import InputComponent from '../../component/input';
 import ProgressHeader from '../../component/progessHeader';
 
+interface RegisterValues {
+    name: string,
+    phoneNumber: string,
+    password: string,
+    confirmPassword?: string,
+    numberRegHospital?: string,
+    cic?: string
+}
 const Register = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const registerSchema = yup.object().shape({
         name: yup.string().required(t("placeholder.err.blank")),
-        email: yup.string().email(t("placeholder.err.email")).required(t("placeholder.err.blank")),
-        password: yup.string().required(t("placeholder.err.blank")),
+        phoneNumber: yup.string().required(t("placeholder.err.blank")).matches(
+            /^(010-\d{4}-\d{4}|0\d{1,2}-\d{3,4}-\d{4})$/,
+            t("placeholder.err.phoneNumber")
+        ),
+        password: yup.string().required(t("placeholder.err.blank")).matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            t("placeholder.err.passwordCorrect")
+        ),
         confirmPassword: yup.string().required(t("placeholder.err.blank")).oneOf([yup.ref('password')], t("placeholder.err.notMatch")),
         numberRegHospital: yup.string().required(t("placeholder.err.blank")),
     });
 
-    const handleSubmit = (values: any): void => {
-        navigation.navigate(SCREENS_NAME.REGISTER.STEP2);
+    const handleSubmit = (values: RegisterValues): void => {
+        values.cic = values.numberRegHospital;
+        delete values.numberRegHospital;
+        if ('confirmPassword' in values) {
+            delete values.confirmPassword;
+        }
+        navigation.navigate(SCREENS_NAME.REGISTER.STEP2, { valuesStep1: values });
     };
 
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
@@ -41,7 +60,7 @@ const Register = () => {
             </Pressable>
             <ProgressHeader index={[0]} length={4} style={{ marginTop: 45 }} />
             <Formik
-                initialValues={{ name: '', email: '', password: '', confirmPassword: '', numberRegHospital: '' }}
+                initialValues={{ name: '', phoneNumber: '', password: '', confirmPassword: '', numberRegHospital: '' }}
                 validationSchema={registerSchema}
                 onSubmit={handleSubmit}
             >
@@ -64,13 +83,13 @@ const Register = () => {
                                 />
                                 <View style={{ marginTop: 15 }}>
                                     <InputComponent
-                                        placeholder={t("placeholder.field.email")}
-                                        onPressIconRight={() => clearField('email', setFieldValue)}
+                                        placeholder={t("placeholder.field.phoneNumber")}
+                                        onPressIconRight={() => clearField('phoneNumber', setFieldValue)}
                                         isIconRight={true}
-                                        value={values.email}
-                                        onChangeText={handleChange('email')}
-                                        label={t("authentication.email")}
-                                        textError={errors.email}
+                                        value={values.phoneNumber}
+                                        onChangeText={handleChange('phoneNumber')}
+                                        label={t("common.text.phoneNumber")}
+                                        textError={errors.phoneNumber}
                                     />
                                 </View>
                                 <View style={{ marginTop: 15 }}>
@@ -116,7 +135,7 @@ const Register = () => {
                                 style={[
                                     styles.button,
                                     {
-                                        backgroundColor: (errors.name || errors.email || errors.password || errors.confirmPassword || errors.numberRegHospital)
+                                        backgroundColor: (errors.name || errors.password || errors.confirmPassword || errors.numberRegHospital)
                                             ? colors.gray
                                             : colors.primary
                                     }
