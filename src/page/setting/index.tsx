@@ -33,8 +33,7 @@ const Setting = () => {
           }}
         />
         <View style={{marginTop: 40}} />
-        <RangeBlock value={85} />
-        {/* <CategoryComponent
+        <CategoryComponent
           text="푸시알림"
           handleOnPress={() => {
             navigation.navigate(SCREENS_NAME.SETTING.SETTING_NOTIFICATION);
@@ -48,14 +47,14 @@ const Setting = () => {
           }}
         />
         <View style={styles.divide} />
-        <CategoryComponent text="앱정보" handleOnPress={() => { }} />
+        <CategoryComponent text="앱정보" handleOnPress={() => {}} />
         <View style={styles.divide} />
         <CategoryComponent
           text="로그아웃"
           handleOnPress={() => {
             navigation.navigate(SCREENS_NAME.SETTING.SETTING_LOGOUT);
           }}
-        /> */}
+        />
       </View>
     </SafeAreaView>
   );
