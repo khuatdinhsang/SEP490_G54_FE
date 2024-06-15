@@ -7,6 +7,20 @@ import {
 } from 'victory-native';
 import colors from '../../constant/color';
 
+/*
+Example Props:
+  <BarChart
+    data={[
+      {x: '9/11', y: 2},
+      {x: '9/13', y: 2},
+      {x: '9/15', y: 3},
+      {x: '9/20', y: 3},
+      {x: '10/4', y: 3},
+      {x: '10/5', y: 3, label: '3점'},
+    ]}
+  />;
+*/
+
 interface BarChartProps {
   data: Array<{x: string; y: number; label?: string}>;
 }
