@@ -11,7 +11,7 @@ import {
 } from 'victory-native';
 import colors from '../../constant/color';
 
-interface BarChartProps {
+interface LineChartProps {
   data: Array<{x: string; y: number; label?: string}>;
   backgroundProps?: {y: number; height: number; color: string};
   domainY: [number, number];
@@ -48,7 +48,7 @@ interface BarChartProps {
 />; */
 }
 
-const LineChart = (props: BarChartProps) => {
+const LineChart = (props: LineChartProps) => {
   const HEIGHT = 220;
   const {data, backgroundProps, domainY} = props;
   const dataScatter = data.map(item => {
