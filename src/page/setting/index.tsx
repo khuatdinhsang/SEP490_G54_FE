@@ -10,6 +10,7 @@ import {paddingHorizontalScreen} from '../../styles/padding';
 import {HeightDevice} from '../../util/Dimenssion';
 import {SCREENS_NAME} from '../../navigator/const';
 import RangeBlock from '../../component/range-block';
+import BarChart from '../../component/bar-chart';
 
 const Setting = () => {
   const {t, i18n} = useTranslation();
