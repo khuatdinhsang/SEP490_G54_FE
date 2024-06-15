@@ -1,6 +1,7 @@
 import {useCallback} from 'react';
 import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import {
+  Background,
   Circle,
   VictoryAxis,
   VictoryChart,
@@ -12,6 +13,8 @@ import colors from '../../constant/color';
 
 interface BarChartProps {
   data: Array<{x: string; y: number; label?: string}>;
+  backgroundProps?: {y: number; height: number; color: string};
+  domainY: [number, number];
 }
 
 // Example props:
@@ -27,8 +30,27 @@ interface BarChartProps {
 />; */
 }
 
+{
+  /* <LineChart
+  data={[
+    {x: '9/11', y: 70},
+    {x: '9/15', y: 60},
+    {x: '9/20', y: 80},
+    {x: '10/4', y: 50},
+    {x: '10/5', y: 60, label: '60kg'},
+  ]}
+  backgroundProps={{
+    color: colors.primary,
+    height: 20,
+    y: 40,
+  }}
+  domainY={[0, 100]}
+/>; */
+}
+
 const LineChart = (props: BarChartProps) => {
-  const {data} = props;
+  const HEIGHT = 220;
+  const {data, backgroundProps, domainY} = props;
   const dataScatter = data.map(item => {
     return {
       x: item.x,
@@ -66,14 +88,23 @@ const LineChart = (props: BarChartProps) => {
 
   return (
     <VictoryChart
-      domain={{y: [0, 20]}}
-      height={220}
+      domain={{y: domainY}}
+      height={HEIGHT}
       style={{
         parent: {
           marginLeft: -20,
         },
+        background: backgroundProps && {fill: colors.primary, opacity: '0.15'},
       }}
-      domainPadding={{x: 20}}>
+      domainPadding={{x: 20}}
+      backgroundComponent={
+        backgroundProps && (
+          <Background
+            y={HEIGHT - backgroundProps.y - 85}
+            height={backgroundProps.height}
+          />
+        )
+      }>
       <VictoryAxis
         crossAxis
         style={{
@@ -123,7 +154,7 @@ const LineChart = (props: BarChartProps) => {
       <VictoryLabel
         text="접시"
         x={30}
-        y={170}
+        y={HEIGHT - 50}
         textAnchor="middle"
         style={{fill: colors.gray_G05, fontSize: 14, fontWeight: '400'}}
       />
