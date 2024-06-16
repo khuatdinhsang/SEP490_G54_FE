@@ -40,7 +40,8 @@
     "redux-persist": "^6.0.0",
     "rn-range-slider": "^2.2.2",
     "spoqa-han-sans": "^3.3.0",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "victory-native": "^36.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
