@@ -1,7 +1,7 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
-import {IMAGE} from '../../constant/image';
-import {flexRow} from '../../styles/flex';
+import { IMAGE } from '../../constant/image';
+import { flexRow } from '../../styles/flex';
 
 interface CategoryComponentProps {
   text: string;
@@ -9,18 +9,18 @@ interface CategoryComponentProps {
 }
 
 const CategoryComponent = (props: CategoryComponentProps) => {
-  const {text, handleOnPress} = props;
+  const { text, handleOnPress } = props;
   const handleOnPressInner = () => {
     handleOnPress();
   };
 
   return (
-    <View style={[styles.container, flexRow]}>
+    <Pressable onPress={handleOnPressInner} style={[styles.container, flexRow]}>
       <Text style={styles.text}>{text}</Text>
-      <Pressable style={styles.iconRight} onPress={handleOnPressInner}>
+      <View style={styles.iconRight} >
         <Image source={IMAGE.ICON_ARROW_RIGHT_GRAY} style={styles.icon} />
-      </Pressable>
-    </View>
+      </View>
+    </Pressable>
   );
 };
 

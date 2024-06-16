@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
         color: colors.black,
     },
     unitInput: {
-        width: '30%',
+        width: '100%',
         height: 56,
         position: 'absolute',
-        marginLeft: '30%',
+        paddingLeft: '30%',
     },
     bridge: {
         position: 'absolute',
@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     exampleContainer: {
-        marginTop: 30,
+        marginTop: 55,
         zIndex: 1,
     },
     exampleFruit: {
         fontWeight: '500',
         fontSize: 16,
         color: colors.gray_G08,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     buttonContainer: {
         position: 'absolute',

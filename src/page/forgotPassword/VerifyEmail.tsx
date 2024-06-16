@@ -30,29 +30,30 @@ const VerifyEmail = () => {
     const [checkResetTime, setCheckResetTime] = useState<boolean>(false);
     const [checkCode, setCheckCode] = useState<string>('')
     const [timeUp, setTimeUp] = useState<boolean>(false)
-    const [error, setError] = useState<string>();
     const [codeResponse, setCodeResponse] = useState<string>("")
+    const [isGetCode, setIsGetCode] = useState<boolean>(false)
     const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true)
+    const [isEmailExits, setIsEmailExits] = useState<string>("");
     const handleResetTime = async (values: typeValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
+        setIsGetCode(true)
+        //resetTime
+        setCheckResetTime(pre => !pre);
+        setTimeUp(false)
+        setCheckCode("loading")
+        clearField('code', setFieldValue)
         try {
-            const res = await authService.verifyEmailApi(values.email);
+            const res = await authService.forgetPassword(values.email);
             console.log("118", res)
             if (res.code == 200) {
                 setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
-                setCheckCode("loading")
-                //resetTime
-                setCheckResetTime(pre => !pre);
-                setTimeUp(false)
-
+                setIsEmailExits("")
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {
-                console.log("52", error.response.data.code)
-                console.log("53", error.response.data.message)
                 if (error.response.data.code == 400) {
-                    setError(error.response.data.message)
+                    setIsEmailExits(error.response.data.message)
                 }
             }
         }
@@ -60,9 +61,9 @@ const VerifyEmail = () => {
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
-    const handleSubmit = () => {
+    const handleSubmit = (values: typeValues) => {
         if (checkCode === 'success') {
-            navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.MAIN)
+            navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.MAIN, { email: values.email, code: values.code })
         }
     }
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
@@ -74,9 +75,10 @@ const VerifyEmail = () => {
     const fotgotPasswordSchema = yup.object().shape({
         email: yup
             .string()
-            .email(t("placeholder.err.email"))
             .required(
                 t("placeholder.err.blank")
+            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                t("placeholder.err.email")
             ),
         code: yup
             .string()
@@ -84,12 +86,14 @@ const VerifyEmail = () => {
                 t("placeholder.err.blank")
             ),
     });
-    const handleCheckCode = () => {
-        //thanh cong
-        setCheckCode('success')
-
-        //that bai
-        // setCheckCode('error')
+    const handleCheckCode = async (values: typeValues): Promise<void> => {
+        if (values.code === codeResponse) {
+            setCheckCode('success');
+            setIsTimerRunning(false);
+        } else {
+            setCheckCode('error');
+            setIsTimerRunning(true)
+        }
     }
     const renderMessage = () => {
         if (timeUp) {
@@ -128,31 +132,35 @@ const VerifyEmail = () => {
                 return null;
         }
     };
-    console.log(checkCode)
+    const handleGetCode = (values: boolean) => {
+        setIsGetCode(values)
+    }
     return (
-        <SafeAreaView style={styles.container} >
-            <View style={{ marginTop: 15 }}>
-                <Pressable style={styles.buttonCancel} onPress={loginPage}>
-                    <Image
-                        source={require('../../assets/image/register/icon_X.png')} />
-                </Pressable>
-                <Text style={[styles.text, { textAlign: 'center' }]}>{t("authentication.findPassword")}</Text>
-                <View style={styles.line}></View>
 
-                <View style={[styles.content]}>
-                    <Formik
-                        initialValues={{ email: '', code: '' }}
-                        validationSchema={fotgotPasswordSchema}
-                        onSubmit={handleSubmit}>
-                        {({
-                            handleChange,
-                            handleBlur,
-                            handleSubmit,
-                            setFieldValue,
-                            values,
-                            errors,
-                            touched,
-                        }) => (
+        <Formik
+            initialValues={{ email: '', code: '' }}
+            validationSchema={fotgotPasswordSchema}
+            onSubmit={handleSubmit}>
+            {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                setFieldValue,
+                values,
+                errors,
+                touched,
+            }) => (
+                <SafeAreaView style={styles.container} >
+                    <View style={{ marginTop: 15 }}>
+                        <Pressable style={styles.buttonCancel} onPress={loginPage}>
+                            <Image
+                                source={require('../../assets/image/register/icon_X.png')} />
+                        </Pressable>
+                        <Text style={[styles.text, { textAlign: 'center' }]}>{t("authentication.findPassword")}</Text>
+                        <View style={styles.line}></View>
+
+                        <View style={[styles.content]}>
+
                             <View style={{ marginTop: 30 }}>
                                 <View style={[flexRowSpaceBetween]}>
                                     <View style={{ width: '70%' }}>
@@ -194,15 +202,17 @@ const VerifyEmail = () => {
                                         </Text>
                                     </Pressable>
                                 </View>
+                                {isEmailExits && <Text style={styles.textError}>{isEmailExits}</Text>}
                                 <View style={{ marginTop: 10 }}>
                                     <InputComponent
                                         placeholder={t('common.text.getCodePassword')}
                                         value={values.code}
                                         onChangeText={handleChange('code')}
                                         textError={errors.code}
+                                        isEditable={isGetCode}
                                     />
                                     {values.code && (
-                                        <Pressable onPress={handleCheckCode}>
+                                        <Pressable onPress={() => handleCheckCode(values)}>
                                             <Text
                                                 style={[
                                                     styles.verification,
@@ -217,8 +227,8 @@ const VerifyEmail = () => {
                                         </Pressable>
                                     )}
                                 </View>
-                                {renderMessage()}
-                                {checkCode && (
+                                {!isEmailExits && renderMessage()}
+                                {checkCode && !isEmailExits && (
                                     <Text
                                         style={{
                                             fontWeight: 700,
@@ -233,18 +243,21 @@ const VerifyEmail = () => {
                                             time={time}
                                             checkResetTime={checkResetTime}
                                             isTimerRunning={isTimerRunning}
+                                            setIsGetCode={handleGetCode}
                                         />
                                     </Text>
                                 )}
                             </View>
-                        )}
-                    </Formik>
-                </View>
-            </View>
-            <Pressable disabled={checkCode === 'success' ? false : true} onPress={handleSubmit} style={[styles.button, { backgroundColor: checkCode == 'success' ? colors.primary : colors.gray }]} >
-                <Text style={styles.textButton}>{t("common.text.confirm")}</Text>
-            </Pressable>
-        </SafeAreaView >
+
+
+                        </View>
+                    </View>
+                    <Pressable disabled={checkCode === 'success' ? false : true} onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: checkCode == 'success' ? colors.primary : colors.gray }]} >
+                        <Text style={styles.textButton}>{t("common.text.confirm")}</Text>
+                    </Pressable>
+                </SafeAreaView >
+            )}
+        </Formik>
     );
 };
 const styles = StyleSheet.create({

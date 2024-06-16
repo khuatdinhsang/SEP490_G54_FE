@@ -3,19 +3,22 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { SCREENS_NAME } from '../../navigator/const';
-import HeaderNavigatorComponent from '../../component/header-navigator';
-import { flexCenter, flexRow, flexRowSpaceBetween } from '../../styles/flex';
-import colors from '../../constant/color';
-import { IMAGE } from '../../constant/image';
-import InputNumber from '../../component/inputNumber';
+import { SCREENS_NAME } from '../../../../navigator/const';
+import HeaderNavigatorComponent from '../../../../component/header-navigator';
+import { flexCenter, flexRow, flexRowSpaceBetween } from '../../../../styles/flex';
+import * as Progress from 'react-native-progress';
+import colors from '../../../../constant/color';
+import { IMAGE } from '../../../../constant/image';
+import InputNumber from '../../../../component/inputNumber';
 import CheckBox from '@react-native-community/checkbox';
-import DialogSingleComponent from '../../component/dialog-single';
-
+import DialogSingleComponent from '../../../../component/dialog-single';
+import { WidthDevice } from '../../../../util/Dimenssion';
+import { paddingHorizontalScreen } from '../../../../styles/padding';
 interface dataType {
     id: number,
     value: string
 }
+const widthProgressBar = WidthDevice - 2 * paddingHorizontalScreen - 50;
 const FillRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { selectedItem } = route.params;
@@ -162,27 +165,30 @@ const FillRecord = ({ route }: any) => {
                     </View>
                     <View>
                         <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
-                        <View style={[flexRowSpaceBetween, styles.item]}>
-                            <View style={[flexRow]}>
-                                <Text style={styles.itemText}>{selectedItem.value}</Text>
-                                <View style={{ width: '50%', marginLeft: 10 }}>
-                                    <InputNumber
-                                        textRight='mg/DL'
-                                        value={glucozer}
-                                        keyboardType={"numeric"}
-                                        handleSetValue={handleSetGlucozer}
-                                    />
+                        <View style={styles.item}>
+                            <View style={flexRowSpaceBetween}>
+                                <View style={[flexRow]}>
+                                    <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                    <View style={{ width: '50%', marginLeft: 10 }}>
+                                        <InputNumber
+                                            textRight='mg/DL'
+                                            value={glucozer}
+                                            keyboardType={"numeric"}
+                                            handleSetValue={handleSetGlucozer}
+                                        />
+                                    </View>
+
                                 </View>
+                                <Pressable style={flexRow}>
+                                    <CheckBox
+                                        disabled={false}
+                                        value={isCheckedGlucozer}
+                                        onValueChange={toggleCheckBoxGlucozer}
+                                        tintColors={{ true: colors.primary, false: colors.gray }}
+                                    />
+                                    <Text style={styles.textUnKnown}>{t('recordHealthData.unknown')}</Text>
+                                </Pressable>
                             </View>
-                            <Pressable style={flexRow}>
-                                <CheckBox
-                                    disabled={false}
-                                    value={isCheckedGlucozer}
-                                    onValueChange={toggleCheckBoxGlucozer}
-                                    tintColors={{ true: colors.primary, false: colors.gray }}
-                                />
-                                <Text style={styles.textUnKnown}>{t('recordHealthData.unknown')}</Text>
-                            </Pressable>
                         </View>
                     </View>
                 </View>
@@ -205,6 +211,20 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         paddingBottom: 100
+    },
+    progressBarTextLeft: {
+        position: 'absolute',
+        top: 10,
+    },
+    progressBarTextRight: {
+        position: 'absolute',
+        top: 10,
+        right: 0,
+    },
+    progressBarTextCenter: {
+        position: 'absolute',
+        top: 10,
+        color: colors.primary,
     },
     header: {
         paddingHorizontal: 20,

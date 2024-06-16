@@ -28,6 +28,7 @@ const RegisterRules = ({ route }: any) => {
     const handleSubmit = async (): Promise<void> => {
         if (checked) {
             try {
+                console.log("31", data)
                 const res = await authService.register(data)
                 if (res.code === 201) {
                     navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)

@@ -6,8 +6,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {IMAGE} from '../../../constant/image';
-import {flexRowCenter} from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { flexRow, flexRowCenter } from '../../../styles/flex';
 import colors from '../../../constant/color';
 
 interface HospitalScheduleInputComponentProps {
@@ -19,14 +19,14 @@ interface HospitalScheduleInputComponentProps {
 const HospitalScheduleInputComponent = (
   props: HospitalScheduleInputComponentProps,
 ) => {
-  const {note, changeText, state} = props;
+  const { note, changeText, state } = props;
 
   const color = state ? colors.black : colors.gray_G04;
 
   return (
-    <View style={[styles.container, flexRowCenter]}>
+    <View style={[styles.container, flexRow]}>
       <TextInput style={styles.input} onChangeText={changeText} />
-      <Text style={[styles.text, {color}]}>{note}</Text>
+      <Text style={[styles.text, { color }]}>{note}</Text>
     </View>
   );
 };
@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 0,
+    width: '100%',
+    textAlign: 'center'
   },
   text: {
     fontWeight: '400',

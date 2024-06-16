@@ -3,6 +3,7 @@ import { authService } from '../services/auth';
 import { LoginData, LoginResponse } from '../constant/type/auth';
 import { ResponseForm } from '../constant/type';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface UserCounterStep {
   date: string; // YYYY-MM-DD
@@ -18,6 +19,11 @@ export const loginUser = createAsyncThunk(
   async (user: LoginData, { rejectWithValue }) => {
     try {
       const res = await authService.login(user);
+      if (res.code === 200) {
+        await AsyncStorage.setItem('accessToken', res.result?.accessToken);
+        await AsyncStorage.setItem('idUser', res.result?.idUser.toString());
+        await AsyncStorage.setItem('refreshToken', res.result?.refreshToken);
+      }
       return res;
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
@@ -38,7 +44,7 @@ const userSlice = createSlice({
   initialState: {
     id: undefined,
     counterStep: [],
-    token: ""
+    token: "",
   },
   reducers: {
     initUser: (state: User, action: PayloadAction<InitialState>) => {
@@ -54,8 +60,7 @@ const userSlice = createSlice({
     builder.addCase(
       loginUser.fulfilled,
       (state, action: PayloadAction<ResponseForm<LoginResponse>>) => {
-        console.log("54", action.payload);
-        state.token = action.payload?.result.token;
+        state.token = action.payload?.result.accessToken;
       }
     );
     builder.addCase(loginUser.rejected, (state, action) => {

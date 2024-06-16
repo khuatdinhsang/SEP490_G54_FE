@@ -115,9 +115,10 @@ const styles = StyleSheet.create({
         color: colors.black,
     },
     unitInput: {
-        width: '70%',
+        width: '100%',
         height: 56,
-        textAlign: 'center'
+        position: 'absolute',
+        paddingLeft: '30%',
     },
     bridge: {
         position: 'absolute',

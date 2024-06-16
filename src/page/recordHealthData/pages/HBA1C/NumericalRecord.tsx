@@ -3,11 +3,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SCREENS_NAME } from '../../navigator/const';
-import HeaderNavigatorComponent from '../../component/header-navigator';
-import { flexCenter, flexRow, flexRowSpaceBetween } from '../../styles/flex';
-import colors from '../../constant/color';
-import { IMAGE } from '../../constant/image';
+import { SCREENS_NAME } from '../../../../navigator/const';
+import HeaderNavigatorComponent from '../../../../component/header-navigator';
+import { flexCenter, flexRow, flexRowSpaceBetween } from '../../../../styles/flex';
+import colors from '../../../../constant/color';
+import { IMAGE } from '../../../../constant/image';
 
 interface DataType {
     id: number;

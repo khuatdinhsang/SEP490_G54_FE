@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import * as Progress from 'react-native-progress';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexRow, flexRowSpaceBetween} from '../../../styles/flex';
-import {paddingHorizontalScreen} from '../../../styles/padding';
-import {WidthDevice} from '../../../util/Dimenssion';
+import { IMAGE } from '../../../constant/image';
+import { flexRow, flexRowSpaceBetween } from '../../../styles/flex';
+import { paddingHorizontalScreen } from '../../../styles/padding';
+import { WidthDevice } from '../../../util/Dimenssion';
 import Guide from './GuideDown';
 import CounterStepModule from '../../../native-module/counter-step.module';
 
@@ -15,14 +15,14 @@ interface ShoesProps {
 }
 const widthProgressBar = WidthDevice - 2 * paddingHorizontalScreen - 50;
 
-const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
+const ShoesComponent = ({ progressBar, guide }: ShoesProps) => {
   const [counterStep, setCounterStep] = useState<number>(0);
 
   // Interval to update the step count every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       const val = CounterStepModule.stepsSinceLastReboot();
-      console.log('[CounterStepVal]:', val);
+      // console.log('[CounterStepVal]:', val);
       setCounterStep(val);
     }, 5000);
     return () => clearInterval(interval);
@@ -43,7 +43,7 @@ const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
       <View style={[styles.shoeUnit]}>
         <View style={flexRowSpaceBetween}>
           <Text style={styles.shoeTextLeft}>
-            <Text style={{color: colors.black, fontWeight: '700'}}>
+            <Text style={{ color: colors.black, fontWeight: '700' }}>
               {counterStep}
             </Text>
             /200 걸음
@@ -52,7 +52,7 @@ const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
         </View>
         <View style={[flexRow, styles.shoeContainerKcal]}>
           <Text style={styles.shoeTextKcal}>
-            <Text style={{fontWeight: '700'}}>123</Text>kcal 소모
+            <Text style={{ fontWeight: '700' }}>123</Text>kcal 소모
           </Text>
           <Image source={IMAGE.HOME.SHOE} />
         </View>
@@ -71,7 +71,7 @@ const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
           <Text
             style={[
               styles.progressBarTextCenter,
-              {left: widthProgressBar * progressBar - 10},
+              { left: widthProgressBar * progressBar - 10 },
             ]}>
             50
           </Text>
@@ -82,7 +82,7 @@ const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {paddingHorizontal: 10, paddingVertical: 10},
+  container: { paddingHorizontal: 10, paddingVertical: 10 },
   unitTitle: {
     marginLeft: 2,
     color: colors.black,

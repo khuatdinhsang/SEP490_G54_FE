@@ -30,8 +30,11 @@ const Login = () => {
     const loginSchema = yup.object().shape({
         email: yup
             .string()
-            .email(t("placeholder.err.email"))
-            .required(t("placeholder.err.blank")),
+            .required(
+                t("placeholder.err.blank")
+            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                t("placeholder.err.email")
+            ),
         password: yup
             .string()
             .required(t("placeholder.err.blank"))
@@ -48,16 +51,18 @@ const Login = () => {
     const clearPassword = (setFieldValue: (field: string, value: any) => void) => {
         setFieldValue('password', '');
     };
-    const handleSubmit = async (values: LoginValues): Promise<void> => {
+    const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
             const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
             if (res.code == 200) {
-                await AsyncStorage.setItem('accessToken', res.result?.token);
+                resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
             if (error?.code == 400) {
+                setMessageError(error.message)
+            } if (error?.code == 401) {
                 setMessageError(error.message)
             }
         } finally {
@@ -81,7 +86,7 @@ const Login = () => {
         setFieldValue(field, text);
         setMessageError(''); // Clear the error message
     };
-
+    console.log()
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -89,7 +94,7 @@ const Login = () => {
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     validationSchema={loginSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={(values, { resetForm }) => handleSubmit(values, resetForm)}
                 >
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => {
                         return (
