@@ -56,6 +56,7 @@ const RegisterStep2 = ({ route }: any) => {
     const [isEmailExits, setIsEmailExits] = useState<string>("");
     const [codeResponse, setCodeResponse] = useState<string>("")
     const { valuesStep1 } = route.params;
+    const [isGetCode, setIsGetCode] = useState<boolean>(false)
     useEffect(() => {
         const isValid = isValidDateForYearMonthDay(year, month, day);
         setIsValidDate(isValid);
@@ -108,6 +109,12 @@ const RegisterStep2 = ({ route }: any) => {
     };
 
     const handleResetTime = async (values: RegisterValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
+        setIsGetCode(true)
+        //resetTime
+        setCheckResetTime(pre => !pre);
+        setTimeUp(false)
+        setCheckCode("loading")
+        clearField('code', setFieldValue)
         try {
             const res = await authService.verifyEmailApi(values.email);
             console.log("118", res)
@@ -115,12 +122,7 @@ const RegisterStep2 = ({ route }: any) => {
                 setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
-                setCheckCode("loading")
-                //resetTime
-                setCheckResetTime(pre => !pre);
-                setTimeUp(false)
                 setIsEmailExits("")
-
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {
@@ -174,8 +176,11 @@ const RegisterStep2 = ({ route }: any) => {
     const forgotPasswordSchema = yup.object().shape({
         email: yup
             .string()
-            .email(t('placeholder.err.email'))
-            .required(t('placeholder.err.blank')),
+            .required(
+                t("placeholder.err.blank")
+            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                t("placeholder.err.email")
+            ),
         code: yup.string().required(t('placeholder.err.blank')),
     });
     const handleCheckCode = async (values: RegisterValues): Promise<void> => {
@@ -189,7 +194,7 @@ const RegisterStep2 = ({ route }: any) => {
     };
     const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
         setFieldValue(field, text);
-        setIsEmailExits(''); // Clear the error message
+        // setIsEmailExits(''); // Clear the error message
     };
 
     const renderMessage = () => {
@@ -229,6 +234,9 @@ const RegisterStep2 = ({ route }: any) => {
                 return null;
         }
     };
+    const handleGetCode = (values: boolean) => {
+        setIsGetCode(values)
+    }
     return (
         <Formik
             initialValues={{ email: '', code: '' }}
@@ -428,6 +436,7 @@ const RegisterStep2 = ({ route }: any) => {
                                             value={values.code}
                                             onChangeText={handleChange('code')}
                                             textError={errors.code}
+                                            isEditable={isGetCode}
                                         />
                                         {values.code && (
                                             <Pressable onPress={() => handleCheckCode(values)}>
@@ -445,8 +454,8 @@ const RegisterStep2 = ({ route }: any) => {
                                             </Pressable>
                                         )}
                                     </View>
-                                    {renderMessage()}
-                                    {checkCode && (
+                                    {!isEmailExits && renderMessage()}
+                                    {checkCode && !isEmailExits && (
                                         <Text
                                             style={{
                                                 fontWeight: 700,
@@ -461,6 +470,7 @@ const RegisterStep2 = ({ route }: any) => {
                                                 time={time}
                                                 checkResetTime={checkResetTime}
                                                 isTimerRunning={isTimerRunning}
+                                                setIsGetCode={handleGetCode}
                                             />
                                         </Text>
                                     )}

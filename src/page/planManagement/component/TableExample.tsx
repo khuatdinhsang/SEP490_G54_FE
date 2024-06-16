@@ -19,8 +19,8 @@ const TableExample = () => {
         ],
         [
             t("planManagement.text.vegetables"),
-            [`${t("planManagement.text.examplesVegetables")}\n${t("planManagement.text.apple/melon")}\n${t("planManagement.text.tangerine")}\n${t("planManagement.text.grape")}\n${t("planManagement.text.cannedFruit")}`],
-            [`1${t("planManagement.text.disk")}\n1/2${t("planManagement.text.disk")}\n1${t("planManagement.text.fruit")}\n15${t("planManagement.text.fruit")}\n1/2${t("planManagement.text.disk")}`]
+            `${t("planManagement.text.examplesVegetables")}\n${t("planManagement.text.apple/melon")}\n${t("planManagement.text.tangerine")}\n${t("planManagement.text.grape")}\n${t("planManagement.text.cannedFruit")}`,
+            `1${t("planManagement.text.disk")}\n1/2${t("planManagement.text.disk")}\n1${t("planManagement.text.fruit")}\n15${t("planManagement.text.fruit")}\n1/2${t("planManagement.text.disk")}`
         ],
         [
             t("planManagement.text.driedFruit"),
@@ -41,9 +41,9 @@ const TableExample = () => {
                 <Rows
                     style={{ backgroundColor: colors.gray_G01 }}
                     flexArr={[1, 2, 1]}
+                    borderStyle={styles.border}
                     data={tableData}
                     textStyle={styles.text}
-                    borderStyle={{ borderWidth: 1, borderColor: colors.gray_G03 }}
                 />
             </Table>
         </View>
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 0
     },
+    border: { borderWidth: 1, borderColor: colors.gray_G03 },
     textHeader: {
         textAlign: 'center',
         color: colors.primary,

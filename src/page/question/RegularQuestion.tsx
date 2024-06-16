@@ -14,7 +14,7 @@ const RegularQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const goBackPreviousPage = () => {
-
+        navigation.goBack()
     }
     const nextPage = () => {
 

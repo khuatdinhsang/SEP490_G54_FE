@@ -1,15 +1,19 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexRow, flexRowSpaceAround} from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { flexRow, flexRowSpaceAround } from '../../../styles/flex';
 import Guide from './GuideDown';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SCREENS_NAME } from '../../../navigator/const';
 
 interface CategoryProps {
   guide: boolean;
 }
 
-const CategoryComponent = ({guide}: CategoryProps) => {
+const CategoryComponent = ({ guide }: CategoryProps) => {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   return (
     <View style={styles.container}>
       <View style={flexRow}>
@@ -55,10 +59,12 @@ const CategoryComponent = ({guide}: CategoryProps) => {
             <Text style={styles.categoryItemText}>건강정보 학습</Text>
           </View>
           <View>
-            <Image
-              source={IMAGE.HOME.CATEGORY5}
-              style={styles.categoryItemIcon}
-            />
+            <Pressable onPress={() => navigation.navigate(SCREENS_NAME.QUESTION.MAIN)}>
+              <Image
+                source={IMAGE.HOME.CATEGORY5}
+                style={styles.categoryItemIcon}
+              />
+            </Pressable>
             <Text style={styles.categoryItemText}>문의작성</Text>
           </View>
           <View>

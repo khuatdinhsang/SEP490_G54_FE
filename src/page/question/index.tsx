@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../navigator/const';
@@ -8,13 +8,56 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import { flexCenter, flexRow } from '../../styles/flex';
 import colors from '../../constant/color';
 import { IMAGE } from '../../constant/image';
+import { axiosClient } from '../../config/axiosClient';
+import { authService } from '../../services/auth';
+import { questionService } from '../../services/question';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const Question = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [listQuestion, setListQuestion] = useState([])
+    const [existedQuestion, setExistedQuestion] = useState<boolean>(false)
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack();
     }
+    useEffect(() => {
+        const fetchListQuestion = async () => {
+            try {
+                const idUser = await AsyncStorage.getItem('idUser');
+                const accessToken = await AsyncStorage.getItem('accessToken');
+                console.log("11")
+                const response = await axios.get(`http://10.0.2.2:8080/api/questions/user?userId=${Number(idUser)}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                // const res = await questionService.getListQuestionByUser(Number(idUser), accessToken)
+                console.log("12", response.data)
+                if (response.data.code == 200) {
+                    console.log("vao day")
+                }
+            } catch (error: any) {
+                // if (error?.code === 400 || error?.code === 401) {
+                //     setMessageError(error.message)
+                // }
+                // else {
+                //     setMessageError("Unexpected error occurred.");
+                // }
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+        }
+        fetchListQuestion()
+    }, [])
+    // console.log("44", messageError)
+
     const nextPage = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.ADD);
     }

@@ -2,6 +2,11 @@ export interface LoginData {
     email: string;
     password: string;
 }
+export interface VerifyForgetPassword {
+    email: string,
+    code: string,
+    password: string;
+}
 export interface RegisterData {
     email: string;
     password: string;
@@ -21,8 +26,9 @@ export interface VerifyEmailResponse {
 
 export interface LoginResponse {
     type: 'ADMIN' | 'USER' | 'MEDICAL_SPECIALIST' | 'DELETED';
-    token: string;
+    accessToken: string;
     idUser: number;
+    refreshToken: string
 }
 export interface RegisterResponse {
     code: number,

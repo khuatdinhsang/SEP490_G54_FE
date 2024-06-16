@@ -5,9 +5,10 @@ interface CountdownProps {
     setTimeUp: Function,
     time: number,
     checkResetTime: boolean,
-    isTimerRunning: boolean
+    isTimerRunning: boolean,
+    setIsGetCode: (values: boolean) => void
 }
-const CountdownTimer = ({ setTimeUp, time, checkResetTime, isTimerRunning }: CountdownProps) => {
+const CountdownTimer = ({ setTimeUp, time, checkResetTime, isTimerRunning, setIsGetCode }: CountdownProps) => {
     const [remainingTime, setRemainingTime] = useState(time * 60); // Convert minutes to seconds
 
     useEffect(() => {
@@ -21,7 +22,10 @@ const CountdownTimer = ({ setTimeUp, time, checkResetTime, isTimerRunning }: Cou
                 if (prevTime > 0 && isTimerRunning) {
                     return prevTime - 1;
                 } else {
-                    if (prevTime === 0) setTimeUp(true);
+                    if (prevTime === 0) {
+                        setIsGetCode(false)
+                        setTimeUp(true)
+                    }
                     clearInterval(interval);
                     return prevTime;
                 }

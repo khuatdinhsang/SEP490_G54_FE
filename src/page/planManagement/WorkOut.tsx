@@ -30,8 +30,8 @@ const WorkOut = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const [isChecked, setIsChecked] = useState(false);
-    const [hour, setHours] = useState<number>();
-    const [minute, setMinutes] = useState<number>();
+    const [hour, setHours] = useState<number>(0);
+    const [minute, setMinutes] = useState<number>(0);
     const [showHourScroll, setShowHourScroll] = useState(false);
     const [showMinuteScroll, setShowMinuteScroll] = useState(false);
     const handleHourChange = (newHour: number) => setHours(newHour);
@@ -101,6 +101,9 @@ const WorkOut = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            {(showMinuteScroll || showHourScroll) && (
+                <View style={styles.boxShadow}></View>
+            )}
             <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
@@ -232,6 +235,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 16,
         marginBottom: 10,
+    },
+    boxShadow: {
+        width: WidthDevice,
+        position: 'absolute',
+        height: '100%',
+        backgroundColor: colors.black,
+        opacity: 0.6,
+        zIndex: 100,
     },
     detailExample: {
         marginLeft: 10,

@@ -76,7 +76,7 @@ const SelectDate = (props: InputComponentProps) => {
                                     <View
                                         style={[
                                             flexRowCenter,
-                                            { width: type === 'year' || type === 'hour' || type === 'minute' ? '46%' : '30%', flexWrap: 'wrap' },
+                                            { width: type === 'year' || type === 'hour' || type === 'minute' ? '48%' : '30%', flexWrap: 'wrap' },
                                         ]}>
                                         {Array.from(
                                             { length },
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: '400',
+        padding: 10
     },
     centeredView: {
         flex: 1,
@@ -210,7 +211,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.gray,
     },
     itemModal: {
-        padding: 10,
         margin: 5,
         borderRadius: 8,
     },

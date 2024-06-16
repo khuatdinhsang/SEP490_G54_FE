@@ -17,7 +17,8 @@ interface InputComponentProps {
   styleInput?: StyleProp<TextStyle>;
   multiline?: boolean
   textAlignVertical?: 'auto' | 'top' | 'bottom' | 'center',
-  heightLine?: number
+  heightLine?: number,
+  isEditable?: boolean,
 }
 
 const InputComponent = (props: InputComponentProps) => {
@@ -35,7 +36,8 @@ const InputComponent = (props: InputComponentProps) => {
     styleInput,
     multiline,
     textAlignVertical,
-    heightLine
+    heightLine,
+    isEditable,
   } = props;
 
   return (
@@ -50,7 +52,7 @@ const InputComponent = (props: InputComponentProps) => {
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={colors.gray_G04}
-          style={[styleInput, styles.text, isFocused && styles.textFocused, multiline && { paddingVertical: 10, height: heightLine, textAlignVertical: textAlignVertical || 'top' }]}
+          style={[styleInput, styles.text, (isFocused || isEditable) && styles.textFocused, multiline && { paddingVertical: 10, height: heightLine, textAlignVertical: textAlignVertical || 'top' }]}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           value={value}
@@ -58,6 +60,7 @@ const InputComponent = (props: InputComponentProps) => {
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
+          editable={isEditable}
         />
         {isIconRight && value && (
           <Pressable style={styles.iconRight} onPress={onPressIconRight}>

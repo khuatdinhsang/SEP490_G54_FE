@@ -15,27 +15,47 @@ import 'moment/locale/ko';
 import moment from 'moment';
 import { paddingHorizontalScreen } from '../../styles/padding';
 import CountdownTimer from '../../component/countDownTime';
+import { authService } from '../../services/auth';
+import axios from 'axios';
+import InputComponent from '../../component/input';
+interface typeValues {
+    password: string,
+    confirmPassword: string
+}
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ route }: any) => {
+    const { email, code } = route.params;
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-
+    const [error, setError] = useState<string>("")
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
-    const handleSubmit = () => {
-        navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+    const handleSubmit = async (values: typeValues): Promise<void> => {
+        const data = { password: values.password, email, code }
+        try {
+            const res = await authService.verifyForgetPassword(data);
+            console.log("118", res)
+            if (res.code == 200) {
+                navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+            }
+        } catch (error: any) {
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.data.code == 400) {
+                    setError(error.response.data.message)
+                }
+            }
+        }
     }
+
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
         setFieldValue(field, '');
     };
     const fotgotPasswordSchema = yup.object().shape({
-        password: yup
-            .string()
-            .required(
-                t("placeholder.err.blank")
-            ),
-
+        password: yup.string().required(t("placeholder.err.blank")).matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            t("placeholder.err.passwordCorrect")
+        ),
         confirmPassword: yup
             .string()
             .required(
@@ -44,6 +64,10 @@ const ForgotPassword = () => {
             .oneOf([yup.ref('password')], t("placeholder.err.notMatch"))
         ,
     });
+    const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
+        setFieldValue(field, text);
+        // setIsEmailExits(''); // Clear the error message
+    };
     return (
         <View>
             <SafeAreaView style={styles.container} >
@@ -62,48 +86,33 @@ const ForgotPassword = () => {
                                 <Text style={[styles.text, { textAlign: 'center' }]}>{t("authentication.findPassword")}</Text>
                                 <View style={styles.line}></View>
                                 <View style={[styles.content]}>
-                                    <View>
-                                        <Text style={styles.text}>{t("common.text.resetPassword")}</Text>
-                                        <View style={[flexRow, { marginTop: 10 }]}>
-                                            <View style={{ width: '100%' }}>
-                                                <TextInput
-                                                    style={[styles.field, { borderColor: errors.password && touched.password ? colors.primary : colors.gray }]}
-                                                    placeholder={t("placeholder.field.resetPassword")}
-                                                    value={values.password}
-                                                    onChangeText={handleChange('password')}
-                                                    onBlur={handleBlur('password')}
-                                                    secureTextEntry={true}
-                                                />
-                                                {values.password &&
-                                                    <Pressable onPress={() => clearField('password', setFieldValue)}>
-                                                        <Image style={styles.iconCancel} source={require('../../assets/image/login/Union.png')} />
-                                                        <View style={styles.backGrIcon}></View>
-                                                    </Pressable>
-                                                }
-                                            </View>
-                                        </View>
-                                        {errors.password && touched.password && <Text style={styles.textError}>{errors.password}</Text>}
-                                        <View style={{ marginVertical: 10 }}>
-                                            <Text style={[styles.text, { marginBottom: 10 }]}>{t("common.text.confirmPassword")}</Text>
-                                            <TextInput
-                                                style={[styles.field, { borderColor: errors.confirmPassword && touched.confirmPassword ? colors.primary : colors.gray, backgroundColor: colors.white }]}
-                                                placeholder={t("placeholder.field.confirmResetPassword")}
-                                                value={values.confirmPassword}
-                                                onChangeText={handleChange('confirmPassword')}
-                                                onBlur={handleBlur('confirmPassword')}
-                                                secureTextEntry={true}
-                                            />
-                                            {values.confirmPassword &&
-                                                <Pressable onPress={() => clearField('confirmPassword', setFieldValue)}>
-                                                    <Image style={styles.iconCancel} source={require('../../assets/image/login/Union.png')} />
-                                                    <View style={styles.backGrIcon}></View>
-                                                </Pressable>
-                                            }
-                                        </View>
-                                        {errors.confirmPassword && touched.confirmPassword && <Text style={styles.textError}>{errors.confirmPassword}</Text>}
+                                    <InputComponent
+                                        placeholder={t("placeholder.field.resetPassword")}
+                                        onPressIconRight={() => clearField('password', setFieldValue)}
+                                        isIconRight={true}
+                                        value={values.password}
+                                        onChangeText={handleChangeText('password', setFieldValue)}
+                                        label={t('common.text.resetPassword')}
+                                        textError={errors.password}
+                                        secureTextEntry={true}
+                                    />
+                                    <View style={{ marginVertical: 10 }}>
+                                        <InputComponent
+                                            placeholder={t("placeholder.field.confirmResetPassword")}
+                                            onPressIconRight={() => clearField('confirmPassword', setFieldValue)}
+                                            isIconRight={true}
+                                            value={values.confirmPassword}
+                                            onChangeText={handleChangeText('confirmPassword', setFieldValue)}
+                                            label={t('common.text.confirmPassword')}
+                                            textError={errors.confirmPassword}
+                                            secureTextEntry={true}
+                                        />
                                     </View>
+                                    {errors.confirmPassword && touched.confirmPassword && <Text style={styles.textError}>{errors.confirmPassword}</Text>}
                                 </View>
+                                {error && <Text style={[styles.textError, { paddingHorizontal: 20 }]}>{error}</Text>}
                             </View>
+
                             <Pressable disabled={errors.password || errors.confirmPassword ? true : false} onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: (errors.password || errors.confirmPassword || !values.password) ? colors.gray : colors.primary }]} >
                                 <Text style={styles.textButton}>{t("common.text.confirm")}</Text>
                             </Pressable>
