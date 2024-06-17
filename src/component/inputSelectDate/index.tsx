@@ -45,7 +45,7 @@ const SelectDate = (props: InputComponentProps) => {
             <Pressable onPress={toggleModalScroll}>
                 <View style={styles.itemDate}>
                     <Text style={styles.date}>{value}</Text>
-                    <Text style={styles.textDate}>{text}</Text>
+                    <Text style={[styles.textDate, { color: value ? colors.black : colors.gray_G04 }]}>{text}</Text>
                 </View>
             </Pressable>
             {showScroll && (
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 1000,
         right: 15,
-        color: colors.black,
+
     },
     modalView: {
         backgroundColor: colors.white,

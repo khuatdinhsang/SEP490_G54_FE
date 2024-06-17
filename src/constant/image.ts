@@ -77,7 +77,8 @@ export const IMAGE = {
     CHART: require('assets/image/recordData/chart.png'),
     HEART_ORANGE: require('assets/image/recordData/heart_orange.png'),
     ICON_CHECK: require('assets/image/recordData/icon_check.png'),
-    ICON_CHECK_ORANGE: require('assets/image/recordData/icon_check_orange.png'),
+    ICON_CHECK_ORANGE: require('assets/image/recordData/icon_check_orange1.png'),
     ICON_FACE_SMILES: require('assets/image/recordData/icon_face.png'),
+    CALENDAR: require('assets/image/recordData/Category.png'),
   },
 };

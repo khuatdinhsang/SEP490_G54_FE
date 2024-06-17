@@ -12,10 +12,13 @@ import * as yup from "yup";
 import InputComponent from '../../component/input';
 import DialogSingleComponent from '../../component/dialog-single';
 import { IMAGE } from '../../constant/image';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { questionService } from '../../services/question';
 
 const AddQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [messageError, setMessageError] = useState<string>("")
     const [isShowModal, setIsShowModal] = useState<boolean>(false)
     const goBackPreviousPage = () => {
         navigation.goBack();
@@ -31,9 +34,28 @@ const AddQuestion = () => {
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
         setFieldValue(field, '');
     };
-    const handleSubmit = (values: any) => {
-        setIsShowModal(true)
-        console.log("dsa", values)
+    const handleSubmit = async (values: { title: string, content: string }): Promise<any> => {
+        const idUser = await AsyncStorage.getItem('idUser');
+        console.log("39", idUser)
+        const transformData = {
+            "appUserId": Number(idUser),
+            typeUserQuestion: "ASSIGN_ADMIN",
+            title: values.title,
+            body: values.content
+        }
+        try {
+            const res = await questionService.create(transformData)
+            console.log("Res", res)
+            if (res.code === 200) {
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        // setIsShowModal(true)
     }
     const navigateQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.LIST)

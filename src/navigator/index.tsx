@@ -1,6 +1,6 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import {SCREENS_NAME, SCREENS_STACK} from './const';
-import {useEffect, useState} from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { SCREENS_NAME, SCREENS_STACK } from './const';
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../component/loading';
 
@@ -26,7 +26,7 @@ const Navigator = () => {
   }
   //  initialRouteName={initialRoute}
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator initialRouteName={SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART} screenOptions={{ headerShown: false }}>
       {SCREENS_STACK.map(screen => (
         <Stack.Screen
           key={screen.name}

@@ -14,6 +14,7 @@ import CheckBox from '@react-native-community/checkbox';
 import DialogSingleComponent from '../../../../component/dialog-single';
 import { WidthDevice } from '../../../../util/Dimenssion';
 import { paddingHorizontalScreen } from '../../../../styles/padding';
+import RangeBlock from '../../../../component/range-block';
 interface dataType {
     id: number,
     value: string

@@ -8,10 +8,10 @@ const axiosClient = axios.create({
 });
 axiosClient.interceptors.request.use(
     async (config: any) => {
-        // const accessToken = await AsyncStorage.getItem('accessToken');
-        // if (accessToken) {
-        //     config.headers['Authorization'] = `Bearer ${accessToken}`;
-        // }
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        if (accessToken) {
+            config.headers['Authorization'] = `Bearer ${accessToken}`;
+        }
         return config;
     },
     (error) => {

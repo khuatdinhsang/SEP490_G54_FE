@@ -3,12 +3,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import HeaderNavigatorComponent from '../../../component/header-navigator';
-import colors from '../../../constant/color';
-import { flexCenter, flexRow } from '../../../styles/flex';
-import { IMAGE } from '../../../constant/image';
-import { HeightDevice } from '../../../util/Dimenssion';
-import { SCREENS_NAME } from '../../../navigator/const';
+import { SCREENS_NAME } from '../../../../navigator/const';
+import HeaderNavigatorComponent from '../../../../component/header-navigator';
+import { flexCenter, flexRow } from '../../../../styles/flex';
+import colors from '../../../../constant/color';
+import { IMAGE } from '../../../../constant/image';
+import { HeightDevice } from '../../../../util/Dimenssion';
+
 
 const NumericalRecordChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();

@@ -7,36 +7,45 @@ import HeaderNavigatorComponent from '../../../../component/header-navigator';
 import { flexCenter, flexRow, flexRowCenter } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import InputNumber from '../../../../component/inputNumber';
+import ItemAdvice from '../../../planManagement/component/ItemAdvice';
+import Advice from '../../component/Advice';
 import { SCREENS_NAME } from '../../../../navigator/const';
 
-const BloodPressure = () => {
+type dataType = {
+    id: number;
+    name: string;
+};
+const PositiveMindRecord = () => {
+
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [minBloodPressure, setMinBloodPressure] = useState<string>("")
-    const [maxBloodPressure, setMaxBloodPressure] = useState<string>("")
+    const initData = [
+        { id: 1, name: t("planManagement.advice.worry") },
+        { id: 2, name: t("planManagement.advice.felling") },
+        { id: 3, name: t("planManagement.advice.share") },
+        { id: 4, name: t("planManagement.advice.regret") },
+        { id: 5, name: t("planManagement.advice.negativeMind") },
+        { id: 6, name: t("planManagement.advice.negativeMind") },
+        { id: 7, name: t("planManagement.advice.negativeMind") },
+        { id: 8, name: t("planManagement.advice.negativeMind") },
+    ];
+    const [data, setData] = useState<dataType[]>(initData);
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const goBackPreviousPage = () => {
-        navigation.goBack();
-    }
-    const viewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART)
+        navigation.goBack()
     }
     const nextPage = () => {
-        viewChart()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART)
     }
-    const handleSetMaxBloodPressure = (value: string) => {
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
-            setMaxBloodPressure(value);
-        }
-    }
-    const handleSetMinBloodPressure = (value: string) => {
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
-            setMinBloodPressure(value);
-        }
-    }
-
-
+    const handleSelectItem = (itemId: number) => {
+        setSelectedItems((prevSelectedItems) => {
+            if (prevSelectedItems.includes(itemId)) {
+                return prevSelectedItems.filter(item => item !== itemId);
+            } else {
+                return [...prevSelectedItems, itemId];
+            }
+        });
+    };
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -44,56 +53,40 @@ const BloodPressure = () => {
                     <HeaderNavigatorComponent
                         isIconLeft={true}
                         textRight={t("common.text.next")}
-                        text={t('common.diseases.highBlood')}
+                        text={t('planManagement.text.positiveMind')}
                         handleClickArrowLeft={goBackPreviousPage}
                     />
                 </View>
                 <View style={flexRow}>
                     <Pressable style={[styles.navigate, styles.active]}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.bloodPressureProfile')}
+                            {t('recordHealthData.positiveMindProfile')}
                         </Text>
                     </Pressable>
-                    <Pressable onPress={viewChart} style={styles.navigate}>
+                    <Pressable
+                        onPress={nextPage}
+                        style={styles.navigate}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
                             {t('recordHealthData.viewChart')}
                         </Text>
                     </Pressable>
                 </View>
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                    <Text style={styles.title}>{t('recordHealthData.minMaxPressure')}</Text>
-                    <View style={[flexRowCenter, styles.item]}>
-                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('common.text.max')}</Text>
-                        <View style={{ width: "60%", marginLeft: 20 }}>
-                            <InputNumber
-                                textRight='mmHG'
-                                value={maxBloodPressure}
-                                keyboardType={"numeric"}
-                                handleSetValue={handleSetMaxBloodPressure}
-                                styleInput={{ paddingLeft: 50 }}
-                            />
-                        </View>
-                    </View>
-                    <View style={[flexRowCenter, styles.item]}>
-                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('common.text.min')}</Text>
-                        <View style={{ width: "60%", marginLeft: 20 }}>
-                            <InputNumber
-                                textRight='mmHG'
-                                value={minBloodPressure}
-                                keyboardType={"numeric"}
-                                handleSetValue={handleSetMinBloodPressure}
-                                styleInput={{ paddingLeft: 50 }}
-                            />
-                        </View>
-                    </View>
+                    <Text style={styles.title}> {t('recordHealthData.selectEveryThing')}</Text>
+                    {data.map((item: dataType) => {
+                        const isSelected = selectedItems.includes(item.id);
+                        return (
+                            <Advice key={item.id} item={item} handleSelectItem={handleSelectItem} isSelected={isSelected} />
+                        );
+                    })}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={minBloodPressure && maxBloodPressure ? false : true}
+                    disabled={selectedItems.length > 0 ? false : true}
                     onPress={nextPage}
-                    style={[flexCenter, styles.button, { backgroundColor: minBloodPressure && maxBloodPressure ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: minBloodPressure && maxBloodPressure ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
+                    style={[flexCenter, styles.button, { backgroundColor: selectedItems.length > 0 ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: selectedItems.length > 0 ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
@@ -144,15 +137,11 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     title: {
-        fontWeight: '500',
+        fontWeight: '700',
         fontSize: 18,
-        color: colors.gray_G07
+        color: colors.gray_G07,
+        textAlign: "center",
+        marginBottom: 20
     },
-    item: {
-        paddingVertical: 24,
-        backgroundColor: colors.gray_G01,
-        borderRadius: 12,
-        marginTop: 20,
-    }
 })
-export default BloodPressure
+export default PositiveMindRecord

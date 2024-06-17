@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
-import {IMAGE} from '../../constant/image';
-import {flexCenter, flexRowCenter} from '../../styles/flex';
+import { IMAGE } from '../../constant/image';
+import { flexCenter, flexRowCenter } from '../../styles/flex';
 
 const ratio = 140 / 300;
 const midPoint = 85;
@@ -11,7 +11,7 @@ interface RangeBlockProps {
 }
 
 const RangeBlock = (props: RangeBlockProps) => {
-  const {value} = props;
+  const { value } = props;
   const [dynamicWidth, setDynamicWidth] = useState<number | undefined>();
   const [textWidth, setTextWidth] = useState<number | undefined>();
   const [rangeWidth, setRangeWidth] = useState<number>(0);
@@ -41,19 +41,19 @@ const RangeBlock = (props: RangeBlockProps) => {
     <View
       style={[styles.contain, flexRowCenter]}
       onLayout={event => {
-        const {x, y, width, height} = event.nativeEvent.layout;
+        const { x, y, width, height } = event.nativeEvent.layout;
         setDynamicWidth(width);
       }}>
-      <View style={[styles.rangeWrapper, {width: rangeWidth}]}>
+      <View style={[styles.rangeWrapper, { width: rangeWidth }]}>
         <Text style={styles.textLeft}>70</Text>
         <Text style={styles.textRight}>100</Text>
         <View
-          style={[styles.textMainWrapper, flexCenter, {left: spaceFromMid}]}>
+          style={[styles.textMainWrapper, flexCenter, { left: spaceFromMid }]}>
           <Text
             style={[styles.textMain]}
             numberOfLines={1}
             onLayout={event => {
-              const {x, y, width, height} = event.nativeEvent.layout;
+              const { x, y, width, height } = event.nativeEvent.layout;
               setTextWidth(width);
             }}>
             {value ?? '?'}
