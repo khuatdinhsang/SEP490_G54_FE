@@ -9,7 +9,6 @@ export const questionService = {
         return axiosClient.get(`${endpoint}/user?userId=${id}`);
     },
     create(data: questionData): Promise<VerifyEmailResponse> {
-        console.log("12", data)
         return axiosClient.post(`${endpoint}`, data);
     },
 };

@@ -27,11 +27,12 @@ const Question = () => {
                 const res = await questionService.getListQuestionByUser(Number(idUser))
                 console.log("Res", res)
                 if (res.code === 200) {
+                    console.log("re", res)
                     if (res.result.length === 0) {
                         console.log("vao day")
                         setListQuestion([])
                     } else {
-                        // setListQuestion(res.result)
+                        setListQuestion(res.result)
                     }
                 }
             } catch (error: any) {

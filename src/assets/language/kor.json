@@ -228,7 +228,9 @@
     "questionSuccess": "글 등록이 완료되었습니다.",
     "answerResponse": "문의 답변",
     "answer": "답변",
-
+    "typeQuestion": "질문의 종류",
+    "admin": "관리자",
+    "medicalSpecialist": "의료 전문가",
     "placeholder": {
       "title": "제목을 입력해주세요",
       "content": "문의내용을 작성해주세요"
