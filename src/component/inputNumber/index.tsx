@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { KeyboardTypeOptions, StyleSheet, Text, TextInput, View } from 'react-native'
+import { KeyboardTypeOptions, StyleProp, StyleSheet, Text, TextInput, TextStyle, View } from 'react-native'
 import colors from '../../constant/color'
 
 interface InputComponentProps {
@@ -7,21 +7,22 @@ interface InputComponentProps {
     value: string,
     error?: string,
     handleSetValue: (value: string) => void
-    keyboardType: KeyboardTypeOptions
+    keyboardType: KeyboardTypeOptions,
+    styleInput?: StyleProp<TextStyle>
 }
 
 const InputNumber = (props: InputComponentProps) => {
     const [isFocused, setIsFocused] = useState(false);
-    const { textRight, error, value, handleSetValue } = props
+    const { textRight, error, value, handleSetValue, styleInput } = props
     return (
         <View
             style={[
                 styles.box,
                 isFocused && styles.textFocused
             ]}>
-            <Text style={[styles.unit, isFocused && styles.textRightFocused]}>{textRight}</Text>
+            <Text style={[styles.unit, value.length !== 0 && styles.textRightFocused]}>{textRight}</Text>
             <TextInput
-                style={styles.unitInput}
+                style={[styles.unitInput, styleInput]}
                 keyboardType="numeric"
                 value={value}
                 onChangeText={handleSetValue}

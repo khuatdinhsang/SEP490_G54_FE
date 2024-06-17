@@ -9,33 +9,25 @@ import colors from '../../../../constant/color';
 import InputNumber from '../../../../component/inputNumber';
 import { SCREENS_NAME } from '../../../../navigator/const';
 
-const BloodPressure = () => {
+const FoodIntakeRecord = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [minBloodPressure, setMinBloodPressure] = useState<string>("")
-    const [maxBloodPressure, setMaxBloodPressure] = useState<string>("")
-    const goBackPreviousPage = () => {
-        navigation.goBack();
+    const [weight, setWeight] = useState<string>("")
+    const handleViewChart = () => {
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART)
     }
-    const viewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART)
+    const goBackPreviousPage = () => {
+        navigation.goBack()
     }
     const nextPage = () => {
-        viewChart()
+        handleViewChart()
     }
-    const handleSetMaxBloodPressure = (value: string) => {
+    const handleSetWeight = (value: string) => {
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
-            setMaxBloodPressure(value);
+            setWeight(value);
         }
     }
-    const handleSetMinBloodPressure = (value: string) => {
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
-            setMinBloodPressure(value);
-        }
-    }
-
 
     return (
         <SafeAreaView style={styles.container}>
@@ -44,44 +36,34 @@ const BloodPressure = () => {
                     <HeaderNavigatorComponent
                         isIconLeft={true}
                         textRight={t("common.text.next")}
-                        text={t('common.diseases.highBlood')}
+                        text={t('recordHealthData.weight')}
                         handleClickArrowLeft={goBackPreviousPage}
                     />
                 </View>
                 <View style={flexRow}>
                     <Pressable style={[styles.navigate, styles.active]}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.bloodPressureProfile')}
+                            {t('recordHealthData.weightProfile')}
                         </Text>
                     </Pressable>
-                    <Pressable onPress={viewChart} style={styles.navigate}>
+                    <Pressable
+                        onPress={handleViewChart}
+                        style={styles.navigate}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
                             {t('recordHealthData.viewChart')}
                         </Text>
                     </Pressable>
                 </View>
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                    <Text style={styles.title}>{t('recordHealthData.minMaxPressure')}</Text>
+                    <Text style={styles.title}>{t('recordHealthData.enterWeight')}</Text>
                     <View style={[flexRowCenter, styles.item]}>
-                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('common.text.max')}</Text>
-                        <View style={{ width: "60%", marginLeft: 20 }}>
+                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('recordHealthData.weight')}</Text>
+                        <View style={{ width: "50%", marginLeft: 20 }}>
                             <InputNumber
-                                textRight='mmHG'
-                                value={maxBloodPressure}
+                                textRight='kg'
+                                value={weight}
                                 keyboardType={"numeric"}
-                                handleSetValue={handleSetMaxBloodPressure}
-                                styleInput={{ paddingLeft: 50 }}
-                            />
-                        </View>
-                    </View>
-                    <View style={[flexRowCenter, styles.item]}>
-                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('common.text.min')}</Text>
-                        <View style={{ width: "60%", marginLeft: 20 }}>
-                            <InputNumber
-                                textRight='mmHG'
-                                value={minBloodPressure}
-                                keyboardType={"numeric"}
-                                handleSetValue={handleSetMinBloodPressure}
+                                handleSetValue={handleSetWeight}
                                 styleInput={{ paddingLeft: 50 }}
                             />
                         </View>
@@ -90,10 +72,10 @@ const BloodPressure = () => {
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={minBloodPressure && maxBloodPressure ? false : true}
+                    disabled={weight ? false : true}
                     onPress={nextPage}
-                    style={[flexCenter, styles.button, { backgroundColor: minBloodPressure && maxBloodPressure ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: minBloodPressure && maxBloodPressure ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
+                    style={[flexCenter, styles.button, { backgroundColor: weight ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: weight ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
@@ -155,4 +137,4 @@ const styles = StyleSheet.create({
         marginTop: 20,
     }
 })
-export default BloodPressure
+export default FoodIntakeRecord

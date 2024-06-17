@@ -68,7 +68,9 @@
       "CannotRestored": "삭제 후 되돌릴 수 없습니다",
       "cancel": "취소",
       "step": "걸음",
-      "retrieveAgain": "불러오기"
+      "retrieveAgain": "불러오기",
+      "max": "최고",
+      "min": "최저"
     },
     "diseases": {
       "chronic": "만성질환",
@@ -264,6 +266,16 @@
     "pleaseUnCheck": "수치를 입력하시려면 체크를 풀어주세요",
     "haven'tEnteredAnyNumbers": "아직 수치를 입력하지 않았어요",
     "enterNumberFirst": "수치를 먼저 입력해주세요",
-    "enterRecord": "입력하러 가기"
+    "enterRecord": "입력하러 가기",
+    "bloodPressureProfile": "혈압기록",
+    "weightProfile": "체중기록",
+    "minMaxPressure": "혈압의 최고/최저 수치를 입력해주세요",
+    "enterWeight": "체중을 입력해주세요",
+    "positiveMindProfile": "긍정적 마음 기록",
+    "selectEveryThing": "오늘 실천한 내용을 모두 선택해주세요",
+    "workoutProfile": "은동기록",
+    "pleaseChooseDay": "오늘 실천한 운동시간을 입력해주세요",
+    "medicationProfile": "약물복용 기록",
+    "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다"
   }
 }
