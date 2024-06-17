@@ -17,7 +17,7 @@ const FoodInTakeChart = () => {
         navigation.goBack()
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD)
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -25,7 +25,7 @@ const FoodInTakeChart = () => {
                 <View style={styles.header}>
                     <HeaderNavigatorComponent
                         isIconLeft={true}
-                        text={t('recordHealthData.weight')}
+                        text={t('planManagement.text.foodIntake')}
                         handleClickArrowLeft={goBackPreviousPage}
                     />
                 </View>
@@ -34,7 +34,7 @@ const FoodInTakeChart = () => {
                         onPress={navigateNumericalRecord}
                         style={styles.navigate}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.weightProfile')}
+                            {t('recordHealthData.foodIntakeProfile')}
                         </Text>
                     </Pressable>
                     <Pressable style={[styles.navigate, styles.active]}>

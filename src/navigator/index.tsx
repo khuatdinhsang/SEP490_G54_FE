@@ -26,7 +26,7 @@ const Navigator = () => {
   }
   //  initialRouteName={initialRoute}
   return (
-    <Stack.Navigator initialRouteName={SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName={SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD} screenOptions={{ headerShown: false }}>
       {SCREENS_STACK.map(screen => (
         <Stack.Screen
           key={screen.name}

@@ -276,6 +276,8 @@
     "workoutProfile": "은동기록",
     "pleaseChooseDay": "오늘 실천한 운동시간을 입력해주세요",
     "medicationProfile": "약물복용 기록",
-    "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다"
+    "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다",
+    "foodIntakeProfile": "식이 기록",
+    "howManyPlates": "몇접시를 먹었나요?"
   }
 }
