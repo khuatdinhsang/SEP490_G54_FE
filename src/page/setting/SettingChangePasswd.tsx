@@ -1,97 +1,147 @@
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {StyleSheet, View} from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { SafeAreaView, StyleSheet, View, ScrollView, Pressable, Text } from 'react-native';
 import ButtonComponent from '../../component/button';
 import DialogSingleComponent from '../../component/dialog-single';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import InputComponent from '../../component/input';
-import {IMAGE} from '../../constant/image';
-import {paddingHorizontalScreen} from '../../styles/padding';
+import { IMAGE } from '../../constant/image';
+import { paddingHorizontalScreen } from '../../styles/padding';
+import colors from '../../constant/color';
+import { authService } from '../../services/auth';
+import { SCREENS_NAME } from '../../navigator/const';
+import axios from 'axios';
+import * as yup from "yup";
+import { Formik } from 'formik';
+import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+
+interface typeValues {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
 
 const SettingChangePassword = () => {
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
   const [isDisable, setIsDisable] = useState<boolean>(true);
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
-  const [newPassword, setNewPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [textErrorConfirmPassword, setTextErrorConfirmPassword] =
-    useState<string>('');
+  const [error, setError] = useState<string>("");
 
-  const handleClearNewPassword = () => {
-    setNewPassword('');
-  };
-  const handleClearConfirmPassword = () => {
-    setConfirmPassword('');
-  };
-
-  const handleChangeNewPassword = (newPassword: string) => {
-    setNewPassword(newPassword);
-    if (newPassword.length !== 0 && newPassword === confirmPassword) {
-      setIsDisable(false);
-    } else {
-      setIsDisable(true);
+  const handleSubmit = async (values: typeValues): Promise<void> => {
+    const data = { oldPassword: values.oldPassword, newPassword: values.newPassword };
+    try {
+      const res = await authService.changePassword(data);
+      console.log("118", res);
+      if (res.code == 200) {
+        setIsShowDialog(true)
+      }
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.data.code == 400 || error.response.data.code == 401) {
+          setError(error.response.data.message);
+        }
+      }
     }
   };
-  const handleChangeConfirmPassword = (confirmPassword: string) => {
-    setConfirmPassword(confirmPassword);
-    if (newPassword !== confirmPassword) {
-      setTextErrorConfirmPassword('비밀번호를 다시 확인해주세요');
-      setIsDisable(true);
-    } else {
-      setTextErrorConfirmPassword('');
-      setIsDisable(false);
-    }
+  const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
+    setFieldValue(field, '');
   };
 
-  const handlePressChangePassword = () => {
-    if (!isDisable) {
-      setIsShowDialog(true);
-    }
+  const changePasswordSchema = yup.object().shape({
+    oldPassword: yup.string().required(t("placeholder.err.blank")).matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      t("placeholder.err.passwordCorrect")
+    ),
+    newPassword: yup.string().required(t("placeholder.err.blank")).matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      t("placeholder.err.passwordCorrect")
+    ),
+    confirmNewPassword: yup
+      .string()
+      .required(t("placeholder.err.blank"))
+      .oneOf([yup.ref('newPassword')], t("placeholder.err.notMatch"))
+  });
+
+  const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
+    setFieldValue(field, text);
+    setError('')
   };
+
   const handleClickDialog = () => {
     setIsShowDialog(false);
+    navigation.navigate(SCREENS_NAME.SETTING.MAIN)
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <HeaderNavigatorComponent
         text="비밀번호 변경"
+        isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
         }}
       />
-      <View style={{marginTop: 30}} />
-      <View style={{flex: 1}}>
-        <InputComponent
-          placeholder="이메일을 입력해주세요"
-          label="비밀번호 재설정"
-          isIconRight={true}
-          value={newPassword}
-          onChangeText={handleChangeNewPassword}
-          secureTextEntry={true}
-          onPressIconRight={handleClearNewPassword}
-        />
-        <View style={{marginVertical: 14}} />
-        <InputComponent
-          placeholder="이메일을 입력해주세요"
-          label="비밀번호 확인"
-          isIconRight={true}
-          value={confirmPassword}
-          onChangeText={handleChangeConfirmPassword}
-          secureTextEntry={true}
-          onPressIconRight={handleClearConfirmPassword}
-          textError={textErrorConfirmPassword}
-        />
-      </View>
-      <ButtonComponent
-        text="완료"
-        handleClick={handlePressChangePassword}
-        isDisable={isDisable}
-      />
+      <Formik
+        initialValues={{ oldPassword: '', newPassword: '', confirmNewPassword: '' }}
+        validationSchema={changePasswordSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+          <>
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+              <View style={{ marginTop: 15 }}>
+                <View style={[styles.content]}>
+                  <InputComponent
+                    placeholder={t("placeholder.field.oldPassword")}
+                    onPressIconRight={() => clearField('oldPassword', setFieldValue)}
+                    isIconRight={true}
+                    value={values.oldPassword}
+                    onChangeText={handleChangeText('oldPassword', setFieldValue)}
+                    label={t('common.text.oldPassword')}
+                    textError={errors.oldPassword}
+                    secureTextEntry={true}
+                  />
+                  <View style={{ marginVertical: 10 }}>
+                    <InputComponent
+                      placeholder={t("placeholder.field.newPassword")}
+                      onPressIconRight={() => clearField('newPassword', setFieldValue)}
+                      isIconRight={true}
+                      value={values.newPassword}
+                      onChangeText={handleChangeText('newPassword', setFieldValue)}
+                      label={t('common.text.newPassword')}
+                      textError={errors.newPassword}
+                      secureTextEntry={true}
+                    />
+                  </View>
+                  <View style={{ marginVertical: 10 }}>
+                    <InputComponent
+                      placeholder={t("placeholder.field.confirmNewPassword")}
+                      onPressIconRight={() => clearField('confirmNewPassword', setFieldValue)}
+                      isIconRight={true}
+                      value={values.confirmNewPassword}
+                      onChangeText={handleChangeText('confirmNewPassword', setFieldValue)}
+                      label={t('common.text.confirmNewPassword')}
+                      textError={errors.confirmNewPassword}
+                      secureTextEntry={true}
+                    />
+                  </View>
+                </View>
+                {error && <Text style={styles.textError}>{error}</Text>}
+              </View>
+            </ScrollView>
+            <Pressable
+              disabled={(errors.confirmNewPassword || errors.oldPassword || errors.newPassword) ? true : false}
+              onPress={() => handleSubmit()}
+              style={[styles.button, { backgroundColor: (errors.confirmNewPassword || errors.oldPassword || errors.newPassword || !values.newPassword) ? colors.gray : colors.primary }]}
+            >
+              <Text style={styles.textButton}>{t("common.text.confirm")}</Text>
+            </Pressable>
+          </>
+        )}
+      </Formik>
       <DialogSingleComponent
         isOverlay={true}
         isActive={isShowDialog}
@@ -101,18 +151,41 @@ const SettingChangePassword = () => {
         imageSource={IMAGE.ICON_CHECK_COLOR}
         buttonText="확인"
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: paddingHorizontalScreen * 2,
     flex: 1,
-    paddingBottom: 30,
+    paddingHorizontal: 20,
   },
-  switch: {
-    marginVertical: 12,
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 100,
+  },
+  content: {
+    marginTop: 20,
+  },
+  textError: {
+    color: colors.red,
+    fontWeight: "500",
+    fontSize: 18
+  },
+  textButton: {
+    color: colors.white,
+    textAlign: "center",
+    lineHeight: 60,
+    fontWeight: "500",
+    fontSize: 18
+  },
+  button: {
+    height: 60,
+    borderRadius: 12,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
   },
 });
 

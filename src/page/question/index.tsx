@@ -1,6 +1,6 @@
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../navigator/const';
@@ -11,48 +11,51 @@ import { IMAGE } from '../../constant/image';
 import { questionService } from '../../services/question';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import QuestionComponent from './component/Question';
+import { questionResponse } from './const';
+
 
 const Question = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [listQuestion, setListQuestion] = useState([])
+    const [listQuestion, setListQuestion] = useState<questionResponse[]>([])
     const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack();
     }
-    useEffect(() => {
-        const fetchListQuestion = async () => {
-            try {
-                const idUser = await AsyncStorage.getItem('idUser');
-                const res = await questionService.getListQuestionByUser(Number(idUser))
-                console.log("Res", res)
-                if (res.code === 200) {
-                    if (res.result.length === 0) {
-                        console.log("vao day")
-                        setListQuestion([])
-                    } else {
-                        // setListQuestion(res.result)
-                    }
-                }
-            } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
-                    setMessageError(error.message);
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
+    const fetchListQuestion = async () => {
+        try {
+            const res = await questionService.getListQuestionByUser();
+            console.log("Res", res);
+            if (res.code === 200) {
+                setListQuestion(res.result || []);
+            } else {
+                setMessageError("Failed to fetch questions.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
             }
         }
-        fetchListQuestion()
-    }, [])
-
+    };
+    useFocusEffect(
+        useCallback(() => {
+            fetchListQuestion();
+        }, [])
+    );
     const nextPage = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.ADD);
     }
     const navigateQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST)
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
     }
     const navigateRegularQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)
+    }
+    const handleDetailQuestion = (id: number) => {
+        navigation.navigate(SCREENS_NAME.QUESTION.DETAIL, { questionId: id })
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -77,15 +80,20 @@ const Question = () => {
                         </Text>
                     </Pressable>
                 </View>
-
-                {listQuestion ?
-                    <Text>aaa</Text>
-                    :
-                    <View style={[flexCenter, { height: '60%' }]}>
-                        <Image source={IMAGE.QUESTION.TEXT} />
-                        <Text style={styles.textTitle}>{t('questionManagement.noRequest')}</Text>
-                        <Text style={styles.textDesc}>{t('questionManagement.typeToRequest')}</Text>
-                    </View>}
+                <View style={{ paddingHorizontal: 20, marginTop: 20, }}>
+                    {listQuestion.length > 0 ?
+                        listQuestion.map((item) => {
+                            return (
+                                <QuestionComponent key={item.id} question={item} handleDetailQuestion={handleDetailQuestion} />
+                            )
+                        })
+                        :
+                        <View style={[flexCenter, { height: '80%' }]}>
+                            <Image source={IMAGE.QUESTION.TEXT} />
+                            <Text style={styles.textTitle}>{t('questionManagement.noRequest')}</Text>
+                            <Text style={styles.textDesc}>{t('questionManagement.typeToRequest')}</Text>
+                        </View>}
+                </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        flexGrow: 1,
+        paddingBottom: 100
     },
     navigate: {
         height: 48,

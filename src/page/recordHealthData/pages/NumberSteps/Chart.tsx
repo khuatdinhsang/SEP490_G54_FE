@@ -40,7 +40,6 @@ const NumberStepsChart = () => {
                     </Pressable>
                 </View>
             </ScrollView>
-
         </SafeAreaView>
     )
 }

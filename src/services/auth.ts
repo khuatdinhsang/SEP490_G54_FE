@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
-import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword } from '../constant/type/auth';
+import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changePassword } from '../constant/type/auth';
 
 const endpoint = '/auth';
 
@@ -21,4 +21,7 @@ export const authService = {
     verifyForgetPassword(data: VerifyForgetPassword): Promise<VerifyEmailResponse> {
         return axiosClient.post(`forget-password/email/verify`, data);
     },
+    changePassword(data: changePassword): Promise<VerifyEmailResponse> {
+        return axiosClient.put(`accounts/change-password`, data);
+    }
 };

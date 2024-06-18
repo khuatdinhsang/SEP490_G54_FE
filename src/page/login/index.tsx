@@ -86,7 +86,6 @@ const Login = () => {
         setFieldValue(field, text);
         setMessageError(''); // Clear the error message
     };
-    console.log()
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>

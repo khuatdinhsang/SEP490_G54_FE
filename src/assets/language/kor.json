@@ -70,7 +70,10 @@
       "step": "걸음",
       "retrieveAgain": "불러오기",
       "max": "최고",
-      "min": "최저"
+      "min": "최저",
+      "oldPassword": "기존 비밀번호",
+      "newPassword": "새 비밀번호",
+      "confirmNewPassword": "새 암호를 확인합니다"
     },
     "diseases": {
       "chronic": "만성질환",
@@ -105,7 +108,10 @@
       "confirmPassword": "확인 비밀번호를 입력해주세요",
       "numberRegHospital": "병원등록 번호를 입력해주세요",
       "resetPassword": "새 비밀번호를 다시 입력해 주세요",
-      "confirmResetPassword": "새 암호를 확인합니다"
+      "confirmResetPassword": "새 암호를 확인합니다",
+      "oldPassword": "이전 비밀번호를 다시 입력하세요",
+      "newPassword": "새 비밀번호를 입력하세요",
+      "confirmNewPassword": "새 비밀번호를 다시 입력하세요"
     },
     "err": {
       // validEmail
@@ -228,7 +234,9 @@
     "questionSuccess": "글 등록이 완료되었습니다.",
     "answerResponse": "문의 답변",
     "answer": "답변",
-
+    "typeQuestion": "질문의 종류",
+    "admin": "관리자",
+    "medicalSpecialist": "의료 전문가",
     "placeholder": {
       "title": "제목을 입력해주세요",
       "content": "문의내용을 작성해주세요"
@@ -276,6 +284,11 @@
     "workoutProfile": "은동기록",
     "pleaseChooseDay": "오늘 실천한 운동시간을 입력해주세요",
     "medicationProfile": "약물복용 기록",
-    "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다"
+    "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다",
+    "foodIntakeProfile": "식이 기록",
+    "howManyPlates": "몇접시를 먹었나요?"
+  },
+  "medicalSchedule": {
+    "setUpSchedule": "병원 일정 설정"
   }
 }

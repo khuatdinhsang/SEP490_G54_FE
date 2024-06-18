@@ -21,6 +21,7 @@ const colors = {
     gray_G09: '#1F2126',
     gray_G10: '#17191E',
     green: '#49DFCA',
+    green_background: '#EAFFFC',
     blue_01: '#5653FF',
     blue_background: '#EEEEFF',
     background: '#F6F8FC',

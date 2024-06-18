@@ -8,26 +8,34 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import { flexCenter, flexRow } from '../../styles/flex';
 import colors from '../../constant/color';
 import InputComponent from '../../component/input';
-import { dataQuestion } from './const';
+import { questionResponse } from './const';
+import { questionService } from '../../services/question';
 
 const QuestionDetail = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const { questionId } = route.params;
-    const [questionDetail, setQuestionDetail] = useState<dataQuestion>()
-    const initData = [
-        { id: 1, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁.어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 2, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 3, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 4, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁.어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 5, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 6, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 7, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-    ]
-    const [listQuestion, setListQuestion] = useState<dataQuestion[]>(initData)
-
+    const [questionDetail, setQuestionDetail] = useState<questionResponse>()
+    const [messageError, setErrorMessage] = useState<string>("")
+    const fetchDetailQuestion = async () => {
+        try {
+            const res = await questionService.getDetailQuestion(questionId);
+            console.log("Res", res);
+            if (res.code === 200) {
+                setQuestionDetail(res.result);
+            } else {
+                setErrorMessage("Failed to fetch questions.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setErrorMessage(error.message);
+            } else {
+                setErrorMessage("Unexpected error occurred.");
+            }
+        }
+    };
     useEffect(() => {
-        setQuestionDetail(listQuestion.find((item) => item.id === questionId))
+        fetchDetailQuestion()
     }, [questionId])
     console.log(questionDetail)
     const goBackPreviousPage = () => {
@@ -36,7 +44,7 @@ const QuestionDetail = ({ route }: any) => {
     const nextPage = () => {
     }
     const navigateQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST)
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
     }
     const navigateRegularQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)
@@ -78,13 +86,13 @@ const QuestionDetail = ({ route }: any) => {
                     />
                     <View style={{ marginTop: 15 }}>
                         <InputComponent
-                            value={questionDetail?.content}
+                            value={questionDetail?.body}
                             label={t("questionManagement.content")}
                             styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                             multiline={true}
                         />
                     </View>
-                    {questionDetail?.status === 1 &&
+                    {questionDetail?.answer &&
                         <View style={{ marginTop: 15 }}>
                             <InputComponent
                                 value={questionDetail?.answer}
