@@ -70,7 +70,10 @@
       "step": "걸음",
       "retrieveAgain": "불러오기",
       "max": "최고",
-      "min": "최저"
+      "min": "최저",
+      "oldPassword": "기존 비밀번호",
+      "newPassword": "새 비밀번호",
+      "confirmNewPassword": "새 암호를 확인합니다"
     },
     "diseases": {
       "chronic": "만성질환",
@@ -105,7 +108,10 @@
       "confirmPassword": "확인 비밀번호를 입력해주세요",
       "numberRegHospital": "병원등록 번호를 입력해주세요",
       "resetPassword": "새 비밀번호를 다시 입력해 주세요",
-      "confirmResetPassword": "새 암호를 확인합니다"
+      "confirmResetPassword": "새 암호를 확인합니다",
+      "oldPassword": "이전 비밀번호를 다시 입력하세요",
+      "newPassword": "새 비밀번호를 입력하세요",
+      "confirmNewPassword": "새 비밀번호를 다시 입력하세요"
     },
     "err": {
       // validEmail

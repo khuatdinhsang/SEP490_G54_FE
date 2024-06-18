@@ -26,6 +26,7 @@ const SettingLogout = () => {
     <View style={styles.container}>
       <HeaderNavigatorComponent
         text="로그아웃"
+        isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
         }}
