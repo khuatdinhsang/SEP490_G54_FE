@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import SelectDate from '../../component/inputSelectDate';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { ErrorMessage } from 'formik';
+import { SCREENS_NAME } from '../../navigator/const';
 
 const ProfileNewHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -85,8 +86,8 @@ const ProfileNewHospitalSchedule = () => {
     }
     try {
       const res = await medicalAppointmentService.create(transformData)
-      console.log("res")
-      if (res.code === 200) {
+      if (res.code === 201) {
+        navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE)
       }
     } catch (error: any) {
       if (error?.response?.status === 400 || error?.response?.status === 401) {
@@ -105,8 +106,6 @@ const ProfileNewHospitalSchedule = () => {
     setTypeMakeHospitalSchedule(TypeMakeHospitalSchedule.MEDICAL_CHECKUP);
   };
   const isDisable = typeMakeHospitalSchedule && address && note ? false : true
-  console.log("120", isDisable)
-  console.log("121", address, note, typeMakeHospitalSchedule)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

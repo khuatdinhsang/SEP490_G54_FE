@@ -4,12 +4,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
 import { flexRow } from '../../../styles/flex';
 import { TypeMakeHospitalSchedule } from '../const';
+import { appointment } from '../../../constant/type/medical';
 
 interface HospitalScheduleComponentProps {
   typeMakeHospitalSchedule: TypeMakeHospitalSchedule;
+  appointment: appointment
 }
 const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
-  const { typeMakeHospitalSchedule } = props;
+  const { typeMakeHospitalSchedule, appointment } = props;
 
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
@@ -32,10 +34,10 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
         </Text>
       </View>
       <View>
-        <Text style={styles.text}>종로 보건소</Text>
+        <Text style={styles.text}>{appointment.hospital}</Text>
       </View>
       <View style={styles.textRightWrapper}>
-        <Text style={styles.textRight}>2023.11.08</Text>
+        <Text style={styles.textRight}>{appointment.date?.split("T")[0]}</Text>
       </View>
     </View>
   );

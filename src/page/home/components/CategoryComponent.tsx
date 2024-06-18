@@ -67,13 +67,13 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
             </Pressable>
             <Text style={styles.categoryItemText}>문의작성</Text>
           </View>
-          <View>
+          <Pressable onPress={() => { navigation.navigate(SCREENS_NAME.PROFILE.MAIN) }}>
             <Image
               source={IMAGE.HOME.CATEGORY6}
               style={styles.categoryItemIcon}
             />
             <Text style={styles.categoryItemText}>병원일정 설정</Text>
-          </View>
+          </Pressable>
         </View>
       </View>
     </View>

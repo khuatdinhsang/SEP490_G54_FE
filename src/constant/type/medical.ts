@@ -12,3 +12,20 @@ export interface medicalAppointmentData {
     note: string,
     date: Date
 }
+export interface appointment {
+    id: number,
+    appUserName: string,
+    date: string,
+    hospital: string,
+    typeMedicalAppointment: TypeMakeHospitalSchedule,
+    statusMedicalAppointment: string,
+    note: string
+}
+export interface appointMentResponse {
+    code: number,
+    result: appointment
+}
+export interface listAppointMentResponse {
+    code: number,
+    result: appointment[]
+}
