@@ -29,8 +29,8 @@ const Setting = () => {
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
         <HeaderNavigatorComponent
-          isIconLeft={true}
           text="설정"
+          isIconLeft={true}
           handleClickArrowLeft={() => {
             navigation.goBack();
           }}

@@ -20,6 +20,7 @@ export const loginUser = createAsyncThunk(
     try {
       const res = await authService.login(user);
       if (res.code === 200) {
+        console.log("59", res)
         await AsyncStorage.setItem('accessToken', res.result?.accessToken);
         await AsyncStorage.setItem('idUser', res.result?.idUser.toString());
         await AsyncStorage.setItem('refreshToken', res.result?.refreshToken);

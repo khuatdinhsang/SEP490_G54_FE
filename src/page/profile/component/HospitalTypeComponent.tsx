@@ -1,8 +1,8 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexCenter} from '../../../styles/flex';
-import {TypeMakeHospitalSchedule} from '../const';
+import { IMAGE } from '../../../constant/image';
+import { flexCenter } from '../../../styles/flex';
+import { TypeMakeHospitalSchedule } from '../const';
 
 interface HospitalTypeComponentProps {
   state: TypeMakeHospitalSchedule | undefined;
@@ -11,7 +11,7 @@ interface HospitalTypeComponentProps {
 }
 
 const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
-  const {state, handleOnPress, type} = props;
+  const { state, handleOnPress, type } = props;
 
   const isActive = state === type;
   const backgroundColor = isActive ? colors.orange_01 : 'transparent';
@@ -31,13 +31,13 @@ const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
       onPress={() => handleOnPress()}>
       <Image
         source={
-          type === TypeMakeHospitalSchedule.SEE_DOCTOR
+          type === TypeMakeHospitalSchedule.DIAGNOSIS
             ? IMAGE.PROFILE.HOSPITAL_SCHEDULE.TYPE1
             : IMAGE.PROFILE.HOSPITAL_SCHEDULE.TYPE2
         }
       />
-      <View style={{marginVertical: 5}} />
-      <Text style={[styles.textType, {color}]}>진료</Text>
+      <View style={{ marginVertical: 5 }} />
+      <Text style={[styles.textType, { color }]}>진료</Text>
     </Pressable>
   );
 };

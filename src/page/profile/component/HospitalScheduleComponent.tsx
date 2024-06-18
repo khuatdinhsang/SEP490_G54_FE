@@ -1,41 +1,43 @@
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {StyleSheet, Text, View} from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {flexRow} from '../../../styles/flex';
-import {TypeMakeHospitalSchedule} from '../const';
+import { flexRow } from '../../../styles/flex';
+import { TypeMakeHospitalSchedule } from '../const';
+import { appointment } from '../../../constant/type/medical';
 
 interface HospitalScheduleComponentProps {
   typeMakeHospitalSchedule: TypeMakeHospitalSchedule;
+  appointment: appointment
 }
 const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
-  const {typeMakeHospitalSchedule} = props;
+  const { typeMakeHospitalSchedule, appointment } = props;
 
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const labelColor =
-    typeMakeHospitalSchedule === TypeMakeHospitalSchedule.HEALTH_CHECKUP
+    typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
       ? colors.green
       : colors.blue_01;
   const labelColorWrapper =
-    typeMakeHospitalSchedule === TypeMakeHospitalSchedule.HEALTH_CHECKUP
+    typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
       ? '#EAFFFC'
       : '#ECECFF';
 
   return (
     <View style={[styles.container, flexRow, styles.shadowBox]}>
-      <View style={[styles.labelWrapper, {backgroundColor: labelColorWrapper}]}>
-        <Text style={[styles.label, {color: labelColor}]}>
-          {typeMakeHospitalSchedule === TypeMakeHospitalSchedule.HEALTH_CHECKUP
+      <View style={[styles.labelWrapper, { backgroundColor: labelColorWrapper }]}>
+        <Text style={[styles.label, { color: labelColor }]}>
+          {typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
             ? '건강검진'
             : '진료'}
         </Text>
       </View>
       <View>
-        <Text style={styles.text}>종로 보건소</Text>
+        <Text style={styles.text}>{appointment.hospital}</Text>
       </View>
       <View style={styles.textRightWrapper}>
-        <Text style={styles.textRight}>2023.11.08</Text>
+        <Text style={styles.textRight}>{appointment.date?.split("T")[0]}</Text>
       </View>
     </View>
   );
@@ -81,10 +83,10 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     shadowColor: '#6D6D6D',
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 22,
-    elevation: 22,
+    elevation: 3,
   },
 });
 

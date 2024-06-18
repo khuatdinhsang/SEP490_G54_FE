@@ -174,7 +174,9 @@ const styles = StyleSheet.create({
         paddingRight: 50
     },
     textError: {
-        color: colors.red
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 18
     },
     iconCancel: {
         width: 10,

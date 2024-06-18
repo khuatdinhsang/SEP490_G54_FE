@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
-import { flexCenter, flexRow } from '../../styles/flex';
+import { flexCenter, flexRow, flexRowSpaceBetween } from '../../styles/flex';
 import colors from '../../constant/color';
 import { Formik } from 'formik';
 import * as yup from "yup";
@@ -20,12 +20,13 @@ const AddQuestion = () => {
     const { t, i18n } = useTranslation();
     const [messageError, setMessageError] = useState<string>("")
     const [isShowModal, setIsShowModal] = useState<boolean>(false)
+    const [typeUserQuestion, setTypeUserQuestion] = useState("ASSIGN_ADMIN")
     const goBackPreviousPage = () => {
         navigation.goBack();
     }
     const nextPage = () => {
         setIsShowModal(false)
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST);
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN);
     }
     const addQuestionSchema = yup.object().shape({
         title: yup.string().required(t("questionManagement.error.title")),
@@ -34,19 +35,18 @@ const AddQuestion = () => {
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
         setFieldValue(field, '');
     };
-    const handleSubmit = async (values: { title: string, content: string }): Promise<any> => {
-        const idUser = await AsyncStorage.getItem('idUser');
-        console.log("39", idUser)
+    const handleSubmit = async (values: { title: string, content: string }, setFieldValue: (field: string, value: any) => void): Promise<any> => {
         const transformData = {
-            "appUserId": Number(idUser),
-            typeUserQuestion: "ASSIGN_ADMIN",
+            typeUserQuestion: typeUserQuestion,
             title: values.title,
             body: values.content
         }
         try {
             const res = await questionService.create(transformData)
-            console.log("Res", res)
-            if (res.code === 200) {
+            if (res.code === 201) {
+                setIsShowModal(true)
+                clearField('title', setFieldValue)
+                clearField('content', setFieldValue)
             }
         } catch (error: any) {
             if (error?.response?.status === 400 || error?.response?.status === 401) {
@@ -55,10 +55,9 @@ const AddQuestion = () => {
                 setMessageError("Unexpected error occurred.");
             }
         }
-        // setIsShowModal(true)
     }
     const navigateQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST)
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
     }
     const navigateRegularQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)
@@ -69,7 +68,7 @@ const AddQuestion = () => {
                 <Formik
                     initialValues={{ title: '', content: '' }}
                     validationSchema={addQuestionSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={(values, { setFieldValue }) => handleSubmit(values, setFieldValue)}
                 >
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
                         <View style={{ flex: 1 }}>
@@ -100,6 +99,50 @@ const AddQuestion = () => {
                                 </View>
 
                                 <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20, }}>
+                                    <Text style={{ fontWeight: "500", fontSize: 18, color: colors.black, marginBottom: 10 }}>{t('questionManagement.typeQuestion')}</Text>
+                                    <View style={[flexRowSpaceBetween, { width: '100%', marginBottom: 20 }]}>
+                                        <Pressable
+                                            onPress={() => setTypeUserQuestion("ASSIGN_ADMIN")}
+                                            style={{ width: '47%' }}>
+                                            <View
+                                                style={[
+                                                    styles.box,
+                                                    {
+                                                        borderColor: typeUserQuestion === "ASSIGN_ADMIN" ? colors.primary : colors.gray,
+                                                        backgroundColor: typeUserQuestion === "ASSIGN_ADMIN" ? colors.primary : 'white',
+                                                    },
+                                                ]}>
+                                                <Text
+                                                    style={[
+                                                        styles.textInput,
+                                                        { color: typeUserQuestion === "ASSIGN_ADMIN" ? colors.white : colors.black },
+                                                    ]}>
+                                                    {t('questionManagement.admin')}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
+                                        <Pressable
+                                            onPress={() => setTypeUserQuestion("ASSIGN_MS")}
+                                            style={{ width: '47%' }}>
+                                            <View
+                                                style={{
+                                                    borderRadius: 8,
+                                                    borderColor: typeUserQuestion === "ASSIGN_MS" ? colors.primary : colors.gray,
+                                                    borderWidth: 1,
+                                                    height: 56,
+                                                    backgroundColor: typeUserQuestion === "ASSIGN_MS" ? colors.primary : 'white',
+                                                }}>
+                                                <Text
+                                                    style={[
+                                                        styles.textInput,
+                                                        { color: typeUserQuestion === "ASSIGN_MS" ? colors.white : colors.black },
+                                                    ]}>
+                                                    {t('questionManagement.medicalSpecialist')}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
+                                    </View>
+
                                     <InputComponent
                                         placeholder={t("questionManagement.placeholder.title")}
                                         onPressIconRight={() => clearField('title', setFieldValue)}
@@ -193,6 +236,15 @@ const styles = StyleSheet.create({
         lineHeight: 60,
         fontWeight: "500",
         fontSize: 18
+    },
+    textInput: {
+        textAlign: 'center',
+        lineHeight: 56,
+    },
+    box: {
+        borderRadius: 8,
+        borderWidth: 1,
+        height: 56,
     },
 })
 export default AddQuestion

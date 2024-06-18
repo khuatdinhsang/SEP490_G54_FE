@@ -1,7 +1,7 @@
 export const IMAGE = {
   HOME: {
     CATEGORY: require('assets/image/home/category.png'),
-    CATEGORY1: require('assets/image/home/category/category1.png'),
+    INFORMATION_HEALTH: require('assets/image/home/category/information-health.png'),
     CATEGORY2: require('assets/image/home/category/category2.png'),
     CATEGORY3: require('assets/image/home/category/category3.png'),
     CATEGORY4: require('assets/image/home/category/category4.png'),

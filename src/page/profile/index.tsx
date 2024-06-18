@@ -1,11 +1,11 @@
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {paddingHorizontalScreen} from '../../styles/padding';
-import {HeightDevice} from '../../util/Dimenssion';
+import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { paddingHorizontalScreen } from '../../styles/padding';
+import { HeightDevice } from '../../util/Dimenssion';
 import colors from '../../constant/color';
 import HeaderNavigatorComponent from '../../component/header-navigator';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {IMAGE} from '../../constant/image';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { IMAGE } from '../../constant/image';
 import {
   flexCenter,
   flexRow,
@@ -15,29 +15,30 @@ import {
   flexRowSpaceEvenly,
 } from '../../styles/flex';
 import CategoryComponent from '../../component/category';
-import {SCREENS_NAME} from '../../navigator/const';
+import { SCREENS_NAME } from '../../navigator/const';
 
 const Profile = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-  const handleMyHealthMissionStatement = () => {};
+  const handleMyHealthMissionStatement = () => { };
 
-  const handleClinicalSurvey = () => {};
+  const handleClinicalSurvey = () => { };
 
   const handleMakeHospitalSchedule = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE);
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <HeaderNavigatorComponent
           text="내정보"
+          isIconLeft={true}
           handleClickArrowLeft={() => {
             navigation.goBack();
           }}
         />
-        <View style={{marginTop: 20}} />
+        <View style={{ marginTop: 20 }} />
         <View style={[flexRow]}>
           <Image source={IMAGE.HOME.SIDEBAR.프로필이미지} />
           <Text style={styles.textName}>프로필이미지</Text>

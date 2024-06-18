@@ -17,7 +17,6 @@ import ProfileMakeHospitalSchedule from '../page/profile/ProfileMakeHospitalSche
 import ProfileNewHospitalSchedule from '../page/profile/ProfileNewHospitalSchedule';
 import Question from '../page/question';
 import AddQuestion from '../page/question/AddQuestion';
-import ListQuestion from '../page/question/ListQuestion';
 import QuestionDetail from '../page/question/QuestionDetail';
 import RegularQuestion from '../page/question/RegularQuestion';
 import RecordHealthData from '../page/recordHealthData';
@@ -48,6 +47,7 @@ import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
 import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 import InformationHealth from '../page/informationHealth';
+import Week1Day1 from '../page/login/stack/week1/day1/index.tsx';
 
 export const SCREENS_NAME = {
   LOGIN: {
@@ -94,7 +94,6 @@ export const SCREENS_NAME = {
   QUESTION: {
     MAIN: 'Main Question',
     ADD: 'Add Question',
-    LIST: 'List Question',
     DETAIL: 'Detail Question',
     REGULAR: 'Regular Question',
   },
@@ -119,6 +118,7 @@ export const SCREENS_NAME = {
   },
   INFORMATION_HEALTH: {
     MAIN: 'Main Information Health',
+    WEEK1DAY1: 'Week 1 Day 1',
   },
 };
 
@@ -255,10 +255,6 @@ const SCREENS_STACK_QUESTION = [
     component: AddQuestion,
   },
   {
-    name: SCREENS_NAME.QUESTION.LIST,
-    component: ListQuestion,
-  },
-  {
     name: SCREENS_NAME.QUESTION.DETAIL,
     component: QuestionDetail,
   },
@@ -342,7 +338,12 @@ const SCREEN_STACK_INFORMATION_HEALTH = [
     name: SCREENS_NAME.INFORMATION_HEALTH.MAIN,
     component: InformationHealth,
   },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY1,
+    component: Week1Day1,
+  },
 ];
+
 const SCREENS_STACK = [
   ...SCREENS_STACK_SETTING,
   ...SCREENS_STACK_LOGIN,

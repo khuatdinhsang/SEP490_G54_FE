@@ -1,17 +1,17 @@
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {StyleSheet, View} from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
 import ButtonComponent from '../../component/button';
 import DialogSingleComponent from '../../component/dialog-single';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import SwitchComponent from '../../component/switch';
-import {IMAGE} from '../../constant/image';
-import {paddingHorizontalScreen} from '../../styles/padding';
+import { IMAGE } from '../../constant/image';
+import { paddingHorizontalScreen } from '../../styles/padding';
 
 const SettingNotification = () => {
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
@@ -41,12 +41,13 @@ const SettingNotification = () => {
     <View style={styles.container}>
       <HeaderNavigatorComponent
         text="푸시알림"
+        isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
         }}
       />
-      <View style={{marginTop: 30}} />
-      <View style={{flex: 1}}>
+      <View style={{ marginTop: 30 }} />
+      <View style={{ flex: 1 }}>
         <SwitchComponent
           text="전체 알림 설정"
           value={notificationAllowed}
