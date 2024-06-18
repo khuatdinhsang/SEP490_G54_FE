@@ -46,6 +46,7 @@ const ProfileNewHospitalSchedule = () => {
   const toggleMonthScroll = () => setShowMonthScroll(!showMonthScroll);
   const toggleDayScroll = () => setShowDayScroll(!showDayScroll);
   const [messageError, setMessageError] = useState<string>("")
+  const [isValidTime, setIsValidTime] = useState<string>("")
   useEffect(() => {
     const isValid = isValidDateForYearMonthDay(year, month, day);
     setIsValidDate(isValid);
@@ -78,12 +79,17 @@ const ProfileNewHospitalSchedule = () => {
   };
 
   const handleCreateSchedule = async (): Promise<any> => {
+    if (date.getTime() < Date.now()) {
+      setIsValidTime("Invalid time")
+      return
+    }
     const transformData = {
       location: address,
       note,
       date,
       type: typeMakeHospitalSchedule
     }
+
     try {
       const res = await medicalAppointmentService.create(transformData)
       if (res.code === 201) {
@@ -177,6 +183,7 @@ const ProfileNewHospitalSchedule = () => {
                 />
               </View>
             </View>
+            {isValidTime && <Text style={styles.textError}>{isValidTime}</Text>}
           </View>
           <View style={styles.component}>
             <Text style={styles.label}>장소</Text>
