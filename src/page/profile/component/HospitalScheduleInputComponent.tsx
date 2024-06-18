@@ -25,7 +25,7 @@ const HospitalScheduleInputComponent = (
 
   return (
     <View style={[styles.container, flexRow]}>
-      <TextInput style={styles.input} onChangeText={changeText} />
+      <TextInput style={styles.input} onChangeText={changeText} keyboardType='numeric' />
       <Text style={[styles.text, { color }]}>{note}</Text>
     </View>
   );

@@ -281,5 +281,8 @@
     "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다",
     "foodIntakeProfile": "식이 기록",
     "howManyPlates": "몇접시를 먹었나요?"
+  },
+  "medicalSchedule": {
+    "setUpSchedule": "병원 일정 설정"
   }
 }

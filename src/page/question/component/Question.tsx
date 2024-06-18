@@ -3,10 +3,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { flexRowSpaceBetween } from '../../../styles/flex'
 import colors from '../../../constant/color'
 import { useTranslation } from 'react-i18next'
-import { dataQuestion } from '../const'
+import { dataQuestion, questionResponse } from '../const'
 
 type itemQuestion = {
-    question: dataQuestion;
+    question: questionResponse;
     handleDetailQuestion: (id: number) => void;
 };
 const QuestionComponent: React.FC<itemQuestion> = ({ question, handleDetailQuestion }) => {
@@ -16,11 +16,11 @@ const QuestionComponent: React.FC<itemQuestion> = ({ question, handleDetailQuest
             onPress={() => { handleDetailQuestion(question.id) }}
             style={[flexRowSpaceBetween, styles.question]}>
             <View style={{ width: '70%' }}>
-                <Text style={styles.textQuestion}>{question.date}</Text>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.content}</Text>
+                <Text style={styles.textQuestion}>{question.questionDate?.split("T")[0]}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.body}</Text>
             </View>
-            <View style={[styles.statusQuestion, { backgroundColor: question.status === 1 ? colors.blue_background : colors.orange_01 }]}>
-                <Text style={[styles.textQuestion, { color: question.status === 1 ? colors.blue_01 : colors.orange_04 }]}>{question.status === 1 ? t('questionManagement.answered') : t('questionManagement.waitForReply')}</Text>
+            <View style={[styles.statusQuestion, { backgroundColor: question.answer ? colors.blue_background : colors.orange_01 }]}>
+                <Text style={[styles.textQuestion, { color: question.answer ? colors.blue_01 : colors.orange_04 }]}>{question.answer ? t('questionManagement.answered') : t('questionManagement.waitForReply')}</Text>
             </View>
         </Pressable>
     )

@@ -17,7 +17,6 @@ import ProfileMakeHospitalSchedule from '../page/profile/ProfileMakeHospitalSche
 import ProfileNewHospitalSchedule from '../page/profile/ProfileNewHospitalSchedule';
 import Question from '../page/question';
 import AddQuestion from '../page/question/AddQuestion';
-import ListQuestion from '../page/question/ListQuestion';
 import QuestionDetail from '../page/question/QuestionDetail';
 import RegularQuestion from '../page/question/RegularQuestion';
 import RecordHealthData from '../page/recordHealthData';
@@ -93,7 +92,6 @@ export const SCREENS_NAME = {
     QUESTION: {
         MAIN: 'Main Question',
         ADD: 'Add Question',
-        LIST: 'List Question',
         DETAIL: 'Detail Question',
         REGULAR: 'Regular Question',
     },
@@ -251,10 +249,6 @@ const SCREENS_STACK_QUESTION = [
         component: AddQuestion,
     },
     {
-        name: SCREENS_NAME.QUESTION.LIST,
-        component: ListQuestion,
-    },
-    {
         name: SCREENS_NAME.QUESTION.DETAIL,
         component: QuestionDetail,
     },
@@ -333,6 +327,7 @@ const SCREENS_STACK_RECORD_DATA = [
         component: FoodInTakeChart,
     },
 ];
+
 
 const SCREENS_STACK = [
     ...SCREENS_STACK_SETTING,

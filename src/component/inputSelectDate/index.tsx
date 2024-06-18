@@ -34,6 +34,8 @@ const SelectDate = (props: InputComponentProps) => {
         switch (type) {
             case 'year':
                 return currentYear - value
+            case 'yearPlus':
+                return currentYear + value
             case 'minute':
                 return value * 5
             default:
@@ -76,7 +78,7 @@ const SelectDate = (props: InputComponentProps) => {
                                     <View
                                         style={[
                                             flexRowCenter,
-                                            { width: type === 'year' || type === 'hour' || type === 'minute' ? '48%' : '30%', flexWrap: 'wrap' },
+                                            { width: type === 'year' || type === 'yearPlus' || type === 'hour' || type === 'minute' ? '48%' : '30%', flexWrap: 'wrap' },
                                         ]}>
                                         {Array.from(
                                             { length },

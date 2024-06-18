@@ -56,6 +56,7 @@ const Login = () => {
         try {
             const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
             if (res.code == 200) {
+                console.log("59", res)
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }

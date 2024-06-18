@@ -26,7 +26,7 @@ const AddQuestion = () => {
     }
     const nextPage = () => {
         setIsShowModal(false)
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST);
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN);
     }
     const addQuestionSchema = yup.object().shape({
         title: yup.string().required(t("questionManagement.error.title")),
@@ -46,7 +46,7 @@ const AddQuestion = () => {
             if (res.code === 201) {
                 setIsShowModal(true)
                 clearField('title', setFieldValue)
-                clearField('body', setFieldValue)
+                clearField('content', setFieldValue)
             }
         } catch (error: any) {
             if (error?.response?.status === 400 || error?.response?.status === 401) {
@@ -57,7 +57,7 @@ const AddQuestion = () => {
         }
     }
     const navigateQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST)
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
     }
     const navigateRegularQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)

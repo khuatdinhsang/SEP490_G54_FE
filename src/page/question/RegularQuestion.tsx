@@ -8,8 +8,6 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import { flexCenter, flexRow } from '../../styles/flex';
 import colors from '../../constant/color';
 import RegularQuestionComponent from './component/RegularQuestion';
-import { dataQuestion } from './const';
-
 const RegularQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
@@ -28,12 +26,12 @@ const RegularQuestion = () => {
         { id: 6, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
         { id: 7, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
     ]
-    const [listQuestion, setListQuestion] = useState<dataQuestion[]>(initData)
+    const [listQuestion, setListQuestion] = useState<any[]>(initData)
     const handleDetailQuestion = (id: number) => {
         navigation.navigate(SCREENS_NAME.QUESTION.DETAIL, { questionId: id })
     }
     const navigateQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.LIST)
+        navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
     }
     const navigateRegularQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)
