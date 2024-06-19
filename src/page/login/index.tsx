@@ -61,10 +61,8 @@ const Login = () => {
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
-            if (axios.isAxiosError(error) && error.response) {
-                if (error.response.data.code == 400 || error.response.data.code == 401) {
-                    setMessageError(error.response.data.message)
-                }
+            if (error.code == 400 || error.code == 401) {
+                setMessageError(error.message)
             }
         } finally {
             setIsLoading(false)
