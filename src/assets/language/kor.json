@@ -73,7 +73,13 @@
       "min": "최저",
       "oldPassword": "기존 비밀번호",
       "newPassword": "새 비밀번호",
-      "confirmNewPassword": "새 암호를 확인합니다"
+      "confirmNewPassword": "새 암호를 확인합니다",
+      "height": "상",
+      "medium": "중",
+      "low": "하",
+      "use": "사용X",
+      "new": "새로운",
+      "average": "평균"
     },
     "diseases": {
       "chronic": "만성질환",
@@ -290,5 +296,17 @@
   },
   "medicalSchedule": {
     "setUpSchedule": "병원 일정 설정"
+  },
+  "evaluate": {
+    "view": "평가 및 결과보기",
+    "week": "주간 실천 평가",
+    "month": "월간 실천 평가",
+    "chartSynthetic": "합산 평가 그래프",
+    "weeklyEvaluationResults": "주간실천 평가 결과",
+    "general": "합산 평가",
+    "congratulation": "축하합니다!",
+    "successfulWeek": "성공적인 일주일을 보냈습니다",
+    "activitySummary": "이번주 나의 건강활동 요약",
+    "noReview": "아직 평가 결과가 존재하지 않습니다"
   }
 }
