@@ -28,6 +28,7 @@ import SelectDate from '../../component/inputSelectDate';
 import InputNumber from '../../component/inputNumber';
 import { authService } from '../../services/auth';
 import axios from 'axios';
+import LoadingScreen from '../../component/loading';
 interface RegisterValues {
     email: string,
     code: string
@@ -44,8 +45,9 @@ const RegisterStep2 = ({ route }: any) => {
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
     const [day, setDay] = useState<number>(new Date().getDate());
-    const [isValidDate, setIsValidDate] = useState(true);
+    // const [isValidDate, setIsValidDate] = useState(true);
     const [dob, setDob] = useState<Date>(new Date())
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showYearScroll, setShowYearScroll] = useState(false);
     const [showMonthScroll, setShowMonthScroll] = useState(false);
     const [showDayScroll, setShowDayScroll] = useState(false);
@@ -57,10 +59,10 @@ const RegisterStep2 = ({ route }: any) => {
     const [codeResponse, setCodeResponse] = useState<string>("")
     const { valuesStep1 } = route.params;
     const [isGetCode, setIsGetCode] = useState<boolean>(false)
-    useEffect(() => {
-        const isValid = isValidDateForYearMonthDay(year, month, day);
-        setIsValidDate(isValid);
-    }, [year, month, day]);
+    // useEffect(() => {
+    //     const isValid = isValidDateForYearMonthDay(year, month, day);
+    //     setIsValidDate(isValid);
+    // }, [year, month, day]);
 
     const handleYearChange = (newYear: number) => setYear(newYear);
     const handleMonthChange = (newMonth: number) => setMonth(newMonth);
@@ -104,21 +106,24 @@ const RegisterStep2 = ({ route }: any) => {
         setGender(value);
     };
     const handleSubmit = (values: RegisterValues): void => {
-        const data = { weight: Number(weight), height: Number(height), dob: dob.toISOString().split('T')[0], email: values.email }
+        const data = { weight: Number(weight), gender: gender, height: Number(height), dob: dob.toISOString().split('T')[0], email: values.email }
         navigation.navigate(SCREENS_NAME.REGISTER.STEP3, { valuesStep2: { ...data, ...valuesStep1 } });
     };
 
     const handleResetTime = async (values: RegisterValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
-        setIsGetCode(true)
-        //resetTime
-        setCheckResetTime(pre => !pre);
-        setTimeUp(false)
-        setCheckCode("loading")
+
+        setIsLoading(true)
         clearField('code', setFieldValue)
         try {
             const res = await authService.verifyEmailApi(values.email);
             console.log("118", res)
             if (res.code == 200) {
+                setIsGetCode(true)
+                //resetTime
+                setCheckResetTime(pre => !pre);
+                setTimeUp(false)
+                setIsLoading(false)
+                setCheckCode("loading")
                 setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
@@ -130,6 +135,9 @@ const RegisterStep2 = ({ route }: any) => {
                     setIsEmailExits(error.response.data.message)
                 }
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     };
     const clearField = (
@@ -495,6 +503,7 @@ const RegisterStep2 = ({ route }: any) => {
                             <Text style={styles.text}>{t('common.text.next')}</Text>
                         </Pressable>
                     </View>
+                    {isLoading && <LoadingScreen />}
                 </SafeAreaView>
             )
             }

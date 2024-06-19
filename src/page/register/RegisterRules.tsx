@@ -13,12 +13,15 @@ import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
 import { authService } from '../../services/auth';
 import axios from 'axios';
+import LoadingScreen from '../../component/loading';
 
 const RegisterRules = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checked, setChecked] = useState<boolean>(false)
     const { data } = route.params;
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [messageError, setMessageError] = useState<string>("")
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
@@ -26,18 +29,25 @@ const RegisterRules = ({ route }: any) => {
         setChecked(checked => !checked)
     }
     const handleSubmit = async (): Promise<void> => {
+        setIsLoading(true)
         if (checked) {
             try {
-                console.log("31", data)
+                console.log("35", data)
                 const res = await authService.register(data)
                 if (res.code === 201) {
+                    setIsLoading(false)
                     navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
                 }
-            } catch (error) {
-                if (axios.isAxiosError(error) && error.response) {
-                    console.log("r", error.response.data.message)
-                    // console.log("r", error.response.data.code)
+            } catch (error: any) {
+                console.log(error.response.data.message)
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
                 }
+            }
+            finally {
+                setIsLoading(false)
             }
         }
     }
@@ -107,11 +117,13 @@ const RegisterRules = ({ route }: any) => {
                         <Text>{t("common.text.view")}</Text>
                     </View>
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 <Pressable
                     disabled={checked ? false : true}
                     onPress={handleSubmit} style={[styles.button, { backgroundColor: checked ? colors.primary : colors.gray }]} >
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
+                {isLoading && <LoadingScreen />}
             </SafeAreaView >
         </ScrollView >
     );
@@ -164,8 +176,11 @@ const styles = StyleSheet.create({
         //     { translateX: -150 },
         // ],
     },
-
-
+    textError: {
+        fontSize: 18,
+        fontWeight: "500",
+        color: colors.red
+    },
 })
 
 export default RegisterRules;

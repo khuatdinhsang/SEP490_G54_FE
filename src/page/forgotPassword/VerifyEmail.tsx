@@ -18,6 +18,7 @@ import CountdownTimer from '../../component/countDownTime';
 import InputComponent from '../../component/input';
 import { authService } from '../../services/auth';
 import axios from 'axios';
+import LoadingScreen from '../../component/loading';
 
 interface typeValues {
     email: string,
@@ -34,17 +35,20 @@ const VerifyEmail = () => {
     const [isGetCode, setIsGetCode] = useState<boolean>(false)
     const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true)
     const [isEmailExits, setIsEmailExits] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const handleResetTime = async (values: typeValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
-        setIsGetCode(true)
-        //resetTime
-        setCheckResetTime(pre => !pre);
-        setTimeUp(false)
-        setCheckCode("loading")
+        setIsLoading(true)
         clearField('code', setFieldValue)
         try {
             const res = await authService.forgetPassword(values.email);
-            console.log("118", res)
+            console.log("49", res)
             if (res.code == 200) {
+                setIsGetCode(true)
+                setCheckCode("loading")
+                //resetTime
+                setCheckResetTime(pre => !pre);
+                setTimeUp(false)
+                setIsLoading(false)
                 setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
@@ -56,6 +60,9 @@ const VerifyEmail = () => {
                     setIsEmailExits(error.response.data.message)
                 }
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     };
     const loginPage = () => {
@@ -255,9 +262,11 @@ const VerifyEmail = () => {
                     <Pressable disabled={checkCode === 'success' ? false : true} onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: checkCode == 'success' ? colors.primary : colors.gray }]} >
                         <Text style={styles.textButton}>{t("common.text.confirm")}</Text>
                     </Pressable>
+                    {isLoading && <LoadingScreen />}
                 </SafeAreaView >
             )}
         </Formik>
+
     );
 };
 const styles = StyleSheet.create({

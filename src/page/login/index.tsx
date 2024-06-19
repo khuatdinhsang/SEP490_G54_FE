@@ -56,19 +56,18 @@ const Login = () => {
         try {
             const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
             if (res.code == 200) {
+                setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
-            if (error?.code == 400) {
-                setMessageError(error.message)
-            } if (error?.code == 401) {
-                setMessageError(error.message)
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.data.code == 400 || error.response.data.code == 401) {
+                    setMessageError(error.response.data.message)
+                }
             }
         } finally {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000);
+            setIsLoading(false)
         }
 
     }

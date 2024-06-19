@@ -10,6 +10,7 @@ import colors from '../../constant/color';
 import InputComponent from '../../component/input';
 import { questionResponse } from './const';
 import { questionService } from '../../services/question';
+import LoadingScreen from '../../component/loading';
 
 const QuestionDetail = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -17,21 +18,26 @@ const QuestionDetail = ({ route }: any) => {
     const { questionId } = route.params;
     const [questionDetail, setQuestionDetail] = useState<questionResponse>()
     const [messageError, setErrorMessage] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
     const fetchDetailQuestion = async () => {
+        setIsLoading(true)
         try {
             const res = await questionService.getDetailQuestion(questionId);
             console.log("Res", res);
             if (res.code === 200) {
+                setIsLoading(false)
                 setQuestionDetail(res.result);
             } else {
                 setErrorMessage("Failed to fetch questions.");
             }
         } catch (error: any) {
             if (error?.response?.status === 400 || error?.response?.status === 401) {
-                setErrorMessage(error.message);
+                setErrorMessage(error.response.data.message);
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
+        } finally {
+            setIsLoading(false)
         }
     };
     useEffect(() => {
@@ -42,6 +48,7 @@ const QuestionDetail = ({ route }: any) => {
         navigation.goBack()
     }
     const nextPage = () => {
+        navigateQuestion()
     }
     const navigateQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
@@ -102,6 +109,7 @@ const QuestionDetail = ({ route }: any) => {
                             />
                         </View>
                     }
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -112,6 +120,7 @@ const QuestionDetail = ({ route }: any) => {
                     <Text style={styles.textButton}> {t('common.text.confirm')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -158,6 +167,11 @@ const styles = StyleSheet.create({
         lineHeight: 60,
         fontWeight: "500",
         fontSize: 18
+    },
+    textError: {
+        fontSize: 18,
+        fontWeight: "500",
+        color: colors.red
     },
 })
 export default QuestionDetail

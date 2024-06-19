@@ -14,11 +14,13 @@ import DialogSingleComponent from '../../component/dialog-single';
 import { IMAGE } from '../../constant/image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { questionService } from '../../services/question';
+import LoadingScreen from '../../component/loading';
 
 const AddQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [messageError, setMessageError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [isShowModal, setIsShowModal] = useState<boolean>(false)
     const [typeUserQuestion, setTypeUserQuestion] = useState("ASSIGN_ADMIN")
     const goBackPreviousPage = () => {
@@ -36,6 +38,7 @@ const AddQuestion = () => {
         setFieldValue(field, '');
     };
     const handleSubmit = async (values: { title: string, content: string }, setFieldValue: (field: string, value: any) => void): Promise<any> => {
+        setIsLoading(true)
         const transformData = {
             typeUserQuestion: typeUserQuestion,
             title: values.title,
@@ -44,16 +47,20 @@ const AddQuestion = () => {
         try {
             const res = await questionService.create(transformData)
             if (res.code === 201) {
+                setIsLoading(false)
                 setIsShowModal(true)
                 clearField('title', setFieldValue)
                 clearField('content', setFieldValue)
             }
         } catch (error: any) {
             if (error?.response?.status === 400 || error?.response?.status === 401) {
-                setMessageError(error.message);
+                setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     }
     const navigateQuestion = () => {
@@ -167,6 +174,7 @@ const AddQuestion = () => {
                                         />
                                     </View>
                                 </View>
+
                             </ScrollView>
                             <View style={[styles.buttonContainer, { backgroundColor: colors.background }]}>
                                 <Pressable
@@ -176,6 +184,7 @@ const AddQuestion = () => {
                                     <Text style={styles.textButton}> {t('questionManagement.write')}</Text>
                                 </Pressable>
                             </View>
+                            {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                         </View>
                     )}
                 </Formik>
@@ -188,6 +197,7 @@ const AddQuestion = () => {
                 buttonText={t("common.text.confirm")}
                 handleClickButton={nextPage}
             />
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -245,6 +255,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         height: 56,
+    },
+    textError: {
+        fontSize: 18,
+        fontWeight: "500",
+        color: colors.red
     },
 })
 export default AddQuestion

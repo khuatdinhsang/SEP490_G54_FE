@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import QuestionComponent from './component/Question';
 import { questionResponse } from './const';
+import LoadingScreen from '../../component/loading';
 
 
 const Question = () => {
@@ -20,24 +21,30 @@ const Question = () => {
     const { t, i18n } = useTranslation();
     const [listQuestion, setListQuestion] = useState<questionResponse[]>([])
     const [messageError, setMessageError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const goBackPreviousPage = () => {
         navigation.goBack();
     }
     const fetchListQuestion = async () => {
+        setIsLoading(true)
         try {
             const res = await questionService.getListQuestionByUser();
             console.log("Res", res);
             if (res.code === 200) {
                 setListQuestion(res.result || []);
+                setIsLoading(false)
             } else {
                 setMessageError("Failed to fetch questions.");
             }
         } catch (error: any) {
             if (error?.response?.status === 400 || error?.response?.status === 401) {
-                setMessageError(error.message);
+                setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     };
     useFocusEffect(
@@ -94,6 +101,7 @@ const Question = () => {
                             <Text style={styles.textDesc}>{t('questionManagement.typeToRequest')}</Text>
                         </View>}
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -102,6 +110,7 @@ const Question = () => {
                     <Text style={styles.textButton}> {t('questionManagement.write')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -161,6 +170,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.gray_G06,
         textAlign: "center",
+    },
+    textError: {
+        fontSize: 18,
+        fontWeight: "500",
+        color: colors.red
     },
 })
 export default Question
