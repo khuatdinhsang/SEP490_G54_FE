@@ -8,13 +8,19 @@ import colors from '../../constant/color';
 import { paddingHorizontalScreen } from '../../styles/padding';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SCREENS_NAME } from '../../navigator/const';
+import { useState } from 'react';
+import LoadingScreen from '../../component/loading';
 
 const SettingLogout = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+  const [isLoading, setIsLoading] = useState(false)
   const handlePressYesLogout = async () => {
+    setIsLoading(true)
     await AsyncStorage.removeItem('accessToken');
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
     navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
   };
 
@@ -40,6 +46,7 @@ const SettingLogout = () => {
         handleClick={handlePressNoLogout}
         backgroundColor={colors.black}
       />
+      {isLoading && <LoadingScreen />}
     </View>
   );
 };

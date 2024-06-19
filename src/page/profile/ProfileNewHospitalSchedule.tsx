@@ -22,6 +22,7 @@ import SelectDate from '../../component/inputSelectDate';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { ErrorMessage } from 'formik';
 import { SCREENS_NAME } from '../../navigator/const';
+import LoadingScreen from '../../component/loading';
 
 const ProfileNewHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -37,7 +38,8 @@ const ProfileNewHospitalSchedule = () => {
   const [showMonthScroll, setShowMonthScroll] = useState(false);
   const [showDayScroll, setShowDayScroll] = useState(false);
   const { t, i18n } = useTranslation();
-  const [isValidDate, setIsValidDate] = useState(true);
+  // const [isValidDate, setIsValidDate] = useState(true);
+  const [isLoading, setIsLoading] = useState(false)
   const [date, setDate] = useState<Date>(new Date())
   const handleYearChange = (newYear: number) => setYear(newYear);
   const handleMonthChange = (newMonth: number) => setMonth(newMonth);
@@ -47,10 +49,10 @@ const ProfileNewHospitalSchedule = () => {
   const toggleDayScroll = () => setShowDayScroll(!showDayScroll);
   const [messageError, setMessageError] = useState<string>("")
   const [isValidTime, setIsValidTime] = useState<string>("")
-  useEffect(() => {
-    const isValid = isValidDateForYearMonthDay(year, month, day);
-    setIsValidDate(isValid);
-  }, [year, month, day]);
+  // useEffect(() => {
+  //   const isValid = isValidDateForYearMonthDay(year, month, day);
+  //   setIsValidDate(isValid);
+  // }, [year, month, day]);
   useEffect(() => {
     setDate(new Date(year, month - 1, day + 1));
   }, [day, month, year])
@@ -79,6 +81,7 @@ const ProfileNewHospitalSchedule = () => {
   };
 
   const handleCreateSchedule = async (): Promise<any> => {
+    setIsLoading(true)
     if (date.getTime() < Date.now()) {
       setIsValidTime("Invalid time")
       return
@@ -93,14 +96,18 @@ const ProfileNewHospitalSchedule = () => {
     try {
       const res = await medicalAppointmentService.create(transformData)
       if (res.code === 201) {
+        setIsLoading(false)
         navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE)
       }
     } catch (error: any) {
       if (error?.response?.status === 400 || error?.response?.status === 401) {
-        setMessageError(error.message);
+        setMessageError(error.response.data.message);
       } else {
         setMessageError("Unexpected error occurred.");
       }
+    }
+    finally {
+      setIsLoading(false)
     }
 
   };
@@ -209,7 +216,7 @@ const ProfileNewHospitalSchedule = () => {
               }}
             />
           </View>
-          {messageError && <Text style={styles.textError}>{messageError}</Text>}
+          {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
           <View style={{ marginTop: 15 }} />
           <ButtonComponent
             handleClick={handleCreateSchedule}
@@ -219,6 +226,7 @@ const ProfileNewHospitalSchedule = () => {
           <View style={{ paddingTop: 20 }} />
         </View>
       </ScrollView>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };

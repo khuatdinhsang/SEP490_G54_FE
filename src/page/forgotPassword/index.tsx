@@ -18,6 +18,7 @@ import CountdownTimer from '../../component/countDownTime';
 import { authService } from '../../services/auth';
 import axios from 'axios';
 import InputComponent from '../../component/input';
+import LoadingScreen from '../../component/loading';
 interface typeValues {
     password: string,
     confirmPassword: string
@@ -28,23 +29,28 @@ const ForgotPassword = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [error, setError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
     const handleSubmit = async (values: typeValues): Promise<void> => {
+        setIsLoading(true)
         const data = { password: values.password, email, code }
         try {
             const res = await authService.verifyForgetPassword(data);
-            console.log("118", res)
             if (res.code == 200) {
+                setIsLoading(false)
                 navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {
-                if (error.response.data.code == 400) {
+                if (error.response.data.code == 400 || error.response.data.code == 401) {
                     setError(error.response.data.message)
                 }
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     }
 
@@ -120,6 +126,7 @@ const ForgotPassword = ({ route }: any) => {
                     )}
                 </Formik>
             </SafeAreaView >
+            {isLoading && <LoadingScreen />}
         </View>
     );
 };

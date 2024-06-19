@@ -10,28 +10,35 @@ import { SCREENS_NAME } from '../../navigator/const';
 import { useCallback, useState } from 'react';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { appointment } from '../../constant/type/medical';
+import LoadingScreen from '../../component/loading';
 
 const ProfileMakeHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [listAppointments, setListAppointments] = useState<appointment[]>([]);
   const [messageError, setMessageError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false)
   const handleCreateSchedule = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.NEW_HOSPITAL_SCHEDULE);
   };
   const fetchListAppointment = async () => {
+    setIsLoading(true)
     try {
       const res = await medicalAppointmentService.getAll();
       if (res.code === 200) {
+        setIsLoading(false)
         setListAppointments(res.result);
       } else {
         setMessageError("Failed to fetch questions.");
       }
     } catch (error: any) {
       if (error?.response?.status === 400 || error?.response?.status === 401) {
-        setMessageError(error.message);
+        setMessageError(error.response.data.message);
       } else {
         setMessageError("Unexpected error occurred.");
       }
+    }
+    finally {
+      setIsLoading(false)
     }
   };
   useFocusEffect(
@@ -59,11 +66,13 @@ const ProfileMakeHospitalSchedule = () => {
               appointment={item}
             />
           ))}
+          {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
         </ScrollView>
         <View style={styles.buttonContainer}>
           <HospitalScheduleButtonComponent handleOnPress={handleCreateSchedule} />
         </View>
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -94,6 +103,11 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: colors.black,
     marginLeft: 12,
+  },
+  textError: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: colors.red
   },
 });
 
