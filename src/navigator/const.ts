@@ -46,6 +46,8 @@ import MedicationChart from '../page/recordHealthData/pages/Medication/Chart';
 import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
 import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
+import WeeklyEvaluate from '../page/evaluate/WeeklyEvaluate';
+import WeeklyEvaluateDetail from '../page/evaluate/WeeklyEvaluateDetail';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -114,6 +116,10 @@ export const SCREENS_NAME = {
         FOOD_INTAKE_RECORD: 'Food Injection Record',
         FOOD_INTAKE_CHART: 'Food Injection Chart',
     },
+    EVALUATE: {
+        WEEKLY: 'Evaluate Week',
+        DETAIL_WEEKLY: 'Evaluate Detail Week',
+    }
 };
 
 const SCREENS_STACK_LOGIN = [
@@ -328,6 +334,17 @@ const SCREENS_STACK_RECORD_DATA = [
     },
 ];
 
+const SCREENS_STACK_EVALUATE = [
+    {
+        name: SCREENS_NAME.EVALUATE.WEEKLY,
+        component: WeeklyEvaluate,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.DETAIL_WEEKLY,
+        component: WeeklyEvaluateDetail,
+    },
+]
+
 
 const SCREENS_STACK = [
     ...SCREENS_STACK_SETTING,
@@ -339,5 +356,6 @@ const SCREENS_STACK = [
     ...SCREENS_STACK_PROFILE,
     ...SCREENS_STACK_QUESTION,
     ...SCREENS_STACK_RECORD_DATA,
+    ...SCREENS_STACK_EVALUATE
 ];
 export { SCREENS_STACK };

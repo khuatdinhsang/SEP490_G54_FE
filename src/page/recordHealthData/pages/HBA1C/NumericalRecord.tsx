@@ -48,29 +48,29 @@ const NumericalRecord = ({ route }: any) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    text={`${t('recordHealthData.glycatedHemoglobin')}/${t('recordHealthData.cholesterol')}/${t('recordHealthData.bloodSugar')}`}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
+            <View style={[flexRow, { backgroundColor: colors.white }]}>
+                <Pressable
+                    style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                        {t('recordHealthData.bloodCountRecord')}
+                    </Text>
+                </Pressable>
+                <Pressable
+                    onPress={navigateChart}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                        {t('recordHealthData.viewChart')}
+                    </Text>
+                </Pressable>
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        text={`${t('recordHealthData.glycatedHemoglobin')}/${t('recordHealthData.cholesterol')}/${t('recordHealthData.bloodSugar')}`}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
-                <View style={[flexRow, { backgroundColor: colors.white }]}>
-                    <Pressable
-                        style={[styles.navigate, styles.active]}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.bloodCountRecord')}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={navigateChart}
-                        style={styles.navigate}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.viewChart')}
-                        </Text>
-                    </Pressable>
-                </View>
                 <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
                     <Text style={styles.title}>{t('recordHealthData.chooseMeal')}/{t('recordHealthData.chooseMealTime')}</Text>
                     {data && data.map((item) => {

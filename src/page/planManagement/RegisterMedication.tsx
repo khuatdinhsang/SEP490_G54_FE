@@ -204,7 +204,9 @@ const RegisterMedication = () => {
                             })}
                         </ScrollView>
                         <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
-                            <Pressable style={[styles.btn, { backgroundColor: colors.gray_G02 }]}>
+                            <Pressable
+                                onPress={closeModal}
+                                style={[styles.btn, { backgroundColor: colors.gray_G02 }]}>
                                 <Text style={{ textAlign: 'center', color: colors.gray_G04 }}>{t("common.text.cancel")}</Text>
                             </Pressable>
                             <Pressable style={[styles.btn, { backgroundColor: colors.primary }]}>

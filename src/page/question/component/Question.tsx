@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { flexRowSpaceBetween } from '../../../styles/flex'
 import colors from '../../../constant/color'
 import { useTranslation } from 'react-i18next'
-import { dataQuestion, questionResponse } from '../const'
+import { questionResponse } from '../const'
 
 type itemQuestion = {
     question: questionResponse;

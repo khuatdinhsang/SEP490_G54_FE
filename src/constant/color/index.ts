@@ -24,6 +24,7 @@ const colors = {
     green_background: '#EAFFFC',
     blue_01: '#5653FF',
     blue_background: '#EEEEFF',
+    blue: '#F5F5FF',
     background: '#F6F8FC',
 };
 

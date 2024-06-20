@@ -48,29 +48,29 @@ const PositiveMindRecord = () => {
     };
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    textRight={t("common.text.next")}
+                    text={t('planManagement.text.positiveMind')}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
+            <View style={flexRow}>
+                <Pressable style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                        {t('recordHealthData.positiveMindProfile')}
+                    </Text>
+                </Pressable>
+                <Pressable
+                    onPress={nextPage}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                        {t('recordHealthData.viewChart')}
+                    </Text>
+                </Pressable>
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        textRight={t("common.text.next")}
-                        text={t('planManagement.text.positiveMind')}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
-                <View style={flexRow}>
-                    <Pressable style={[styles.navigate, styles.active]}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.positiveMindProfile')}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={nextPage}
-                        style={styles.navigate}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.viewChart')}
-                        </Text>
-                    </Pressable>
-                </View>
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                     <Text style={styles.title}> {t('recordHealthData.selectEveryThing')}</Text>
                     {data.map((item: dataType) => {

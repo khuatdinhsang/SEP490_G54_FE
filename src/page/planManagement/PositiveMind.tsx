@@ -87,19 +87,19 @@ const PositiveMind: React.FC = () => {
                 </TouchableOpacity>
             )}
             <View style={{ flex: 1 }}>
+                <View style={{ paddingHorizontal: 20 }}>
+                    <HeaderNavigatorComponent
+                        isIconLeft={true}
+                        isTextRight={true}
+                        textRightStyle={{ color: selectedItems.length === 3 ? colors.primary : colors.gray_G04 }}
+                        textRight={t("common.text.next")}
+                        text={t("planManagement.text.positiveMind")}
+                        handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={nextPage}
+                    />
+                </View>
+                <ProgressHeader index={[0]} length={5} />
                 <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-                    <View style={{ paddingHorizontal: 20 }}>
-                        <HeaderNavigatorComponent
-                            isIconLeft={true}
-                            isTextRight={true}
-                            textRightStyle={{ color: selectedItems.length === 3 ? colors.primary : colors.gray_G04 }}
-                            textRight={t("common.text.next")}
-                            text={t("planManagement.text.positiveMind")}
-                            handleClickArrowLeft={goBackPreviousPage}
-                            handleClickIconRight={nextPage}
-                        />
-                    </View>
-                    <ProgressHeader index={[0]} length={5} />
                     <View>
                         <Text style={styles.mentalRules}>{t("planManagement.text.mentalRules")}</Text>
                         <View style={{ marginTop: 10 }}>
@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
         top: 32,
         left: '50%',
         zIndex: 10,
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,
@@ -222,6 +223,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         paddingBottom: 20,
+        paddingTop: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
     },
     warning: {

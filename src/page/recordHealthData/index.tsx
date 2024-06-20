@@ -22,51 +22,59 @@ const RecordHealthData = () => {
         {
             id: 1,
             title: `${t('recordHealthData.glycatedHemoglobin')},${t('recordHealthData.cholesterol')},${t('recordHealthData.bloodSugar')}`,
-            image: IMAGE.RECORD_DATA.BLOOD
+            image: IMAGE.RECORD_DATA.BLOOD,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD
         }, {
             id: 2,
             title: t('recordHealthData.bloodPressure'),
-            image: IMAGE.RECORD_DATA.THERMOMETER
+            image: IMAGE.RECORD_DATA.THERMOMETER,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE
         }, {
             id: 3,
             title: t('recordHealthData.weight'),
-            image: IMAGE.RECORD_DATA.CHART
+            image: IMAGE.RECORD_DATA.CHART,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT
         }, {
             id: 4,
             title: t('planManagement.text.positiveMind'),
-            image: IMAGE.RECORD_DATA.HEART_ORANGE
+            image: IMAGE.RECORD_DATA.HEART_ORANGE,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD
         }, {
             id: 5,
             title: t('planManagement.text.workout'),
-            image: IMAGE.PLAN_MANAGEMENT.HUMAN
+            image: IMAGE.PLAN_MANAGEMENT.HUMAN,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD
         }, {
             id: 6,
             title: t('recordHealthData.diet'),
-            image: IMAGE.PLAN_MANAGEMENT.VEGETABLE
+            image: IMAGE.PLAN_MANAGEMENT.VEGETABLE,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD
         }, {
             id: 7,
             title: t('planManagement.text.takingMedication'),
-            image: IMAGE.PLAN_MANAGEMENT.MEDICATION
+            image: IMAGE.PLAN_MANAGEMENT.MEDICATION,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD
         }, {
             id: 8,
             title: t('planManagement.text.numberSteps'),
-            image: IMAGE.PLAN_MANAGEMENT.SHOES
+            image: IMAGE.PLAN_MANAGEMENT.SHOES,
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART
         }
     ]
     const [listRecord, setListRecord] = useState<recordData[]>(initData)
-    const handleNavigate = () => {
-        navigation.navigate(SCREENS_NAME.HOME.MAIN)
+    const handleNavigate = (screen: string) => {
+        navigation.navigate(screen)
     }
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    text={t('recordHealthData.record')}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        text={t('recordHealthData.record')}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
                 <View style={styles.content}>
                     <View style={[flexRowCenter, { marginBottom: 40 }]}>
                         <Text style={styles.textContent}>{t('recordHealthData.myToday')}</Text>
@@ -94,7 +102,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20
     },
     header: {
-        backgroundColor: colors.white
+        backgroundColor: colors.white,
+        paddingHorizontal: 20
     },
     content: {
         paddingHorizontal: 20,

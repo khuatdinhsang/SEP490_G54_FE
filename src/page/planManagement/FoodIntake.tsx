@@ -11,12 +11,18 @@ import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import ProgressHeader from '../../component/progessHeader';
 import TableExample from './component/TableExample';
+import InputNumber from '../../component/inputNumber';
 
 const FoodIntake = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [sizeDisk, setSizeDisk] = useState<string>();
-
+    const [sizeDisk, setSizeDisk] = useState<string>("");
+    const handleSetSizeDisk = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value)) {
+            setSizeDisk(value);
+        }
+    }
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
     }
@@ -48,15 +54,13 @@ const FoodIntake = () => {
                     <View style={[flexRowCenter, { flexDirection: 'column' }]}>
                         <Image source={IMAGE.PLAN_MANAGEMENT.FORK_KNIFE} />
                         <Pressable style={styles.inputContainer}>
-                            <View style={[styles.box, { borderColor: !sizeDisk ? colors.primary : colors.gray }]}>
-                                <Text style={styles.unit}>{t("planManagement.text.disk")}</Text>
-                                <TextInput
-                                    style={styles.unitInput}
-                                    keyboardType="numeric"
-                                    value={sizeDisk}
-                                    onChangeText={setSizeDisk}
-                                />
-                            </View>
+                            <InputNumber
+                                textRight={t("planManagement.text.disk")}
+                                value={sizeDisk}
+                                keyboardType={"numeric"}
+                                handleSetValue={handleSetSizeDisk}
+                                styleInput={{ paddingLeft: 50 }}
+                            />
                             {(!sizeDisk) && <View style={flexRowCenter}>
                                 <View style={styles.bridge}>
                                     <View style={styles.diamond} />
@@ -117,19 +121,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: 170,
     },
-    box: {
-        borderRadius: 8,
-        borderWidth: 1,
-        height: 56,
-        position: 'relative',
-    },
-    unit: {
-        lineHeight: 56,
-        position: 'absolute',
-        zIndex: 1000,
-        right: 20,
-        color: colors.black,
-    },
     unitInput: {
         width: '100%',
         height: 56,
@@ -139,6 +130,8 @@ const styles = StyleSheet.create({
     bridge: {
         position: 'absolute',
         top: 5,
+        left: "50%",
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,

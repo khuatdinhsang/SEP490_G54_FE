@@ -81,4 +81,14 @@ export const IMAGE = {
     ICON_FACE_SMILES: require('assets/image/recordData/icon_face.png'),
     CALENDAR: require('assets/image/recordData/Category.png'),
   },
+  EVALUATE: {
+    NOTE: require('assets/image/evaluate/note.png'),
+    HIGH: require('assets/image/evaluate/eval_high.png'),
+    CONG1: require('assets/image/evaluate/cong1.png'),
+    CONG2: require('assets/image/evaluate/cong2.png'),
+    CONG3: require('assets/image/evaluate/cong3.png'),
+    SAD1: require('assets/image/evaluate/icon_sad.png'),
+    DOCTOR: require('assets/image/evaluate/icon__doctor.png'),
+    CATEGORY: require('assets/image/evaluate/Category.png'),
+  }
 };

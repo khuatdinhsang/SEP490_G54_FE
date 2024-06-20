@@ -140,21 +140,21 @@ const ListRegisterMedication = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={{ flex: 1 }}>
+                <View style={{ paddingHorizontal: 20, backgroundColor: colors.white }}>
+                    <HeaderNavigatorComponent
+                        isIconLeft={true}
+                        isTextRight={true}
+                        textRight={t("common.text.next")}
+                        text={t("planManagement.text.takingMedication")}
+                        handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={nextPage}
+                        textRightStyle={{ color: colors.primary }}
+                    />
+                </View>
+                <View style={{ backgroundColor: colors.white }}>
+                    <ProgressHeader index={[0, 1, 2, 3]} length={5} />
+                </View>
                 <ScrollView contentContainerStyle={{ paddingBottom: 0 }} >
-                    <View style={{ paddingHorizontal: 20, backgroundColor: colors.white }}>
-                        <HeaderNavigatorComponent
-                            isIconLeft={true}
-                            isTextRight={true}
-                            textRight={t("common.text.next")}
-                            text={t("planManagement.text.takingMedication")}
-                            handleClickArrowLeft={goBackPreviousPage}
-                            handleClickIconRight={nextPage}
-                            textRightStyle={{ color: colors.primary }}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: colors.white }}>
-                        <ProgressHeader index={[0, 1, 2, 3]} length={5} />
-                    </View>
                     <View >
                         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
                             <Text style={[styles.textPlan, { marginBottom: 20 }]}>{t("planManagement.text.registerMedication")}</Text>
