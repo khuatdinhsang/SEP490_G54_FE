@@ -48,17 +48,17 @@ const ProfileMakeHospitalSchedule = () => {
   );
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <HeaderNavigatorComponent
-          text="병원 일정 설정"
-          isIconLeft={true}
-          handleClickArrowLeft={() => {
-            navigation.goBack();
-          }}
-        />
-      </View>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.header}>
+          <HeaderNavigatorComponent
+            text="병원 일정 설정"
+            isIconLeft={true}
+            handleClickArrowLeft={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+        <View style={styles.container}>
           {listAppointments && listAppointments.map((item) => (
             <HospitalScheduleComponent
               key={item.id}
@@ -67,11 +67,11 @@ const ProfileMakeHospitalSchedule = () => {
             />
           ))}
           {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
-        </ScrollView>
-        <View style={styles.buttonContainer}>
-          <HospitalScheduleButtonComponent handleOnPress={handleCreateSchedule} />
+          <View style={styles.buttonContainer}>
+            <HospitalScheduleButtonComponent handleOnPress={handleCreateSchedule} />
+          </View>
         </View>
-      </View>
+      </ScrollView>
       {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );

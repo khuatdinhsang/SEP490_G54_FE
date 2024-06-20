@@ -1,4 +1,4 @@
-import Svg, {Rect} from 'react-native-svg';
+import Svg, { Rect } from 'react-native-svg';
 import {
   VictoryAxis,
   VictoryBar,
@@ -22,11 +22,11 @@ Example Props:
 */
 
 interface BarChartProps {
-  data: Array<{x: string; y: number; label?: string}>;
+  data: Array<{ x: string; y: number; label?: string }>;
 }
 
 const BarChart = (props: BarChartProps) => {
-  const {data} = props;
+  const { data } = props;
   const textLabel = {
     fontWeight: '400',
     fontSize: 14,
@@ -44,8 +44,8 @@ const BarChart = (props: BarChartProps) => {
       <VictoryAxis
         crossAxis
         style={{
-          axis: {stroke: colors.gray_G03},
-          grid: {stroke: 'transparent'},
+          axis: { stroke: colors.gray_G03 },
+          grid: { stroke: 'transparent' },
           tickLabels: {
             fill: (fill: any) => {
               return fill.index === data.length - 1
@@ -60,8 +60,8 @@ const BarChart = (props: BarChartProps) => {
         crossAxis
         dependentAxis
         style={{
-          axis: {stroke: 'transparent'},
-          tickLabels: {fill: 'transparent'},
+          axis: { stroke: 'transparent' },
+          tickLabels: { fill: 'transparent' },
           grid: {
             stroke: colors.gray_G03,
             strokeWidth: 0.5,
@@ -78,7 +78,7 @@ const BarChart = (props: BarChartProps) => {
           },
         }}
         data={data}
-        cornerRadius={{top: 9, bottom: 9}}
+        cornerRadius={{ top: 9, bottom: 9 }}
         barWidth={18}
         labelComponent={<CustomLabelComponent />}
       />

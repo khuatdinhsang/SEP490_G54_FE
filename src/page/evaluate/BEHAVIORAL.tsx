@@ -37,7 +37,7 @@ const BEHAVIORAL = ({ route }: any) => {
     };
     const nextPage = () => {
         console.log("Submitted answers: ", answers);
-        navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_P, { time })
+        
     }
     return (
         <SafeAreaView style={styles.container}>

@@ -7,6 +7,10 @@ export interface VerifyForgetPassword {
     code: string,
     password: string;
 }
+export interface changePassword {
+    oldPassword: string,
+    newPassword: string;
+}
 export interface RegisterData {
     email: string;
     password: string;

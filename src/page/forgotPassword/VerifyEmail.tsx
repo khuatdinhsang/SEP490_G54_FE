@@ -219,7 +219,8 @@ const VerifyEmail = () => {
                                         isEditable={isGetCode}
                                     />
                                     {values.code && (
-                                        <Pressable onPress={() => handleCheckCode(values)}>
+                                        <Pressable
+                                            onPress={() => handleCheckCode(values)}>
                                             <Text
                                                 style={[
                                                     styles.verification,
@@ -331,9 +332,12 @@ const styles = StyleSheet.create({
     },
     verification: {
         position: 'absolute',
-        right: 20,
-        top: -35,
-        zIndex: 1000
+        right: 0,
+        bottom: 0,
+        zIndex: 1000,
+        lineHeight: 60,
+        paddingHorizontal: 20,
+        height: 60,
     },
     backGrIcon: {
         backgroundColor: colors.gray,
