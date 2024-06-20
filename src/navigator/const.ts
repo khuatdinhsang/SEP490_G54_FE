@@ -48,6 +48,12 @@ import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 import WeeklyEvaluate from '../page/evaluate/WeeklyEvaluate';
 import WeeklyEvaluateDetail from '../page/evaluate/WeeklyEvaluateDetail';
+import MonthlyEvaluate from '../page/evaluate/MonthlyEvaluate';
+import SAT_SF_C from '../page/evaluate/SAT_SF_C';
+import SAT_SF_I from '../page/evaluate/SAT_SF_I';
+import SAT_SF_P from '../page/evaluate/SAT_SF_P';
+import BEHAVIORAL from '../page/evaluate/BEHAVIORAL';
+import SuccessSurvey from '../page/evaluate/SuccessSurvey';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -119,6 +125,12 @@ export const SCREENS_NAME = {
     EVALUATE: {
         WEEKLY: 'Evaluate Week',
         DETAIL_WEEKLY: 'Evaluate Detail Week',
+        MONTHLY: 'Evaluate Month',
+        SAT_SF_C: 'Survey SAT_SF_C',
+        SAT_SF_P: 'Survey SAT_SF_P',
+        SAT_SF_I: 'Survey SAT_SF_I',
+        BEHAVIORAL_MODEL: 'Behavioral Model',
+        SUCCESS_SURVEY: 'Success Survey'
     }
 };
 
@@ -342,6 +354,30 @@ const SCREENS_STACK_EVALUATE = [
     {
         name: SCREENS_NAME.EVALUATE.DETAIL_WEEKLY,
         component: WeeklyEvaluateDetail,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.MONTHLY,
+        component: MonthlyEvaluate,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SAT_SF_C,
+        component: SAT_SF_C,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SAT_SF_I,
+        component: SAT_SF_I,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SAT_SF_P,
+        component: SAT_SF_P,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.BEHAVIORAL_MODEL,
+        component: BEHAVIORAL,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SUCCESS_SURVEY,
+        component: SuccessSurvey,
     },
 ]
 

@@ -22,9 +22,7 @@ const PlanManagement = () => {
     <SafeAreaView>
       <View style={styles.container}>
         <HeaderNavigatorComponent
-          isIconXRight={false}
-          isTextRight={false}
-          textRight={t('planManagement.text.implementationPlan')}
+          isIconLeft={true}
           text={t("planManagement.text.positiveMind")}
           handleClickArrowLeft={goBackPreviousPage}
         />

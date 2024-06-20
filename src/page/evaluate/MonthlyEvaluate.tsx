@@ -8,9 +8,10 @@ import { flexRow, flexRowCenter } from '../../styles/flex';
 import colors from '../../constant/color';
 import WeeklyComponent from './conponent/weeklyComponent';
 import { IMAGE } from '../../constant/image';
+import MonthComponent from './conponent/monthlyComponent';
 import { SCREENS_NAME } from '../../navigator/const';
 
-const WeeklyEvaluate = () => {
+const MonthEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
 
@@ -28,33 +29,24 @@ const WeeklyEvaluate = () => {
                 />
             </View>
             <View style={flexRow}>
-                <Pressable style={[styles.navigate, styles.active]}>
-                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                <Pressable
+                    onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.WEEKLY)}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
                         {t('evaluate.week')}
                     </Text>
                 </Pressable>
-                <Pressable
-                    onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.MONTHLY)}
-                    style={styles.navigate}>
-                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                <Pressable style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
                         {t('evaluate.month')}
                     </Text>
                 </Pressable>
             </View>
             {true ? <ScrollView style={styles.scrollView}>
                 <View style={styles.content}>
-                    <View style={{ marginBottom: 20 }}>
-                        <WeeklyComponent isNew={true} time="10/2-10/8" />
-                        <WeeklyComponent isNew={true} time="10/2-10/8" />
-                        <WeeklyComponent time="10/2-10/8" />
-                        <WeeklyComponent isNew={true} time="10/2-10/8" />
-                        <WeeklyComponent time="10/2-10/8" />
-                        <WeeklyComponent time="10/2-10/8" />
-                        <WeeklyComponent isNew={true} time="10/2-10/8" />
-                        <WeeklyComponent time="10/2-10/8" />
-                        <WeeklyComponent isNew={true} time="10/2-10/8" />
-                        {/* Other WeeklyComponent instances can be added here */}
-                    </View>
+                    <MonthComponent time={10} />
+                    <MonthComponent time={9} />
+                    <MonthComponent time={8} />
                 </View>
             </ScrollView>
                 :
@@ -100,4 +92,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default WeeklyEvaluate;
+export default MonthEvaluate;
