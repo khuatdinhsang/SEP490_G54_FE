@@ -25,7 +25,7 @@ const PositiveMindChart = () => {
                 <View style={styles.header}>
                     <HeaderNavigatorComponent
                         isIconLeft={true}
-                        text={t('common.diseases.highBlood')}
+                        text={t('planManagement.text.positiveMind')}
                         handleClickArrowLeft={goBackPreviousPage}
                     />
                 </View>
@@ -34,7 +34,7 @@ const PositiveMindChart = () => {
                         onPress={navigateNumericalRecord}
                         style={styles.navigate}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.weightProfile')}
+                            {t('recordHealthData.positiveMindProfile')}
                         </Text>
                     </Pressable>
                     <Pressable style={[styles.navigate, styles.active]}>

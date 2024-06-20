@@ -38,7 +38,7 @@ const WeeklyEvaluate = () => {
                     </Text>
                 </Pressable>
             </View>
-            {false ? <ScrollView style={styles.scrollView}>
+            {true ? <ScrollView style={styles.scrollView}>
                 <View style={styles.content}>
                     <View style={{ marginBottom: 20 }}>
                         <WeeklyComponent isNew={true} time="10/2-10/8" />

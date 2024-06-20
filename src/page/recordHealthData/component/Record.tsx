@@ -6,12 +6,12 @@ import { recordData } from '../contant';
 
 type itemRecord = {
     record: recordData;
-    handleNavigate: () => void;
+    handleNavigate: (screen: string) => void;
 };
 const RecordComponent: React.FC<itemRecord> = ({ record, handleNavigate }) => {
     return (
         <Pressable
-            onPress={handleNavigate}
+            onPress={() => handleNavigate(record.screen)}
             style={styles.item}>
             <Image source={record.image || IMAGE.RECORD_DATA.BLOOD} />
             <Text style={styles.itemText}>{record.title}</Text>

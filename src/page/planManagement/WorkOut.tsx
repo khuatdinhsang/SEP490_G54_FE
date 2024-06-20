@@ -264,6 +264,8 @@ const styles = StyleSheet.create({
     bridge: {
         position: 'absolute',
         top: -20,
+        transform: [{ translateX: -7.5 }],
+        left: "50%"
     },
     diamond: {
         width: 15,

@@ -28,27 +28,33 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
           />
         )}
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>
-          <View>
+          <Pressable
+            onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN)}
+          >
             <Image
               source={IMAGE.HOME.CATEGORY1}
               style={styles.categoryItemIcon}
             />
             <Text style={styles.categoryItemText}>실천계획 관리</Text>
-          </View>
-          <View>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN)}
+          >
             <Image
               source={IMAGE.HOME.CATEGORY2}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>실천계획 관리</Text>
-          </View>
-          <View>
+            <Text style={styles.categoryItemText}>건강수치 기록</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.WEEKLY)}
+          >
             <Image
               source={IMAGE.HOME.CATEGORY3}
               style={styles.categoryItemIcon}
             />
             <Text style={styles.categoryItemText}>평가/결과 보기</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>
           <View>
@@ -67,7 +73,7 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
             </Pressable>
             <Text style={styles.categoryItemText}>문의작성</Text>
           </View>
-          <Pressable onPress={() => { navigation.navigate(SCREENS_NAME.PROFILE.MAIN) }}>
+          <Pressable onPress={() => { navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE) }}>
             <Image
               source={IMAGE.HOME.CATEGORY6}
               style={styles.categoryItemIcon}

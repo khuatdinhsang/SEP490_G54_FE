@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     },
     content: {
         paddingHorizontal: paddingHorizontalScreen,
-        height: '80%'
+        height: '80%',
+        // flex: 1
     },
     line: {
         marginTop: 15,

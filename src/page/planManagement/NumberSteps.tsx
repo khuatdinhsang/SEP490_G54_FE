@@ -10,9 +10,11 @@ import colors from '../../constant/color';
 import { flexCenter, flexRow, flexRowCenter } from '../../styles/flex';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice } from '../../util/Dimenssion';
+import InputNumber from '../../component/inputNumber';
 
 const NumberSteps = () => {
     const { t } = useTranslation();
+    const [numberSteps, setNumberSteps] = useState<string>("");
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const goBackPreviousPage = () => {
@@ -24,8 +26,13 @@ const NumberSteps = () => {
             navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
         }
     };
+    const handleSetNumberSteps = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value)) {
+            setNumberSteps(value);
+        }
+    }
 
-    const [numberSteps, setNumberSteps] = useState<string>();
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -47,18 +54,13 @@ const NumberSteps = () => {
                     <View style={[flexCenter, { flexDirection: 'column' }]}>
                         <Image style={{ marginTop: 30, height: 100, width: 100, marginBottom: 20 }} source={IMAGE.PLAN_MANAGEMENT.SHOES} />
                         <Pressable style={{ width: 170 }}>
-                            <View
-                                style={[styles.box, {
-                                    borderColor: !numberSteps ? colors.primary : colors.gray
-                                }]}>
-                                <Text style={styles.unit}>{t("common.text.step")}</Text>
-                                <TextInput
-                                    style={styles.unitInput}
-                                    keyboardType="numeric"
-                                    value={numberSteps}
-                                    onChangeText={setNumberSteps}
-                                />
-                            </View>
+                            <InputNumber
+                                textRight={t("common.text.step")}
+                                value={numberSteps}
+                                keyboardType={"numeric"}
+                                handleSetValue={handleSetNumberSteps}
+                                styleInput={{ paddingLeft: 50 }}
+                            />
                             {(!numberSteps) && <View style={flexRowCenter}>
                                 <View style={[flexRow, styles.bridge]}>
                                     <View style={styles.diamond} />
@@ -102,27 +104,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
     },
-    box: {
-        borderRadius: 8,
-        borderWidth: 1,
-        height: 56,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    unit: {
-        position: 'absolute',
-        right: 20,
-        color: colors.black,
-    },
-    unitInput: {
-        width: '100%',
-        height: 56,
-        position: 'absolute',
-        paddingLeft: '30%',
-    },
     bridge: {
         position: 'absolute',
         top: 5,
+        left: "50%",
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,

@@ -175,10 +175,9 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   bridge: {
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'absolute',
     top: '-50%',
+    transform: [{ translateX: 7.5 }]
   },
   diamond: {
     width: 15,
