@@ -307,6 +307,14 @@
     "congratulation": "축하합니다!",
     "successfulWeek": "성공적인 일주일을 보냈습니다",
     "activitySummary": "이번주 나의 건강활동 요약",
-    "noReview": "아직 평가 결과가 존재하지 않습니다"
+    "noReview": "아직 평가 결과가 존재하지 않습니다",
+    "answerSurvey": "설문하기",
+    "viewResult": "결과보기",
+    "abSolutelyNotCorrect": "전혀 그럴 않다",
+    "aPartCorrect": "약간 그렇다",
+    "prettyCorrect": "꽤 그렇다",
+    "absoluteCorrect": "매우 그렇다",
+    "thankyouSurvey": "수고하셨습니다!",
+    "viewChartResult": "이제 결과를 보러갈까요?"
   }
 }
