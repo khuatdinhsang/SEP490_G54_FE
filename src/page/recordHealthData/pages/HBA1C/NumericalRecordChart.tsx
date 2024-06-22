@@ -10,6 +10,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import BarChart from '../../../../component/bar-chart';
+import LineChart from '../../../../component/line-chart';
 
 
 const NumericalRecordChart = () => {
@@ -57,15 +58,29 @@ const NumericalRecordChart = () => {
                             <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
                         </Pressable>
                     </View>
-                    : <BarChart
+                    // : <BarChart
+                    //     data={[
+                    //         { x: '9/11', y: 2 },
+                    //         { x: '9/13', y: 2 },
+                    //         { x: '9/15', y: 3 },
+                    //         { x: '9/20', y: 3, label: '3점' },
+                    //         { x: '10/4', y: 3 },
+                    //         { x: '10/5', y: 3 },
+                    //     ]}
+                    : <LineChart
                         data={[
-                            { x: '9/11', y: 2 },
-                            { x: '9/13', y: 2 },
-                            { x: '9/15', y: 3 },
-                            { x: '9/20', y: 3, label: '3점' },
-                            { x: '10/4', y: 3 },
-                            { x: '10/5', y: 3 },
+                            { x: '9/11', y: 70 },
+                            { x: '9/15', y: 60 },
+                            { x: '9/20', y: 80 },
+                            { x: '10/4', y: 50 },
+                            { x: '10/5', y: 60, label: '60kg' },
                         ]}
+                        backgroundProps={{
+                            color: colors.primary,
+                            height: 20,
+                            y: 40,
+                        }}
+                        domainY={[0, 100]}
                     />
                 }
             </ScrollView>

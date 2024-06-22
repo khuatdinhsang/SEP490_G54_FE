@@ -1,14 +1,10 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-
-type itemType = {
-    name: string;
-    id: number;
-};
+import { mentalData } from '../../../constant/type/medical';
 
 type itemAdviceProps = {
-    item: itemType;
+    item: mentalData;
     handleSelectItem: (id: number, isAdd: boolean) => void;
 };
 const ItemAdviceSelect: React.FC<itemAdviceProps> = ({ item, handleSelectItem }) => {
@@ -16,7 +12,7 @@ const ItemAdviceSelect: React.FC<itemAdviceProps> = ({ item, handleSelectItem })
         <Pressable
             onPress={() => handleSelectItem(item.id, false)}
             style={styles.itemAdvice}>
-            <Text style={styles.textItemAdvice}>{item.name}</Text>
+            <Text style={styles.textItemAdvice}>{item.title}</Text>
             <View style={styles.add}>
                 <Text style={{ textAlign: 'center', color: colors.white }}>-</Text>
             </View>

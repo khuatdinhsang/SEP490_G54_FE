@@ -29,3 +29,19 @@ export interface listAppointMentResponse {
     code: number,
     result: appointment[]
 }
+export interface mentalData {
+    id: number,
+    title: number,
+    description: string,
+    deleted: false
+}
+export interface mentalResponse {
+    code: number,
+    result: mentalData[]
+}
+export interface mentalPost {
+    status: boolean,
+    weekStart: string,
+    mentalRuleId: number[],
+    date: string
+}

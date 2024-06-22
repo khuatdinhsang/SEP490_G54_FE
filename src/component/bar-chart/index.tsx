@@ -1,4 +1,4 @@
-import Svg, { Rect } from 'react-native-svg';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import {
   VictoryAxis,
   VictoryBar,
@@ -88,12 +88,18 @@ const BarChart = (props: BarChartProps) => {
 
 const CustomLabelComponent = (props: any) => (
   <Svg>
+    <Defs>
+      <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <Stop offset="0%" stopColor={colors.black} stopOpacity="0.7" />
+        <Stop offset="100%" stopColor={colors.gray_G10} stopOpacity="0.7" />
+      </LinearGradient>
+    </Defs>
     <Rect
       x={props.x - 12 - props.text.length * 5}
       y={props.y - 35}
       width={45}
       height={28}
-      fill={colors.gray_G10}
+      fill="url(#grad)"
       rx="8"
       ry="8"
     />
@@ -103,6 +109,8 @@ const CustomLabelComponent = (props: any) => (
       style={{
         fill: colors.white,
         fontSize: 14,
+        fontWeight: '400',
+        lineHeight: 20,
       }}
       dy={-15}
       renderInPortal={false}
