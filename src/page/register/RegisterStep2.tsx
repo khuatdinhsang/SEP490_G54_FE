@@ -608,9 +608,12 @@ const styles = StyleSheet.create({
     },
     verification: {
         position: 'absolute',
-        right: 20,
-        top: -37,
+        right: 0,
+        bottom: 0,
         zIndex: 1000,
+        lineHeight: 60,
+        paddingHorizontal: 20,
+        height: 60,
     },
 });
 export default RegisterStep2;

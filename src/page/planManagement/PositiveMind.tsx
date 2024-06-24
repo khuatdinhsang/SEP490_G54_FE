@@ -17,11 +17,10 @@ import DialogSingleComponent from '../../component/dialog-single';
 import WarningSelected from './component/WarningSelected';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+import { mentalData } from '../../constant/type/medical';
+import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
 
-type dataType = {
-    id: number;
-    name: string;
-};
 
 const PositiveMind: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -29,23 +28,64 @@ const PositiveMind: React.FC = () => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN);
     };
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const [warning, setWarning] = useState(false);
-    const initData = [
-        { id: 1, name: t("planManagement.advice.worry") },
-        { id: 2, name: t("planManagement.advice.felling") },
-        { id: 3, name: t("planManagement.advice.share") },
-        { id: 4, name: t("planManagement.advice.regret") },
-        { id: 5, name: t("planManagement.advice.negativeMind") },
-        { id: 6, name: t("planManagement.advice.negativeMind") },
-        { id: 7, name: t("planManagement.advice.negativeMind") },
-        { id: 8, name: t("planManagement.advice.negativeMind") },
-    ];
-    const [data, setData] = useState<dataType[]>(initData);
-    const [selectedItems, setSelectedItems] = useState<dataType[]>([]);
+    const [data, setData] = useState<mentalData[]>([]);
+    const [selectedItems, setSelectedItems] = useState<mentalData[]>([]);
+    useEffect(() => {
+        const fetchListMental = async () => {
+            setIsLoading(true)
+            try {
+                const res = await planService.getListMental()
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    setData(res.result);
+                } else {
+                    setMessageError("Failed to fetch questions.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+        };
+        fetchListMental()
+    }, [])
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (selectedItems.length === 3) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
+            const mentalRuleId = selectedItems.map(item => item.id)
+            const data = {
+                mentalRuleId,
+                status: true,
+                weekStart: new Date().toISOString(),
+                date: new Date().toISOString()
+            }
+            try {
+                const res = await planService.postListMental(data)
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
         }
     };
 
@@ -119,13 +159,13 @@ const PositiveMind: React.FC = () => {
                             </View>
                             {selectedItems.length > 0 && (
                                 <View style={styles.selectedItem}>
-                                    {selectedItems.map((item: dataType) => (
+                                    {selectedItems.map((item: mentalData) => (
                                         <ItemAdviceSelect key={item.id} item={item} handleSelectItem={handleSelectItem} />
                                     ))}
                                 </View>
                             )}
                             <View style={{ paddingHorizontal: 20 }}>
-                                {data.map((item: dataType) => {
+                                {data.map((item: mentalData) => {
                                     return (
                                         <ItemAdvice key={item.id} item={item} handleSelectItem={handleSelectItem} />
                                     );
@@ -134,6 +174,7 @@ const PositiveMind: React.FC = () => {
                         </View>
                     </View>
                 </ScrollView>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 <View style={styles.buttonContainer}>
                     <Pressable
                         disabled={selectedItems.length !== 3}
@@ -143,6 +184,7 @@ const PositiveMind: React.FC = () => {
                     </Pressable>
                 </View>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -236,6 +278,11 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
         color: colors.white,
+    },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 18
     }
 });
 

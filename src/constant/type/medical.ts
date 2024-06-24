@@ -29,3 +29,33 @@ export interface listAppointMentResponse {
     code: number,
     result: appointment[]
 }
+export interface mentalData {
+    id: number,
+    title: number,
+    description: string,
+    deleted: boolean
+}
+export interface mentalResponse {
+    code: number,
+    result: mentalData[]
+}
+export interface mentalPost {
+    status: boolean,
+    weekStart: string,
+    mentalRuleId: number[],
+    date: string
+}
+export interface activityPost {
+    planType: string | undefined,
+    weekStart: string,
+    planDuration: number,
+    schedule: string[]
+}
+export interface foodIntakePost {
+    dishPerDay: number,
+    weekStart: string
+}
+export interface stepsNumberPost {
+    plannedStepPerDay: number,
+    weekStart: string
+}

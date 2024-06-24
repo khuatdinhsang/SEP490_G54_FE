@@ -193,12 +193,6 @@ const styles = StyleSheet.create({
         top: -31,
         zIndex: 1000
     },
-    verification: {
-        position: 'absolute',
-        right: 20,
-        top: -35,
-        zIndex: 1000
-    },
     backGrIcon: {
         backgroundColor: colors.gray,
         width: 24,

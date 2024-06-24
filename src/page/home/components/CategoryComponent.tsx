@@ -72,6 +72,8 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
               />
             </Pressable>
             <Text style={styles.categoryItemText}>문의작성</Text>
+
+            
           </View>
           <Pressable onPress={() => { navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE) }}>
             <Image

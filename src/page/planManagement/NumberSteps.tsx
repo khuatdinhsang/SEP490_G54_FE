@@ -11,19 +11,45 @@ import { flexCenter, flexRow, flexRowCenter } from '../../styles/flex';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice } from '../../util/Dimenssion';
 import InputNumber from '../../component/inputNumber';
+import { planService } from '../../services/plan';
+import LoadingScreen from '../../component/loading';
 
 const NumberSteps = () => {
     const { t } = useTranslation();
     const [numberSteps, setNumberSteps] = useState<string>("");
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
     };
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (numberSteps) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+            try {
+                const data = {
+                    plannedStepPerDay: Number(numberSteps),
+                    weekStart: new Date().toISOString(),
+                }
+                const res = await planService.postStepsNumber(data)
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+
         }
     };
     const handleSetNumberSteps = (value: string) => {
@@ -32,8 +58,6 @@ const NumberSteps = () => {
             setNumberSteps(value);
         }
     }
-
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={{ flex: 1 }}>
@@ -72,6 +96,7 @@ const NumberSteps = () => {
                             </View>}
                         </Pressable>
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </ScrollView>
             </View>
             <Pressable
@@ -80,6 +105,7 @@ const NumberSteps = () => {
                 style={[styles.button, { backgroundColor: numberSteps ? colors.primary : colors.gray_G02 }]}>
                 <Text style={[styles.text, { color: numberSteps ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
             </Pressable>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 }
@@ -131,6 +157,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.white
     },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 18
+    }
 })
 
 export default NumberSteps;

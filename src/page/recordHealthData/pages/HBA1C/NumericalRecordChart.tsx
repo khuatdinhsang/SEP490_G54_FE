@@ -9,6 +9,8 @@ import { flexCenter, flexRow } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
+import BarChart from '../../../../component/bar-chart';
+import LineChart from '../../../../component/line-chart';
 
 
 const NumericalRecordChart = () => {
@@ -45,16 +47,42 @@ const NumericalRecordChart = () => {
                         </Text>
                     </Pressable>
                 </View>
-                <View style={[flexCenter, { height: '60%' }]}>
-                    <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                    <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                    <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
-                    <Pressable
-                        onPress={navigateNumericalRecord}
-                        style={styles.button}>
-                        <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
-                    </Pressable>
-                </View>
+                {false ?
+                    <View style={[flexCenter, { height: '60%' }]}>
+                        <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Pressable
+                            onPress={navigateNumericalRecord}
+                            style={styles.button}>
+                            <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
+                        </Pressable>
+                    </View>
+                    // : <BarChart
+                    //     data={[
+                    //         { x: '9/11', y: 2 },
+                    //         { x: '9/13', y: 2 },
+                    //         { x: '9/15', y: 3 },
+                    //         { x: '9/20', y: 3, label: '3점' },
+                    //         { x: '10/4', y: 3 },
+                    //         { x: '10/5', y: 3 },
+                    //     ]}
+                    : <LineChart
+                        data={[
+                            { x: '9/11', y: 70 },
+                            { x: '9/15', y: 60 },
+                            { x: '9/20', y: 80 },
+                            { x: '10/4', y: 50 },
+                            { x: '10/5', y: 60, label: '60kg' },
+                        ]}
+                        backgroundProps={{
+                            color: colors.primary,
+                            height: 20,
+                            y: 40,
+                        }}
+                        domainY={[0, 100]}
+                    />
+                }
             </ScrollView>
 
         </SafeAreaView>
