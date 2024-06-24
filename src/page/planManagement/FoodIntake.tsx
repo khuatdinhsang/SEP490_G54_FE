@@ -12,11 +12,15 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import ProgressHeader from '../../component/progessHeader';
 import TableExample from './component/TableExample';
 import InputNumber from '../../component/inputNumber';
+import { planService } from '../../services/plan';
+import LoadingScreen from '../../component/loading';
 
 const FoodIntake = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [sizeDisk, setSizeDisk] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const handleSetSizeDisk = (value: string) => {
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
@@ -27,12 +31,33 @@ const FoodIntake = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
     }
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (sizeDisk) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+            try {
+                const data = {
+                    dishPerDay: Number(sizeDisk),
+                    weekStart: new Date().toISOString(),
+                }
+                const res = await planService.postDiet(data)
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
         }
     }
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -77,6 +102,7 @@ const FoodIntake = () => {
                         <TableExample />
                     </View>
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -86,6 +112,7 @@ const FoodIntake = () => {
                     <Text style={styles.text}> {t('common.text.next')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -181,6 +208,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
     },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 18
+    }
 });
 
 export default FoodIntake;

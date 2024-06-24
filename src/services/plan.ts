@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
-import { mentalPost, mentalResponse } from '../constant/type/medical';
+import { activityPost, foodIntakePost, mentalPost, mentalResponse, stepsNumberPost } from '../constant/type/medical';
 import { VerifyEmailResponse } from '../constant/type/auth';
 
 export const planService = {
@@ -9,6 +9,16 @@ export const planService = {
     },
     postListMental(data: mentalPost): Promise<VerifyEmailResponse> {
         return axiosClient.post(`mental-records`, data);
-    }
+    },
+    postActivity(data: activityPost): Promise<VerifyEmailResponse> {
+        return axiosClient.post(`activity-records`, data);
+    },
+    postDiet(data: foodIntakePost): Promise<VerifyEmailResponse> {
+        return axiosClient.post(`diet-records`, data);
+    },
+    postStepsNumber(data: stepsNumberPost): Promise<VerifyEmailResponse> {
+        return axiosClient.post(`step-records`, data);
+    },
+
 
 };

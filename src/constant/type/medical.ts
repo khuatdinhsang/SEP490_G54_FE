@@ -33,7 +33,7 @@ export interface mentalData {
     id: number,
     title: number,
     description: string,
-    deleted: false
+    deleted: boolean
 }
 export interface mentalResponse {
     code: number,
@@ -44,4 +44,18 @@ export interface mentalPost {
     weekStart: string,
     mentalRuleId: number[],
     date: string
+}
+export interface activityPost {
+    planType: string | undefined,
+    weekStart: string,
+    planDuration: number,
+    schedule: string[]
+}
+export interface foodIntakePost {
+    dishPerDay: number,
+    weekStart: string
+}
+export interface stepsNumberPost {
+    plannedStepPerDay: number,
+    weekStart: string
 }
