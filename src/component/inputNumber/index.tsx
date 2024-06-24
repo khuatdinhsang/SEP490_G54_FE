@@ -20,7 +20,7 @@ const InputNumber = (props: InputComponentProps) => {
                 styles.box,
                 isFocused && styles.textFocused
             ]}>
-            <Text style={[styles.unit, value.length !== 0 && styles.textRightFocused]}>{textRight}</Text>
+            <Text style={[styles.unit, value?.length !== 0 && styles.textRightFocused]}>{textRight}</Text>
             <TextInput
                 style={[styles.unitInput, styleInput]}
                 keyboardType="numeric"

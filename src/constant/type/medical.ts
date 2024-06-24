@@ -59,3 +59,8 @@ export interface stepsNumberPost {
     plannedStepPerDay: number,
     weekStart: string
 }
+export interface medicinePost {
+    weekStart: string,
+    medicineTypeId: number | undefined,
+    schedule: string[]
+}

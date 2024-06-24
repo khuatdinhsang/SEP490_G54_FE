@@ -10,13 +10,15 @@ import colors from '../../constant/color';
 import { flexRow, flexRowCenter, flexRowSpaceBetween } from '../../styles/flex';
 import CheckBox from '@react-native-community/checkbox';
 import DaySelection from '../../component/chooseDate';
-import SelectDate from '../../component/inputSelectDate';
 import { IMAGE } from '../../constant/image';
 import TimerModule from '../../native-module/timer.module';
 import { TypeDate } from './const';
 import LoadingScreen from '../../component/loading';
 import { medicineService } from '../../services/medicine';
 import { mentalData } from '../../constant/type/medical';
+import InputNumber from '../../component/inputNumber';
+import { getISO8601ForSelectedDays, twoDigit } from '../../util';
+import { planService } from '../../services/plan';
 
 type dataType = {
     id: number,
@@ -29,14 +31,8 @@ const AddMedication = () => {
     const [isChecked, setIsChecked] = useState(false);
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const [selectedDays, setSelectedDays] = useState<number[]>([]);
-    const [hour, setHours] = useState<number>();
-    const [minute, setMinutes] = useState<number>();
-    const [showHourScroll, setShowHourScroll] = useState(false);
-    const [showMinuteScroll, setShowMinuteScroll] = useState(false);
-    const handleHourChange = (newHour: number) => setHours(newHour);
-    const handleMinuteChange = (newMinute: number) => setMinutes(newMinute);
-    const toggleHourScroll = () => setShowHourScroll(!showHourScroll);
-    const toggleMinuteScroll = () => setShowMinuteScroll(!showMinuteScroll);
+    const [hour, setHours] = useState<string>("");
+    const [minute, setMinutes] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const initData = [
@@ -48,17 +44,28 @@ const AddMedication = () => {
         { id: 6, name: t("common.text.saturday"), value: TypeDate.SATURDAY },
         { id: 7, name: t("common.text.sunday"), value: TypeDate.SUNDAY },
     ];
+    const handleSetHour = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value)) {
+            setHours(value);
+        }
+    }
+    const handleSetMinute = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value)) {
+            setMinutes(value);
+        }
+    }
 
     const [data, setData] = useState<dataType[]>(initData);
     const [dataMedication, setDataMedication] = useState<mentalData[]>([]);
-    const [selectedMedication, setSelectedMedication] = useState<number>();
+    const [selectedMedication, setSelectedMedication] = useState<number | undefined>();
 
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
                 const res = await medicineService.getListMedicineType();
-                console.log("res", res);
                 if (res.code === 200) {
                     setIsLoading(false);
                     setDataMedication(res.result);
@@ -82,10 +89,40 @@ const AddMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
     };
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const preHours = twoDigit(Number(hour));
+        const preMinutes = twoDigit(Number(minute));
+        console.log("a", selectedMedication)
+        const times = getISO8601ForSelectedDays(preHours, preMinutes, selectedDays);
+        try {
+            const data = {
+                medicineTypeId: selectedMedication,
+                weekStart: new Date().toISOString(),
+                schedule: times
+            }
+            const res = await planService.postMedicine(data)
+            console.log("105", res)
+            if (res.code === 200) {
+                setIsLoading(false)
+                navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
 
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
     };
+
+
 
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {
@@ -173,27 +210,21 @@ const AddMedication = () => {
                             <Text style={[styles.textChooseMedication, { marginTop: 30, marginBottom: 10 }]}>{t("planManagement.text.timeWorkoutInDay")}</Text>
                             <View style={[flexRowSpaceBetween, { width: '100%' }]}>
                                 <View style={{ width: '47%' }}>
-                                    <SelectDate
+                                    <InputNumber
+                                        textRight={t('common.text.hours')}
                                         value={hour}
-                                        text={t('common.text.hours')}
-                                        textButton={t('common.text.next')}
-                                        toggleModalScroll={toggleHourScroll}
-                                        handleChange={handleHourChange}
-                                        showScroll={showHourScroll}
-                                        length={12}
-                                        type={'hour'}
+                                        keyboardType={"numeric"}
+                                        handleSetValue={handleSetHour}
+                                        styleInput={{ paddingLeft: 50 }}
                                     />
                                 </View>
                                 <View style={{ width: '47%' }}>
-                                    <SelectDate
+                                    <InputNumber
+                                        textRight={t('common.text.minutes')}
                                         value={minute}
-                                        text={t('common.text.minutes')}
-                                        textButton={t('common.text.next')}
-                                        toggleModalScroll={toggleMinuteScroll}
-                                        handleChange={handleMinuteChange}
-                                        showScroll={showMinuteScroll}
-                                        length={12}
-                                        type={'minute'}
+                                        keyboardType={"numeric"}
+                                        handleSetValue={handleSetMinute}
+                                        styleInput={{ paddingLeft: 50 }}
                                     />
                                 </View>
                             </View>

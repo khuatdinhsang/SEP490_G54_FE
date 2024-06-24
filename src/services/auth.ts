@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { axiosClient } from '../config/axiosClient';
+import { axiosClient, baseURL } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
 import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changePassword } from '../constant/type/auth';
 
@@ -23,5 +23,14 @@ export const authService = {
     },
     changePassword(data: changePassword): Promise<VerifyEmailResponse> {
         return axiosClient.put(`accounts/change-password`, data);
-    }
+    },
+    refreshToken(refreshToken: string, accessToken: string): Promise<ResponseForm<LoginResponse>> {
+        return axios.get(`${baseURL}/${endpoint}/refresh-token/${refreshToken}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`
+            },
+        });
+    },
+
 };

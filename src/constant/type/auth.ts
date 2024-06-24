@@ -38,3 +38,7 @@ export interface RegisterResponse {
     code: number,
     message: string
 }
+export interface refreshTokenResponse {
+    accessToken: string,
+    refreshToken: string
+}
