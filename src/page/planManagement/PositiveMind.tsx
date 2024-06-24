@@ -17,9 +17,9 @@ import DialogSingleComponent from '../../component/dialog-single';
 import WarningSelected from './component/WarningSelected';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
-import { planService } from '../../services/plan';
 import { mentalData } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
 
 
 const PositiveMind: React.FC = () => {
@@ -70,7 +70,6 @@ const PositiveMind: React.FC = () => {
             }
             try {
                 const res = await planService.postListMental(data)
-                console.log("74", res)
                 if (res.code === 200) {
                     setIsLoading(false)
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
