@@ -25,7 +25,8 @@ export const authService = {
         return axiosClient.put(`accounts/change-password`, data);
     },
     refreshToken(refreshToken: string, accessToken: string): Promise<ResponseForm<LoginResponse>> {
-        return axios.get(`${baseURL}/${endpoint}/refresh-token/${refreshToken}`, {
+        console.log("vao day may lan")
+        return axios.get(`${baseURL}${endpoint}/refresh-token/${refreshToken}`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${accessToken}`

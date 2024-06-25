@@ -1,7 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
-import { removeAsyncStorageWhenLogout } from '../util';
 export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
     baseURL: baseURL,
@@ -31,8 +30,7 @@ axiosClient.interceptors.response.use(
     },
     // Xử lý lỗi khi nhận phản hồi
     async (error) => {
-        console.log('Interceptor error:', error.response.data);
-        if (error.response.data && error.response.data.code == 401) {
+        if (error.response && error.response.status === 401) {
             const originalRequest = error.config;
             const accessToken = await AsyncStorage.getItem('accessToken');
             const refreshToken = await AsyncStorage.getItem('refreshToken');
@@ -59,4 +57,11 @@ axiosClient.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+// axiosClient.interceptors.response.use(
+//     (response) => response.data,
+//     async (error) => {
+//         console.error('Response error:', error.response ? error.response.data : error.message);
+//         return Promise.reject(error);
+//     }
+// );
 export { axiosClient };

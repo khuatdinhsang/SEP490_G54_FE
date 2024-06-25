@@ -59,6 +59,7 @@ const Login = () => {
                 setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
+
             }
         } catch (error: any) {
             if (error.code == 400 || error.code == 401) {

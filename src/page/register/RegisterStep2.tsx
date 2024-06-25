@@ -364,7 +364,7 @@ const RegisterStep2 = ({ route }: any) => {
                                                         styles.textInput,
                                                         { color: !gender ? colors.white : colors.black },
                                                     ]}>
-                                                    {t('common.text.male')}
+                                                    {t('common.text.female')}
                                                 </Text>
                                             </View>
                                         </Pressable>
