@@ -17,9 +17,9 @@ import DialogSingleComponent from '../../component/dialog-single';
 import WarningSelected from './component/WarningSelected';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+import { planService } from '../../services/plan';
 import { mentalData } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
-import { planService } from '../../services/plan';
 
 
 const PositiveMind: React.FC = () => {
@@ -173,8 +173,8 @@ const PositiveMind: React.FC = () => {
                             </View>
                         </View>
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </ScrollView>
-                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 <View style={styles.buttonContainer}>
                     <Pressable
                         disabled={selectedItems.length !== 3}

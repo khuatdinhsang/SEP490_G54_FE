@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SCREENS_NAME } from '../../navigator/const';
 import { useState } from 'react';
 import LoadingScreen from '../../component/loading';
+import { removeAsyncStorageWhenLogout } from '../../util';
 
 const SettingLogout = () => {
   const { t, i18n } = useTranslation();
@@ -17,7 +18,7 @@ const SettingLogout = () => {
   const [isLoading, setIsLoading] = useState(false)
   const handlePressYesLogout = async () => {
     setIsLoading(true)
-    await AsyncStorage.removeItem('accessToken');
+    removeAsyncStorageWhenLogout()
     setTimeout(() => {
       setIsLoading(false)
     }, 1000)
