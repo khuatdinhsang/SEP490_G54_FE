@@ -74,6 +74,7 @@ const AddMedication = ({ route }: any) => {
                 if (res.code === 200) {
                     setIsLoading(false);
                     setDataMedication(res.result);
+                    setMessageError("");
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }

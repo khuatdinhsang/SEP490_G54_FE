@@ -25,6 +25,7 @@ const ProfileMakeHospitalSchedule = () => {
     try {
       const res = await medicalAppointmentService.getAll();
       if (res.code === 200) {
+        setMessageError("");
         setIsLoading(false)
         setListAppointments(res.result);
       } else {

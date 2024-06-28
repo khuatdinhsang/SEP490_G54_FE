@@ -9,7 +9,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image'; // Assuming you have IMAGE imported from your constant files
 import { SCREENS_NAME } from '../../../../navigator/const';
 import { planService } from '../../../../services/plan';
-import { convertFromUTC, getMondayOfCurrentWeek } from '../../../../util';
+import { convertFromUTC, convertObjectToArray, getMondayOfCurrentWeek } from '../../../../util';
 import { HeightDevice, WidthDevice } from '../../../../util/Dimenssion';
 import LoadingScreen from '../../../../component/loading';
 import { offsetTime } from '../../../../constant';
@@ -56,10 +56,38 @@ const MedicationRecord = () => {
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
-
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART);
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const dataSubmit = {
+            date: new Date().toISOString().split("T")[0],
+            status: true,
+            medicineTypeId: convertObjectToArray(selectedItems)
+        }
+        console.log("da", dataSubmit)
+        try {
+            const res = await planService.putMedicine(dataSubmit)
+            if (res.code === 200) {
+                setMessageError("")
+                setIsLoading(false)
+                handleViewChart()
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
     };
+    const handleViewChart = () => {
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART);
+
+    }
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
         setSelectedItems((prevSelectedItems) => ({
@@ -69,7 +97,8 @@ const MedicationRecord = () => {
     };
 
     const isButtonSelected = (itemId: number, isSelected: boolean) => selectedItems[itemId] === isSelected;
-    const allItemsSelected = Object.keys(selectedItems).length > 0 && Object.values(selectedItems).every(val => val);
+
+    const allItemsSelected = dataListMedication.every(item => item.weekday.includes(today) && selectedItems[item.medicineId] !== undefined);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -89,7 +118,7 @@ const MedicationRecord = () => {
                         </Text>
                     </Pressable>
                     <Pressable
-                        onPress={nextPage}
+                        onPress={handleViewChart}
                         style={styles.navigate}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
                             {t('recordHealthData.viewChart')}

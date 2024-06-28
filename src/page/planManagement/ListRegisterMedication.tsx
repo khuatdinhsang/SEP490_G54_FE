@@ -37,6 +37,7 @@ const ListRegisterMedication = ({ route }: any) => {
             const res = await planService.postMedicine(listRegisterMedicationSubmit)
             if (res.code === 200) {
                 setIsLoading(false)
+                setMessageError("");
                 navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
             } else {
                 setMessageError("Unexpected error occurred.");

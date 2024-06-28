@@ -77,6 +77,7 @@ const WorkOutRecord = () => {
         try {
             const res = await planService.putActivity(dataSubmit)
             if (res.code === 200) {
+                setMessageError("");
                 setIsLoading(false)
                 handleViewChart()
             } else {

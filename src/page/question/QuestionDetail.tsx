@@ -25,6 +25,7 @@ const QuestionDetail = ({ route }: any) => {
             const res = await questionService.getDetailQuestion(questionId);
             console.log("Res", res);
             if (res.code === 200) {
+                setErrorMessage("");
                 setIsLoading(false)
                 setQuestionDetail(res.result);
             } else {

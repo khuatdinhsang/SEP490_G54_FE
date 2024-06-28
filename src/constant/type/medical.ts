@@ -138,3 +138,9 @@ export interface mentalPutResponse {
     mentalRuleId: number,
     date: string
 }
+
+export interface medicinePut {
+    status: boolean,
+    date: string,
+    medicineTypeId: number[]
+}

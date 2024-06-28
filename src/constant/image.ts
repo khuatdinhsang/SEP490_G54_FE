@@ -54,6 +54,7 @@ export const IMAGE = {
     HEART: require('assets/image/planmanagement/heart.png'),
     VEGETABLE: require('assets/image/planmanagement/vegetable.png'),
     MEDICATION: require('assets/image/planmanagement/medication.png'),
+    MEDICATION1: require('assets/image/planmanagement/medication1.png'),
     SHOES: require('assets/image/planmanagement/shoes.png'),
     SOCCER: require('assets/image/planmanagement/soccer.png'),
     BOLLING: require('assets/image/planmanagement/bolling.png'),
@@ -90,5 +91,5 @@ export const IMAGE = {
     SAD1: require('assets/image/evaluate/icon_sad.png'),
     DOCTOR: require('assets/image/evaluate/icon__doctor.png'),
     CATEGORY: require('assets/image/evaluate/Category.png'),
-  }
+  },
 };

@@ -41,6 +41,7 @@ const PositiveMind: React.FC = () => {
                 const res = await planService.getListMental()
                 if (res.code === 200) {
                     setIsLoading(false)
+                    setMessageError("");
                     setData(res.result);
                 } else {
                     setMessageError("Failed to fetch questions.");
@@ -72,6 +73,7 @@ const PositiveMind: React.FC = () => {
             try {
                 const res = await planService.postListMental(data)
                 if (res.code === 200) {
+                    setMessageError("");
                     setIsLoading(false)
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
                 } else {

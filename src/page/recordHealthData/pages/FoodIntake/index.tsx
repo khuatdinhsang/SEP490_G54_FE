@@ -34,6 +34,7 @@ const FoodIntakeRecord = () => {
             try {
                 const res = await planService.getDietRecord(getMondayOfCurrentWeek().split("T")[0])
                 if (res.code === 200) {
+                    setMessageError("");
                     setIsLoading(false)
                     setBoldOfRice(res.result)
                 } else {

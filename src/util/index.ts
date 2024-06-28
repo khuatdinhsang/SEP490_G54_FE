@@ -78,3 +78,8 @@ export const getPreviousMonday = () => {
     lastMonday.setDate(today.getDate() - daysToLastMonday);
     return lastMonday.toISOString();
 }
+export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] => {
+    return Object.keys(obj)
+        .filter(key => obj[key])
+        .map(key => parseInt(key, 10));
+}

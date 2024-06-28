@@ -152,6 +152,7 @@ const RegisterMedication = () => {
                 console.log("res", res)
                 if (res.code === 200) {
                     setIsLoading(false);
+                    setMessageError("");
                     setListRegisterMedication(res.result);
                     if (res.result.length > 0) {
                         setIsShowModal(true)

@@ -315,6 +315,7 @@
     "prettyCorrect": "꽤 그렇다",
     "absoluteCorrect": "매우 그렇다",
     "thankyouSurvey": "수고하셨습니다!",
-    "viewChartResult": "이제 결과를 보러갈까요?"
+    "viewChartResult": "이제 결과를 보러갈까요?",
+    "chartMedicine": "약물복용 그래프"
   }
 }

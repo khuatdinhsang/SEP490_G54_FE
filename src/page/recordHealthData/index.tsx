@@ -52,7 +52,7 @@ const RecordHealthData = () => {
         }, {
             id: 7,
             title: t('planManagement.text.takingMedication'),
-            image: IMAGE.PLAN_MANAGEMENT.MEDICATION,
+            image: IMAGE.PLAN_MANAGEMENT.MEDICATION1,
             screen: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD
         }, {
             id: 8,

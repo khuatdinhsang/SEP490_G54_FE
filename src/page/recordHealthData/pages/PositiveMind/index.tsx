@@ -41,6 +41,7 @@ const PositiveMindRecord = () => {
                 const res = await planService.getListMentalRecords(getMondayOfCurrentWeek().split("T")[0]);
                 if (res.code === 200) {
                     setIsLoading(false);
+                    setMessageError("");
                     setData(res.result);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -68,10 +69,10 @@ const PositiveMindRecord = () => {
                 status: true,
                 mentalRuleId: selectedItems
             }
-            console.log("71", data)
             const res = await planService.putMentalRecords(data)
             console.log("da", res)
             if (res.code === 200) {
+                setMessageError("");
                 setIsLoading(false)
                 viewChart()
             } else {
