@@ -8,19 +8,47 @@ import { flexCenter, flexRow, flexRowCenter } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import InputNumber from '../../../../component/inputNumber';
 import { SCREENS_NAME } from '../../../../navigator/const';
+import LoadingScreen from '../../../../component/loading';
+import { getMondayOfCurrentWeek } from '../../../../util';
+import { planService } from '../../../../services/plan';
 
 const Weight = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [weight, setWeight] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART)
     }
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-    const nextPage = () => {
-        handleViewChart()
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const dataSubmit = {
+            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            date: new Date().toISOString().split("T")[0],
+            weight: Number(weight)
+        }
+        try {
+            const res = await planService.postWeight(dataSubmit)
+            if (res.code === 201) {
+                setIsLoading(false)
+                handleViewChart()
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
     }
     const handleSetWeight = (value: string) => {
         const numericRegex = /^[0-9]*$/;
@@ -68,6 +96,7 @@ const Weight = () => {
                             />
                         </View>
                     </View>
+                    {messageError && !isLoading && <Text style={[styles.title, { color: colors.red }]}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -78,6 +107,7 @@ const Weight = () => {
                     <Text style={[styles.textButton, { color: weight ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }

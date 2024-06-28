@@ -15,10 +15,13 @@ import TimerModule from '../../native-module/timer.module';
 import { TypeDate } from './const';
 import LoadingScreen from '../../component/loading';
 import { medicineService } from '../../services/medicine';
-import { mentalData } from '../../constant/type/medical';
+import { listRegisterMedicineData, medicinePost, mentalData } from '../../constant/type/medical';
 import InputNumber from '../../component/inputNumber';
-import { getISO8601ForSelectedDays, twoDigit } from '../../util';
-import { planService } from '../../services/plan';
+import { convertToUTC, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { addRegisterMedication, addRegisterMedicationInterface, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
+import { offsetTime } from '../../constant';
 
 type dataType = {
     id: number,
@@ -26,7 +29,7 @@ type dataType = {
     value: string
 }
 
-const AddMedication = () => {
+const AddMedication = ({ route }: any) => {
     const { t, i18n } = useTranslation();
     const [isChecked, setIsChecked] = useState(false);
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -35,6 +38,7 @@ const AddMedication = () => {
     const [minute, setMinutes] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const dispatch = useDispatch()
     const initData = [
         { id: 1, name: t("common.text.monday"), value: TypeDate.MONDAY },
         { id: 2, name: t("common.text.tuesday"), value: TypeDate.TUESDAY },
@@ -44,6 +48,12 @@ const AddMedication = () => {
         { id: 6, name: t("common.text.saturday"), value: TypeDate.SATURDAY },
         { id: 7, name: t("common.text.sunday"), value: TypeDate.SUNDAY },
     ];
+
+    const [data, setData] = useState<dataType[]>(initData);
+    const [dataMedication, setDataMedication] = useState<mentalData[]>([]);
+    const [selectedMedication, setSelectedMedication] = useState<number | undefined>();
+    const listRegisterMedication = useSelector((state: RootState) => state.medication.listRegisterMedication);
+    const listRegisterMedicationInterface = useSelector((state: RootState) => state.medication.listRegisterMedicationInterface);
     const handleSetHour = (value: string) => {
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
@@ -56,11 +66,6 @@ const AddMedication = () => {
             setMinutes(value);
         }
     }
-
-    const [data, setData] = useState<dataType[]>(initData);
-    const [dataMedication, setDataMedication] = useState<mentalData[]>([]);
-    const [selectedMedication, setSelectedMedication] = useState<number | undefined>();
-
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
@@ -89,40 +94,50 @@ const AddMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
     };
 
-    const nextPage = async (): Promise<void> => {
-        setIsLoading(true)
+    const nextPage = () => {
         const preHours = twoDigit(Number(hour));
         const preMinutes = twoDigit(Number(minute));
-        console.log("a", selectedMedication)
         const times = getISO8601ForSelectedDays(preHours, preMinutes, selectedDays);
-        try {
-            const data = {
-                medicineTypeId: selectedMedication,
-                weekStart: new Date().toISOString(),
-                schedule: times
-            }
-            const res = await planService.postMedicine(data)
-            console.log("105", res)
-            if (res.code === 200) {
-                setIsLoading(false)
-                navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
+        const dataSubmit = {
+            medicineTypeId: selectedMedication,
+            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            schedule: times
+        };
+        const dayChoose = data.filter(item => selectedDays.includes(item.id));
+        const selectedMedicineTitle = dataMedication.find((item) => item.id === selectedMedication)?.title || '';
+        const dataInterface: listRegisterMedicineData = {
+            medicineTypeId: selectedMedication || 0,
+            weekday: dayChoose.map((item) => item.name),
+            time: convertToUTC(`${twoDigit(Number(3))}:${twoDigit(Number(20))}:00`, offsetTime),
+            medicineTitle: selectedMedicineTitle.toString()
+        };
 
-            } else {
-                setMessageError("Unexpected error occurred.");
-            }
-        } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
-                setMessageError(error.response.data.message);
-            } else {
-                setMessageError("Unexpected error occurred.");
-            }
-        }
-        finally {
-            setIsLoading(false)
+        const existingMedicationIndex = listRegisterMedication.findIndex(
+            item => item.medicineTypeId === selectedMedication
+        );
+        if (existingMedicationIndex !== -1) {
+            const updatedListRegisterMedication = [...listRegisterMedication];
+            const updatedListRegisterMedicationInterface = [...listRegisterMedicationInterface];
+
+            updatedListRegisterMedication[existingMedicationIndex] = dataSubmit;
+            updatedListRegisterMedicationInterface[existingMedicationIndex] = dataInterface;
+
+            dispatch(setListRegisterMedication(updatedListRegisterMedication));
+            dispatch(setListRegisterMedicationInterface(updatedListRegisterMedicationInterface));
+
+            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
+                listRegisterMedicationSubmit: updatedListRegisterMedication,
+                listRegisterMedicationInterface: updatedListRegisterMedicationInterface
+            });
+        } else {
+            dispatch(addRegisterMedication(dataSubmit));
+            dispatch(addRegisterMedicationInterface(dataInterface));
+            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
+                listRegisterMedicationSubmit: [...listRegisterMedication, dataSubmit],
+                listRegisterMedicationInterface: [...listRegisterMedicationInterface, dataInterface]
+            });
         }
     };
-
-
 
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {
@@ -245,7 +260,7 @@ const AddMedication = () => {
             <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={hour && minute && selectedDays.length ? false : true}
-                    onPress={() => nextPage()}
+                    onPress={nextPage}
                     style={[styles.button, { backgroundColor: (hour && minute && selectedDays.length > 0 && selectedMedication) ? colors.primary : colors.gray_G02 }]}>
                     <Text style={[styles.text, { color: (hour && minute && selectedDays.length > 0 && selectedMedication) ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
                 </Pressable>

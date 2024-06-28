@@ -8,10 +8,12 @@ import HeaderNavigatorComponent from '../../../../component/header-navigator';
 import { flexCenter, flexRow, flexRowSpaceBetween } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
+import { TypeTimeMeasure } from '../../contant';
 
 interface DataType {
     id: number;
     value: string;
+    name: string
 }
 
 const NumericalRecord = ({ route }: any) => {
@@ -20,12 +22,12 @@ const NumericalRecord = ({ route }: any) => {
     const chooseSelectedItem = route?.params?.chooseSelectedItem
     const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
     const initData: DataType[] = [
-        { id: 1, value: t("recordHealthData.beforeBreakfast") },
-        { id: 2, value: t("recordHealthData.afterBreakfast") },
-        { id: 3, value: t("recordHealthData.beforeLunch") },
-        { id: 4, value: t("recordHealthData.afterLunch") },
-        { id: 5, value: t("recordHealthData.beforeDinner") },
-        { id: 6, value: t("recordHealthData.afterDinner") },
+        { id: 1, name: t("recordHealthData.beforeBreakfast"), value: TypeTimeMeasure.BEFORE_BREAKFAST },
+        { id: 2, name: t("recordHealthData.afterBreakfast"), value: TypeTimeMeasure.AFTER_BREAKFAST },
+        { id: 3, name: t("recordHealthData.beforeLunch"), value: TypeTimeMeasure.BEFORE_LUNCH },
+        { id: 4, name: t("recordHealthData.afterLunch"), value: TypeTimeMeasure.AFTER_LUNCH },
+        { id: 5, name: t("recordHealthData.beforeDinner"), value: TypeTimeMeasure.BEFORE_DINNER },
+        { id: 6, name: t("recordHealthData.afterDinner"), value: TypeTimeMeasure.AFTER_DINNER },
     ];
 
     const [data, setData] = useState<DataType[]>(initData);
@@ -81,9 +83,9 @@ const NumericalRecord = ({ route }: any) => {
                                 key={item.id}
                                 style={[flexRowSpaceBetween, styles.item, { backgroundColor: isSelected ? colors.orange_01 : colors.white, borderColor: isSelected ? colors.orange_04 : colors.white }]}>
                                 <View style={flexRow}>
-                                    <Text style={[styles.textItem, { color: isSelected ? colors.orange_04 : colors.gray_G07 }]}>{item.value}</Text>
+                                    <Text style={[styles.textItem, { color: isSelected ? colors.orange_04 : colors.gray_G07 }]}>{item.name}</Text>
                                     {item.id === chooseSelectedItem?.id && <View style={styles.itemChoose}>
-                                        <Text style={styles.textItemChoose}>{item.value}</Text>
+                                        <Text style={styles.textItemChoose}>{item.name}</Text>
                                     </View>}
                                 </View>
                                 <Image source={isSelected ? IMAGE.RECORD_DATA.ICON_CHECK_ORANGE : IMAGE.RECORD_DATA.ICON_CHECK} />

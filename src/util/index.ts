@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
+import { DateTime } from 'luxon';
 interface OutputData {
     id: number;
     name: string;
@@ -45,3 +46,35 @@ export const removeAsyncStorageWhenLogout = async () => {
         console.error('error', error);
     }
 };
+export const getMondayOfCurrentWeek = () => {
+    const today = new Date();
+    // Lấy ngày (0 là Chủ Nhật, 1 là Thứ Hai, ..., 6 là Thứ Bảy)
+    const dayOfWeek = today.getDay();
+    // Tính số ngày đã qua từ thứ Hai (nếu Chủ Nhật thì là 6, còn lại là dayOfWeek - 1)
+    const diff = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
+    // Tạo ngày thứ Hai đầu tuần
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - diff);
+    return monday.toISOString();
+}
+
+export const convertToUTC = (time: string, offset: number) => {
+    const [hour, minute, second] = time.split(':').map(Number);
+    const localDate = DateTime.fromObject({ hour, minute, second }, { zone: `UTC+${offset}` });
+    const utcDate = localDate.toUTC();
+    return utcDate.toFormat('HH:mm:ss');
+}
+export const convertFromUTC = (time: string, offset: number) => {
+    const [hour, minute, second] = time.split(':').map(Number);
+    const utcDate = DateTime.fromObject({ hour, minute, second }, { zone: 'utc' });
+    const localDate = utcDate.setZone(`UTC+${offset}`);
+    return localDate.toFormat('HH:mm:ss');
+}
+export const getPreviousMonday = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const daysToLastMonday = dayOfWeek === 0 ? 6 : dayOfWeek + 6;
+    const lastMonday = new Date(today);
+    lastMonday.setDate(today.getDate() - daysToLastMonday);
+    return lastMonday.toISOString();
+}

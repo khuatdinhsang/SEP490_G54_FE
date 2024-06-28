@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View, Image } from 'react-native';
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
@@ -8,23 +8,57 @@ import { flexCenter, flexRow, flexRowCenter, flexRowSpaceBetween } from '../../.
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image'; // Assuming you have IMAGE imported from your constant files
 import { SCREENS_NAME } from '../../../../navigator/const';
+import { planService } from '../../../../services/plan';
+import { convertFromUTC, getMondayOfCurrentWeek } from '../../../../util';
+import { HeightDevice, WidthDevice } from '../../../../util/Dimenssion';
+import LoadingScreen from '../../../../component/loading';
+import { offsetTime } from '../../../../constant';
 
 const MedicationRecord = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
-    const initData = [
-        { id: 1, medication: "고혈압약", time: "오전9시" },
-        { id: 2, medication: "기타약", time: "오전13시" },
-    ];
-    const [takeMedicines] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
+    const [dataListMedication, setDataListMedication] = useState<any[]>([]);
+    const today: string = new Date().toLocaleString('en-US', { weekday: 'long' });
+    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
+
+    useEffect(() => {
+        const fetchDataListMedication = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const res = await planService.getListMedicationRecords(getMondayOfCurrentWeek().split("T")[0]);
+                if (res.code === 200) {
+                    setDataListMedication(res.result);
+                    setMessageError("");
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchDataListMedication();
+    }, []);
+
+    useEffect(() => {
+        const checkTodayExists = dataListMedication.some(item => item.weekday.includes(today));
+        setCheckIsExits(checkTodayExists);
+    }, [dataListMedication, today]);
 
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.goBack();
     };
 
     const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART);
     };
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
@@ -35,8 +69,7 @@ const MedicationRecord = () => {
     };
 
     const isButtonSelected = (itemId: number, isSelected: boolean) => selectedItems[itemId] === isSelected;
-
-    const allItemsSelected = takeMedicines.every(item => item.id in selectedItems);
+    const allItemsSelected = Object.keys(selectedItems).length > 0 && Object.values(selectedItems).every(val => val);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -63,53 +96,56 @@ const MedicationRecord = () => {
                         </Text>
                     </Pressable>
                 </View>
-                {takeMedicines.length > 0 ? (
+                {dataListMedication.length > 0 ? (
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                        {takeMedicines.map((itemChild) => (
-                            <View style={{ marginBottom: 30 }} key={itemChild.id}>
-                                <View style={flexRow}>
-                                    <Text style={styles.text}>오늘</Text>
-                                    <Text style={[styles.text, { color: colors.orange_04 }]}>{itemChild.time}</Text>
-                                    <Text style={styles.text}>에</Text>
-                                    <Text style={[styles.text, { color: colors.orange_04 }]}>{itemChild.medication}</Text>
-                                    <Text style={styles.text}>을 먹었나요?</Text>
+                        {dataListMedication.map((item) => (
+                            item.weekday.includes(today) && (
+                                <View style={{ marginBottom: 30 }} key={item.medicineId}>
+                                    <View style={[flexRow, { flexWrap: 'wrap' }]}>
+                                        <Text style={styles.text}>오늘</Text>
+                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text>
+                                        <Text style={styles.text}>에</Text>
+                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineTitle}</Text>
+                                        <Text style={styles.text}>을 먹었나요?</Text>
+                                    </View>
+                                    <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
+                                        <Pressable
+                                            onPress={() => handleSelectItem(item.medicineId, true)}
+                                            style={[
+                                                flexRowCenter,
+                                                styles.buttonBox,
+                                                {
+                                                    width: '47%',
+                                                    borderColor: isButtonSelected(item.medicineId, true) ? colors.primary : colors.gray,
+                                                    backgroundColor: isButtonSelected(item.medicineId, true) ? colors.orange_02 : colors.white
+                                                }
+                                            ]}
+                                        >
+                                            <Text style={{ color: isButtonSelected(item.medicineId, true) ? colors.primary : colors.textGray }}>
+                                                {t("common.text.yes")}
+                                            </Text>
+                                        </Pressable>
+                                        <Pressable
+                                            onPress={() => handleSelectItem(item.medicineId, false)}
+                                            style={[
+                                                flexRowCenter,
+                                                styles.buttonBox,
+                                                {
+                                                    width: '47%',
+                                                    borderColor: isButtonSelected(item.medicineId, false) ? colors.primary : colors.gray,
+                                                    backgroundColor: isButtonSelected(item.medicineId, false) ? colors.orange_02 : colors.white
+                                                }
+                                            ]}
+                                        >
+                                            <Text style={{ color: isButtonSelected(item.medicineId, false) ? colors.primary : colors.textGray }}>
+                                                {t("common.text.no")}
+                                            </Text>
+                                        </Pressable>
+                                    </View>
                                 </View>
-                                <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
-                                    <Pressable
-                                        onPress={() => handleSelectItem(itemChild.id, true)}
-                                        style={[
-                                            flexRowCenter,
-                                            styles.buttonBox,
-                                            {
-                                                width: '47%',
-                                                borderColor: isButtonSelected(itemChild.id, true) ? colors.primary : colors.gray,
-                                                backgroundColor: isButtonSelected(itemChild.id, true) ? colors.orange_02 : colors.white
-                                            }
-                                        ]}
-                                    >
-                                        <Text style={{ color: isButtonSelected(itemChild.id, true) ? colors.primary : colors.textGray }}>
-                                            {t("common.text.yes")}
-                                        </Text>
-                                    </Pressable>
-                                    <Pressable
-                                        onPress={() => handleSelectItem(itemChild.id, false)}
-                                        style={[
-                                            flexRowCenter,
-                                            styles.buttonBox,
-                                            {
-                                                width: '47%',
-                                                borderColor: isButtonSelected(itemChild.id, false) ? colors.primary : colors.gray,
-                                                backgroundColor: isButtonSelected(itemChild.id, false) ? colors.orange_02 : colors.white
-                                            }
-                                        ]}
-                                    >
-                                        <Text style={{ color: isButtonSelected(itemChild.id, false) ? colors.primary : colors.textGray }}>
-                                            {t("common.text.no")}
-                                        </Text>
-                                    </Pressable>
-                                </View>
-                            </View>
+                            )
                         ))}
+                        {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
                     </View>
                 ) : (
                     <View style={styles.emptyContainer}>
@@ -118,17 +154,22 @@ const MedicationRecord = () => {
                     </View>
                 )}
             </ScrollView>
-            {takeMedicines.length > 0 && <View style={styles.buttonContainer}>
-                <Pressable
-                    disabled={!allItemsSelected}
-                    onPress={nextPage}
-                    style={[flexCenter, styles.button, { backgroundColor: allItemsSelected ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: allItemsSelected ? colors.white : colors.gray_G04 }]}>
-                        {t('recordHealthData.goToViewChart')}
-                    </Text>
-                </Pressable>
-            </View>}
-        </SafeAreaView>
+            {
+                checkIsExits && (
+                    <View style={styles.buttonContainer}>
+                        <Pressable
+                            disabled={!allItemsSelected}
+                            onPress={nextPage}
+                            style={[flexCenter, styles.button, { backgroundColor: allItemsSelected ? colors.primary : colors.gray_G02 }]}>
+                            <Text style={[styles.textButton, { color: allItemsSelected ? colors.white : colors.gray_G04 }]}>
+                                {t('recordHealthData.goToViewChart')}
+                            </Text>
+                        </Pressable>
+                    </View>
+                )
+            }
+            {isLoading && <LoadingScreen />}
+        </SafeAreaView >
     );
 };
 
@@ -139,7 +180,6 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         paddingBottom: 100,
-        flexGrow: 1,
     },
     navigate: {
         height: 48,
@@ -181,7 +221,8 @@ const styles = StyleSheet.create({
     text: {
         fontWeight: "500",
         fontSize: 18,
-        color: colors.gray_G07
+        color: colors.gray_G07,
+        flexWrap: 'wrap'
     },
     box: {
         borderRadius: 8,
@@ -200,10 +241,10 @@ const styles = StyleSheet.create({
         height: 60,
     },
     emptyContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
+        marginTop: 100
     },
 });
 

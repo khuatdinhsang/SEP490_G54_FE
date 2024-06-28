@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
@@ -10,11 +10,12 @@ import InputNumber from '../../../../component/inputNumber';
 import ItemAdvice from '../../../planManagement/component/ItemAdvice';
 import Advice from '../../component/Advice';
 import { SCREENS_NAME } from '../../../../navigator/const';
+import { planService } from '../../../../services/plan';
+import { getMondayOfCurrentWeek } from '../../../../util';
+import { mentalData } from '../../../../constant/type/medical';
+import LoadingScreen from '../../../../component/loading';
 
-type dataType = {
-    id: number;
-    name: string;
-};
+
 const PositiveMindRecord = () => {
 
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -29,13 +30,63 @@ const PositiveMindRecord = () => {
         { id: 7, name: t("planManagement.advice.negativeMind") },
         { id: 8, name: t("planManagement.advice.negativeMind") },
     ];
-    const [data, setData] = useState<dataType[]>(initData);
+    const [data, setData] = useState<mentalData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    useEffect(() => {
+        const fetchDataMentalRecord = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const res = await planService.getListMentalRecords(getMondayOfCurrentWeek().split("T")[0]);
+                if (res.code === 200) {
+                    setIsLoading(false);
+                    setData(res.result);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchDataMentalRecord();
+    }, []);
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART)
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        try {
+            const data = {
+                date: new Date().toISOString(),
+                status: true,
+                mentalRuleId: selectedItems
+            }
+            console.log("71", data)
+            const res = await planService.putMentalRecords(data)
+            console.log("da", res)
+            if (res.code === 200) {
+                setIsLoading(false)
+                viewChart()
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
     }
     const handleSelectItem = (itemId: number) => {
         setSelectedItems((prevSelectedItems) => {
@@ -46,6 +97,9 @@ const PositiveMindRecord = () => {
             }
         });
     };
+    const viewChart = () => {
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART)
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -63,7 +117,7 @@ const PositiveMindRecord = () => {
                     </Text>
                 </Pressable>
                 <Pressable
-                    onPress={nextPage}
+                    onPress={viewChart}
                     style={styles.navigate}>
                     <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
                         {t('recordHealthData.viewChart')}
@@ -73,12 +127,13 @@ const PositiveMindRecord = () => {
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                     <Text style={styles.title}> {t('recordHealthData.selectEveryThing')}</Text>
-                    {data.map((item: dataType) => {
+                    {data.map((item: mentalData) => {
                         const isSelected = selectedItems.includes(item.id);
                         return (
                             <Advice key={item.id} item={item} handleSelectItem={handleSelectItem} isSelected={isSelected} />
                         );
                     })}
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -89,6 +144,7 @@ const PositiveMindRecord = () => {
                     <Text style={[styles.textButton, { color: selectedItems.length > 0 ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -143,5 +199,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 20
     },
+    textError: {
+        fontSize: 18,
+        color: colors.red,
+        fontWeight: "500"
+    }
 })
 export default PositiveMindRecord

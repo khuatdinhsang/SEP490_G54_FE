@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import HeaderNavigatorComponent from '../../component/header-navigator'
 import { useTranslation } from 'react-i18next';
@@ -14,108 +14,43 @@ import SelectDate from '../../component/inputSelectDate';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice } from '../../util/Dimenssion';
 import DialogSingleComponent from '../../component/dialog-single';
-type dataType = {
-
-}
-const ListRegisterMedication = () => {
+import { listRegisterMedicineData } from '../../constant/type/medical';
+import { planService } from '../../services/plan';
+import { getMondayOfCurrentWeek } from '../../util';
+import LoadingScreen from '../../component/loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { deleteRegisterMedication } from '../../store/medication.slice';
+const ListRegisterMedication = ({ route }: any) => {
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+    const [messageError, setMessageError] = useState<string>("")
     const [isModalDelete, setIsModalDelete] = useState<boolean>(false)
     const [itemSelected, setItemSelected] = useState<number>()
-    const initListRegisterMedication = [
-        {
-            id: 1,
-            name: t("planManagement.medication.highBloodPressure"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.morning"),
+    const [isLoading, setIsLoading] = useState(false);
+    const listRegisterMedicationInterface = useSelector((state: RootState) => state.medication.listRegisterMedicationInterface);
+    const listRegisterMedicationSubmit = useSelector((state: RootState) => state.medication.listRegisterMedication);
+    const dispatch = useDispatch()
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        try {
+            const res = await planService.postMedicine(listRegisterMedicationSubmit)
+            if (res.code === 200) {
+                setIsLoading(false)
+                navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
+            } else {
+                setMessageError("Unexpected error occurred.");
             }
-        },
-        {
-            id: 2,
-            name: t("planManagement.medication.hyperlipidemia"),
-            day: [
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 4,
-                    value: t("common.text.thursday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 11,
-                session: t("common.text.morning"),
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
             }
-        },
-        {
-            id: 3,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-        {
-            id: 4,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-    ]
-    const [ListRegisterMedication, setListRegisterMedication] = useState(initListRegisterMedication)
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
+        }
+        finally {
+            setIsLoading(false)
+        }
     };
     const handleRegisterMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
@@ -126,17 +61,14 @@ const ListRegisterMedication = () => {
     const handleDeleteMedication = (id: number) => {
         setItemSelected(id)
         setIsModalDelete(true)
-
     }
     const handleClickButtonCancel = () => {
         setIsModalDelete(false)
     }
     const handleClickButtonConfirm = (id: number) => {
+        dispatch(deleteRegisterMedication(id));
         setIsModalDelete(false)
-        setListRegisterMedication(ListRegisterMedication.filter(item => item.id !== id));
-
     }
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={{ flex: 1 }}>
@@ -158,21 +90,19 @@ const ListRegisterMedication = () => {
                     <View >
                         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
                             <Text style={[styles.textPlan, { marginBottom: 20 }]}>{t("planManagement.text.registerMedication")}</Text>
-                            {ListRegisterMedication && ListRegisterMedication.map((item) => {
+                            {listRegisterMedicationInterface && listRegisterMedicationInterface.map((item) => {
                                 return <View
-                                    key={item.id}
+                                    key={item.medicineTypeId}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
-                                    <View style={[flexRow, { flex: 1 }]}>
+                                    <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
                                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                                         <View style={styles.detailExample}>
-                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.name}</Text>
-                                            <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.day.map(item => item.value).join(', ')} | </Text>
-                                                <Text style={styles.textChooseDay}>{item.time.value}{item.time.session}</Text>
-                                            </View>
+                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
+                                            <Text style={styles.textChooseDay}>{item.weekday.map(item => item).join(', ')} | {item.time}</Text>
                                         </View>
                                     </View>
-                                    <Pressable onPress={() => handleDeleteMedication(item.id)}>
+                                    <Pressable
+                                        onPress={() => handleDeleteMedication(item.medicineTypeId)}>
                                         <Text style={styles.textDelete}>{t("common.text.delete")}</Text>
                                     </Pressable>
                                 </View>
@@ -183,6 +113,7 @@ const ListRegisterMedication = () => {
                                     <Text style={styles.textAddSchedule}>{t("planManagement.text.addSchedule")}</Text>
                                 </Pressable>
                             </View>
+                            {messageError && !isLoading && <Text style={[styles.textAddSchedule, { color: colors.red }]}>{messageError}</Text>}
                         </View>
                     </View>
                 </ScrollView >
@@ -207,6 +138,7 @@ const ListRegisterMedication = () => {
                 handleClickButtonConfirm={handleClickButtonConfirm}
                 itemSelected={itemSelected}
             />
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -255,6 +187,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
+        width: '80%'
     },
     textChooseDay: {
         fontSize: 16,

@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
@@ -8,15 +8,19 @@ import { flexCenter, flexRow, flexRowCenter, flexRowSpaceBetween } from '../../.
 import colors from '../../../../constant/color';
 import { SCREENS_NAME } from '../../../../navigator/const';
 import InputComponent from '../../../../component/input';
+import LoadingScreen from '../../../../component/loading';
+import { planService } from '../../../../services/plan';
+import { getMondayOfCurrentWeek } from '../../../../util';
 
 const FoodIntakeRecord = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const initBoldOfRice = "4";
+    const [boldOfRice, setBoldOfRice] = useState<number>(0);
     const [numberBoldOfRice, setNumberBoldOfRice] = useState<string | undefined>(undefined);
     const [error, setError] = useState<boolean>(false);
     const [showInput, setShowInput] = useState<boolean>(false);
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART);
     };
@@ -24,13 +28,60 @@ const FoodIntakeRecord = () => {
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
-
-    const nextPage = () => {
+    useEffect(() => {
+        const getBoldOfRice = async () => {
+            setIsLoading(true)
+            try {
+                const res = await planService.getDietRecord(getMondayOfCurrentWeek().split("T")[0])
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    setBoldOfRice(res.result)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+        }
+        getBoldOfRice()
+    }, [])
+    const nextPage = async (): Promise<void> => {
         const numericRegex = /^[0-9]*$/;
         if (numberBoldOfRice) {
             if (numericRegex.test(numberBoldOfRice)) {
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART)
                 setError(false);
+                setIsLoading(true)
+                const dataSubmit = {
+                    date: new Date().toISOString().split("T")[0],
+                    actualValue: Number(numberBoldOfRice),
+                }
+                try {
+                    const res = await planService.putDiet(dataSubmit)
+                    if (res.code === 200) {
+                        setMessageError("")
+                        setIsLoading(false)
+                        handleViewChart()
+                    } else {
+                        setMessageError("Unexpected error occurred.");
+                    }
+                } catch (error: any) {
+                    if (error?.response?.status === 400 || error?.response?.status === 401) {
+                        setMessageError(error.response.data.message);
+                    } else {
+                        setMessageError("Unexpected error occurred.");
+                    }
+                }
+                finally {
+                    setIsLoading(false)
+                }
+
             } else {
                 setError(true);
             }
@@ -39,7 +90,7 @@ const FoodIntakeRecord = () => {
 
     const handleClickTrue = () => {
         setShowInput(true);
-        setNumberBoldOfRice(initBoldOfRice);
+        setNumberBoldOfRice(boldOfRice.toString());
     };
 
     const handleClickFalse = () => {
@@ -80,7 +131,7 @@ const FoodIntakeRecord = () => {
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                     <View style={flexRow}>
                         <Text style={styles.text}>오늘은</Text>
-                        <Text style={[styles.text, { color: colors.orange_04 }]}>{initBoldOfRice}접시</Text>
+                        <Text style={[styles.text, { color: colors.orange_04 }]}>{boldOfRice}접시</Text>
                         <Text style={styles.text}>를 먹었나요?</Text>
                     </View>
                     <View style={[flexRowSpaceBetween, { width: '100%', marginTop: 10 }]}>
@@ -91,14 +142,14 @@ const FoodIntakeRecord = () => {
                                 style={[
                                     styles.box,
                                     {
-                                        borderColor: numberBoldOfRice === initBoldOfRice ? colors.orange_04 : colors.gray_G03,
-                                        backgroundColor: numberBoldOfRice === initBoldOfRice ? colors.orange_01 : colors.white,
+                                        borderColor: numberBoldOfRice === boldOfRice.toString() ? colors.orange_04 : colors.gray_G03,
+                                        backgroundColor: numberBoldOfRice === boldOfRice.toString() ? colors.orange_01 : colors.white,
                                     },
                                 ]}>
                                 <Text
                                     style={[
                                         styles.textInput,
-                                        { color: numberBoldOfRice === initBoldOfRice ? colors.orange_04 : colors.gray_G05 },
+                                        { color: numberBoldOfRice === boldOfRice.toString() ? colors.orange_04 : colors.gray_G05 },
                                     ]}>
                                     {t('common.text.yes')}
                                 </Text>
@@ -111,14 +162,14 @@ const FoodIntakeRecord = () => {
                                 style={[
                                     styles.box,
                                     {
-                                        borderColor: numberBoldOfRice !== initBoldOfRice && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G03,
-                                        backgroundColor: numberBoldOfRice !== initBoldOfRice && numberBoldOfRice !== undefined ? colors.orange_01 : colors.white,
+                                        borderColor: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G03,
+                                        backgroundColor: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_01 : colors.white,
                                     },
                                 ]}>
                                 <Text
                                     style={[
                                         styles.textInput,
-                                        { color: numberBoldOfRice !== initBoldOfRice && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G05 },
+                                        { color: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G05 },
                                     ]}>
                                     {t('common.text.no')}
                                 </Text>
@@ -142,7 +193,8 @@ const FoodIntakeRecord = () => {
                             </View>
                         </View>
                     )}
-                    {error && <Text style={[styles.text, { color: colors.red }]}>{t("placeholder.err.number")}</Text>}
+                    {error && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{t("placeholder.err.number")}</Text>}
+                    {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -153,6 +205,7 @@ const FoodIntakeRecord = () => {
                     <Text style={[styles.textButton, { color: numberBoldOfRice ? colors.white : colors.gray_G04 }]}>{t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };

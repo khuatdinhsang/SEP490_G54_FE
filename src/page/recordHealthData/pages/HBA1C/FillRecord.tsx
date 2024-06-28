@@ -15,10 +15,9 @@ import DialogSingleComponent from '../../../../component/dialog-single';
 import { WidthDevice } from '../../../../util/Dimenssion';
 import { paddingHorizontalScreen } from '../../../../styles/padding';
 import RangeBlock from '../../../../component/range-block';
-interface dataType {
-    id: number,
-    value: string
-}
+import { getMondayOfCurrentWeek } from '../../../../util';
+import { planService } from '../../../../services/plan';
+import LoadingScreen from '../../../../component/loading';
 const widthProgressBar = WidthDevice - 2 * paddingHorizontalScreen - 50;
 const FillRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -31,12 +30,40 @@ const FillRecord = ({ route }: any) => {
     const [isCheckedChoresterol, setIsCheckedChoresterol] = useState(false);
     const [isCheckedGlucozer, setIsCheckedGlucozer] = useState(false);
     const [isShowModal, setShowModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { chooseSelectedItem: selectedItem })
-    }
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const dataSubmit = {
+            timeMeasure: selectedItem.value,
+            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            date: new Date().toISOString().split("T")[0],
+            cholesterol: Number(choresterol),
+            bloodSugar: Number(choresterol),
+            hba1c: Number(glycemic)
+        }
+        try {
+            const res = await planService.postCardinal(dataSubmit)
+            if (res.code === 201) {
+                setIsLoading(false)
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { chooseSelectedItem: selectedItem })
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
+    };
     const handleSetGlycemic = (value: any) => {
         if (isCheckedGlycemic) {
             setShowModal(true)
@@ -118,7 +145,7 @@ const FillRecord = ({ route }: any) => {
                         <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
                             <View style={[flexRow]}>
-                                <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                <Text style={styles.itemText}>{selectedItem.name}</Text>
                                 <View style={{ width: '50%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='%'
@@ -143,7 +170,7 @@ const FillRecord = ({ route }: any) => {
                         <Text style={styles.textTitle}>콜레스테롤을 입력해주세요</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
                             <View style={[flexRow]}>
-                                <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                <Text style={styles.itemText}>{selectedItem.name}</Text>
                                 <View style={{ width: '50%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='mg/DL'
@@ -165,11 +192,11 @@ const FillRecord = ({ route }: any) => {
                         </View>
                     </View>
                     <View>
-                        <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
+                        <Text style={styles.textTitle}>혈당을 입력해주세요</Text>
                         <View style={styles.item}>
                             <View style={flexRowSpaceBetween}>
                                 <View style={[flexRow]}>
-                                    <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                    <Text style={styles.itemText}>{selectedItem.name}</Text>
                                     <View style={{ width: '50%', marginLeft: 10 }}>
                                         <InputNumber
                                             textRight='mg/DL'
@@ -193,6 +220,7 @@ const FillRecord = ({ route }: any) => {
                         </View>
                     </View>
                 </View>
+                {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -202,6 +230,7 @@ const FillRecord = ({ route }: any) => {
                     <Text style={[styles.textButton, { color: !disableButton ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
