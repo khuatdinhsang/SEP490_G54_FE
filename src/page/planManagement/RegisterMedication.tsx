@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +10,16 @@ import colors from '../../constant/color';
 import { flexRow, flexRowCenter, flexRowSpaceBetween } from '../../styles/flex';
 import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
+import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
+import { getPreviousMonday } from '../../util';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const [isShowModal, setIsShowModal] = useState<boolean>(true)
+    const [isShowModal, setIsShowModal] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
     };
@@ -24,7 +29,6 @@ const RegisterMedication = () => {
 
     const closeModal = () => {
         setIsShowModal(false)
-        // Implement close modal functionality
     };
     const initListRegisterMedication = [
         {
@@ -139,7 +143,34 @@ const RegisterMedication = () => {
             }
         },
     ]
-    const [ListRegisterMedication, setListRegisterMedication] = useState(initListRegisterMedication)
+    const [ListRegisterMedication, setListRegisterMedication] = useState<any[]>([])
+    useEffect(() => {
+        const fetchDataMedication = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
+                console.log("res", res)
+                if (res.code === 200) {
+                    setIsLoading(false);
+                    setListRegisterMedication(res.result);
+                    if (res.result.length > 0) {
+                        setIsShowModal(true)
+                    }
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchDataMedication();
+    }, []);
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -195,13 +226,14 @@ const RegisterMedication = () => {
                                         <View style={styles.detailExample}>
                                             <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.name}</Text>
                                             <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.day.map(item => item.value).join(', ')} | </Text>
+                                                <Text style={styles.textChooseDay}>{item.day.map((item: any) => item.value).join(', ')} | </Text>
                                                 <Text style={styles.textChooseDay}>{item.time.value}{item.time.session}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
                             })}
+                            {messageError && !isLoading && <Text style={[styles.textAddSchedule, { color: 'red' }]}>{messageError}</Text>}
                         </ScrollView>
                         <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
                             <Pressable
@@ -216,6 +248,7 @@ const RegisterMedication = () => {
                     </View>
                 </View>
             </Modal>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };

@@ -20,6 +20,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "formik": "^2.4.6",
     "i18next": "^23.11.5",
+    "luxon": "^3.4.4",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "react": "18.2.0",
@@ -40,8 +41,8 @@
     "redux-persist": "^6.0.0",
     "rn-range-slider": "^2.2.2",
     "spoqa-han-sans": "^3.3.0",
-    "yup": "^1.4.0",
-    "victory-native": "^36.6.11"
+    "victory-native": "^36.6.11",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -51,6 +52,7 @@
     "@react-native/eslint-config": "0.74.83",
     "@react-native/metro-config": "0.74.83",
     "@react-native/typescript-config": "0.74.83",
+    "@types/luxon": "^3.4.2",
     "@types/react": "^18.2.6",
     "@types/react-native-table-component": "^1.2.8",
     "@types/react-test-renderer": "^18.0.0",

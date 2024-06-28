@@ -2,14 +2,10 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
 import { IMAGE } from '../../../constant/image';
-
-type itemType = {
-    name: string;
-    id: number;
-};
+import { mentalData } from '../../../constant/type/medical';
 
 type itemAdviceProps = {
-    item: itemType;
+    item: mentalData;
     handleSelectItem: (id: number, isAdd: boolean) => void;
     isSelected?: boolean
 };
@@ -18,7 +14,7 @@ const Advice: React.FC<itemAdviceProps> = ({ item, handleSelectItem, isSelected 
         <Pressable
             onPress={() => handleSelectItem(item.id, true)}
             style={[styles.itemAdvice, { borderColor: isSelected ? colors.primary : colors.gray, backgroundColor: isSelected ? colors.orange_01 : colors.white }]}>
-            <Text style={[styles.textItemAdvice, { color: isSelected ? colors.orange_04 : colors.gray_G08 }]}>{item.name}</Text>
+            <Text style={[styles.textItemAdvice, { color: isSelected ? colors.orange_04 : colors.gray_G08 }]}>{item.title}</Text>
             <Image source={isSelected ? IMAGE.RECORD_DATA.ICON_CHECK_ORANGE : IMAGE.RECORD_DATA.ICON_CHECK} />
         </Pressable>
     );

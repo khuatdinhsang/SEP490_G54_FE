@@ -13,6 +13,7 @@ import { HeightDevice } from '../../util/Dimenssion';
 import InputNumber from '../../component/inputNumber';
 import { planService } from '../../services/plan';
 import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
 
 const NumberSteps = () => {
     const { t } = useTranslation();
@@ -30,7 +31,7 @@ const NumberSteps = () => {
             try {
                 const data = {
                     plannedStepPerDay: Number(numberSteps),
-                    weekStart: new Date().toISOString(),
+                    weekStart: getMondayOfCurrentWeek().split("T")[0],
                 }
                 const res = await planService.postStepsNumber(data)
                 if (res.code === 200) {

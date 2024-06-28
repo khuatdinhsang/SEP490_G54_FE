@@ -20,6 +20,7 @@ import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
 import { planService } from '../../services/plan';
 import { mentalData } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
 
 
 const PositiveMind: React.FC = () => {
@@ -65,7 +66,7 @@ const PositiveMind: React.FC = () => {
             const data = {
                 mentalRuleId,
                 status: true,
-                weekStart: new Date().toISOString(),
+                weekStart: getMondayOfCurrentWeek().split("T")[0],
                 date: new Date().toISOString()
             }
             try {
@@ -172,8 +173,8 @@ const PositiveMind: React.FC = () => {
                                 })}
                             </View>
                         </View>
+                        {messageError && !isLoading && <Text style={[styles.textError, { paddingHorizontal: 20 }]}>{messageError}</Text>}
                     </View>
-                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </ScrollView>
                 <View style={styles.buttonContainer}>
                     <Pressable

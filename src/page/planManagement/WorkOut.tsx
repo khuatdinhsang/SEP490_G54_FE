@@ -17,6 +17,7 @@ import DaySelection from '../../component/chooseDate';
 import { TypeActivityRecord, TypeDate } from './const';
 import { planService } from '../../services/plan';
 import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
 
 type dataType = {
     id: number,
@@ -43,7 +44,7 @@ const WorkOut = () => {
     const handleMinuteChange = (newMinute: number) => setMinutes(newMinute);
     const toggleHourScroll = () => setShowHourScroll(!showHourScroll);
     const toggleMinuteScroll = () => setShowMinuteScroll(!showMinuteScroll);
-    const [selectedItem, setSelectedItem] = useState<string | undefined>();
+    const [selectedItem, setSelectedItem] = useState<TypeActivityRecord | undefined>();
     const [selectedDays, setSelectedDays] = useState<number[]>([]);
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
@@ -111,7 +112,7 @@ const WorkOut = () => {
             schedule,
             planType: selectedItem,
             planDuration: Number(convertTime),
-            weekStart: new Date().toISOString(),
+            weekStart: getMondayOfCurrentWeek().split("T")[0]
         }
         try {
             const res = await planService.postActivity(dataSubmit)
@@ -234,8 +235,9 @@ const WorkOut = () => {
                             )
                         })}
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </View>
-                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
+
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable

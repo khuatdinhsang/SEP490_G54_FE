@@ -10,43 +10,52 @@ import InputNumber from '../../../../component/inputNumber';
 import { SCREENS_NAME } from '../../../../navigator/const';
 import SelectDate from '../../../../component/inputSelectDate';
 import { IMAGE } from '../../../../constant/image';
+import { TypeActivityRecord } from '../../../planManagement/const';
+import LoadingScreen from '../../../../component/loading';
+import { planService } from '../../../../services/plan';
 
 type dataTypeWorkOut = {
     id: number,
     intensity: string,
     des: string,
-    image: string
+    image: string,
+    planType: string
 }
 const WorkOutRecord = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [hour, setHours] = useState<number>();
-    const [minute, setMinutes] = useState<number>();
-    const [selectedItem, setSelectedItem] = useState<number>();
+    const [hour, setHours] = useState<number>(0);
+    const [minute, setMinutes] = useState<number>(0);
+    const [selectedItem, setSelectedItem] = useState<TypeActivityRecord | undefined>();
     const [showHourScroll, setShowHourScroll] = useState(false);
     const [showMinuteScroll, setShowMinuteScroll] = useState(false);
     const handleHourChange = (newHour: number) => setHours(newHour);
     const handleMinuteChange = (newMinute: number) => setMinutes(newMinute);
     const toggleHourScroll = () => setShowHourScroll(!showHourScroll);
     const toggleMinuteScroll = () => setShowMinuteScroll(!showMinuteScroll);
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const initDataWorkOut = [
         {
             id: 1,
             intensity: t("planManagement.text.highIntensity"),
             des: t("planManagement.text.examplesHighIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.SOCCER
+            image: IMAGE.PLAN_MANAGEMENT.SOCCER,
+            planType: TypeActivityRecord.HEAVY
         },
         {
             id: 2,
             intensity: t("planManagement.text.mediumIntensity"),
             des: t("planManagement.text.exampleMediumIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.BADMINTON
+            image: IMAGE.PLAN_MANAGEMENT.BADMINTON,
+            planType: TypeActivityRecord.MEDIUM
         },
         {
             id: 3,
             intensity: t("planManagement.text.lowIntensity"),
             des: t("planManagement.text.examplesLowIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.BOLLING
+            image: IMAGE.PLAN_MANAGEMENT.BOLLING,
+            planType: TypeActivityRecord.LIGHT
         },
     ]
     const [dataWorkOut, setDataWorkOut] = useState<dataTypeWorkOut[]>(initDataWorkOut);
@@ -57,11 +66,36 @@ const WorkOutRecord = () => {
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-    const nextPage = () => {
-        handleViewChart()
-    }
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const convertTime = hour * 60 + minute;
+        const dataSubmit = {
+            actualType: selectedItem,
+            actualDuration: Number(convertTime),
+            date: new Date().toISOString()
+        }
+        try {
+            const res = await planService.putActivity(dataSubmit)
+            if (res.code === 200) {
+                setIsLoading(false)
+                handleViewChart()
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
+    };
     const handleSelectItem = (itemId: number) => {
-        setSelectedItem(itemId);
+        const activityChoose = initDataWorkOut.find((item) => item.id === itemId)
+        setSelectedItem(activityChoose?.planType);
     };
     const isDisable = hour && minute && selectedItem ? true : false
 
@@ -125,15 +159,16 @@ const WorkOutRecord = () => {
                         return (
                             <Pressable onPress={() => handleSelectItem(item.id)}
                                 key={item.id}
-                                style={[flexRow, styles.example, { backgroundColor: selectedItem === item.id ? colors.orange_01 : colors.white, borderColor: selectedItem === item.id ? colors.primary : colors.gray }]}>
+                                style={[flexRow, styles.example, { backgroundColor: selectedItem === item.planType ? colors.orange_01 : colors.white, borderColor: selectedItem === item.planType ? colors.primary : colors.gray }]}>
                                 <Image source={item.image || IMAGE.PLAN_MANAGEMENT.SOCCER} />
                                 <View style={styles.detailExample}>
-                                    <Text style={[styles.textPlan, { color: selectedItem === item.id ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
+                                    <Text style={[styles.textPlan, { color: selectedItem === item.planType ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
                                     <Text style={[styles.textChooseDay, { fontSize: 12 }]}>{item.des}</Text>
                                 </View>
                             </Pressable>
                         )
                     })}
+                    {messageError && !isLoading && <Text style={[styles.textChooseDay, { color: 'red' }]}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -144,6 +179,7 @@ const WorkOutRecord = () => {
                     <Text style={[styles.textButton, { color: isDisable ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView >
     )
 }
