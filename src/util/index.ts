@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
+import { valueWeight } from "../constant/type/chart";
 interface OutputData {
     id: number;
     name: string;
@@ -83,3 +84,19 @@ export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] 
         .filter(key => obj[key])
         .map(key => parseInt(key, 10));
 }
+export interface OutputDataChart {
+    x: string;
+    y: number;
+}
+
+export const transformDataToChart = (inputArray: valueWeight[]): OutputDataChart[] => {
+    return inputArray.map((input: valueWeight) => {
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        return {
+            x: `${month}/${day}`,
+            y: input.value
+        };
+    });
+};

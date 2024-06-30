@@ -10,10 +10,11 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { getMondayOfCurrentWeek, transformDataToChart } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import BarChart from '../../../../component/bar-chart';
+import { dataChartWeightResponse, valueWeight } from '../../../../constant/type/chart';
 
 const WeightChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -27,6 +28,8 @@ const WeightChart = () => {
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueWeight[]>([])
+    const [mediumData, setMediumData] = useState<number>(0)
     useEffect(() => {
         const checkIsExitsData = async (): Promise<void> => {
             setIsLoading(true);
@@ -49,6 +52,30 @@ const WeightChart = () => {
             }
         };
         checkIsExitsData();
+    }, []);
+    useEffect(() => {
+        const getData = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const res = await chartService.getDataWeight();
+                if (res.code === 200) {
+                    setDataChart(res.result.weightResponseList)
+                    setMediumData(res.result.avgValue)
+                    setMessageError("");
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getData();
     }, []);
     return (
         <SafeAreaView style={styles.container}>
@@ -77,32 +104,17 @@ const WeightChart = () => {
                 {
                     checkIsExits ?
                         <View style={styles.chart}>
-                            {/* <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
+                            <LineChart
+                                icon={IMAGE.RECORD_DATA.CHART}
+                                textTitleMedium={t('evaluate.chartWeight')}
                                 unit='회'
                                 valueMedium="2/2"
                                 labelElement="%"
                                 textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 25 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
-                            /> */}
-                            <BarChart
-                                data={[
-                                    { x: '9/11', y: 2 },
-                                    { x: '9/13', y: 2 },
-                                    { x: '9/15', y: 3 },
-                                    { x: '9/20', y: 3 },
-                                    { x: '10/4', y: 3 },
-                                    { x: '10/5', y: 3, label: '3점' },
-                                ]}
+                                data={transformDataToChart(dataChart)}
+                                domainY={[0, 150]}
                             />
+
                         </View>
                         :
                         <View style={[flexCenter, { height: '60%' }]}>

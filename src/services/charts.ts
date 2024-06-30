@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
+import { dataChartWeightResponse } from '../constant/type/chart';
 export const chartService = {
     checkIsExistMedication(weekStart: string): Promise<ResponseForm<boolean>> {
         return axiosClient.get(`medicine-records/mobile/check-plan/${weekStart}`);
@@ -25,6 +26,9 @@ export const chartService = {
     },
     checkIsExistStep(weekStart: string): Promise<ResponseForm<boolean>> {
         return axiosClient.get(`step-records/mobile/check-plan/${weekStart}`);
+    },
+    getDataWeight(): Promise<ResponseForm<dataChartWeightResponse>> {
+        return axiosClient.get(`weight-records/mobile/chart`);
     },
 
 };
