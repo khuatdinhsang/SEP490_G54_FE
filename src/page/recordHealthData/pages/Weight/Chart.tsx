@@ -10,7 +10,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, transformDataToChart } from '../../../../util';
+import { getMondayOfCurrentWeek, getValueMaxChart, transformDataToChart } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import BarChart from '../../../../component/bar-chart';
@@ -77,6 +77,7 @@ const WeightChart = () => {
         };
         getData();
     }, []);
+    console.log("80", transformDataToChart(dataChart, "kg"))
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -106,13 +107,19 @@ const WeightChart = () => {
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.RECORD_DATA.CHART}
-                                textTitleMedium={t('evaluate.chartWeight')}
-                                unit='회'
-                                valueMedium="2/2"
+                                textTitleMedium={t('evaluate.mediumWeight')}
+                                unit='kg'
+                                valueMedium={mediumData.toString()}
                                 labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={transformDataToChart(dataChart)}
-                                domainY={[0, 150]}
+                                textTitle={t("evaluate.chartWeight")}
+                                data={transformDataToChart(dataChart, "kg")}
+                                domainY={[0, getValueMaxChart(dataChart)]}
+                                textInfo={t("evaluate.normalWeightRange")}
+                                backgroundProps={{
+                                    color: colors.primary,
+                                    height: 20,
+                                    y: 60,
+                                }}
                             />
 
                         </View>

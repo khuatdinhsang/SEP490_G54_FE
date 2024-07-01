@@ -22,7 +22,8 @@ interface LineChartProps {
   valueMedium: string,
   backgroundProps?: { y: number; height: number; color: string };
   domainY: [number, number];
-  labelElement: string
+  labelElement: string,
+  textInfo?: string,
 }
 
 // Example props:
@@ -58,7 +59,7 @@ interface LineChartProps {
 
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
-  const { data, backgroundProps, domainY, icon, textTitle, valueMedium, labelElement, textTitleMedium, unit } = props;
+  const { data, backgroundProps, textInfo, domainY, icon, textTitle, valueMedium, labelElement, textTitleMedium, unit } = props;
   const dataScatter = data.map(item => {
     return {
       x: item.x,
@@ -100,6 +101,12 @@ const LineChart = (props: LineChartProps) => {
         <Image source={icon} />
         <Text style={styles.textTitle}>{textTitle}</Text>
       </View>
+      {backgroundProps && (
+        <View style={[flexRow, { marginTop: 5 }]}>
+          <View style={styles.infoColor}></View>
+          <Text style={styles.textColorInfo}>{textInfo}</Text>
+        </View>
+      )}
       <VictoryChart
         domain={{ y: domainY }}
         height={HEIGHT}
@@ -194,7 +201,7 @@ const CustomLabelComponent = (props: any) => (
     <Rect
       x={props.x - 12 - props.text.length * 5}
       y={props.y - 35}
-      width={props.text.length * 10 + 24}
+      width={props.text.length * 8 + 8 * 2}
       height={28}
       fill="url(#grad)" // Apply gradient here
       rx="8"
@@ -208,9 +215,12 @@ const CustomLabelComponent = (props: any) => (
         fontSize: 14,
         fontWeight: '400',
         lineHeight: 20,
+        width: 70
       }}
       dy={-15}
+      dx={-7}
       renderInPortal={false}
+      textAnchor="middle"
     />
   </Svg>
 );
@@ -254,6 +264,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.gray_G09,
     textAlign: "center",
+  },
+  infoColor: {
+    height: 20,
+    width: 70,
+    backgroundColor: colors.primary,
+    opacity: 0.15,
+    marginRight: 10
+  },
+  textColorInfo: {
+    fontWeight: "400",
+    fontSize: 14,
+    color: colors.gray_G06
   }
 });
 export default LineChart;

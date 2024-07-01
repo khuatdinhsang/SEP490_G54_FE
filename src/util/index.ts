@@ -87,16 +87,32 @@ export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] 
 export interface OutputDataChart {
     x: string;
     y: number;
+    label?: string
 }
 
-export const transformDataToChart = (inputArray: valueWeight[]): OutputDataChart[] => {
+export const transformDataToChart = (inputArray: valueWeight[], unitLabel: string): OutputDataChart[] => {
     return inputArray.map((input: valueWeight) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
         const date = new Date(input.date);
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
         return {
             x: `${month}/${day}`,
-            y: input.value
+            y: input.value,
+            ...(isToday && { label: `${input.value} ${unitLabel}` })
         };
     });
+};
+export const getValueMaxChart = (inputArray: valueWeight[]): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.value));
+    return roundUpToNearest(maxValue, 20);
+}
+export const roundUpToNearest = (value: number, increment: number): number => {
+    return Math.ceil(value / increment) * increment;
 };
