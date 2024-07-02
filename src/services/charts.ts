@@ -1,3 +1,4 @@
+import { dataChartStepResponse } from './../constant/type/chart';
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
@@ -29,6 +30,9 @@ export const chartService = {
     },
     getDataWeight(): Promise<ResponseForm<dataChartWeightResponse>> {
         return axiosClient.get(`weight-records/mobile/chart`);
+    },
+    getDataSteps(): Promise<ResponseForm<dataChartStepResponse>> {
+        return axiosClient.get(`step-records/mobile/chart`);
     },
 
 };

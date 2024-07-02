@@ -10,11 +10,11 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, getValueMaxChart, transformDataToChart } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import BarChart from '../../../../component/bar-chart';
 import { dataChartWeightResponse, valueWeight } from '../../../../constant/type/chart';
+import { getValueMaxChartWeight, transformDataToChartWeight } from '../../../../util';
 
 const WeightChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -25,19 +25,20 @@ const WeightChart = () => {
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT)
     }
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
+    // const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueWeight[]>([])
     const [mediumData, setMediumData] = useState<number>(0)
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistWeight(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataWeight();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.weightResponseList)
+                    setMediumData(resData.result.avgValue)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -51,33 +52,8 @@ const WeightChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
-    useEffect(() => {
-        const getData = async (): Promise<void> => {
-            setIsLoading(true);
-            try {
-                const res = await chartService.getDataWeight();
-                if (res.code === 200) {
-                    setDataChart(res.result.weightResponseList)
-                    setMediumData(res.result.avgValue)
-                    setMessageError("");
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
-            } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
-                    setMessageError(error.response.data.message);
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        getData();
-    }, []);
-    console.log("80", transformDataToChart(dataChart, "kg"))
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -103,7 +79,7 @@ const WeightChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.RECORD_DATA.CHART}
@@ -112,13 +88,13 @@ const WeightChart = () => {
                                 valueMedium={mediumData.toString()}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartWeight")}
-                                data={transformDataToChart(dataChart, "kg")}
-                                domainY={[0, getValueMaxChart(dataChart)]}
+                                data={transformDataToChartWeight(dataChart, "kg")}
+                                domainY={[0, getValueMaxChartWeight(dataChart)]}
                                 textInfo={t("evaluate.normalWeightRange")}
                                 backgroundProps={{
                                     color: colors.primary,
                                     height: 20,
-                                    y: 60,
+                                    y: 70,
                                 }}
                             />
 

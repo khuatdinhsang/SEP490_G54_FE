@@ -10,24 +10,27 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartStep } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
+import { valueSteps, valueWeight } from '../../../../constant/type/chart';
 
 const NumberStepsChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueSteps[]>([])
+    const [dataToday, setDataToday] = useState<number>(0)
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistMental(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataSteps();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.stepResponseList)
+                    setDataToday(resData.result.valueToday)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -41,7 +44,7 @@ const NumberStepsChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
     const goBackPreviousPage = () => {
         navigation.goBack()
@@ -55,28 +58,22 @@ const NumberStepsChart = () => {
                 <View style={styles.header}>
                     <HeaderNavigatorComponent
                         isIconLeft={true}
-                        text={t('recordHealthData.weight')}
+                        text={t('planManagement.text.numberSteps')}
                         handleClickArrowLeft={goBackPreviousPage}
                     />
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
+                                icon={IMAGE.PLAN_MANAGEMENT.SHOES}
+                                textTitleMedium={t("evaluate.myStepToday")}
+                                unit={t("evaluate.step")}
+                                valueMedium={dataToday.toString()}
                                 labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                textTitle={t("evaluate.chartStep")}
+                                data={transformDataToChartStep(dataChart, "%")}
+                                domainY={[0, getValueMaxChartStep(dataChart)]}
                             />
                         </View>
                         :

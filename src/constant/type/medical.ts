@@ -70,7 +70,7 @@ export interface listRegisterMedicineData {
     medicineTypeId: number,
     medicineTitle: string,
     time: string,
-    weekday: string[]
+    weekday: string[],
 }
 export interface cardinalPost {
     id?: number,

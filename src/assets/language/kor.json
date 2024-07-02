@@ -319,6 +319,9 @@
     "chartMedicine": "약물복용 그래프",
     "chartWeight": "체중 그래프",
     "mediumWeight": "평균 체중",
-    "normalWeightRange": "체중 정상 범위"
+    "normalWeightRange": "체중 정상 범위",
+    "myStepToday": "오늘 나의 걸음 수",
+    "step": "보",
+    "chartStep": "걸음수 그래프"
   }
 }

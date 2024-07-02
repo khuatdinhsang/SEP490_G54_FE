@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
@@ -11,6 +11,7 @@ import { SCREENS_NAME } from '../../../../navigator/const';
 import LoadingScreen from '../../../../component/loading';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import { planService } from '../../../../services/plan';
+import { chartService } from '../../../../services/charts';
 
 const Weight = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -24,6 +25,27 @@ const Weight = () => {
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
+    useEffect(() => {
+        const checkIsExistWeightToday = async () => {
+            setIsLoading(true);
+            try {
+                const res = await chartService.checkIsExistWeight(getMondayOfCurrentWeek().split("T")[0]);
+                if (res.result === true) {
+                    setIsLoading(false);
+                    setMessageError("");
+                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART)
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        checkIsExistWeightToday()
+    }, [])
+
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
         const dataSubmit = {

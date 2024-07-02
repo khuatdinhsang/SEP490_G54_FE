@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
-import { valueWeight } from "../constant/type/chart";
+import { valueSteps, valueWeight } from "../constant/type/chart";
 interface OutputData {
     id: number;
     name: string;
@@ -90,7 +90,7 @@ export interface OutputDataChart {
     label?: string
 }
 
-export const transformDataToChart = (inputArray: valueWeight[], unitLabel: string): OutputDataChart[] => {
+export const transformDataToChartWeight = (inputArray: valueWeight[], unitLabel: string): OutputDataChart[] => {
     return inputArray.map((input: valueWeight) => {
         const today = new Date();
         const todayMonth = today.getMonth() + 1;
@@ -106,7 +106,7 @@ export const transformDataToChart = (inputArray: valueWeight[], unitLabel: strin
         };
     });
 };
-export const getValueMaxChart = (inputArray: valueWeight[]): number => {
+export const getValueMaxChartWeight = (inputArray: valueWeight[]): number => {
     if (inputArray.length === 0) {
         return 0;
     }
@@ -116,3 +116,27 @@ export const getValueMaxChart = (inputArray: valueWeight[]): number => {
 export const roundUpToNearest = (value: number, increment: number): number => {
     return Math.ceil(value / increment) * increment;
 };
+
+export const transformDataToChartStep = (inputArray: valueSteps[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueSteps) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
+        return {
+            x: `${month}/${day}`,
+            y: input.valuePercent,
+            ...(isToday && { label: `${input.valuePercent} ${unitLabel}` })
+        };
+    });
+};
+export const getValueMaxChartStep = (inputArray: valueSteps[]): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.valuePercent));
+    return roundUpToNearest(maxValue, 20);
+}

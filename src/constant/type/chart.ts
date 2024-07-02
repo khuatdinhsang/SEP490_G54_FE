@@ -7,3 +7,11 @@ export interface valueWeight {
     value: number,
     date: string
 }
+export interface valueSteps {
+    valuePercent: number,
+    date: string
+}
+export interface dataChartStepResponse {
+    valueToday: number,
+    stepResponseList: valueSteps[]
+}

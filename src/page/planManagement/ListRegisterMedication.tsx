@@ -16,11 +16,12 @@ import { HeightDevice } from '../../util/Dimenssion';
 import DialogSingleComponent from '../../component/dialog-single';
 import { listRegisterMedicineData } from '../../constant/type/medical';
 import { planService } from '../../services/plan';
-import { getMondayOfCurrentWeek } from '../../util';
+import { convertFromUTC, getMondayOfCurrentWeek } from '../../util';
 import LoadingScreen from '../../component/loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { deleteRegisterMedication } from '../../store/medication.slice';
+import { deleteRegisterMedication, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
+import { offsetTime } from '../../constant';
 const ListRegisterMedication = ({ route }: any) => {
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -31,13 +32,19 @@ const ListRegisterMedication = ({ route }: any) => {
     const listRegisterMedicationInterface = useSelector((state: RootState) => state.medication.listRegisterMedicationInterface);
     const listRegisterMedicationSubmit = useSelector((state: RootState) => state.medication.listRegisterMedication);
     const dispatch = useDispatch()
+    useEffect(() => {
+        if (route.params?.listRegisterMedication) {
+            dispatch(setListRegisterMedication(route.params?.listRegisterMedication));
+            dispatch(setListRegisterMedicationInterface(route.params?.listRegisterMedication));
+        }
+    }, [])
+    console.log("listRegisterMedicationSubmit", listRegisterMedicationSubmit)
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
         try {
             const res = await planService.postMedicine(listRegisterMedicationSubmit)
             if (res.code === 200) {
                 setIsLoading(false)
-                setMessageError("");
                 navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
             } else {
                 setMessageError("Unexpected error occurred.");
@@ -55,9 +62,10 @@ const ListRegisterMedication = ({ route }: any) => {
     };
     const handleRegisterMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
+        setMessageError("")
     }
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
+        navigation.goBack()
     };
     const handleDeleteMedication = (id: number) => {
         setItemSelected(id)
@@ -91,7 +99,7 @@ const ListRegisterMedication = ({ route }: any) => {
                     <View >
                         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
                             <Text style={[styles.textPlan, { marginBottom: 20 }]}>{t("planManagement.text.registerMedication")}</Text>
-                            {listRegisterMedicationInterface && listRegisterMedicationInterface.map((item) => {
+                            {listRegisterMedicationInterface && listRegisterMedicationInterface?.map((item) => {
                                 return <View
                                     key={item.medicineTypeId}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
@@ -99,11 +107,11 @@ const ListRegisterMedication = ({ route }: any) => {
                                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                                         <View style={styles.detailExample}>
                                             <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
-                                            <Text style={styles.textChooseDay}>{item.weekday.map(item => item).join(', ')} | {item.time}</Text>
+                                            <Text style={styles.textChooseDay}>{item.weekday.map(item => item).join(', ')} | {convertFromUTC(item.time, offsetTime)}</Text>
                                         </View>
                                     </View>
                                     <Pressable
-                                        onPress={() => handleDeleteMedication(item.medicineTypeId)}>
+                                        onPress={() => handleDeleteMedication(item?.medicineTypeId)}>
                                         <Text style={styles.textDelete}>{t("common.text.delete")}</Text>
                                     </Pressable>
                                 </View>
