@@ -10,30 +10,36 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
+import { valueActivity, valueSteps } from '../../../../constant/type/chart';
+import { getValueMaxChartActivity, transformDataToChartActivity } from '../../../../util';
 
 const WorkOutChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueActivity[]>([])
+    const [dataToday, setDataToday] = useState<number>(0)
+    const [typeToday, setTypeToday] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD)
     }
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [messageError, setMessageError] = useState<string>("");
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistActivity(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataActivity();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.activityResponseList)
+                    setDataToday(resData.result.durationToday)
+                    setTypeToday(resData.result.typeToDay)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -47,8 +53,9 @@ const WorkOutChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -74,23 +81,17 @@ const WorkOutChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
-                                labelElement="%"
+                                icon={IMAGE.PLAN_MANAGEMENT.HUMAN}
+                                textTitleMedium={t("evaluate.resultActivityToday")}
+                                unit={t("common.text.minutes")}
+                                valueMedium={dataToday.toString()}
+                                labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                data={transformDataToChartActivity(dataChart, typeToday)}
+                                domainY={[0, getValueMaxChartActivity(dataChart)]}
                             />
                         </View>
                         :

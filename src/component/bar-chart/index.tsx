@@ -6,6 +6,8 @@ import {
   VictoryLabel,
 } from 'victory-native';
 import colors from '../../constant/color';
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { flexRow } from '../../styles/flex';
 
 /*
 Example Props:
@@ -23,66 +25,96 @@ Example Props:
 
 interface BarChartProps {
   data: Array<{ x: string; y: number; label?: string }>;
+  icon: ImageSourcePropType;
+  textTitle: string;
+  textTitleMedium: string;
+  unit: string;
+  valueMedium: string;
+  backgroundProps?: { y: number; height: number; color: string };
+  textInfo?: string;
 }
 
 const BarChart = (props: BarChartProps) => {
-  const { data } = props;
+  const { data, backgroundProps, textInfo, icon, textTitle, valueMedium, textTitleMedium, unit } = props;
   const textLabel = {
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 20,
   };
+  const yValues = data.map(d => d.y);
+  const maxY = Math.max(...yValues);
+  const tickValues = [0, maxY / 3, (2 * maxY) / 3, maxY];
 
   return (
-    <VictoryChart
-      height={200}
-      style={{
-        parent: {
-          marginLeft: -20,
-        },
-      }}>
-      <VictoryAxis
-        crossAxis
+    <View style={[styles.container, styles.shadowBox]}>
+      <View style={flexRow}>
+        <Image source={icon} style={{ marginRight: 5 }} />
+        <Text style={styles.textTitle}>{textTitle}</Text>
+      </View>
+      {backgroundProps && (
+        <View style={[flexRow, { marginTop: 5 }]}>
+          <View style={styles.infoColor}></View>
+          <Text style={styles.textColorInfo}>{textInfo}</Text>
+        </View>
+      )}
+      <VictoryChart
+        height={200}
         style={{
-          axis: { stroke: colors.gray_G03 },
-          grid: { stroke: 'transparent' },
-          tickLabels: {
-            fill: (fill: any) => {
-              return fill.index === data.length - 1
-                ? colors.black
-                : colors.gray_G05;
+          parent: {
+            marginLeft: -40,
+          },
+        }}
+      >
+        <VictoryAxis
+          crossAxis
+          style={{
+            axis: { stroke: colors.gray_G03 },
+            grid: { stroke: 'transparent' },
+            tickLabels: {
+              fill: (fill: any) => {
+                return fill.index === data.length - 1
+                  ? colors.black
+                  : colors.gray_G05;
+              },
+              ...textLabel,
             },
-            ...textLabel,
-          },
-        }}
-      />
-      <VictoryAxis
-        crossAxis
-        dependentAxis
-        style={{
-          axis: { stroke: 'transparent' },
-          tickLabels: { fill: 'transparent' },
-          grid: {
-            stroke: colors.gray_G03,
-            strokeWidth: 0.5,
-            strokeDasharray: '3,3',
-          },
-        }}
-      />
+          }}
+        />
+        <VictoryAxis
+          crossAxis
+          dependentAxis
+          tickValues={tickValues}
+          style={{
+            axis: { stroke: 'transparent' },
+            tickLabels: { fill: 'transparent' },
+            grid: {
+              stroke: colors.gray_G03,
+              strokeWidth: 0.5,
+              strokeDasharray: '3,3',
+            },
+          }}
+        />
 
-      <VictoryBar
-        style={{
-          data: {
-            fill: fill =>
-              fill.index === data.length - 1 ? colors.primary : colors.gray_G03,
-          },
-        }}
-        data={data}
-        cornerRadius={{ top: 9, bottom: 9 }}
-        barWidth={18}
-        labelComponent={<CustomLabelComponent />}
-      />
-    </VictoryChart>
+        <VictoryBar
+          style={{
+            data: {
+              fill: fill =>
+                fill.index === data.length - 1 ? colors.primary : colors.gray_G03,
+            },
+          }}
+          data={data}
+          cornerRadius={{ top: 9, bottom: 9 }}
+          barWidth={18}
+          labelComponent={<CustomLabelComponent />}
+        />
+      </VictoryChart>
+      <View>
+        <Text style={styles.textTitleMedium}>{textTitleMedium}</Text>
+        <View style={styles.value}>
+          <Text style={styles.textValue}>{valueMedium} {unit}</Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -117,4 +149,58 @@ const CustomLabelComponent = (props: any) => (
     />
   </Svg>
 );
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 16,
+  },
+  shadowBox: {
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#6D6D6D',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 3,
+  },
+  textTitle: {
+    fontWeight: "700",
+    fontSize: 18,
+    color: colors.gray_G08,
+  },
+  textTitleMedium: {
+    fontWeight: "500",
+    fontSize: 16,
+    color: colors.gray_G07,
+    paddingLeft: 10,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.orange_04,
+  },
+  value: {
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: colors.gray_G01,
+    marginTop: 10,
+  },
+  textValue: {
+    fontWeight: "700",
+    fontSize: 18,
+    color: colors.gray_G09,
+    textAlign: "center",
+  },
+  infoColor: {
+    height: 20,
+    width: 70,
+    backgroundColor: colors.primary,
+    opacity: 0.15,
+    marginRight: 10,
+  },
+  textColorInfo: {
+    fontWeight: "400",
+    fontSize: 14,
+    color: colors.gray_G06,
+  },
+});
+
 export default BarChart;

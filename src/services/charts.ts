@@ -1,4 +1,4 @@
-import { dataChartStepResponse } from './../constant/type/chart';
+import { dataChartActivityResponse, dataChartDietResponse, dataChartMedicineResponse, dataChartMentalResponse, dataChartStepResponse } from './../constant/type/chart';
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
@@ -33,6 +33,18 @@ export const chartService = {
     },
     getDataSteps(): Promise<ResponseForm<dataChartStepResponse>> {
         return axiosClient.get(`step-records/mobile/chart`);
+    },
+    getDataDiet(): Promise<ResponseForm<dataChartDietResponse>> {
+        return axiosClient.get(`diet-records/mobile/chart`);
+    },
+    getDataMedicine(): Promise<ResponseForm<dataChartMedicineResponse>> {
+        return axiosClient.get(`medicine-records/mobile/chart`);
+    },
+    getDataActivity(): Promise<ResponseForm<dataChartActivityResponse>> {
+        return axiosClient.get(`activity-records/mobile/chart`);
+    },
+    getDataMental(): Promise<ResponseForm<dataChartMentalResponse>> {
+        return axiosClient.get(`mental-records/mobile/chart`);
     },
 
 };

@@ -23,6 +23,7 @@ const MedicationRecord = () => {
     const [dataListMedication, setDataListMedication] = useState<any[]>([]);
     const today: string = new Date().toLocaleString('en-US', { weekday: 'long' });
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
+    const [allItemsSelected, setAllItemsSelected] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchDataListMedication = async (): Promise<void> => {
@@ -53,23 +54,31 @@ const MedicationRecord = () => {
         setCheckIsExits(checkTodayExists);
     }, [dataListMedication, today]);
 
+    useEffect(() => {
+        const allSelected = dataListMedication
+            .filter(item => item.weekday.includes(today))
+            .every(item => selectedItems[item.medicineTypeId] !== undefined);
+        setAllItemsSelected(allSelected);
+    }, [selectedItems, dataListMedication, today]);
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
+
     const nextPage = async (): Promise<void> => {
-        setIsLoading(true)
+        setIsLoading(true);
         const dataSubmit = {
             date: new Date().toISOString().split("T")[0],
             status: true,
             medicineTypeId: convertObjectToArray(selectedItems)
-        }
-        console.log("da", dataSubmit)
+        };
+        console.log("da", dataSubmit);
         try {
-            const res = await planService.putMedicine(dataSubmit)
+            const res = await planService.putMedicine(dataSubmit);
             if (res.code === 200) {
-                setMessageError("")
-                setIsLoading(false)
-                handleViewChart()
+                setMessageError("");
+                setIsLoading(false);
+                handleViewChart();
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -79,15 +88,14 @@ const MedicationRecord = () => {
             } else {
                 setMessageError("Unexpected error occurred.");
             }
-        }
-        finally {
-            setIsLoading(false)
+        } finally {
+            setIsLoading(false);
         }
     };
+
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART);
-
-    }
+    };
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
         setSelectedItems((prevSelectedItems) => ({
@@ -97,8 +105,6 @@ const MedicationRecord = () => {
     };
 
     const isButtonSelected = (itemId: number, isSelected: boolean) => selectedItems[itemId] === isSelected;
-
-    const allItemsSelected = dataListMedication.every(item => item.weekday.includes(today) && selectedItems[item.medicineId] !== undefined);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -129,7 +135,7 @@ const MedicationRecord = () => {
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                         {dataListMedication.map((item) => (
                             item.weekday.includes(today) && (
-                                <View style={{ marginBottom: 30 }} key={item.medicineId}>
+                                <View style={{ marginBottom: 30 }} key={item.medicineTypeId}>
                                     <View style={[flexRow, { flexWrap: 'wrap' }]}>
                                         <Text style={styles.text}>오늘</Text>
                                         <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text>
@@ -139,34 +145,34 @@ const MedicationRecord = () => {
                                     </View>
                                     <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
                                         <Pressable
-                                            onPress={() => handleSelectItem(item.medicineId, true)}
+                                            onPress={() => handleSelectItem(item.medicineTypeId, true)}
                                             style={[
                                                 flexRowCenter,
                                                 styles.buttonBox,
                                                 {
                                                     width: '47%',
-                                                    borderColor: isButtonSelected(item.medicineId, true) ? colors.primary : colors.gray,
-                                                    backgroundColor: isButtonSelected(item.medicineId, true) ? colors.orange_02 : colors.white
+                                                    borderColor: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.gray,
+                                                    backgroundColor: isButtonSelected(item.medicineTypeId, true) ? colors.orange_02 : colors.white
                                                 }
                                             ]}
                                         >
-                                            <Text style={{ color: isButtonSelected(item.medicineId, true) ? colors.primary : colors.textGray }}>
+                                            <Text style={{ color: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.textGray }}>
                                                 {t("common.text.yes")}
                                             </Text>
                                         </Pressable>
                                         <Pressable
-                                            onPress={() => handleSelectItem(item.medicineId, false)}
+                                            onPress={() => handleSelectItem(item.medicineTypeId, false)}
                                             style={[
                                                 flexRowCenter,
                                                 styles.buttonBox,
                                                 {
                                                     width: '47%',
-                                                    borderColor: isButtonSelected(item.medicineId, false) ? colors.primary : colors.gray,
-                                                    backgroundColor: isButtonSelected(item.medicineId, false) ? colors.orange_02 : colors.white
+                                                    borderColor: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.gray,
+                                                    backgroundColor: isButtonSelected(item.medicineTypeId, false) ? colors.orange_02 : colors.white
                                                 }
                                             ]}
                                         >
-                                            <Text style={{ color: isButtonSelected(item.medicineId, false) ? colors.primary : colors.textGray }}>
+                                            <Text style={{ color: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.textGray }}>
                                                 {t("common.text.no")}
                                             </Text>
                                         </Pressable>

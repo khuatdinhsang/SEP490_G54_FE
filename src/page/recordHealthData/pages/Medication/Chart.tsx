@@ -12,8 +12,9 @@ import { HeightDevice } from '../../../../util/Dimenssion';
 import LoadingScreen from '../../../../component/loading';
 import { planService } from '../../../../services/plan';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartStep } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
+import { valueSteps } from '../../../../constant/type/chart';
 
 const MedicationChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -21,14 +22,19 @@ const MedicationChart = () => {
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueSteps[]>([])
+    const [doneToday, setDoneToday] = useState<number>(0)
+    const [totalToday, setTotalToday] = useState<number>(0)
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistMedication(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataMedicine();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.medicineResponseList)
+                    setDoneToday(resData.result.doneToday)
+                    setTotalToday(resData.result.totalToday)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -42,14 +48,17 @@ const MedicationChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
+
+
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD)
     }
+    console.log("61", transformDataToChartStep(dataChart, "%"))
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -75,23 +84,17 @@ const MedicationChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
+                                textTitleMedium={t("evaluate.numberMedicineToday")}
+                                unit={t("evaluate.times")}
+                                valueMedium={`${doneToday}/${totalToday}`}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                data={transformDataToChartStep(dataChart, "%")}
+                                domainY={[0, getValueMaxChartStep(dataChart)]}
                             />
                         </View>
                         :

@@ -89,7 +89,7 @@ const WeightChart = () => {
                                 labelElement="%"
                                 textTitle={t("evaluate.chartWeight")}
                                 data={transformDataToChartWeight(dataChart, "kg")}
-                                domainY={[0, getValueMaxChartWeight(dataChart)]}
+                                domainY={[0, getValueMaxChartWeight(dataChart, 20)]}
                                 textInfo={t("evaluate.normalWeightRange")}
                                 backgroundProps={{
                                     color: colors.primary,

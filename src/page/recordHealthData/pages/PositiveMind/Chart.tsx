@@ -10,9 +10,11 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartMental, transformDataToChartStep } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
 import LoadingScreen from '../../../../component/loading';
+import BarChart from '../../../../component/bar-chart';
+import { valueMental, valueSteps } from '../../../../constant/type/chart';
 
 const PositiveMindChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -23,17 +25,19 @@ const PositiveMindChart = () => {
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD)
     }
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueMental[]>([])
+    const [mediumData, setMediumData] = useState<number>(0)
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistMental(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataMental();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.mentalResponseList)
+                    setMediumData(resData.result.avgPoint)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -47,7 +51,7 @@ const PositiveMindChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
     return (
         <SafeAreaView style={styles.container}>
@@ -74,23 +78,15 @@ const PositiveMindChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
-                            <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
-                                labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                            <BarChart
+                                icon={IMAGE.PLAN_MANAGEMENT.HEART}
+                                textTitleMedium={t("evaluate.mediumMental")}
+                                unit={t("evaluate.step")}
+                                valueMedium={`${mediumData.toString()}/3`}
+                                textTitle={t("evaluate.chartMental")}
+                                data={transformDataToChartMental(dataChart, "점")}
                             />
                         </View>
                         :

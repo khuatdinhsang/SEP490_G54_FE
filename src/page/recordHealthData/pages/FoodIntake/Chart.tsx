@@ -10,23 +10,27 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { getMondayOfCurrentWeek, getValueMaxChartStep, getValueMaxChartWeight, transformDataToChartStep, transformDataToChartWeight } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
+import { valueWeight } from '../../../../constant/type/chart';
+import LoadingScreen from '../../../../component/loading';
 
 const FoodInTakeChart = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueWeight[]>([])
+    const [dataMedium, setDataMedium] = useState<number>(0)
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistFoodIntake(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataDiet();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.dietResponseList)
+                    setDataMedium(resData.result.avgValue)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -40,7 +44,7 @@ const FoodInTakeChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
     const goBackPreviousPage = () => {
         navigation.goBack()
@@ -73,23 +77,17 @@ const FoodInTakeChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
-                                labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                icon={IMAGE.PLAN_MANAGEMENT.VEGETABLE}
+                                textTitleMedium={t("evaluate.mediumDiet")}
+                                unit={t("planManagement.text.disk")}
+                                valueMedium={dataMedium.toString()}
+                                labelElement={t("planManagement.text.disk")}
+                                textTitle={t("evaluate.chartDiet")}
+                                data={transformDataToChartWeight(dataChart, t("planManagement.text.disk"))}
+                                domainY={[0, getValueMaxChartWeight(dataChart, 5)]}
                             />
                         </View>
                         :
@@ -106,7 +104,7 @@ const FoodInTakeChart = () => {
                 }
                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
-
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }

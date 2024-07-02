@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
-import { valueSteps, valueWeight } from "../constant/type/chart";
+import { valueActivity, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
 interface OutputData {
     id: number;
     name: string;
@@ -106,12 +106,12 @@ export const transformDataToChartWeight = (inputArray: valueWeight[], unitLabel:
         };
     });
 };
-export const getValueMaxChartWeight = (inputArray: valueWeight[]): number => {
+export const getValueMaxChartWeight = (inputArray: valueWeight[], value: number): number => {
     if (inputArray.length === 0) {
         return 0;
     }
     const maxValue = Math.max(...inputArray.map(item => item.value));
-    return roundUpToNearest(maxValue, 20);
+    return roundUpToNearest(maxValue, value);
 }
 export const roundUpToNearest = (value: number, increment: number): number => {
     return Math.ceil(value / increment) * increment;
@@ -140,3 +140,40 @@ export const getValueMaxChartStep = (inputArray: valueSteps[]): number => {
     const maxValue = Math.max(...inputArray.map(item => item.valuePercent));
     return roundUpToNearest(maxValue, 20);
 }
+
+export const transformDataToChartActivity = (inputArray: valueActivity[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueActivity) => {
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        return {
+            x: `${month}/${day}`,
+            y: input.duration,
+            label: `${unitLabel}`
+        };
+    });
+};
+export const getValueMaxChartActivity = (inputArray: valueActivity[]): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.duration));
+    return roundUpToNearest(maxValue, 20);
+}
+
+export const transformDataToChartMental = (inputArray: valueMental[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueMental) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
+        return {
+            x: `${month}/${day}`,
+            y: input.point,
+            ...(isToday && { label: `${input.point} ${unitLabel}` })
+        };
+    });
+};
