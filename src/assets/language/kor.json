@@ -188,7 +188,7 @@
       "boiled/blanchedVegetables": "삶거나 데친 야채",
       "vegetables": "생야채",
       "driedFruit": "건조과일",
-      "examplesBoiled/BlanchedVegetables": "콩나물 무침, 시금치 나물",
+      "examplesBoiled/BlanchedVegetables": "Boiled soybean sprout, Boiled spinach",
       "examplesVegetables": "쌈야채, 양상추, 오이, 당근",
       "apple/melon": "사과, 참외",
       "tangerine": "귤",
@@ -196,11 +196,11 @@
       "cannedFruit": "과일 통조림",
       "grape/bananaDried": "건포도, 건조 바나나",
       "fruit": "과일",
+      Bảng đang thiếu 1 dòng kìa 
       // page 5  đăng kí dùng thuốc
       "registerMedication": "매일 섭취하는 약물 복용 스캐줄을 등록해주세요",
       "addSchedule": "약물복용 스케줄 추가하기",
-      "typesMedication": "매일 섭취하는 약물의 종류와 ",
-      "selectDayTime": "요일/시간을 선택해주세요",
+      "typesMedication": "매일 섭취하는 약물의 종류와 요일/시간을 선택해주세요",
       "pleaseChooseMedication": "약의 종류를 선택해주세요",
       "pleaseSetTime": "시간을 정해주세요",
       "stepGoal": "매일 실천할 걸음 수 목표를 정해주세요",
@@ -304,8 +304,8 @@
     "chartSynthetic": "합산 평가 그래프",
     "weeklyEvaluationResults": "주간실천 평가 결과",
     "general": "합산 평가",
-    "congratulation": "축하합니다!",
-    "successfulWeek": "성공적인 일주일을 보냈습니다",
+    "congratulation": "축하합니다!",//BE gửi lên
+    "successfulWeek": "성공적인 일주일을 보냈습니다",//BE gửi lên
     "activitySummary": "이번주 나의 건강활동 요약",
     "noReview": "아직 평가 결과가 존재하지 않습니다",
     "answerSurvey": "설문하기",
