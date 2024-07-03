@@ -54,7 +54,7 @@ const Login = () => {
     const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
-            const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: "dBAKdQ2yTujIB-xuK994ur:APA91bFWyD25dEPSvhIrhJB-tg_YSa_LtrmVvxbxU6_oRwmBUe_Za9OQwfOf6A6Pg084eK753P-dw0avvV3ZP76dgEnewjIqlIndmOv1pxFcAh6jm4llurRBLG2IlZQUTi_gK7Z2u-Un" })).unwrap()
             if (res.code == 200) {
                 setIsLoading(false);
                 resetForm()
