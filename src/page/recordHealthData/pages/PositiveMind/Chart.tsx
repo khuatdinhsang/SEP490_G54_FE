@@ -16,19 +16,20 @@ import LoadingScreen from '../../../../component/loading';
 import BarChart from '../../../../component/bar-chart';
 import { valueMental, valueSteps } from '../../../../constant/type/chart';
 
-const PositiveMindChart = () => {
+const PositiveMindChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const goBackPreviousPage = () => {
-        navigation.goBack()
-    }
-    const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD)
-    }
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueMental[]>([])
     const [mediumData, setMediumData] = useState<number>(0)
+    const isEditable = route?.params?.isEditable;
+    const goBackPreviousPage = () => {
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+    }
+    const navigateNumericalRecord = () => {
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: isEditable });
+    }
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);

@@ -15,13 +15,14 @@ import LineChart from '../../../../component/line-chart';
 import { valueWeight } from '../../../../constant/type/chart';
 import LoadingScreen from '../../../../component/loading';
 
-const FoodInTakeChart = () => {
+const FoodInTakeChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueWeight[]>([])
     const [dataMedium, setDataMedium] = useState<number>(0)
+    const isEditable = route?.params?.isEditable;
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
@@ -47,10 +48,10 @@ const FoodInTakeChart = () => {
         getDataChart();
     }, []);
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD, { isEditable: isEditable });
     }
     return (
         <SafeAreaView style={styles.container}>

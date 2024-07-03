@@ -14,7 +14,7 @@ import { HeightDevice, WidthDevice } from '../../../../util/Dimenssion';
 import LoadingScreen from '../../../../component/loading';
 import { offsetTime } from '../../../../constant';
 
-const MedicationRecord = () => {
+const MedicationRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const [selectedItems, setSelectedItems] = useState<{ [key: number]: boolean }>({});
@@ -24,7 +24,8 @@ const MedicationRecord = () => {
     const today: string = new Date().toLocaleString('en-US', { weekday: 'long' });
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [allItemsSelected, setAllItemsSelected] = useState<boolean>(false);
-
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     useEffect(() => {
         const fetchDataListMedication = async (): Promise<void> => {
             setIsLoading(true);
@@ -62,7 +63,7 @@ const MedicationRecord = () => {
     }, [selectedItems, dataListMedication, today]);
 
     const goBackPreviousPage = () => {
-        navigation.goBack();
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
 
     const nextPage = async (): Promise<void> => {
@@ -72,13 +73,13 @@ const MedicationRecord = () => {
             status: true,
             medicineTypeId: convertObjectToArray(selectedItems)
         };
-        console.log("da", dataSubmit);
         try {
             const res = await planService.putMedicine(dataSubmit);
             if (res.code === 200) {
                 setMessageError("");
                 setIsLoading(false);
-                handleViewChart();
+                setIsEdit(false)
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -94,7 +95,7 @@ const MedicationRecord = () => {
     };
 
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART);
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: isEdit });
     };
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
@@ -131,66 +132,82 @@ const MedicationRecord = () => {
                         </Text>
                     </Pressable>
                 </View>
-                {dataListMedication.length > 0 ? (
-                    <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                        {dataListMedication.map((item) => (
-                            item.weekday.includes(today) && (
-                                <View style={{ marginBottom: 30 }} key={item.medicineTypeId}>
-                                    <View style={[flexRow, { flexWrap: 'wrap' }]}>
-                                        <Text style={styles.text}>오늘</Text>
-                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text>
-                                        <Text style={styles.text}>에</Text>
-                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineTitle}</Text>
-                                        <Text style={styles.text}>을 먹었나요?</Text>
+                {isEdit ? (
+                    dataListMedication.length > 0 ? (
+                        <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
+                            {dataListMedication.map((item) => (
+                                item.weekday.includes(today) && (
+                                    <View style={{ marginBottom: 30 }} key={item.medicineTypeId}>
+                                        <View style={[flexRow, { flexWrap: 'wrap' }]}>
+                                            <Text style={styles.text}>오늘</Text>
+                                            <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text>
+                                            <Text style={styles.text}>에</Text>
+                                            <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineTitle}</Text>
+                                            <Text style={styles.text}>을 먹었나요?</Text>
+                                        </View>
+                                        <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
+                                            <Pressable
+                                                onPress={() => handleSelectItem(item.medicineTypeId, true)}
+                                                style={[
+                                                    flexRowCenter,
+                                                    styles.buttonBox,
+                                                    {
+                                                        width: '47%',
+                                                        borderColor: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.gray,
+                                                        backgroundColor: isButtonSelected(item.medicineTypeId, true) ? colors.orange_02 : colors.white
+                                                    }
+                                                ]}
+                                            >
+                                                <Text style={{ color: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.textGray }}>
+                                                    {t("common.text.yes")}
+                                                </Text>
+                                            </Pressable>
+                                            <Pressable
+                                                onPress={() => handleSelectItem(item.medicineTypeId, false)}
+                                                style={[
+                                                    flexRowCenter,
+                                                    styles.buttonBox,
+                                                    {
+                                                        width: '47%',
+                                                        borderColor: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.gray,
+                                                        backgroundColor: isButtonSelected(item.medicineTypeId, false) ? colors.orange_02 : colors.white
+                                                    }
+                                                ]}
+                                            >
+                                                <Text style={{ color: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.textGray }}>
+                                                    {t("common.text.no")}
+                                                </Text>
+                                            </Pressable>
+                                        </View>
                                     </View>
-                                    <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
-                                        <Pressable
-                                            onPress={() => handleSelectItem(item.medicineTypeId, true)}
-                                            style={[
-                                                flexRowCenter,
-                                                styles.buttonBox,
-                                                {
-                                                    width: '47%',
-                                                    borderColor: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.gray,
-                                                    backgroundColor: isButtonSelected(item.medicineTypeId, true) ? colors.orange_02 : colors.white
-                                                }
-                                            ]}
-                                        >
-                                            <Text style={{ color: isButtonSelected(item.medicineTypeId, true) ? colors.primary : colors.textGray }}>
-                                                {t("common.text.yes")}
-                                            </Text>
-                                        </Pressable>
-                                        <Pressable
-                                            onPress={() => handleSelectItem(item.medicineTypeId, false)}
-                                            style={[
-                                                flexRowCenter,
-                                                styles.buttonBox,
-                                                {
-                                                    width: '47%',
-                                                    borderColor: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.gray,
-                                                    backgroundColor: isButtonSelected(item.medicineTypeId, false) ? colors.orange_02 : colors.white
-                                                }
-                                            ]}
-                                        >
-                                            <Text style={{ color: isButtonSelected(item.medicineTypeId, false) ? colors.primary : colors.textGray }}>
-                                                {t("common.text.no")}
-                                            </Text>
-                                        </Pressable>
-                                    </View>
-                                </View>
-                            )
-                        ))}
-                        {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
-                    </View>
+                                )
+                            ))}
+                            {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
+                        </View>
+                    ) : (
+                        <View style={styles.emptyContainer}>
+                            <Image source={IMAGE.RECORD_DATA.CALENDAR} />
+                            <Text style={[styles.text, { fontWeight: "700" }]}>{t('recordHealthData.noMedicationSchedule')}</Text>
+                        </View>
+                    )
                 ) : (
-                    <View style={styles.emptyContainer}>
-                        <Image source={IMAGE.RECORD_DATA.CALENDAR} />
-                        <Text style={[styles.text, { fontWeight: "700" }]}>{t('recordHealthData.noMedicationSchedule')}</Text>
+                    <View style={[flexCenter, { marginTop: 100 }]}>
+                        <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
+                            }}
+                            style={styles.buttonChart}>
+                            <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                        </Pressable>
                     </View>
                 )}
+
             </ScrollView>
             {
-                checkIsExits && (
+                checkIsExits && isEdit && (
                     <View style={styles.buttonContainer}>
                         <Pressable
                             disabled={!allItemsSelected}
@@ -281,6 +298,31 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginTop: 100
     },
+    textTitle: {
+        fontWeight: '700',
+        fontSize: 20,
+        color: colors.gray_G10,
+        textAlign: 'center',
+    },
+    textDesc: {
+        fontWeight: '400',
+        fontSize: 16,
+        color: colors.gray_G06,
+        textAlign: 'center',
+    },
+    buttonChart: {
+        marginTop: 20,
+        backgroundColor: colors.gray_G08,
+        borderRadius: 8,
+        paddingVertical: 17,
+        width: 140,
+    },
+    textButtonChart: {
+        fontWeight: '500',
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.white,
+    }
 });
 
 export default MedicationRecord;

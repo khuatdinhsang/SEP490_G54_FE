@@ -21,7 +21,7 @@ type dataTypeWorkOut = {
     image: string,
     planType: string
 }
-const WorkOutRecord = () => {
+const WorkOutRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [hour, setHours] = useState<number>(0);
@@ -59,16 +59,17 @@ const WorkOutRecord = () => {
         },
     ]
     const [dataWorkOut, setDataWorkOut] = useState<dataTypeWorkOut[]>(initDataWorkOut);
-
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART)
     }
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
-        const convertTime = hour * 60 + minute;
+        const convertTime = (hour) * 60 + (minute);
         const dataSubmit = {
             actualType: selectedItem,
             actualDuration: Number(convertTime),
@@ -76,10 +77,12 @@ const WorkOutRecord = () => {
         }
         try {
             const res = await planService.putActivity(dataSubmit)
+            console.log("79", res)
             if (res.code === 200) {
                 setMessageError("");
                 setIsLoading(false)
-                handleViewChart()
+                setIsEdit(false)
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -98,7 +101,7 @@ const WorkOutRecord = () => {
         const activityChoose = initDataWorkOut.find((item) => item.id === itemId)
         setSelectedItem(activityChoose?.planType);
     };
-    const isDisable = hour && minute && selectedItem ? true : false
+    const isDisable = hour && selectedItem ? true : false
 
     return (
         <SafeAreaView style={styles.container}>
@@ -125,61 +128,74 @@ const WorkOutRecord = () => {
                         </Text>
                     </Pressable>
                 </View>
-                <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                    <Text style={styles.title}>{t('recordHealthData.pleaseChooseDay')}</Text>
-                    <View>
-                        <View style={[flexRowSpaceBetween, { width: '100%' }]}>
-                            <View style={{ width: '47%' }}>
-                                <SelectDate
-                                    value={hour}
-                                    text={t('common.text.hours')}
-                                    textButton={t('common.text.next')}
-                                    toggleModalScroll={toggleHourScroll}
-                                    handleChange={handleHourChange}
-                                    showScroll={showHourScroll}
-                                    length={12}
-                                    type={'hour'}
-                                />
-                            </View>
-                            <View style={{ width: '47%' }}>
-                                <SelectDate
-                                    value={minute}
-                                    text={t('common.text.minutes')}
-                                    textButton={t('common.text.next')}
-                                    toggleModalScroll={toggleMinuteScroll}
-                                    handleChange={handleMinuteChange}
-                                    showScroll={showMinuteScroll}
-                                    length={12}
-                                    type={'minute'}
-                                />
+                {isEdit ?
+                    <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
+                        <Text style={styles.title}>{t('recordHealthData.pleaseChooseDay')}</Text>
+                        <View>
+                            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
+                                <View style={{ width: '47%' }}>
+                                    <SelectDate
+                                        value={hour}
+                                        text={t('common.text.hours')}
+                                        textButton={t('common.text.next')}
+                                        toggleModalScroll={toggleHourScroll}
+                                        handleChange={handleHourChange}
+                                        showScroll={showHourScroll}
+                                        length={12}
+                                        type={'hour'}
+                                    />
+                                </View>
+                                <View style={{ width: '47%' }}>
+                                    <SelectDate
+                                        value={minute}
+                                        text={t('common.text.minutes')}
+                                        textButton={t('common.text.next')}
+                                        toggleModalScroll={toggleMinuteScroll}
+                                        handleChange={handleMinuteChange}
+                                        showScroll={showMinuteScroll}
+                                        length={12}
+                                        type={'minute'}
+                                    />
+                                </View>
                             </View>
                         </View>
+                        <Text style={[styles.title, { marginTop: 20 }]}>{t('planManagement.text.movementIntensity')}</Text>
+                        {dataWorkOut && dataWorkOut.map((item) => {
+                            return (
+                                <Pressable onPress={() => handleSelectItem(item.id)}
+                                    key={item.id}
+                                    style={[flexRow, styles.example, { backgroundColor: selectedItem === item.planType ? colors.orange_01 : colors.white, borderColor: selectedItem === item.planType ? colors.primary : colors.gray }]}>
+                                    <Image source={item.image || IMAGE.PLAN_MANAGEMENT.SOCCER} />
+                                    <View style={styles.detailExample}>
+                                        <Text style={[styles.textPlan, { color: selectedItem === item.planType ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
+                                        <Text style={[styles.textChooseDay, { fontSize: 12 }]}>{item.des}</Text>
+                                    </View>
+                                </Pressable>
+                            )
+                        })}
+                        {messageError && !isLoading && <Text style={[styles.textChooseDay, { color: 'red' }]}>{messageError}</Text>}
                     </View>
-                    <Text style={[styles.title, { marginTop: 20 }]}>{t('planManagement.text.movementIntensity')}</Text>
-                    {dataWorkOut && dataWorkOut.map((item) => {
-                        return (
-                            <Pressable onPress={() => handleSelectItem(item.id)}
-                                key={item.id}
-                                style={[flexRow, styles.example, { backgroundColor: selectedItem === item.planType ? colors.orange_01 : colors.white, borderColor: selectedItem === item.planType ? colors.primary : colors.gray }]}>
-                                <Image source={item.image || IMAGE.PLAN_MANAGEMENT.SOCCER} />
-                                <View style={styles.detailExample}>
-                                    <Text style={[styles.textPlan, { color: selectedItem === item.planType ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
-                                    <Text style={[styles.textChooseDay, { fontSize: 12 }]}>{item.des}</Text>
-                                </View>
-                            </Pressable>
-                        )
-                    })}
-                    {messageError && !isLoading && <Text style={[styles.textChooseDay, { color: 'red' }]}>{messageError}</Text>}
-                </View>
+                    : <View style={[flexCenter, { marginTop: 100 }]}>
+                        <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
+                            }}
+                            style={styles.buttonChart}>
+                            <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                        </Pressable>
+                    </View>}
             </ScrollView>
-            <View style={styles.buttonContainer}>
+            {isEdit && <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={isDisable ? false : true}
                     onPress={nextPage}
                     style={[flexCenter, styles.button, { backgroundColor: isDisable ? colors.primary : colors.gray_G02 }]}>
                     <Text style={[styles.textButton, { color: isDisable ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
-            </View>
+            </View>}
             {isLoading && <LoadingScreen />}
         </SafeAreaView >
     )
@@ -259,5 +275,30 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: colors.gray_G09
     },
+    textTitle: {
+        fontWeight: '700',
+        fontSize: 20,
+        color: colors.gray_G10,
+        textAlign: 'center',
+    },
+    textDesc: {
+        fontWeight: '400',
+        fontSize: 16,
+        color: colors.gray_G06,
+        textAlign: 'center',
+    },
+    buttonChart: {
+        marginTop: 20,
+        backgroundColor: colors.gray_G08,
+        borderRadius: 8,
+        paddingVertical: 17,
+        width: 140,
+    },
+    textButtonChart: {
+        fontWeight: '500',
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.white,
+    }
 })
 export default WorkOutRecord

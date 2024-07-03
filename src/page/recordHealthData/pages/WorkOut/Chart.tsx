@@ -15,7 +15,7 @@ import LineChart from '../../../../component/line-chart';
 import { valueActivity, valueSteps } from '../../../../constant/type/chart';
 import { getValueMaxChartActivity, transformDataToChartActivity } from '../../../../util';
 
-const WorkOutChart = () => {
+const WorkOutChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
@@ -24,17 +24,19 @@ const WorkOutChart = () => {
     const [dataChart, setDataChart] = useState<valueActivity[]>([])
     const [dataToday, setDataToday] = useState<number>(0)
     const [typeToday, setTypeToday] = useState<string>("")
+    const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD, { isEditable: isEditable });
     }
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
                 const resData = await chartService.getDataActivity();
+                console.log("22", resData)
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setDataChart(resData.result.activityResponseList)
@@ -55,7 +57,6 @@ const WorkOutChart = () => {
         };
         getDataChart();
     }, []);
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -91,7 +92,7 @@ const WorkOutChart = () => {
                                 labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
                                 data={transformDataToChartActivity(dataChart, typeToday)}
-                                domainY={[0, getValueMaxChartActivity(dataChart)]}
+                                domainY={[0, getValueMaxChartActivity(dataChart, 50)]}
                             />
                         </View>
                         :

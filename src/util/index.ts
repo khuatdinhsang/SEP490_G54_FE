@@ -153,12 +153,12 @@ export const transformDataToChartActivity = (inputArray: valueActivity[], unitLa
         };
     });
 };
-export const getValueMaxChartActivity = (inputArray: valueActivity[]): number => {
+export const getValueMaxChartActivity = (inputArray: valueActivity[], value: number): number => {
     if (inputArray.length === 0) {
         return 0;
     }
     const maxValue = Math.max(...inputArray.map(item => item.duration));
-    return roundUpToNearest(maxValue, 20);
+    return roundUpToNearest(maxValue, value);
 }
 
 export const transformDataToChartMental = (inputArray: valueMental[], unitLabel: string): OutputDataChart[] => {

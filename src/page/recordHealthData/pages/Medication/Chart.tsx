@@ -16,7 +16,7 @@ import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartStep 
 import LineChart from '../../../../component/line-chart';
 import { valueSteps } from '../../../../constant/type/chart';
 
-const MedicationChart = () => {
+const MedicationChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
@@ -25,6 +25,7 @@ const MedicationChart = () => {
     const [dataChart, setDataChart] = useState<valueSteps[]>([])
     const [doneToday, setDoneToday] = useState<number>(0)
     const [totalToday, setTotalToday] = useState<number>(0)
+    const isEditable = route?.params?.isEditable;
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
@@ -53,10 +54,10 @@ const MedicationChart = () => {
 
 
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD, { isEditable: isEditable });
     }
     console.log("61", transformDataToChartStep(dataChart, "%"))
     return (

@@ -1,8 +1,8 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
 import { flexCenter, flexRow, flexRowCenter } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
@@ -11,53 +11,38 @@ import { SCREENS_NAME } from '../../../../navigator/const';
 import LoadingScreen from '../../../../component/loading';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import { planService } from '../../../../services/plan';
-import { chartService } from '../../../../services/charts';
+import { IMAGE } from '../../../../constant/image';
 
-const Weight = () => {
+const Weight = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const { t, i18n } = useTranslation();
-    const [weight, setWeight] = useState<string>("")
-    const [isLoading, setIsLoading] = useState(false)
-    const [messageError, setMessageError] = useState<string>("")
+    const { t } = useTranslation();
+    const [weight, setWeight] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART)
-    }
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
+    };
+
     const goBackPreviousPage = () => {
-        navigation.goBack()
-    }
-    useEffect(() => {
-        const checkIsExistWeightToday = async () => {
-            setIsLoading(true);
-            try {
-                const res = await chartService.checkIsExistWeight(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.result === true) {
-                    setIsLoading(false);
-                    setMessageError("");
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART)
-                }
-            } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
-                    setMessageError(error.response.data.message);
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        checkIsExistWeightToday()
-    }, [])
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+    };
 
     const nextPage = async (): Promise<void> => {
-        setIsLoading(true)
+        setIsLoading(true);
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek().split("T")[0],
             date: new Date().toISOString().split("T")[0],
             weight: Number(weight)
-        }
+        };
         try {
-            const res = await planService.postWeight(dataSubmit)
+            const res = await planService.postWeight(dataSubmit);
             if (res.code === 201) {
-                setIsLoading(false)
-                handleViewChart()
+                setIsLoading(false);
+                setIsEdit(false)
+                setWeight("")
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -67,17 +52,17 @@ const Weight = () => {
             } else {
                 setMessageError("Unexpected error occurred.");
             }
+        } finally {
+            setIsLoading(false);
         }
-        finally {
-            setIsLoading(false)
-        }
-    }
+    };
+
     const handleSetWeight = (value: string) => {
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setWeight(value);
         }
-    }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -104,35 +89,50 @@ const Weight = () => {
                         </Text>
                     </Pressable>
                 </View>
-                <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                    <Text style={styles.title}>{t('recordHealthData.enterWeight')}</Text>
-                    <View style={[flexRowCenter, styles.item]}>
-                        <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('recordHealthData.weight')}</Text>
-                        <View style={{ width: "50%", marginLeft: 20 }}>
-                            <InputNumber
-                                textRight='kg'
-                                value={weight}
-                                keyboardType={"numeric"}
-                                handleSetValue={handleSetWeight}
-                                styleInput={{ paddingLeft: 50 }}
-                            />
+                {isEdit ?
+                    <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
+                        <Text style={styles.title}>{t('recordHealthData.enterWeight')}</Text>
+                        <View style={[flexRowCenter, styles.item]}>
+                            <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('recordHealthData.weight')}</Text>
+                            <View style={{ width: "50%", marginLeft: 20 }}>
+                                <InputNumber
+                                    textRight='kg'
+                                    value={weight}
+                                    keyboardType={"numeric"}
+                                    handleSetValue={handleSetWeight}
+                                    styleInput={{ paddingLeft: 50 }}
+                                />
+                            </View>
                         </View>
+                        {messageError && !isLoading && <Text style={[styles.title, { color: colors.red }]}>{messageError}</Text>}
                     </View>
-                    {messageError && !isLoading && <Text style={[styles.title, { color: colors.red }]}>{messageError}</Text>}
-                </View>
+                    : <View style={[flexCenter, { marginTop: 100 }]}>
+                        <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: false });
+                            }}
+                            style={styles.buttonChart}>
+                            <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                        </Pressable>
+                    </View>
+                }
             </ScrollView>
-            <View style={styles.buttonContainer}>
+            {isEdit && <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={weight ? false : true}
                     onPress={nextPage}
                     style={[flexCenter, styles.button, { backgroundColor: weight ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: weight ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
+                    <Text style={[styles.textButton, { color: weight ? colors.white : colors.gray_G04 }]}>{t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
-            </View>
+            </View>}
             {isLoading && <LoadingScreen />}
         </SafeAreaView>
-    )
-}
+    );
+};
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         paddingBottom: 100
-    }, navigate: {
+    },
+    navigate: {
         height: 48,
         width: '50%'
     },
@@ -187,6 +188,32 @@ const styles = StyleSheet.create({
         backgroundColor: colors.gray_G01,
         borderRadius: 12,
         marginTop: 20,
+    },
+    textTitle: {
+        fontWeight: '700',
+        fontSize: 20,
+        color: colors.gray_G10,
+        textAlign: 'center',
+    },
+    textDesc: {
+        fontWeight: '400',
+        fontSize: 16,
+        color: colors.gray_G06,
+        textAlign: 'center',
+    },
+    buttonChart: {
+        marginTop: 20,
+        backgroundColor: colors.gray_G08,
+        borderRadius: 8,
+        paddingVertical: 17,
+        width: 140,
+    },
+    textButtonChart: {
+        fontWeight: '500',
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.white,
     }
-})
-export default Weight
+});
+
+export default Weight;

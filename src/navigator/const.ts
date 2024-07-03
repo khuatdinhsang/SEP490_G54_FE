@@ -54,6 +54,11 @@ import SAT_SF_I from '../page/evaluate/SAT_SF_I';
 import SAT_SF_P from '../page/evaluate/SAT_SF_P';
 import BEHAVIORAL from '../page/evaluate/BEHAVIORAL';
 import SuccessSurvey from '../page/evaluate/SuccessSurvey';
+import MainWeight from '../page/recordHealthData/pages/Weight/main';
+import MainWorkOut from '../page/recordHealthData/pages/WorkOut/main';
+import MainPositiveMind from '../page/recordHealthData/pages/PositiveMind/main';
+import MainFoodIntake from '../page/recordHealthData/pages/FoodIntake/main';
+import MainMedication from '../page/recordHealthData/pages/Medication/main';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -110,15 +115,20 @@ export const SCREENS_NAME = {
         NUMERICAL_RECORD_CHART: 'Number Record Chart',
         BLOOD_PRESSURE: 'Blood Pressure',
         BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
+        MAIN_WEIGHT: 'Main Weight',
         WEIGHT: 'Weight',
         WEIGHT_CHART: 'Weight Chart',
+        MAIN_POSITIVE_MIND: 'Main Positive Mind',
         POSITIVE_MIND_RECORD: 'Positive Mind Record',
         POSITIVE_MIND_CHART: 'Positive Mind Chart',
+        MAIN_WORK_OUT: 'Main Work Out',
         WORK_OUT_RECORD: 'Work Out Record',
         WORD_OUT_CHART: 'Word Out Chart',
+        MAIN_MEDICATION: 'Main Medication',
         MEDICATION_RECORD: 'Medication Record',
         MEDICATION_CHART: 'Medication Chart',
         NUMBER_STEPS_CHART: 'Number Steps Chart',
+        MAIN_FOOD_INTAKE: 'Main Food Intake',
         FOOD_INTAKE_RECORD: 'Food Injection Record',
         FOOD_INTAKE_CHART: 'Food Injection Chart',
     },
@@ -301,12 +311,20 @@ const SCREENS_STACK_RECORD_DATA = [
         component: BloodPressureChart,
     },
     {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WEIGHT,
+        component: MainWeight,
+    },
+    {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT,
         component: Weight,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART,
         component: WeightChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_POSITIVE_MIND,
+        component: MainPositiveMind,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD,
@@ -317,12 +335,20 @@ const SCREENS_STACK_RECORD_DATA = [
         component: PositiveMindChart,
     },
     {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WORK_OUT,
+        component: MainWorkOut,
+    },
+    {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD,
         component: WorkOutRecord,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART,
         component: WorkOutChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_MEDICATION,
+        component: MainMedication,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD,
@@ -335,6 +361,10 @@ const SCREENS_STACK_RECORD_DATA = [
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART,
         component: NumberStepsChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_FOOD_INTAKE,
+        component: MainFoodIntake,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD,

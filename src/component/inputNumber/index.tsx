@@ -8,12 +8,13 @@ interface InputComponentProps {
     error?: string,
     handleSetValue: (value: string) => void
     keyboardType: KeyboardTypeOptions,
-    styleInput?: StyleProp<TextStyle>
+    styleInput?: StyleProp<TextStyle>,
+    isEditable?: boolean
 }
 
 const InputNumber = (props: InputComponentProps) => {
     const [isFocused, setIsFocused] = useState(false);
-    const { textRight, error, value, handleSetValue, styleInput } = props
+    const { textRight, error, value, handleSetValue, styleInput, isEditable } = props
     return (
         <View
             style={[
@@ -28,6 +29,7 @@ const InputNumber = (props: InputComponentProps) => {
                 onChangeText={handleSetValue}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                editable={isEditable}
             />
         </View>
     )

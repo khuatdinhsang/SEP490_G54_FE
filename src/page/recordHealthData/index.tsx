@@ -33,27 +33,27 @@ const RecordHealthData = () => {
             id: 3,
             title: t('recordHealthData.weight'),
             image: IMAGE.RECORD_DATA.CHART,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WEIGHT
         }, {
             id: 4,
             title: t('planManagement.text.positiveMind'),
             image: IMAGE.RECORD_DATA.HEART_ORANGE,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_POSITIVE_MIND
         }, {
             id: 5,
             title: t('planManagement.text.workout'),
             image: IMAGE.PLAN_MANAGEMENT.HUMAN,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WORK_OUT
         }, {
             id: 6,
             title: t('recordHealthData.diet'),
             image: IMAGE.PLAN_MANAGEMENT.VEGETABLE,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_FOOD_INTAKE
         }, {
             id: 7,
             title: t('planManagement.text.takingMedication'),
             image: IMAGE.PLAN_MANAGEMENT.MEDICATION1,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_MEDICATION
         }, {
             id: 8,
             title: t('planManagement.text.numberSteps'),
