@@ -1,6 +1,6 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { Alert, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import './src/config/translation.config';
 import colors from './src/constant/color';
@@ -8,7 +8,8 @@ import Navigator from './src/navigator';
 import { Provider } from 'react-redux';
 import { persistor, store } from './src/store/store';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import messaging from '@react-native-firebase/messaging';
+import { getToken, requestUserPermission } from './src/config/firebase.config';
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -32,6 +33,16 @@ function App(): React.JSX.Element {
   // <Text>{t("authentication.login")}</Text>
   // <Button onPress={handleChangeText} title="change lang" />
 
+  useEffect(() => {
+    const initialize = async () => {
+      await requestUserPermission()
+      await getToken()
+    }
+    messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+    initialize();
+  }, []);
   return (
     <NavigationContainer theme={MyTheme}>
       <Provider store={store}>

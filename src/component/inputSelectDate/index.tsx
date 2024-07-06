@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 interface InputComponentProps {
     text: string;
-    value: number | undefined,
+    value: number,
     toggleModalScroll: () => void,
     showScroll: boolean,
     textButton: string,
@@ -47,7 +47,7 @@ const SelectDate = (props: InputComponentProps) => {
             <Pressable onPress={toggleModalScroll}>
                 <View style={styles.itemDate}>
                     <Text style={styles.date}>{value}</Text>
-                    <Text style={[styles.textDate, { color: value ? colors.black : colors.gray_G04 }]}>{text}</Text>
+                    <Text style={[styles.textDate, { color: value !== undefined ? colors.black : colors.gray_G04 }]}>{text}</Text>
                 </View>
             </Pressable>
             {showScroll && (
@@ -122,7 +122,7 @@ const SelectDate = (props: InputComponentProps) => {
                                 style={[
                                     styles.button,
                                     {
-                                        backgroundColor: value ? colors.primary : colors.gray_G02,
+                                        backgroundColor: value !== undefined ? colors.primary : colors.gray_G02,
                                         width: '90%',
                                         marginBottom: 20,
                                     },

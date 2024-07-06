@@ -43,6 +43,7 @@ const FoodIntake = () => {
                 const res = await planService.postDiet(data)
                 if (res.code === 200) {
                     setIsLoading(false)
+                    setMessageError("");
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
                 } else {
                     setMessageError("Unexpected error occurred.");

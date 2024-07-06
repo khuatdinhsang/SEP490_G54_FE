@@ -117,6 +117,7 @@ const WorkOut = () => {
         try {
             const res = await planService.postActivity(dataSubmit)
             if (res.code === 200) {
+                setMessageError("");
                 setIsLoading(false)
                 navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
             } else {

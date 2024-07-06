@@ -74,6 +74,7 @@ const AddMedication = ({ route }: any) => {
                 if (res.code === 200) {
                     setIsLoading(false);
                     setDataMedication(res.result);
+                    setMessageError("");
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -108,9 +109,10 @@ const AddMedication = ({ route }: any) => {
         const dataInterface: listRegisterMedicineData = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
-            time: convertToUTC(`${twoDigit(Number(3))}:${twoDigit(Number(20))}:00`, offsetTime),
+            time: convertToUTC(`${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`, offsetTime),
             medicineTitle: selectedMedicineTitle.toString()
         };
+        console.log("115", dataInterface)
 
         const existingMedicationIndex = listRegisterMedication.findIndex(
             item => item.medicineTypeId === selectedMedication

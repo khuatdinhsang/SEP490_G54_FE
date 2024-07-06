@@ -32,8 +32,10 @@ const FillRecord = ({ route }: any) => {
     const [isShowModal, setShowModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
@@ -49,7 +51,8 @@ const FillRecord = ({ route }: any) => {
             const res = await planService.postCardinal(dataSubmit)
             if (res.code === 201) {
                 setIsLoading(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { chooseSelectedItem: selectedItem })
+                setIsEdit(false)
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -69,7 +72,7 @@ const FillRecord = ({ route }: any) => {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setGlycemic(value);
             setIsCheckedGlycemic(false)
@@ -80,7 +83,7 @@ const FillRecord = ({ route }: any) => {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setChoresterol(value);
             setIsCheckedChoresterol(false)
@@ -91,7 +94,7 @@ const FillRecord = ({ route }: any) => {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setGlucozer(value);
             setIsCheckedGlucozer(false)

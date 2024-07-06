@@ -36,6 +36,7 @@ const NumberSteps = () => {
                 const res = await planService.postStepsNumber(data)
                 if (res.code === 200) {
                     setIsLoading(false)
+                    setMessageError("");
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
                 } else {
                     setMessageError("Unexpected error occurred.");

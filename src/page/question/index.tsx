@@ -31,6 +31,7 @@ const Question = () => {
             const res = await questionService.getListQuestionByUser();
             console.log("Res", res);
             if (res.code === 200) {
+                setMessageError("");
                 setListQuestion(res.result || []);
                 setIsLoading(false)
             } else {

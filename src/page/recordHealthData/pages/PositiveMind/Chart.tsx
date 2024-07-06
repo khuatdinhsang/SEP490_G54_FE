@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../../../navigator/const';
@@ -9,16 +9,51 @@ import { flexCenter, flexRow } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
+import { chartService } from '../../../../services/charts';
+import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartMental, transformDataToChartStep } from '../../../../util';
+import LineChart from '../../../../component/line-chart';
+import LoadingScreen from '../../../../component/loading';
+import BarChart from '../../../../component/bar-chart';
+import { valueMental, valueSteps } from '../../../../constant/type/chart';
 
-const PositiveMindChart = () => {
+const PositiveMindChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueMental[]>([])
+    const [mediumData, setMediumData] = useState<number>(0)
+    const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: isEditable });
     }
+    useEffect(() => {
+        const getDataChart = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const resData = await chartService.getDataMental();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.mentalResponseList)
+                    setMediumData(resData.result.avgPoint)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getDataChart();
+    }, []);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -43,18 +78,33 @@ const PositiveMindChart = () => {
                         </Text>
                     </Pressable>
                 </View>
-                <View style={[flexCenter, { height: '60%' }]}>
-                    <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                    <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                    <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
-                    <Pressable
-                        onPress={navigateNumericalRecord}
-                        style={styles.button}>
-                        <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
-                    </Pressable>
-                </View>
+                {
+                    dataChart.length > 0 ?
+                        <View style={styles.chart}>
+                            <BarChart
+                                icon={IMAGE.PLAN_MANAGEMENT.HEART}
+                                textTitleMedium={t("evaluate.mediumMental")}
+                                unit={t("evaluate.step")}
+                                valueMedium={`${mediumData.toString()}/3`}
+                                textTitle={t("evaluate.chartMental")}
+                                data={transformDataToChartMental(dataChart, "점")}
+                            />
+                        </View>
+                        :
+                        <View style={[flexCenter, { height: '60%' }]}>
+                            <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                            <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                            <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                            <Pressable
+                                onPress={navigateNumericalRecord}
+                                style={styles.button}>
+                                <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
+                            </Pressable>
+                        </View>
+                }
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
-
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -106,6 +156,17 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingVertical: 17,
         width: 140
+    },
+    textError: {
+        fontSize: 18,
+        color: colors.red,
+        fontWeight: "500"
+    },
+    chart: {
+        backgroundColor: colors.background,
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingTop: 20
     }
 })
 export default PositiveMindChart

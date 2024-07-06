@@ -1,5 +1,5 @@
-import {useCallback} from 'react';
-import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
+import { useCallback } from 'react';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import {
   Background,
   Circle,
@@ -10,11 +10,20 @@ import {
   VictoryScatter,
 } from 'victory-native';
 import colors from '../../constant/color';
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { flexRow } from '../../styles/flex';
 
 interface LineChartProps {
-  data: Array<{x: string; y: number; label?: string}>;
-  backgroundProps?: {y: number; height: number; color: string};
+  data: Array<{ x: string; y: number; label?: string }>;
+  icon: ImageSourcePropType,
+  textTitle: string,
+  textTitleMedium: string,
+  unit: string,
+  valueMedium: string,
+  backgroundProps?: { y: number; height: number; color: string };
   domainY: [number, number];
+  labelElement: string,
+  textInfo?: string,
 }
 
 // Example props:
@@ -49,8 +58,8 @@ interface LineChartProps {
 }
 
 const LineChart = (props: LineChartProps) => {
-  const HEIGHT = 220;
-  const {data, backgroundProps, domainY} = props;
+  const HEIGHT = 250;
+  const { data, backgroundProps, textInfo, domainY, icon, textTitle, valueMedium, labelElement, textTitleMedium, unit } = props;
   const dataScatter = data.map(item => {
     return {
       x: item.x,
@@ -87,78 +96,97 @@ const LineChart = (props: LineChartProps) => {
   );
 
   return (
-    <VictoryChart
-      domain={{y: domainY}}
-      height={HEIGHT}
-      style={{
-        parent: {
-          marginLeft: -20,
-        },
-        background: backgroundProps && {fill: colors.primary, opacity: '0.15'},
-      }}
-      domainPadding={{x: 20}}
-      backgroundComponent={
-        backgroundProps && (
-          <Background
-            y={HEIGHT - backgroundProps.y - 85}
-            height={backgroundProps.height}
-          />
-        )
-      }>
-      <VictoryAxis
-        crossAxis
+    <View style={[styles.container, styles.shadowBox]}>
+      <View style={flexRow}>
+        <Image source={icon} />
+        <Text style={styles.textTitle}>{textTitle}</Text>
+      </View>
+      {backgroundProps && (
+        <View style={[flexRow, { marginTop: 5 }]}>
+          <View style={styles.infoColor}></View>
+          <Text style={styles.textColorInfo}>{textInfo}</Text>
+        </View>
+      )}
+      <VictoryChart
+        domain={{ y: domainY }}
+        height={HEIGHT}
         style={{
-          axis: {stroke: colors.gray_G03},
-          grid: {
-            stroke: (props: any) => {
-              return props.index === data.length - 1
-                ? colors.primary
-                : 'transparent';
-            },
+          parent: {
+            marginLeft: -20,
           },
-          tickLabels: {
-            fill: (fill: any) => {
-              return fill.index === data.length - 1
-                ? colors.black
-                : colors.gray_G05;
-            },
-            ...textLabel,
-          },
+          background: backgroundProps && { fill: colors.primary, opacity: '0.15' },
         }}
-      />
-      <VictoryAxis
-        crossAxis
-        dependentAxis
-        style={{
-          axis: {stroke: 'transparent'},
-          tickLabels: {fill: colors.gray_G05},
-          grid: {
-            stroke: colors.gray_G03,
-            strokeWidth: 0.5,
-            strokeDasharray: '3,3',
-          },
-        }}
-      />
-      <VictoryLine
-        style={{data: {stroke: colors.primary}}}
-        width={2}
-        data={data}
-        labelComponent={<CustomLabelComponent />}
-      />
-      <VictoryScatter
-        data={dataScatter}
-        style={{data: {fill: colors.primary}}}
-        size={5}
-        dataComponent={<CustomScatterPoint />}
-      />
-      <VictoryLabel
-        text="접시"
-        x={30}
-        y={HEIGHT - 50}
-        textAnchor="middle"
-        style={{fill: colors.gray_G05, fontSize: 14, fontWeight: '400'}}
-      />
-    </VictoryChart>
+        domainPadding={{ x: 20 }}
+        backgroundComponent={
+          backgroundProps && (
+            <Background
+              y={HEIGHT - backgroundProps.y - 85}
+              height={backgroundProps.height}
+            />
+          )
+        }
+      >
+        <VictoryAxis
+          crossAxis
+          style={{
+            axis: { stroke: colors.gray_G03 },
+            grid: {
+              stroke: (props: any) => {
+                return props.index === data.length - 1
+                  ? colors.primary
+                  : 'transparent';
+              },
+            },
+            tickLabels: {
+              fill: (fill: any) => {
+                return fill.index === data.length - 1
+                  ? colors.black
+                  : colors.gray_G05;
+              },
+              ...textLabel,
+            },
+          }}
+        />
+        <VictoryAxis
+          crossAxis
+          dependentAxis
+          style={{
+            axis: { stroke: 'transparent' },
+            tickLabels: { fill: colors.gray_G05 },
+            grid: {
+              stroke: colors.gray_G03,
+              strokeWidth: 0.5,
+              strokeDasharray: '3,3',
+            },
+          }}
+        />
+        <VictoryLine
+          style={{ data: { stroke: colors.primary } }}
+          width={2}
+          data={data}
+          labelComponent={<CustomLabelComponent />}
+        />
+        <VictoryScatter
+          data={dataScatter}
+          style={{ data: { fill: colors.primary } }}
+          size={5}
+          dataComponent={<CustomScatterPoint />}
+        />
+        <VictoryLabel
+          text={labelElement}
+          x={30}
+          y={HEIGHT - 50}
+          textAnchor="middle"
+          style={{ fill: colors.gray_G05, fontSize: 14, fontWeight: '400' }}
+        />
+      </VictoryChart>
+      <View>
+        <Text style={styles.textTitleMedium}>{textTitleMedium}</Text>
+        <View style={styles.value}>
+          <Text style={styles.textValue}>{valueMedium} {unit}</Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
@@ -173,7 +201,7 @@ const CustomLabelComponent = (props: any) => (
     <Rect
       x={props.x - 12 - props.text.length * 5}
       y={props.y - 35}
-      width={props.text.length * 10 + 24}
+      width={props.text.length * 8 + 8 * 2}
       height={28}
       fill="url(#grad)" // Apply gradient here
       rx="8"
@@ -187,11 +215,67 @@ const CustomLabelComponent = (props: any) => (
         fontSize: 14,
         fontWeight: '400',
         lineHeight: 20,
+        width: 70
       }}
       dy={-15}
+      dx={-7}
       renderInPortal={false}
+      textAnchor="middle"
     />
   </Svg>
 );
 
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 16,
+
+  },
+  shadowBox: {
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#6D6D6D',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    elevation: 3,
+  },
+  textTitle: {
+    fontWeight: "700",
+    fontSize: 18,
+    color: colors.gray_G08
+  },
+  textTitleMedium: {
+    fontWeight: "500",
+    fontSize: 16,
+    color: colors.gray_G07,
+    paddingLeft: 10,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.orange_04
+  },
+  value: {
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: colors.gray_G01,
+    marginTop: 10
+  },
+  textValue: {
+    fontWeight: "700",
+    fontSize: 18,
+    color: colors.gray_G09,
+    textAlign: "center",
+  },
+  infoColor: {
+    height: 20,
+    width: 70,
+    backgroundColor: colors.primary,
+    opacity: 0.15,
+    marginRight: 10
+  },
+  textColorInfo: {
+    fontWeight: "400",
+    fontSize: 14,
+    color: colors.gray_G06
+  }
+});
 export default LineChart;

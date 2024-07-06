@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
+import { valueActivity, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
 interface OutputData {
     id: number;
     name: string;
@@ -78,3 +79,101 @@ export const getPreviousMonday = () => {
     lastMonday.setDate(today.getDate() - daysToLastMonday);
     return lastMonday.toISOString();
 }
+export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] => {
+    return Object.keys(obj)
+        .filter(key => obj[key])
+        .map(key => parseInt(key, 10));
+}
+export interface OutputDataChart {
+    x: string;
+    y: number;
+    label?: string
+}
+
+export const transformDataToChartWeight = (inputArray: valueWeight[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueWeight) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
+        return {
+            x: `${month}/${day}`,
+            y: input.value,
+            ...(isToday && { label: `${input.value} ${unitLabel}` })
+        };
+    });
+};
+export const getValueMaxChartWeight = (inputArray: valueWeight[], value: number): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.value));
+    return roundUpToNearest(maxValue, value);
+}
+export const roundUpToNearest = (value: number, increment: number): number => {
+    return Math.ceil(value / increment) * increment;
+};
+
+export const transformDataToChartStep = (inputArray: valueSteps[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueSteps) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
+        return {
+            x: `${month}/${day}`,
+            y: input.valuePercent,
+            ...(isToday && { label: `${input.valuePercent} ${unitLabel}` })
+        };
+    });
+};
+export const getValueMaxChartStep = (inputArray: valueSteps[]): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.valuePercent));
+    return roundUpToNearest(maxValue, 20);
+}
+
+export const transformDataToChartActivity = (inputArray: valueActivity[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueActivity) => {
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        return {
+            x: `${month}/${day}`,
+            y: input.duration,
+            label: `${unitLabel}`
+        };
+    });
+};
+export const getValueMaxChartActivity = (inputArray: valueActivity[], value: number): number => {
+    if (inputArray.length === 0) {
+        return 0;
+    }
+    const maxValue = Math.max(...inputArray.map(item => item.duration));
+    return roundUpToNearest(maxValue, value);
+}
+
+export const transformDataToChartMental = (inputArray: valueMental[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueMental) => {
+        const today = new Date();
+        const todayMonth = today.getMonth() + 1;
+        const todayDate = today.getDate();
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
+        return {
+            x: `${month}/${day}`,
+            y: input.point,
+            ...(isToday && { label: `${input.point} ${unitLabel}` })
+        };
+    });
+};

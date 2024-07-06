@@ -315,6 +315,21 @@
     "prettyCorrect": "꽤 그렇다",
     "absoluteCorrect": "매우 그렇다",
     "thankyouSurvey": "수고하셨습니다!",
-    "viewChartResult": "이제 결과를 보러갈까요?"
+    "viewChartResult": "이제 결과를 보러갈까요?",
+    "chartMedicine": "약물복용 그래프",
+    "chartWeight": "체중 그래프",
+    "mediumWeight": "평균 체중",
+    "normalWeightRange": "체중 정상 범위",
+    "myStepToday": "오늘 나의 걸음 수",
+    "numberMedicineToday": "오늘 나의 약물 복용 횟수",
+    "step": "보",
+    "chartStep": "걸음수 그래프",
+    "chartDiet": "음식섭취 그래프",
+    "mediumDiet": "나의 식이(야채/과일 섭취) 평균",
+    "times": "회",
+    "resultActivityToday": "오늘 나의 체중",
+    "chartActivity": "운동 그래프",
+    "chartMental": "긍정적인 마음 그래프",
+    "mediumMental": "긍정적 마음 실천 평균"
   }
 }
