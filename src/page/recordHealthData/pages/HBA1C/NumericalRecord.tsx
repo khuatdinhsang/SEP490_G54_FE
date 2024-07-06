@@ -20,6 +20,8 @@ const NumericalRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const chooseSelectedItem = route?.params?.chooseSelectedItem
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
     const initData: DataType[] = [
         { id: 1, name: t("recordHealthData.beforeBreakfast"), value: TypeTimeMeasure.BEFORE_BREAKFAST },
@@ -33,19 +35,19 @@ const NumericalRecord = ({ route }: any) => {
     const [data, setData] = useState<DataType[]>(initData);
 
     const goBackPreviousPage = () => {
-        navigation.goBack();
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
 
     const nextPage = () => {
         setSelectedItem(null)
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD, { selectedItem });
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD, { selectedItem, isEditable: isEdit });
     };
 
     const handleSelectItem = (item: DataType) => {
         setSelectedItem(prevSelectedItem => (prevSelectedItem?.id === item.id ? null : item));
     };
     const navigateChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: isEdit })
     }
 
     return (
@@ -72,29 +74,44 @@ const NumericalRecord = ({ route }: any) => {
                     </Text>
                 </Pressable>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
-                    <Text style={styles.title}>{t('recordHealthData.chooseMeal')}/{t('recordHealthData.chooseMealTime')}</Text>
-                    {data && data.map((item) => {
-                        const isSelected = selectedItem?.id === item.id;
-                        return (
-                            <Pressable
-                                onPress={() => handleSelectItem(item)}
-                                key={item.id}
-                                style={[flexRowSpaceBetween, styles.item, { backgroundColor: isSelected ? colors.orange_01 : colors.white, borderColor: isSelected ? colors.orange_04 : colors.white }]}>
-                                <View style={flexRow}>
-                                    <Text style={[styles.textItem, { color: isSelected ? colors.orange_04 : colors.gray_G07 }]}>{item.name}</Text>
-                                    {item.id === chooseSelectedItem?.id && <View style={styles.itemChoose}>
-                                        <Text style={styles.textItemChoose}>{item.name}</Text>
-                                    </View>}
-                                </View>
-                                <Image source={isSelected ? IMAGE.RECORD_DATA.ICON_CHECK_ORANGE : IMAGE.RECORD_DATA.ICON_CHECK} />
-                            </Pressable>
-                        );
-                    })}
+            {isEdit ?
+                <ScrollView contentContainerStyle={styles.scrollView}>
+                    <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
+                        <Text style={styles.title}>{t('recordHealthData.chooseMeal')}/{t('recordHealthData.chooseMealTime')}</Text>
+                        {data && data.map((item) => {
+                            const isSelected = selectedItem?.id === item.id;
+                            return (
+                                <Pressable
+                                    onPress={() => handleSelectItem(item)}
+                                    key={item.id}
+                                    style={[flexRowSpaceBetween, styles.item, { backgroundColor: isSelected ? colors.orange_01 : colors.white, borderColor: isSelected ? colors.orange_04 : colors.white }]}>
+                                    <View style={flexRow}>
+                                        <Text style={[styles.textItem, { color: isSelected ? colors.orange_04 : colors.gray_G07 }]}>{item.name}</Text>
+                                        {item.id === chooseSelectedItem?.id && <View style={styles.itemChoose}>
+                                            <Text style={styles.textItemChoose}>{item.name}</Text>
+                                        </View>}
+                                    </View>
+                                    <Image source={isSelected ? IMAGE.RECORD_DATA.ICON_CHECK_ORANGE : IMAGE.RECORD_DATA.ICON_CHECK} />
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+                :
+                <View style={[flexCenter, { marginTop: 100 }]}>
+                    <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                    <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                    <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: false });
+                        }}
+                        style={styles.buttonChart}>
+                        <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                    </Pressable>
                 </View>
-            </ScrollView>
-            <View style={styles.buttonContainer}>
+            }
+            {isEdit && <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={!selectedItem}
                     onPress={nextPage}
@@ -102,6 +119,7 @@ const NumericalRecord = ({ route }: any) => {
                     <Text style={[styles.textButton, { color: selectedItem ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
                 </Pressable>
             </View>
+            }
         </SafeAreaView>
     );
 };
@@ -182,6 +200,31 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: "center",
         color: colors.orange_04
+    },
+    textTitle: {
+        fontWeight: '700',
+        fontSize: 20,
+        color: colors.gray_G10,
+        textAlign: 'center',
+    },
+    textDesc: {
+        fontWeight: '400',
+        fontSize: 16,
+        color: colors.gray_G06,
+        textAlign: 'center',
+    },
+    buttonChart: {
+        marginTop: 20,
+        backgroundColor: colors.gray_G08,
+        borderRadius: 8,
+        paddingVertical: 17,
+        width: 140,
+    },
+    textButtonChart: {
+        fontWeight: '500',
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.white,
     }
 });
 

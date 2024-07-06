@@ -28,7 +28,7 @@ public class CounterStepService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        Toast.makeText(this, "[ServiceStarting]", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "[ServiceStarting]", Toast.LENGTH_SHORT).show();
         this.startForeground();
         return START_STICKY;
     }
@@ -46,16 +46,15 @@ public class CounterStepService extends Service {
 
     private void startForeground() {
         try {
-            Notification notification =
-                    new NotificationCompat.Builder(this, CHANNEL_ID)
-                            .setSmallIcon(R.drawable.ic_android_black_24dp)
-                            .setContentTitle("Ứng dụng sẽ hoạt động nền")
-                            .setContentText("Đếm số bước chân của bạn ...")
-                            .build();
-           startForeground(1, notification);
-        }
-        catch (Exception e) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_android_black_24dp)
+                    .setContentTitle("Ứng dụng sẽ hoạt động nền")
+                    .setContentText("Đếm số bước chân của bạn ...")
+                    .build();
+            startForeground(1, notification);
+        } catch (Exception e) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                    && e instanceof ForegroundServiceStartNotAllowedException) {
             }
         }
     }

@@ -94,10 +94,10 @@ const Home = () => {
       try {
         await PermissionRequest();
         CounterStepModule.init();
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        const refreshToken = await AsyncStorage.getItem('refreshToken');
-        console.log("a1", accessToken)
-        console.log("r1", refreshToken)
+        // const accessToken = await AsyncStorage.getItem('accessToken');
+        // const refreshToken = await AsyncStorage.getItem('refreshToken');
+        // console.log("a1", accessToken)
+        // console.log("r1", refreshToken)
       } catch (err) {
         console.warn(err);
       }

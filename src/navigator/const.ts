@@ -59,6 +59,8 @@ import MainWorkOut from '../page/recordHealthData/pages/WorkOut/main';
 import MainPositiveMind from '../page/recordHealthData/pages/PositiveMind/main';
 import MainFoodIntake from '../page/recordHealthData/pages/FoodIntake/main';
 import MainMedication from '../page/recordHealthData/pages/Medication/main';
+import MainBloodPressure from '../page/recordHealthData/pages/BloodPressure/main';
+import MainHBA1C from '../page/recordHealthData/pages/HBA1C/main';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -110,9 +112,11 @@ export const SCREENS_NAME = {
     },
     RECORD_HEALTH_DATA: {
         MAIN: 'Main Record Health',
+        MAIN_HBA1C: 'Main HBA1C',
         NUMERICAL_RECORD: 'Numerical Record',
         FILL_RECORD: 'Fill Record',
         NUMERICAL_RECORD_CHART: 'Number Record Chart',
+        MAIN_BLOOD_PRESSURE: 'Main Blood Pressure',
         BLOOD_PRESSURE: 'Blood Pressure',
         BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
         MAIN_WEIGHT: 'Main Weight',
@@ -291,6 +295,10 @@ const SCREENS_STACK_RECORD_DATA = [
         component: RecordHealthData,
     },
     {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_HBA1C,
+        component: MainHBA1C,
+    },
+    {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
         component: NumericalRecord,
     },
@@ -301,6 +309,10 @@ const SCREENS_STACK_RECORD_DATA = [
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
         component: NumericalRecordChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_BLOOD_PRESSURE,
+        component: MainBloodPressure,
     },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE,

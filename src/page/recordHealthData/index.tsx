@@ -23,12 +23,12 @@ const RecordHealthData = () => {
             id: 1,
             title: `${t('recordHealthData.glycatedHemoglobin')},${t('recordHealthData.cholesterol')},${t('recordHealthData.bloodSugar')}`,
             image: IMAGE.RECORD_DATA.BLOOD,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_HBA1C
         }, {
             id: 2,
             title: t('recordHealthData.bloodPressure'),
             image: IMAGE.RECORD_DATA.THERMOMETER,
-            screen: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE
+            screen: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_BLOOD_PRESSURE
         }, {
             id: 3,
             title: t('recordHealthData.weight'),

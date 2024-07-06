@@ -1,26 +1,37 @@
 {
   "project_info": {
-    "project_number": "1055177897654",
-    "project_id": "testnoti-3aff9",
-    "storage_bucket": "testnoti-3aff9.appspot.com"
+    "project_number": "40299942171",
+    "firebase_url": "https://firstproject-58a2f-default-rtdb.firebaseio.com",
+    "project_id": "firstproject-58a2f",
+    "storage_bucket": "firstproject-58a2f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1055177897654:android:7a2985f878303545161817",
+        "mobilesdk_app_id": "1:40299942171:android:54e99748057ed6b1f883be",
         "android_client_info": {
           "package_name": "com.smash_health"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "40299942171-msetsnvhjl9kd532rlmoklfmd56ehhgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCdZ_tH-jnxaRiJNG_dQstCgzejgjGSLaU"
+          "current_key": "AIzaSyDawKLdHWQtVgl7TCnuA-121RCm91IJCMU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "40299942171-msetsnvhjl9kd532rlmoklfmd56ehhgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

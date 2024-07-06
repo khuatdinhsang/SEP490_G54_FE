@@ -42,3 +42,25 @@ export interface dataChartMentalResponse {
     avgPoint: number,
     mentalResponseList: valueMental[]
 }
+export interface valueBloodPressure {
+    systole: number,
+    diastole: number,
+    date: string
+}
+export interface dataChartBloodPressureResponse {
+    systoleToday: number,
+    diastoleToday: number,
+    bloodPressureResponseList: valueBloodPressure[]
+}
+export interface valueCardinal {
+    data: number,
+    date: string
+}
+export interface dataChartCardinalResponse {
+    hba1cDataToday: number,
+    cholesterolDataToday: number,
+    hba1cList: valueCardinal[],
+    cholesterolList: valueCardinal[],
+    bloodSugarList: valueCardinal[],
+    detailDataBloodSugar: Record<string, any>;
+}

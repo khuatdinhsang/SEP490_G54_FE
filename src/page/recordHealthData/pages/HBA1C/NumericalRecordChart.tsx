@@ -14,22 +14,29 @@ import LineChart from '../../../../component/line-chart';
 import { chartService } from '../../../../services/charts';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
+import { valueCardinal } from '../../../../constant/type/chart';
 
 
-const NumericalRecordChart = () => {
+const NumericalRecordChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const isEditable = route?.params?.isEditable;
+    console.log("aa", isEditable)
+    const [dataChartHBA1C, setDataChartHBA1C] = useState<valueCardinal[]>([])
+    const [dataCholesterol, setDataCholesterol] = useState<valueCardinal[]>([])
+    const [dataBloodSugar, setDataBloodSugar] = useState<valueCardinal[]>([])
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistCardinal(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataCardinal();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataBloodSugar(resData.result.bloodSugarList)
+                    setDataCholesterol(resData.result.cholesterolList)
+                    setDataChartHBA1C(resData.result.hba1cList)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -43,13 +50,13 @@ const NumericalRecordChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { isEditable: isEditable })
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -77,7 +84,7 @@ const NumericalRecordChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChartHBA1C || dataBloodSugar || dataCholesterol ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}

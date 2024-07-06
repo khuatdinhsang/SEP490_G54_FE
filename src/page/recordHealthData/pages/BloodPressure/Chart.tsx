@@ -13,22 +13,28 @@ import { getMondayOfCurrentWeek } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import { chartService } from '../../../../services/charts';
 import LineChart from '../../../../component/line-chart';
+import { valueBloodPressure } from '../../../../constant/type/chart';
 
-
-const BloodPressureChart = () => {
+const BloodPressureChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
+    const [dataChart, setDataChart] = useState<valueBloodPressure[]>([])
+    const [systoleToday, setSystoleToday] = useState<number>(0)
+    const [diastoleToday, setDiastoleToday] = useState<number>(0)
+    const isEditable = route?.params?.isEditable;
     useEffect(() => {
-        const checkIsExitsData = async (): Promise<void> => {
+        const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistBloodPressure(getMondayOfCurrentWeek().split("T")[0]);
-                if (res.code === 200) {
-                    setCheckIsExits(res.result);
-                    setMessageError("");
+                const resData = await chartService.getDataBloodPressure();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setDataChart(resData.result.bloodPressureResponseList)
+                    setSystoleToday(resData.result.systoleToday)
+                    setDiastoleToday(resData.result.diastoleToday)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -42,13 +48,13 @@ const BloodPressureChart = () => {
                 setIsLoading(false);
             }
         };
-        checkIsExitsData();
+        getDataChart();
     }, []);
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE)
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: isEditable })
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -75,7 +81,7 @@ const BloodPressureChart = () => {
                     </Pressable>
                 </View>
                 {
-                    checkIsExits ?
+                    dataChart.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
