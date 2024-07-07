@@ -77,6 +77,8 @@
       "height": "상",
       "medium": "중",
       "low": "하",
+      "noData": "없음",
+      "excellent": "최고",
       "use": "사용X",
       "new": "새로운",
       "average": "평균"
@@ -334,6 +336,7 @@
     "chartBlood": "혈당 그래프 ",
     "minBlood": "수축기 목표 범위",
     "maxBlood": "이완기 목표 범위",
-    "valueBloodToday": "오늘의 나의 혈압"
+    "valueBloodToday": "오늘의 나의 혈압",
+    "mediumChart": "합산 평가 그래프"
   }
 }

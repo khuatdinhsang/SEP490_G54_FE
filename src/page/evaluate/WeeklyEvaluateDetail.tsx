@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import HeaderNavigatorComponent from '../../component/header-navigator';
@@ -9,22 +9,52 @@ import colors from '../../constant/color';
 import InputNumber from '../../component/inputNumber';
 import WeeklyComponent from './conponent/weeklyComponent';
 import { IMAGE } from '../../constant/image';
+import { ResponseWeeklyReview } from '../../constant/type/weekly';
+import { weeklyReviewService } from '../../services/weeklyReviews';
+import LoadingScreen from '../../component/loading';
 
 const WeeklyEvaluateDetail = ({ route }: any) => {
-    const { time } = route?.params;
-    console.log(time)
+    const time = route?.params?.time;
+    const timeRender = route?.params?.timeRender;
+    console.log(time, timeRender)
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [isLoading, setIsLoading] = useState(false);
+    const [messageError, setMessageError] = useState<string>("");
+    const [data, setData] = useState<ResponseWeeklyReview>()
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-
+    useEffect(() => {
+        const getData = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const resData = await weeklyReviewService.getDetailWeeklyReviews(time.split("T")[0]);
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setData(resData.result)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getData();
+    }, []);
+    console.log("51", data)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconLeft={true}
-                    text={time}
+                    text={timeRender}
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>
@@ -32,7 +62,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                 <View style={styles.content}>
                     <Text style={styles.text}>{t('evaluate.general')}</Text>
                     <View style={[flexRow, styles.congratulation, styles.shadowBox]}>
-                        <Image style={{ marginRight: 10 }} source={IMAGE.EVALUATE.HIGH} />
+                        <Image style={{ marginRight: 10 }} source={IMAGE.EVALUATE.LAYER} />
                         <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]}>
                             <Text style={styles.textDesc}>{t('evaluate.congratulation')}</Text>
                             <Text style={styles.textDesc}>{t('evaluate.successfulWeek')}</Text>
@@ -40,7 +70,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                     </View>
                     <View style={[flexRowSpaceBetween, { marginTop: 30 }]}>
                         <Text style={styles.text}>{t('evaluate.activitySummary')}</Text>
-                        <Text style={styles.textTime}>{time}</Text>
+                        <Text style={styles.textTime}>{timeRender}</Text>
                     </View>
                     <View style={[styles.shadowBox, styles.summary]}>
                         <Text style={styles.text}>당뇨관련 수치</Text>
@@ -130,7 +160,9 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         </View>
                     </View>
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -215,5 +247,10 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '45deg' }],
         zIndex: 100,
     },
+    textError: {
+        fontWeight: '500',
+        fontSize: 18,
+        color: colors.red
+    }
 })
 export default WeeklyEvaluateDetail

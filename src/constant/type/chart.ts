@@ -64,3 +64,7 @@ export interface dataChartCardinalResponse {
     bloodSugarList: valueCardinal[],
     detailDataBloodSugar: Record<string, any>;
 }
+export interface dataChartWeeklyReview {
+    percentage: number[],
+    weekStart: string[]
+}

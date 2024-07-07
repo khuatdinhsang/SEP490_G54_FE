@@ -15,11 +15,11 @@ import { flexRow } from '../../styles/flex';
 
 interface LineChartProps {
   data: Array<{ x: string; y: number; label?: string }>;
-  icon: ImageSourcePropType,
+  icon?: ImageSourcePropType,
   textTitle: string,
-  textTitleMedium: string,
+  textTitleMedium?: string,
   unit: string,
-  valueMedium: string,
+  valueMedium?: string,
   backgroundProps?: { y: number; height: number; color: string };
   domainY: [number, number];
   labelElement: string,

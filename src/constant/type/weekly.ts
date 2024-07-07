@@ -1,0 +1,21 @@
+export interface ResponseWeeklyReview {
+    weekStart: string,
+    hba1cTotalRecord: number,
+    hba1cSafeRecord: number,
+    cholesterolTotalRecord: number,
+    cholesterolSafeRecord: number,
+    bloodSugarTotalRecord: number,
+    bloodSugarSafeRecord: number,
+    totalBloodPressureRecord: number,
+    safeBloodPressureRecord: number,
+    averageWeightRecordPerWeek: number,
+    averageMentalRecordPerWeek: number,
+    heavyActivity: number,
+    mediumActivity: number,
+    lightActivity: number,
+    averageDietRecordPerWeek: number,
+    medicineDateDone: number,
+    medicineDateTotal: number,
+    averageStepRecordPerWeek: number,
+    totalPoint: number
+}

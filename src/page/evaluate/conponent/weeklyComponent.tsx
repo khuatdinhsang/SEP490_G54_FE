@@ -9,21 +9,22 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { SCREENS_NAME } from '../../../navigator/const'
 interface WeeklyComponentProps {
     isNew?: boolean,
+    timeRender: string,
     time: string
 }
 const WeeklyComponent = (props: WeeklyComponentProps) => {
-    const { isNew, time } = props
+    const { isNew, timeRender, time } = props
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const detailEvaluate = () => {
-        navigation.navigate(SCREENS_NAME.EVALUATE.DETAIL_WEEKLY, { time })
+        navigation.navigate(SCREENS_NAME.EVALUATE.DETAIL_WEEKLY, { timeRender, time })
     }
     return (
         <Pressable
             onPress={detailEvaluate}
             style={[flexRow, styles.item, styles.shadowBox]}>
             <Image source={IMAGE.EVALUATE.NOTE} />
-            <Text style={styles.textTime}>{time}</Text>
+            <Text style={styles.textTime}>{timeRender}</Text>
             <Text style={[styles.textTime, { fontWeight: "500" }]}>{t('evaluate.weeklyEvaluationResults')}</Text>
             {isNew && <Text style={styles.new}>{t('common.text.new')}</Text>}
         </Pressable>

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
 import { valueActivity, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
+import { IMAGE } from "../constant/image";
 interface OutputData {
     id: number;
     name: string;
@@ -182,4 +183,49 @@ export const extractDayAndMonth = (dateString: string) => {
     const day = date.getUTCDate();
     const month = date.getUTCMonth() + 1;
     return `${month}/${day}`;
+}
+export const formatDateRange = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const endDate = new Date(date);
+    endDate.setDate(day + 6);
+    const formattedStart = `${month}/${day}`;
+    const formattedEnd = `${endDate.getMonth() + 1}/${endDate.getDate()}`;
+    return `${formattedStart}-${formattedEnd}`;
+}
+// thuchiendc/ plan
+export const renderIconWeeklyReview = (a: number, b: number): string => {
+    if (b === 0 || a === 0) {
+        return IMAGE.EVALUATE.SAD1;
+    }
+
+    const ratio = (a / b) * 100;
+    if (ratio < 50) {
+        return IMAGE.EVALUATE.SAD;
+    } else if (ratio >= 50 && ratio < 90) {
+        return IMAGE.EVALUATE.CONG3;
+    } else if (ratio >= 90 && ratio < 100) {
+        return IMAGE.EVALUATE.CONG2;
+    } else if (ratio === 100) {
+        return IMAGE.EVALUATE.CONG1;
+    } else {
+        return IMAGE.EVALUATE.SAD1;
+    }
+}
+export const renderTextWeeklyReview = (a: number): string => {
+    if (a === 0) {
+        return "common.text.noData";
+    }
+    if (a < 50) {
+        return "common.text.low";
+    } else if (a >= 50 && a < 90) {
+        return "common.text.medium";
+    } else if (a >= 90 && a < 100) {
+        return "common.text.high";
+    } else if (a === 100) {
+        return "common.text.excellent";
+    } else {
+        return "common.text.noData";
+    }
 }
