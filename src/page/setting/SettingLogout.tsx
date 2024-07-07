@@ -18,10 +18,10 @@ const SettingLogout = () => {
   const [isLoading, setIsLoading] = useState(false)
   const handlePressYesLogout = async () => {
     setIsLoading(true)
-    removeAsyncStorageWhenLogout()
     setTimeout(() => {
       setIsLoading(false)
     }, 1000)
+    await removeAsyncStorageWhenLogout()
     navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
   };
 

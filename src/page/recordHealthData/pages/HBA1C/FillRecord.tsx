@@ -34,6 +34,7 @@ const FillRecord = ({ route }: any) => {
     const [messageError, setMessageError] = useState<string>("")
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
+    console.log("man 2", isEdit)
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }

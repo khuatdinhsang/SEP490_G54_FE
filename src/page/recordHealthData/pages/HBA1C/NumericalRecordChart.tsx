@@ -23,7 +23,7 @@ const NumericalRecordChart = ({ route }: any) => {
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const isEditable = route?.params?.isEditable;
-    console.log("aa", isEditable)
+    console.log("chart", isEditable)
     const [dataChartHBA1C, setDataChartHBA1C] = useState<valueCardinal[]>([])
     const [dataCholesterol, setDataCholesterol] = useState<valueCardinal[]>([])
     const [dataBloodSugar, setDataBloodSugar] = useState<valueCardinal[]>([])

@@ -9,11 +9,12 @@ import { flexCenter, flexRow } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { extractDayAndMonth, getMondayOfCurrentWeek } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import { chartService } from '../../../../services/charts';
 import LineChart from '../../../../component/line-chart';
 import { valueBloodPressure } from '../../../../constant/type/chart';
+import TwoLineChart from '../../../../component/twoLine-chart';
 
 const BloodPressureChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -56,6 +57,15 @@ const BloodPressureChart = ({ route }: any) => {
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: isEditable })
     }
+    const data1 = dataChart.map(item => ({
+        x: extractDayAndMonth(item.date),
+        y: item.diastole
+    }));
+    const data2 = dataChart.map(item => ({
+        x: extractDayAndMonth(item.date),
+        y: item.systole
+    }));
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -83,21 +93,31 @@ const BloodPressureChart = ({ route }: any) => {
                 {
                     dataChart.length > 0 ?
                         <View style={styles.chart}>
-                            <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
+                            <TwoLineChart
+                                icon={IMAGE.RECORD_DATA.THERMOMETER}
                                 labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                textTitle={t("evaluate.chartBlood")}
+                                textInfoColor1={t("evaluate.minBlood")}
+                                textInfoColor2={t("evaluate.maxBlood")}
+                                data1={data1}
+                                data2={data2}
+                                color1={colors.green}
+                                color2={colors.orange_04}
+                                tickValues={[0, 49, 89, 139, 179]}
+                                textDescription={t("evaluate.valueBloodToday")}
+                                valueDescription1={diastoleToday}
+                                valueDescription2={systoleToday}
+                                unitDescription="mg/DL"
+                                backgroundProps1={{
+                                    color: colors.green,
+                                    height: 30,
+                                    y: 40,
+                                }}
+                                backgroundProps2={{
+                                    color: colors.orange_04,
+                                    height: 20,
+                                    y: 40,
+                                }}
                             />
                         </View>
                         :

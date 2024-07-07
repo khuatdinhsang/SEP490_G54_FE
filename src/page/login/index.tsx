@@ -65,14 +65,14 @@ const Login = () => {
             if (error.code == 400 || error.code == 401) {
                 setMessageError(error.message)
             }
+            if (error.code === 406) {
+                navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
+            }
         } finally {
             setIsLoading(false)
         }
 
     }
-
-
-
     const handleFindId = () => {
         // Handle find ID logic
     }

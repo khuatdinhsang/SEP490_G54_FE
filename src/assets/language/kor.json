@@ -330,6 +330,10 @@
     "resultActivityToday": "오늘 나의 체중",
     "chartActivity": "운동 그래프",
     "chartMental": "긍정적인 마음 그래프",
-    "mediumMental": "긍정적 마음 실천 평균"
+    "mediumMental": "긍정적 마음 실천 평균",
+    "chartBlood": "혈당 그래프 ",
+    "minBlood": "수축기 목표 범위",
+    "maxBlood": "이완기 목표 범위",
+    "valueBloodToday": "오늘의 나의 혈압"
   }
 }

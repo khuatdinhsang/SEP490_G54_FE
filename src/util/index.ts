@@ -177,3 +177,9 @@ export const transformDataToChartMental = (inputArray: valueMental[], unitLabel:
         };
     });
 };
+export const extractDayAndMonth = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    return `${month}/${day}`;
+}
