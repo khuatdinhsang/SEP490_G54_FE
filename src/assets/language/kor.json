@@ -337,6 +337,9 @@
     "minBlood": "수축기 목표 범위",
     "maxBlood": "이완기 목표 범위",
     "valueBloodToday": "오늘의 나의 혈압",
-    "mediumChart": "합산 평가 그래프"
+    "mediumChart": "합산 평가 그래프",
+    "relatedDiabetes": "당뇨관련 수치",
+    "diastoleToday": "오늘의 수축기 혈압 지수",
+    "systoleToday": "오늘의 확장기 혈압 지수"
   }
 }

@@ -72,7 +72,8 @@ const LineChart = (props: LineChartProps) => {
     fontSize: 14,
     lineHeight: 20,
   };
-
+  const rangeY = domainY[1] - domainY[0];
+  const pixelsPerUnit = rangeY / HEIGHT;
   const CustomScatterPoint = useCallback(
     (props: any) => {
       const isLastPoint = props.index === data.length - 1;
@@ -94,7 +95,6 @@ const LineChart = (props: LineChartProps) => {
     },
     [dataScatter],
   );
-
   return (
     <View style={[styles.container, styles.shadowBox]}>
       <View style={flexRow}>
@@ -120,8 +120,9 @@ const LineChart = (props: LineChartProps) => {
         backgroundComponent={
           backgroundProps && (
             <Background
-              y={HEIGHT - backgroundProps.y - 85}
-              height={backgroundProps.height}
+              y={HEIGHT - backgroundProps.y * pixelsPerUnit - 75}
+              // y={backgroundProps.y * pixelsPerUnit + backgroundProps.height * pixelsPerUnit}
+              height={backgroundProps.height * pixelsPerUnit}
             />
           )
         }

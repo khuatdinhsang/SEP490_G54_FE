@@ -14,18 +14,20 @@ import { StyleSheet, Text, View } from 'react-native';
 interface LineChartProps {
   data: Array<{ y: number, label?: string }>;
   textTitle: string;
-  tickValues: number[],
+  tickValues: number[];
   labelElement: string;
 }
 
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
   const { data, textTitle, tickValues, labelElement } = props;
+
   const dataScatter = data.map((item, index) => ({
     x: index + 1,
     y: item.y,
     label: item?.label
   }));
+
   const yTickFormat = (y: number) => {
     if (y === 0) return '';
     if (y === 33) return '하';
@@ -55,40 +57,46 @@ const LineChart = (props: LineChartProps) => {
     [dataScatter],
   );
 
-  const CustomLabelComponent = (props: any) => (
-    <Svg>
-      <Defs>
-        <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <Stop offset="0%" stopColor={colors.black} stopOpacity="0.7" />
-          <Stop offset="100%" stopColor={colors.gray_G10} stopOpacity="0.7" />
-        </LinearGradient>
-      </Defs>
-      <Rect
-        x={props.x - 12 - props.text.length * 5}
-        y={props.y - 35}
-        width={props.text.length * 8 + 8 * 2}
-        height={28}
-        fill="url(#grad)"
-        rx="8"
-        ry="8"
-      />
-      <VictoryLabel
-        {...props}
-        text={props.text}
-        style={{
-          fill: colors.white,
-          fontSize: 14,
-          fontWeight: '400',
-          lineHeight: 20,
-          width: 70
-        }}
-        dy={-15}
-        dx={-7}
-        renderInPortal={false}
-        textAnchor="middle"
-      />
-    </Svg>
-  );
+  const CustomLabelComponent = (props: any) => {
+    const isLastPoint = data.length > 0 && props.index === data.length - 1;
+    if (!isLastPoint) return null;
+
+    const label = data[props.index]?.label || '';
+    return (
+      <Svg>
+        <Defs>
+          <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <Stop offset="0%" stopColor={colors.black} stopOpacity="0.7" />
+            <Stop offset="100%" stopColor={colors.gray_G10} stopOpacity="0.7" />
+          </LinearGradient>
+        </Defs>
+        <Rect
+          x={props.x - 12 - label.length * 5}
+          y={props.y - 35}
+          width={label.length * 8 + 8 * 2}
+          height={28}
+          fill="url(#grad)"
+          rx="8"
+          ry="8"
+        />
+        <VictoryLabel
+          {...props}
+          text={label}
+          style={{
+            fill: colors.white,
+            fontSize: 14,
+            fontWeight: '400',
+            lineHeight: 20,
+            width: 70
+          }}
+          dy={-15}
+          dx={-7}
+          renderInPortal={false}
+          textAnchor="middle"
+        />
+      </Svg>
+    );
+  };
 
   return (
     <View style={[styles.container, styles.shadowBox]}>
@@ -167,7 +175,8 @@ const styles = StyleSheet.create({
   textTitle: {
     fontWeight: "700",
     fontSize: 18,
-    color: colors.gray_G08
+    color: colors.gray_G08,
   },
 });
+
 export default LineChart;

@@ -45,8 +45,10 @@ export interface dataChartMentalResponse {
 export interface valueBloodPressure {
     systole: number,
     diastole: number,
-    date: string
+    date: string,
+    label?: string
 }
+
 export interface dataChartBloodPressureResponse {
     systoleToday: number,
     diastoleToday: number,

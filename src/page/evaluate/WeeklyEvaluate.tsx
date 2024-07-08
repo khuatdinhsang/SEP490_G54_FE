@@ -14,7 +14,7 @@ import LoadingScreen from '../../component/loading';
 import { valueWeight } from '../../constant/type/chart';
 import LineChart from '../../component/line-chart-no-x';
 import { weeklyReviewService } from '../../services/weeklyReviews';
-import { extractDayAndMonth, formatDateRange } from '../../util';
+import { extractDayAndMonth, formatDateRange, transformDataToChartNoX } from '../../util';
 
 const WeeklyEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -33,7 +33,7 @@ const WeeklyEvaluate = () => {
                 const resData = await chartService.getDataWeeklyReview();
                 if (resData.code === 200) {
                     setIsLoading(false);
-                    setDataChart(resData.result.percentage)
+                    setDataChart(resData.result.percentage.reverse())
                     setTimes(resData.result.weekStart)
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -101,13 +101,13 @@ const WeeklyEvaluate = () => {
             {times.length > 0 ? <ScrollView style={styles.scrollView}>
                 <View style={styles.content}>
                     <LineChart
-                        data={[{ y: 56 }, { y: 76 }, { y: 40 }, { y: 45, label: "45%" }]}
+                        data={transformDataToChartNoX(dataChart)}
                         textTitle={t("evaluate.mediumChart")}
                         labelElement="사용X"
                         tickValues={[0, 33, 67, 100]}
                     />
                     <View style={{ marginBottom: 20, marginTop: 20 }}>
-                        {times && times?.reverse()?.map((item, index) => {
+                        {times && times?.map((item, index) => {
                             return (
                                 <WeeklyComponent key={index} time={item} isNew={index == 0 ? true : false} timeRender={`${formatDateRange(item)}`} />
                             )

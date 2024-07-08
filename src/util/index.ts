@@ -3,6 +3,7 @@ import { HistoryMedicalResponse } from "../constant/type/medical";
 import { DateTime } from 'luxon';
 import { valueActivity, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
 import { IMAGE } from "../constant/image";
+import { ImageProps } from "react-native";
 interface OutputData {
     id: number;
     name: string;
@@ -194,23 +195,21 @@ export const formatDateRange = (dateString: string) => {
     const formattedEnd = `${endDate.getMonth() + 1}/${endDate.getDate()}`;
     return `${formattedStart}-${formattedEnd}`;
 }
-// thuchiendc/ plan
-export const renderIconWeeklyReview = (a: number, b: number): string => {
-    if (b === 0 || a === 0) {
+
+export const renderIconWeeklyReview = (a: number): ImageProps => {
+    if (a < 0) {
         return IMAGE.EVALUATE.SAD1;
     }
-
-    const ratio = (a / b) * 100;
-    if (ratio < 50) {
+    if (a < 50) {
         return IMAGE.EVALUATE.SAD;
-    } else if (ratio >= 50 && ratio < 90) {
-        return IMAGE.EVALUATE.CONG3;
-    } else if (ratio >= 90 && ratio < 100) {
+    } else if (a >= 50 && a < 90) {
         return IMAGE.EVALUATE.CONG2;
-    } else if (ratio === 100) {
+    } else if (a >= 90 && a < 100) {
+        return IMAGE.EVALUATE.CONG3;
+    } else if (a === 100) {
         return IMAGE.EVALUATE.CONG1;
     } else {
-        return IMAGE.EVALUATE.SAD1;
+        return IMAGE.EVALUATE.CONG1;
     }
 }
 export const renderTextWeeklyReview = (a: number): string => {
@@ -228,4 +227,30 @@ export const renderTextWeeklyReview = (a: number): string => {
     } else {
         return "common.text.noData";
     }
+}
+export const convertMinutesToHoursAndMinutes = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours > 0 && remainingMinutes > 0) {
+        return `${hours}시간 ${remainingMinutes}분`;
+    } else if (hours > 0) {
+        return `${hours}시간`;
+    } else {
+        return `${remainingMinutes}분`;
+    }
+}
+interface DataPoint {
+    y: number;
+    label?: string;
+}
+export const transformDataToChartNoX = (values: number[]): DataPoint[] => {
+    const transformedData: DataPoint[] = values.map(value => ({ y: value }));
+    if (transformedData.length > 0) {
+        const lastValue = transformedData[transformedData.length - 1].y;
+        transformedData[transformedData.length - 1] = {
+            y: lastValue,
+            label: `${lastValue}%`
+        };
+    }
+    return transformedData;
 }
