@@ -22,6 +22,7 @@ const BloodPressure = ({ route }: any) => {
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
     const isEditable = route?.params?.isEditable;
+    const [bloodError, setBloodError] = useState<string>("");
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
@@ -30,6 +31,10 @@ const BloodPressure = ({ route }: any) => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: isEdit })
     }
     const nextPage = async (): Promise<void> => {
+        if (Number(minBloodPressure) > 200 || Number(maxBloodPressure)) {
+            setBloodError("Invalid value");
+            return;
+        }
         setIsLoading(true)
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek().split("T")[0],
@@ -118,6 +123,7 @@ const BloodPressure = ({ route }: any) => {
                                     keyboardType={"numeric"}
                                     handleSetValue={handleSetMinBloodPressure}
                                     styleInput={{ paddingLeft: 50 }}
+                                    error={bloodError}
                                 />
                             </View>
                         </View>

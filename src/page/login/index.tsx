@@ -16,6 +16,7 @@ import { loginUser } from '../../store/user.slice';
 import { ResponseForm } from '../../constant/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
+import NotificationModule from '../../native-module/NotificationModule';
 
 interface LoginValues {
     email: string;
@@ -54,7 +55,8 @@ const Login = () => {
     const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
-            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: "dBAKdQ2yTujIB-xuK994ur:APA91bFWyD25dEPSvhIrhJB-tg_YSa_LtrmVvxbxU6_oRwmBUe_Za9OQwfOf6A6Pg084eK753P-dw0avvV3ZP76dgEnewjIqlIndmOv1pxFcAh6jm4llurRBLG2IlZQUTi_gK7Z2u-Un" })).unwrap()
+            const deviceToken = await AsyncStorage.getItem('deviceToken');
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
                 setIsLoading(false);
                 resetForm()
@@ -65,14 +67,14 @@ const Login = () => {
             if (error.code == 400 || error.code == 401) {
                 setMessageError(error.message)
             }
+            if (error.code === 406) {
+                navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
+            }
         } finally {
             setIsLoading(false)
         }
 
     }
-
-
-
     const handleFindId = () => {
         // Handle find ID logic
     }

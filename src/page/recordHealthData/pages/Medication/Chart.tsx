@@ -12,7 +12,7 @@ import { HeightDevice } from '../../../../util/Dimenssion';
 import LoadingScreen from '../../../../component/loading';
 import { planService } from '../../../../services/plan';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartStep } from '../../../../util';
+import { getMondayOfCurrentWeek, transformDataToChartStep } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
 import { valueSteps } from '../../../../constant/type/chart';
 
@@ -95,7 +95,7 @@ const MedicationChart = ({ route }: any) => {
                                 labelElement="%"
                                 textTitle={t("evaluate.chartMedicine")}
                                 data={transformDataToChartStep(dataChart, "%")}
-                                domainY={[0, getValueMaxChartStep(dataChart)]}
+                                tickValues={[0, 25, 50, 75, 100]}
                             />
                         </View>
                         :

@@ -21,7 +21,7 @@ const NumericalRecord = ({ route }: any) => {
     const { t } = useTranslation();
     const chooseSelectedItem = route?.params?.chooseSelectedItem
     const isEditable = route?.params?.isEditable;
-    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
+    console.log("isE", isEditable)
     const [selectedItem, setSelectedItem] = useState<DataType | null>(null);
     const initData: DataType[] = [
         { id: 1, name: t("recordHealthData.beforeBreakfast"), value: TypeTimeMeasure.BEFORE_BREAKFAST },
@@ -40,14 +40,14 @@ const NumericalRecord = ({ route }: any) => {
 
     const nextPage = () => {
         setSelectedItem(null)
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD, { selectedItem, isEditable: isEdit });
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD, { selectedItem, isEditable });
     };
 
     const handleSelectItem = (item: DataType) => {
         setSelectedItem(prevSelectedItem => (prevSelectedItem?.id === item.id ? null : item));
     };
     const navigateChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: isEdit })
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable })
     }
 
     return (
@@ -74,7 +74,7 @@ const NumericalRecord = ({ route }: any) => {
                     </Text>
                 </Pressable>
             </View>
-            {isEdit ?
+            {isEditable ?
                 <ScrollView contentContainerStyle={styles.scrollView}>
                     <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
                         <Text style={styles.title}>{t('recordHealthData.chooseMeal')}/{t('recordHealthData.chooseMealTime')}</Text>
@@ -111,7 +111,7 @@ const NumericalRecord = ({ route }: any) => {
                     </Pressable>
                 </View>
             }
-            {isEdit && <View style={styles.buttonContainer}>
+            {isEditable && <View style={styles.buttonContainer}>
                 <Pressable
                     disabled={!selectedItem}
                     onPress={nextPage}

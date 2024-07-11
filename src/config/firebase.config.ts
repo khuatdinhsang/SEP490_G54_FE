@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 export const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
@@ -9,9 +10,12 @@ export const requestUserPermission = async () => {
     }
 };
 export const getToken = async () => {
-    // const token = await messaging().getToken({
-    //     vapidKey: "BAjalMty6lwI0zsibvdKVoEGOZsJ5nCOU8uO1jaHER6Yp2ajSIGBq8eyI7dsRBjB6Qr4OUuAYKWvLDAxDYeB8IU",
-    // });
-    const token = await messaging().getToken();
-    console.log("39", token)
+    const token = await messaging().getToken({
+        vapidKey: "BMOssgoskayRgS2I-P9HcAjkHAejXed-MjbMqYjEjcftZJaQdGGlhCKxoipyt5raJYegowHkyjWWc4NDtc3WxfU",
+    });
+    console.log("aa", token)
+    if (token) {
+        await AsyncStorage.setItem('deviceToken', token);
+    }
+
 }

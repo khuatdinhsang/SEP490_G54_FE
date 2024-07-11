@@ -9,20 +9,27 @@ import { flexCenter, flexRow } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { extractDayAndMonth, getMondayOfCurrentWeek, transformDataToChartWeight } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import { chartService } from '../../../../services/charts';
 import LineChart from '../../../../component/line-chart';
 import { valueBloodPressure } from '../../../../constant/type/chart';
-
+import TwoLineChart from '../../../../component/twoLine-chart';
+interface dataTypes {
+    x: string,
+    y: number,
+    label?: string
+}
 const BloodPressureChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const { t, i18n } = useTranslation();
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
-    const [dataChart, setDataChart] = useState<valueBloodPressure[]>([])
+    const [dataSystoleChart, setDataSystoleChart] = useState<dataTypes[]>([])
+    const [dataDiastoleChart, setDataDiastoleChart] = useState<dataTypes[]>([])
+    //tam thu - cao
     const [systoleToday, setSystoleToday] = useState<number>(0)
+    //tam trương - thap
     const [diastoleToday, setDiastoleToday] = useState<number>(0)
     const isEditable = route?.params?.isEditable;
     useEffect(() => {
@@ -32,7 +39,28 @@ const BloodPressureChart = ({ route }: any) => {
                 const resData = await chartService.getDataBloodPressure();
                 if (resData.code === 200) {
                     setIsLoading(false);
-                    setDataChart(resData.result.bloodPressureResponseList)
+                    const diaStoleData = resData.result.bloodPressureResponseList.map((item, index, array) => {
+                        const dataPoint: dataTypes = {
+                            x: extractDayAndMonth(item.date),
+                            y: item.diastole,
+                        };
+                        if (index === array.length - 1) {
+                            dataPoint['label'] = `${item.diastole}`;
+                        }
+                        return dataPoint;
+                    });
+                    const systoleData = resData.result.bloodPressureResponseList.map((item, index, array) => {
+                        const dataPoint: dataTypes = {
+                            x: extractDayAndMonth(item.date),
+                            y: item.systole,
+                        };
+                        if (index === array.length - 1) {
+                            dataPoint['label'] = `${item.systole}`;
+                        }
+                        return dataPoint;
+                    });
+                    setDataDiastoleChart(diaStoleData)
+                    setDataSystoleChart(systoleData)
                     setSystoleToday(resData.result.systoleToday)
                     setDiastoleToday(resData.result.diastoleToday)
                 } else {
@@ -50,58 +78,104 @@ const BloodPressureChart = ({ route }: any) => {
         };
         getDataChart();
     }, []);
+    console.log("a", systoleToday)
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: isEditable })
     }
+    console.log("88", dataDiastoleChart)
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    text={t('common.diseases.highBlood')}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
+            <View style={flexRow}>
+                <Pressable
+                    onPress={navigateNumericalRecord}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                        {t('recordHealthData.bloodPressureProfile')}
+                    </Text>
+                </Pressable>
+                <Pressable style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                        {t('recordHealthData.viewChart')}
+                    </Text>
+                </Pressable>
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        text={t('common.diseases.highBlood')}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
-                <View style={flexRow}>
-                    <Pressable
-                        onPress={navigateNumericalRecord}
-                        style={styles.navigate}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.bloodPressureProfile')}
-                        </Text>
-                    </Pressable>
-                    <Pressable style={[styles.navigate, styles.active]}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.viewChart')}
-                        </Text>
-                    </Pressable>
-                </View>
                 {
-                    dataChart.length > 0 ?
+                    dataSystoleChart.length > 0 || dataDiastoleChart.length > 0 ?
                         <View style={styles.chart}>
-                            <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
+                            {/* <TwoLineChart
+                                icon={IMAGE.RECORD_DATA.THERMOMETER}
                                 labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
+                                textTitle={t("evaluate.chartBlood")}
+                                textInfoColor1={t("evaluate.minBlood")}
+                                textInfoColor2={t("evaluate.maxBlood")}
+                                data1={data1}
+                                data2={data2}
+                                color1={colors.green}
+                                color2={colors.orange_04}
+                                tickValues={[0, 49, 89, 139, 179]}
+                                textDescription={t("evaluate.valueBloodToday")}
+                                valueDescription1={diastoleToday}
+                                valueDescription2={systoleToday}
+                                unitDescription="mg/DL"
+                                backgroundProps1={{
+                                    color: colors.green,
+                                    height: 30,
+                                    y: 40,
+                                }}
+                                backgroundProps2={{
+                                    color: colors.orange_04,
+                                    height: 20,
+                                    y: 40,
+                                }}
+                            /> */}
+                            <LineChart
+                                icon={IMAGE.RECORD_DATA.THERMOMETER}
+                                textTitleToday={t("evaluate.systoleToday")}
+                                unit="mg/DL"
+                                valueToday={systoleToday?.toString()}
+                                labelElement="%"
+                                textTitle={t("evaluate.chartBlood")}
+                                data={dataSystoleChart}
+                                textInfo={t("evaluate.maxBlood")}
+                                tickValues={[0, 70, 100, 140, 200]}
+                                backgroundProps={{
+                                    color: colors.primary,
+                                    height: 32, //100 -140
+                                    y: 72,
+                                }}
                             />
+                            <View style={{ marginTop: 20 }}>
+                                <LineChart
+                                    icon={IMAGE.RECORD_DATA.THERMOMETER}
+                                    textTitleToday={t("evaluate.diastoleToday")}
+                                    textInfo={t("evaluate.minBlood")}
+                                    unit="mg/DL"
+                                    valueToday={diastoleToday?.toString()}
+                                    labelElement="%"
+                                    textTitle={t("evaluate.chartBlood")}
+                                    data={dataDiastoleChart}
+                                    tickValues={[0, 60, 90, 150]}
+                                    backgroundProps={{
+                                        color: colors.primary,
+                                        height: 33,//60-90
+                                        y: 55,
+                                    }}
+                                />
+                            </View>
                         </View>
                         :
-                        <View style={[flexCenter, { height: '60%' }]}>
+                        <View style={[flexCenter, { marginTop: 100 }]}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
@@ -124,7 +198,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        height: HeightDevice
+        paddingBottom: 100
     }, navigate: {
         height: 48,
         width: '50%'

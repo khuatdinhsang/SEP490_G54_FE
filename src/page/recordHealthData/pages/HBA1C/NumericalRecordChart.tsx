@@ -12,31 +12,63 @@ import { HeightDevice } from '../../../../util/Dimenssion';
 import BarChart from '../../../../component/bar-chart';
 import LineChart from '../../../../component/line-chart';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek } from '../../../../util';
+import { extractDayAndMonth, getMondayOfCurrentWeek, transformDataToChartHBA1C } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
-import { valueCardinal } from '../../../../constant/type/chart';
+import { valueBloodSugar, valueCardinal } from '../../../../constant/type/chart';
 
-
+interface dataTypes {
+    x: string,
+    y: number,
+    label?: string
+}
 const NumericalRecordChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const isEditable = route?.params?.isEditable;
-    console.log("aa", isEditable)
+    console.log("chart", isEditable)
     const [dataChartHBA1C, setDataChartHBA1C] = useState<valueCardinal[]>([])
-    const [dataCholesterol, setDataCholesterol] = useState<valueCardinal[]>([])
-    const [dataBloodSugar, setDataBloodSugar] = useState<valueCardinal[]>([])
+    const [dataChartCholesterol, setDataCholesterol] = useState<valueCardinal[]>([])
+    const [hba1cDataToday, setHba1cDataToday] = useState<number>()
+    const [cholesterolDataToday, setCholesterolDataToday] = useState<number>()
+    const [beforeEat, setBeforeEat] = useState<dataTypes[]>([])
+    const [afterEat, setAfterEat] = useState<dataTypes[]>([])
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
                 const resData = await chartService.getDataCardinal();
+                console.log("r", resData)
                 if (resData.code === 200) {
+                    console.log("aaaa", resData.result.detailDataBloodSugar)
                     setIsLoading(false);
-                    setDataBloodSugar(resData.result.bloodSugarList)
                     setDataCholesterol(resData.result.cholesterolList)
                     setDataChartHBA1C(resData.result.hba1cList)
+                    setHba1cDataToday(resData.result.hba1cDataToday)
+                    setCholesterolDataToday(resData.result.cholesterolDataToday)
+                    const beforeEatData = resData.result.bloodSugarList.map((item, index, array) => {
+                        const dataPoint: dataTypes = {
+                            x: extractDayAndMonth(item.date),
+                            y: item.beforeEat ?? 0,
+                        };
+                        if (index === array.length - 1) {
+                            dataPoint['label'] = `${item.beforeEat}mg/DL`;
+                        }
+                        return dataPoint;
+                    });
+                    setBeforeEat(beforeEatData)
+                    const afterEatData = resData.result.bloodSugarList.map((item, index, array) => {
+                        const dataPoint: dataTypes = {
+                            x: extractDayAndMonth(item.date),
+                            y: item.afterEat ?? 0,
+                        };
+                        if (index === array.length - 1) {
+                            dataPoint['label'] = `${item.afterEat}mg/DL`;
+                        }
+                        return dataPoint;
+                    });
+                    setAfterEat(afterEatData)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -60,49 +92,111 @@ const NumericalRecordChart = ({ route }: any) => {
     }
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
 
-                        text={`${t('recordHealthData.glycatedHemoglobin')}/${t('recordHealthData.cholesterol')}/${t('recordHealthData.bloodSugar')}`}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
-                <View style={flexRow}>
-                    <Pressable
-                        onPress={navigateNumericalRecord}
-                        style={styles.navigate}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.bloodCountRecord')}
-                        </Text>
-                    </Pressable>
-                    <Pressable style={[styles.navigate, styles.active]}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.viewChart')}
-                        </Text>
-                    </Pressable>
-                </View>
+                    text={`${t('recordHealthData.glycatedHemoglobin')}/${t('recordHealthData.cholesterol')}/${t('recordHealthData.bloodSugar')}`}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
+            <View style={flexRow}>
+                <Pressable
+                    onPress={navigateNumericalRecord}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                        {t('recordHealthData.bloodCountRecord')}
+                    </Text>
+                </Pressable>
+                <Pressable style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                        {t('recordHealthData.viewChart')}
+                    </Text>
+                </Pressable>
+            </View>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+
                 {
-                    dataChartHBA1C || dataBloodSugar || dataCholesterol ?
+                    dataChartHBA1C || dataChartCholesterol ?
                         <View style={styles.chart}>
-                            <LineChart
-                                icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
-                                textTitleMedium='오늘 나의 약물 복용 횟수'
-                                unit='회'
-                                valueMedium="2/2"
-                                labelElement="%"
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={[
-                                    { x: '9/11', y: 70 },
-                                    { x: '9/15', y: 60 },
-                                    { x: '9/20', y: 80 },
-                                    { x: '10/4', y: 50 },
-                                    { x: '10/5', y: 60 },
-                                ]}
-                                domainY={[0, 100]}
-                            />
+                            <View>
+                                <LineChart
+                                    icon={IMAGE.RECORD_DATA.BLOOD}
+                                    textTitle={t("evaluate.chartHBA1C")}
+                                    textTitleToday={t("evaluate.valueHBA1CToday")}
+                                    unit='%'
+                                    textInfo={t("evaluate.safeHBA1C")}
+                                    valueToday={hba1cDataToday?.toString()}
+                                    labelElement="%"
+                                    data={transformDataToChartHBA1C(dataChartHBA1C, "%")}
+                                    tickValues={[0, 2, 4, 6, 8, 10]}
+                                    // chưa xét
+                                    backgroundProps={{
+                                        color: colors.primary,
+                                        height: 35,//chưa biết đang fix theo figma
+                                        y: 70,
+                                    }}
+                                />
+                            </View>
+                            <View style={{ marginTop: 20 }}>
+                                <LineChart
+                                    icon={IMAGE.RECORD_DATA.BLOOD}
+                                    textTitle={t("evaluate.chartCholesterol")}
+                                    textTitleToday={t("evaluate.valueCholesterolToday")}
+                                    textInfo={t("evaluate.safeCholesterol")}
+                                    unit="mg/DL"
+                                    valueToday={cholesterolDataToday?.toString()}
+                                    labelElement="%"
+                                    data={transformDataToChartHBA1C(dataChartCholesterol, "mg/DL")}
+                                    tickValues={[100, 150, 200, 250, 300]}
+                                    // chưa xét
+                                    backgroundProps={{
+                                        color: colors.primary,
+                                        height: 60,//chưa biết đang fix theo figma
+                                        y: 23,
+                                    }}
+                                />
+                            </View>
+                            <View style={{ marginTop: 20 }}>
+                                <LineChart
+                                    icon={IMAGE.RECORD_DATA.BLOOD}
+                                    textTitle={t("evaluate.chartBloodSugar")}
+                                    textTitleToday={t("evaluate.valueBloodSugarToday")}
+                                    textInfo={t("evaluate.safeBeforeMeal")}
+                                    unit="mg/DL"
+                                    // valueToday={cholesterolDataToday?.toString()}
+                                    labelElement="%"
+                                    data={beforeEat}
+                                    tickValues={[0, 129, 179, 229]}
+                                    // chưa xét
+                                    backgroundProps={{
+                                        color: colors.primary,
+                                        height: 20,//chưa biết đang fix theo figma
+                                        y: 80,
+                                    }}
+                                />
+                            </View>
+                            <View style={{ marginTop: 20 }}>
+                                <LineChart
+                                    icon={IMAGE.RECORD_DATA.BLOOD}
+                                    textTitle={t("evaluate.chartBloodSugar")}
+                                    textTitleToday={t("evaluate.valueBloodSugarToday")}
+                                    textInfo={t("evaluate.safeAfterMeal")}
+                                    unit="mg/DL"
+                                    // valueToday={cholesterolDataToday?.toString()}
+                                    labelElement="%"
+                                    data={afterEat}
+                                    tickValues={[0, 129, 179, 229]}
+                                    // chưa xét
+                                    backgroundProps={{
+                                        color: colors.primary,
+                                        height: 30,//chưa biết đang fix theo figma
+                                        y: 65,
+                                    }}
+                                />
+                            </View>
                         </View>
+
                         :
                         <View style={[flexCenter, { height: '60%' }]}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
@@ -127,7 +221,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        height: HeightDevice
+        paddingBottom: 100
     }, navigate: {
         height: 48,
         width: '50%'

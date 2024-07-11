@@ -10,7 +10,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartMental, transformDataToChartStep } from '../../../../util';
+import { getMondayOfCurrentWeek, transformDataToChartMental, transformDataToChartStep } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
 import LoadingScreen from '../../../../component/loading';
 import BarChart from '../../../../component/bar-chart';

@@ -45,8 +45,10 @@ export interface dataChartMentalResponse {
 export interface valueBloodPressure {
     systole: number,
     diastole: number,
-    date: string
+    date: string,
+    label?: string
 }
+
 export interface dataChartBloodPressureResponse {
     systoleToday: number,
     diastoleToday: number,
@@ -56,11 +58,20 @@ export interface valueCardinal {
     data: number,
     date: string
 }
+export interface valueBloodSugar {
+    afterEat?: number,
+    beforeEat?: number,
+    date: string
+}
 export interface dataChartCardinalResponse {
     hba1cDataToday: number,
     cholesterolDataToday: number,
     hba1cList: valueCardinal[],
     cholesterolList: valueCardinal[],
-    bloodSugarList: valueCardinal[],
+    bloodSugarList: valueBloodSugar[],
     detailDataBloodSugar: Record<string, any>;
+}
+export interface dataChartWeeklyReview {
+    percentage: number[],
+    weekStart: string[]
 }

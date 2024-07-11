@@ -1,7 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { HistoryMedicalResponse } from "../constant/type/medical";
+import { HistoryMedicalResponse, medicinePost } from "../constant/type/medical";
 import { DateTime } from 'luxon';
-import { valueActivity, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
+import { valueActivity, valueCardinal, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
+import { IMAGE } from "../constant/image";
+import { ImageProps } from "react-native";
 interface OutputData {
     id: number;
     name: string;
@@ -91,89 +93,195 @@ export interface OutputDataChart {
 }
 
 export const transformDataToChartWeight = (inputArray: valueWeight[], unitLabel: string): OutputDataChart[] => {
-    return inputArray.map((input: valueWeight) => {
-        const today = new Date();
-        const todayMonth = today.getMonth() + 1;
-        const todayDate = today.getDate();
+    return inputArray.map((input: valueWeight, index: number) => {
         const date = new Date(input.date);
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
-        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
         return {
             x: `${month}/${day}`,
             y: input.value,
-            ...(isToday && { label: `${input.value} ${unitLabel}` })
+            ...(index === inputArray.length - 1 && { label: `${input.value} ${unitLabel}` })
         };
     });
 };
-export const getValueMaxChartWeight = (inputArray: valueWeight[], value: number): number => {
-    if (inputArray.length === 0) {
-        return 0;
-    }
-    const maxValue = Math.max(...inputArray.map(item => item.value));
-    return roundUpToNearest(maxValue, value);
-}
+
 export const roundUpToNearest = (value: number, increment: number): number => {
     return Math.ceil(value / increment) * increment;
 };
 
 export const transformDataToChartStep = (inputArray: valueSteps[], unitLabel: string): OutputDataChart[] => {
-    return inputArray.map((input: valueSteps) => {
-        const today = new Date();
-        const todayMonth = today.getMonth() + 1;
-        const todayDate = today.getDate();
+    return inputArray.map((input: valueSteps, index: number) => {
         const date = new Date(input.date);
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
-        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
         return {
             x: `${month}/${day}`,
-            y: input.valuePercent,
-            ...(isToday && { label: `${input.valuePercent} ${unitLabel}` })
+            y: input.valuePercent > 100 ? 100 : input.valuePercent,
+            ...(index === inputArray.length - 1 && { label: `${input.valuePercent > 100 ? 100 : input.valuePercent} ${unitLabel}` })
         };
     });
 };
-export const getValueMaxChartStep = (inputArray: valueSteps[]): number => {
-    if (inputArray.length === 0) {
-        return 0;
-    }
-    const maxValue = Math.max(...inputArray.map(item => item.valuePercent));
-    return roundUpToNearest(maxValue, 20);
-}
 
-export const transformDataToChartActivity = (inputArray: valueActivity[], unitLabel: string): OutputDataChart[] => {
+export const transformDataToChartActivity = (inputArray: valueActivity[]): OutputDataChart[] => {
     return inputArray.map((input: valueActivity) => {
         const date = new Date(input.date);
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
         return {
             x: `${month}/${day}`,
-            y: input.duration,
-            label: `${unitLabel}`
+            y: convertMinutesToHours(input.duration),
+            label: input.type
         };
     });
 };
-export const getValueMaxChartActivity = (inputArray: valueActivity[], value: number): number => {
-    if (inputArray.length === 0) {
-        return 0;
-    }
-    const maxValue = Math.max(...inputArray.map(item => item.duration));
-    return roundUpToNearest(maxValue, value);
-}
+
 
 export const transformDataToChartMental = (inputArray: valueMental[], unitLabel: string): OutputDataChart[] => {
-    return inputArray.map((input: valueMental) => {
-        const today = new Date();
-        const todayMonth = today.getMonth() + 1;
-        const todayDate = today.getDate();
+    return inputArray.map((input: valueMental, index: number) => {
         const date = new Date(input.date);
         const month = (date.getMonth() + 1).toString();
         const day = date.getDate().toString();
-        const isToday = todayMonth === date.getMonth() + 1 && todayDate === date.getDate();
         return {
             x: `${month}/${day}`,
             y: input.point,
-            ...(isToday && { label: `${input.point} ${unitLabel}` })
+            ...(index === inputArray.length - 1 && { label: `${input.point} ${unitLabel}` })
         };
     });
 };
+export const transformDataToChartHBA1C = (inputArray: valueCardinal[], unitLabel: string): OutputDataChart[] => {
+    return inputArray.map((input: valueCardinal, index: number) => {
+        const date = new Date(input.date);
+        const month = (date.getMonth() + 1).toString();
+        const day = date.getDate().toString();
+        return {
+            x: `${month}/${day}`,
+            y: input.data,
+            ...(index === inputArray.length - 1 && { label: `${input.data} ${unitLabel}` })
+        };
+    });
+};
+export const extractDayAndMonth = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1;
+    return `${month}/${day}`;
+}
+export const formatDateRange = (dateString: string) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const endDate = new Date(date);
+    endDate.setDate(day + 6);
+    const formattedStart = `${month}/${day}`;
+    const formattedEnd = `${endDate.getMonth() + 1}/${endDate.getDate()}`;
+    return `${formattedStart}-${formattedEnd}`;
+}
+
+export const renderIconWeeklyReview = (a: number): ImageProps => {
+    if (a < 0) {
+        return IMAGE.EVALUATE.SAD1;
+    }
+    if (a < 50) {
+        return IMAGE.EVALUATE.SAD;
+    } else if (a >= 50 && a < 90) {
+        return IMAGE.EVALUATE.CONG2;
+    } else if (a >= 90 && a < 100) {
+        return IMAGE.EVALUATE.CONG3;
+    } else if (a === 100) {
+        return IMAGE.EVALUATE.CONG1;
+    } else {
+        return IMAGE.EVALUATE.CONG1;
+    }
+}
+export const renderTextWeeklyReview = (a: number): string => {
+    if (a === 0) {
+        return "common.text.noData";
+    }
+    if (a < 50) {
+        return "common.text.low";
+    } else if (a >= 50 && a < 90) {
+        return "common.text.medium";
+    } else if (a >= 90 && a < 100) {
+        return "common.text.high";
+    } else if (a === 100) {
+        return "common.text.excellent";
+    } else {
+        return "common.text.noData";
+    }
+}
+export const convertMinutesToHoursAndMinutes = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours > 0 && remainingMinutes > 0) {
+        return `${hours}시간 ${remainingMinutes}분`;
+    } else if (hours > 0) {
+        return `${hours}시간`;
+    } else {
+        return `${remainingMinutes}분`;
+    }
+}
+export const convertMinutesToHours = (minutes: number): number => {
+    const hours = minutes / 60;
+    return parseFloat(hours.toFixed(1));
+}
+interface DataPoint {
+    y: number;
+    label?: string;
+}
+export const transformDataToChartNoX = (values: number[]): DataPoint[] => {
+    const transformedData: DataPoint[] = values.map(value => ({ y: value }));
+    if (transformedData.length > 0) {
+        const lastValue = transformedData[transformedData.length - 1].y;
+        transformedData[transformedData.length - 1] = {
+            y: lastValue,
+            label: `${lastValue}%`
+        };
+    }
+    return transformedData;
+}
+export const generateRandomId = (length: number): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+interface Medicine {
+    indexDay: number[];
+    medicineTitle: string;
+    medicineTypeId: number;
+    time: string;
+    weekTime: string[];
+    weekday: string[];
+}
+export const getWeekTimeForCurrentWeek = (medicines: Medicine[]): medicinePost[] => {
+    const weekdaysMap: { [key: string]: number } = {
+        "Sunday": 0,
+        "Monday": 1,
+        "Tuesday": 2,
+        "Wednesday": 3,
+        "Thursday": 4,
+        "Friday": 5,
+        "Saturday": 6
+    };
+
+    const today = new Date();
+    const currentDay = today.getDay();
+    const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+
+    return medicines.map(medicine => {
+        const { time, weekday, medicineTypeId, indexDay } = medicine;
+        const weekTimes = weekday.map(day => {
+            const targetDay = weekdaysMap[day];
+            const date = new Date(startOfWeek);
+            date.setDate(startOfWeek.getDate() + targetDay);
+            return `${date.toISOString().split('T')[0]}T${time}.000+00:00`;
+        });
+        return {
+            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            schedule: weekTimes,
+            medicineTypeId: medicineTypeId,
+        };
+    });
+}
