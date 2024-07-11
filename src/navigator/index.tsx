@@ -3,12 +3,13 @@ import { SCREENS_NAME, SCREENS_STACK } from './const';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../component/loading';
+import { RootState } from '../store/store';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 const Navigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState(SCREENS_NAME.LOGIN.MAIN);
-
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accessToken');

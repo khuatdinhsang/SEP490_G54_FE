@@ -36,6 +36,8 @@ import { GuideStep, SCROLL_VALUE } from './const';
 import PermissionRequest from '../../util/Permission';
 import TimerModule, { TimerItem } from '../../native-module/timer.module';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setScreen } from '../../store/screen.slice';
+import { useResetScreenAtStartOfWeek } from '../../hooks/resetScreen';
 
 const widthSidebar = WidthDevice - 20;
 
@@ -49,6 +51,7 @@ const Home = () => {
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   // dispatch(initUser({id: '1', counterStep: []}));
+  useResetScreenAtStartOfWeek()
 
   const sidebarAnimatedStyles = useAnimatedStyle(() => {
     return {

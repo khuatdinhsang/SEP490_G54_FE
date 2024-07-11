@@ -21,6 +21,7 @@ const Weight = ({ route }: any) => {
     const [messageError, setMessageError] = useState<string>("");
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
+    const [errorWeight, setErrorWeight] = useState<string>("")
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
     };
@@ -30,6 +31,10 @@ const Weight = ({ route }: any) => {
     };
 
     const nextPage = async (): Promise<void> => {
+        if (Number(weight) > 100) {
+            setErrorWeight("Invalid value")
+            return
+        }
         setIsLoading(true);
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek().split("T")[0],
@@ -101,6 +106,7 @@ const Weight = ({ route }: any) => {
                                     keyboardType={"numeric"}
                                     handleSetValue={handleSetWeight}
                                     styleInput={{ paddingLeft: 50 }}
+                                    error={errorWeight}
                                 />
                             </View>
                         </View>

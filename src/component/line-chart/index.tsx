@@ -17,18 +17,20 @@ interface LineChartProps {
   data: Array<{ x: string; y: number; label?: string }>;
   icon?: ImageSourcePropType,
   textTitle: string,
+  unit?: string,
+  textTitleToday?: string,
+  valueToday?: string,
   textTitleMedium?: string,
-  unit: string,
   valueMedium?: string,
   backgroundProps?: { y: number; height: number; color: string };
-  domainY: [number, number];
+  // domainY: [number, number];
   labelElement: string,
   textInfo?: string,
+  tickValues: number[]
 }
 
 // Example props:
-{
-  /* <LineChart
+/* <LineChart
   data={[
     {x: '9/11', y: 12.5},
     {x: '9/15', y: 10},
@@ -37,10 +39,8 @@ interface LineChartProps {
     {x: '10/5', y: 13, label: '8접시'},
   ]}
 />; */
-}
 
-{
-  /* <LineChart
+/* <LineChart
   data={[
     {x: '9/11', y: 70},
     {x: '9/15', y: 60},
@@ -55,25 +55,24 @@ interface LineChartProps {
   }}
   domainY={[0, 100]}
 />; */
-}
 
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
-  const { data, backgroundProps, textInfo, domainY, icon, textTitle, valueMedium, labelElement, textTitleMedium, unit } = props;
+  const { data, backgroundProps, tickValues, textTitleMedium, valueMedium, textInfo, icon, textTitle, textTitleToday, labelElement, valueToday, unit } = props;
   const dataScatter = data.map(item => {
     return {
       x: item.x,
       y: item.y,
+      label: item?.label
     };
   });
+  console.log("aaa", dataScatter)
 
   const textLabel = {
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 20,
   };
-  const rangeY = domainY[1] - domainY[0];
-  const pixelsPerUnit = rangeY / HEIGHT;
   const CustomScatterPoint = useCallback(
     (props: any) => {
       const isLastPoint = props.index === data.length - 1;
@@ -108,7 +107,7 @@ const LineChart = (props: LineChartProps) => {
         </View>
       )}
       <VictoryChart
-        domain={{ y: domainY }}
+        // domain={{ y: domainY }}
         height={HEIGHT}
         style={{
           parent: {
@@ -120,9 +119,8 @@ const LineChart = (props: LineChartProps) => {
         backgroundComponent={
           backgroundProps && (
             <Background
-              y={HEIGHT - backgroundProps.y * pixelsPerUnit - 75}
-              // y={backgroundProps.y * pixelsPerUnit + backgroundProps.height * pixelsPerUnit}
-              height={backgroundProps.height * pixelsPerUnit}
+              y={HEIGHT - backgroundProps.y - 85}
+              height={backgroundProps.height}
             />
           )
         }
@@ -151,6 +149,8 @@ const LineChart = (props: LineChartProps) => {
         <VictoryAxis
           crossAxis
           dependentAxis
+          tickValues={tickValues}
+          tickFormat={(t, index) => (index === 0 ? '' : t)}
           style={{
             axis: { stroke: 'transparent' },
             tickLabels: { fill: colors.gray_G05 },
@@ -165,12 +165,13 @@ const LineChart = (props: LineChartProps) => {
           style={{ data: { stroke: colors.primary } }}
           width={2}
           data={data}
-          labelComponent={<CustomLabelComponent />}
+        // labelComponent={<CustomLabelComponent />}
         />
         <VictoryScatter
           data={dataScatter}
           style={{ data: { fill: colors.primary } }}
           size={5}
+          // labelComponent={<CustomLabelComponent />}
           dataComponent={<CustomScatterPoint />}
         />
         <VictoryLabel
@@ -181,12 +182,18 @@ const LineChart = (props: LineChartProps) => {
           style={{ fill: colors.gray_G05, fontSize: 14, fontWeight: '400' }}
         />
       </VictoryChart>
-      <View>
+      {valueToday && <View>
+        <Text style={styles.textTitleMedium}>{textTitleToday}</Text>
+        <View style={styles.value}>
+          <Text style={styles.textValue}>{valueToday} {unit}</Text>
+        </View>
+      </View>}
+      {valueMedium && <View style={{ marginTop: 20 }}>
         <Text style={styles.textTitleMedium}>{textTitleMedium}</Text>
         <View style={styles.value}>
           <Text style={styles.textValue}>{valueMedium} {unit}</Text>
         </View>
-      </View>
+      </View>}
     </View>
   );
 };

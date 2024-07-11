@@ -13,7 +13,7 @@ import { chartService } from '../../../../services/charts';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import { dataChartWeightResponse, valueWeight } from '../../../../constant/type/chart';
-import { getValueMaxChartWeight, transformDataToChartWeight } from '../../../../util';
+import { transformDataToChartWeight } from '../../../../util';
 
 const WeightChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -25,11 +25,11 @@ const WeightChart = ({ route }: any) => {
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT, { isEditable: isEditable });
     };
-
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueWeight[]>([]);
     const [mediumData, setMediumData] = useState<number>(0);
+    const [dataToday, setDataToday] = useState<number>(0);
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
@@ -39,6 +39,7 @@ const WeightChart = ({ route }: any) => {
                     setIsLoading(false);
                     setDataChart(resData.result.weightResponseList);
                     setMediumData(resData.result.avgValue);
+                    setDataToday(resData.result.valueToday)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -85,16 +86,19 @@ const WeightChart = ({ route }: any) => {
                             <LineChart
                                 icon={IMAGE.RECORD_DATA.CHART}
                                 textTitleMedium={t('evaluate.mediumWeight')}
-                                unit='kg'
                                 valueMedium={mediumData.toString()}
+                                unit='kg'
                                 labelElement="%"
+                                textTitleToday={t('evaluate.weightToday')}
+                                valueToday={dataToday.toString()}
                                 textTitle={t("evaluate.chartWeight")}
                                 data={transformDataToChartWeight(dataChart, "kg")}
-                                domainY={[0, getValueMaxChartWeight(dataChart, 20)]}
+                                tickValues={[0, 20, 40, 60, 80, 100]}
                                 textInfo={t("evaluate.normalWeightRange")}
+                                // chua xets theo figma
                                 backgroundProps={{
                                     color: colors.primary,
-                                    height: 20,
+                                    height: 40,
                                     y: 70,
                                 }}
                             />

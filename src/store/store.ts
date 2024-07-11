@@ -12,11 +12,13 @@ import {
 } from 'redux-persist';
 import userReducer from './user.slice';
 import medicationReducer from './medication.slice';
+import screenReducer from './screen.slice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const reducers = combineReducers({
   user: userReducer,
   medication: medicationReducer,
+  screen: screenReducer
 });
 
 const persistConfig = {

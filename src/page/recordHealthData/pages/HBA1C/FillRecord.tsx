@@ -34,11 +34,25 @@ const FillRecord = ({ route }: any) => {
     const [messageError, setMessageError] = useState<string>("")
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
-    console.log("man 2", isEdit)
+    const [glycemicError, setGlycemicError] = useState<string>("");
+    const [choresterolError, setChoresterolError] = useState<string>("");
+    const [glucozerError, setGlucozerError] = useState<string>("");
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
+        if (Number(glycemic) > 10) {
+            setGlycemicError("Invalid value");
+            return;
+        }
+        if (Number(choresterol) > 300) {
+            setChoresterolError("Invalid value");
+            return;
+        }
+        if (Number(glucozer) > 200) {
+            setGlucozerError("Invalid value");
+            return;
+        }
         setIsLoading(true)
         const dataSubmit = {
             timeMeasure: selectedItem.value,
@@ -69,6 +83,7 @@ const FillRecord = ({ route }: any) => {
         }
     };
     const handleSetGlycemic = (value: any) => {
+        setGlycemicError("")
         if (isCheckedGlycemic) {
             setShowModal(true)
             return
@@ -80,6 +95,7 @@ const FillRecord = ({ route }: any) => {
         }
     };
     const handleSetChoresterol = (value: any) => {
+        setChoresterolError("")
         if (isCheckedChoresterol) {
             setShowModal(true)
             return
@@ -91,6 +107,7 @@ const FillRecord = ({ route }: any) => {
         }
     };
     const handleSetGlucozer = (value: any) => {
+        setGlucozerError("")
         if (isCheckedGlucozer) {
             setShowModal(true)
             return
@@ -156,6 +173,7 @@ const FillRecord = ({ route }: any) => {
                                         value={glycemic}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetGlycemic}
+                                        error={glycemicError}
                                     />
                                 </View>
                             </View>
@@ -181,6 +199,7 @@ const FillRecord = ({ route }: any) => {
                                         value={choresterol}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetChoresterol}
+                                        error={choresterolError}
                                     />
                                 </View>
                             </View>
@@ -207,6 +226,7 @@ const FillRecord = ({ route }: any) => {
                                             value={glucozer}
                                             keyboardType={"numeric"}
                                             handleSetValue={handleSetGlucozer}
+                                            error={glucozerError}
                                         />
                                     </View>
 
@@ -223,8 +243,8 @@ const FillRecord = ({ route }: any) => {
                             </View>
                         </View>
                     </View>
+                    {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
                 </View>
-                {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable

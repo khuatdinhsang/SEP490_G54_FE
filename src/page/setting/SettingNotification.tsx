@@ -13,6 +13,7 @@ import { notificationService } from '../../services/notification';
 import LoadingScreen from '../../component/loading';
 import { notificationsResponse } from '../../constant/type/notification';
 import { Notification } from '../../constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingNotification = () => {
   const { t, i18n } = useTranslation();
@@ -28,32 +29,8 @@ const SettingNotification = () => {
   const [notificationQA, setNotificationQA] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("")
   const [arrayNotificationSubmit, setArrayNotificationSubmit] = useState<notificationsResponse[]>([])
-  const handleClickDialog = async (): Promise<void> => {
-    setIsLoading(true)
-    try {
-      const data = {
-        notificationStatusList: arrayNotificationSubmit,
-        deviceToken: "abc"
-      }
-      const res = await notificationService.putNotification(data);
-      if (res.code === 200) {
-        setIsLoading(false)
-        setMessageError("");
-        setArrayNotificationSubmit([])
-        setIsShowDialog(false)
-      } else {
-        setMessageError("Failed to fetch questions.");
-      }
-    } catch (error: any) {
-      if (error?.response?.status === 400 || error?.response?.status === 401) {
-        setMessageError(error.response.data.message);
-      } else {
-        setMessageError("Unexpected error occurred.");
-      }
-    }
-    finally {
-      setIsLoading(false)
-    }
+  const handleClickDialog = () => {
+    setIsShowDialog(false)
   };
   useEffect(() => {
     const typeNotificationList = [];
@@ -79,7 +56,34 @@ const SettingNotification = () => {
     notificationUseApp,
     notificationQA
   ]);
-  const handleOnPressButton = () => {
+  const handleOnPressButton = async (): Promise<void> => {
+    setIsLoading(true)
+    try {
+      const deviceToken = await AsyncStorage.getItem('deviceToken');
+      console.log("58", deviceToken)
+      const data = {
+        notificationStatusList: arrayNotificationSubmit,
+        deviceToken: deviceToken ?? ""
+      }
+      const res = await notificationService.putNotification(data);
+      if (res.code === 200) {
+        setIsLoading(false)
+        setMessageError("");
+        setArrayNotificationSubmit([])
+        setIsShowDialog(true)
+      } else {
+        setMessageError("Failed to fetch questions.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400 || error?.response?.status === 401) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    }
+    finally {
+      setIsLoading(false)
+    }
     setIsShowDialog(true);
   };
   const updateNotifications = (notifications: notificationsResponse[]) => {

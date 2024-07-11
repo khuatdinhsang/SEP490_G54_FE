@@ -21,6 +21,8 @@ import { planService } from '../../services/plan';
 import { mentalData } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
 import { getMondayOfCurrentWeek } from '../../util';
+import { useDispatch } from 'react-redux';
+import { setScreen } from '../../store/screen.slice';
 
 
 const PositiveMind: React.FC = () => {
@@ -34,6 +36,7 @@ const PositiveMind: React.FC = () => {
     const [warning, setWarning] = useState(false);
     const [data, setData] = useState<mentalData[]>([]);
     const [selectedItems, setSelectedItems] = useState<mentalData[]>([]);
+    const dispatch = useDispatch();
     useEffect(() => {
         const fetchListMental = async () => {
             setIsLoading(true)
@@ -73,6 +76,7 @@ const PositiveMind: React.FC = () => {
             try {
                 const res = await planService.postListMental(data)
                 if (res.code === 200) {
+                    dispatch(setScreen(2));
                     setMessageError("");
                     setIsLoading(false)
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)

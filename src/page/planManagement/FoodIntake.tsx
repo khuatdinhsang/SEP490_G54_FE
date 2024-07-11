@@ -15,6 +15,8 @@ import InputNumber from '../../component/inputNumber';
 import { planService } from '../../services/plan';
 import LoadingScreen from '../../component/loading';
 import { getMondayOfCurrentWeek } from '../../util';
+import { setScreen } from '../../store/screen.slice';
+import { useDispatch } from 'react-redux';
 
 const FoodIntake = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -22,6 +24,7 @@ const FoodIntake = () => {
     const [sizeDisk, setSizeDisk] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
     const handleSetSizeDisk = (value: string) => {
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
@@ -42,6 +45,7 @@ const FoodIntake = () => {
                 }
                 const res = await planService.postDiet(data)
                 if (res.code === 200) {
+                    dispatch(setScreen(4));
                     setIsLoading(false)
                     setMessageError("");
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);

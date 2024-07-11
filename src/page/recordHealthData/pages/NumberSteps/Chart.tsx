@@ -10,7 +10,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, getValueMaxChartStep, transformDataToChartStep } from '../../../../util';
+import { getMondayOfCurrentWeek, transformDataToChartStep } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import { valueSteps, valueWeight } from '../../../../constant/type/chart';
@@ -73,7 +73,7 @@ const NumberStepsChart = () => {
                                 labelElement="%"
                                 textTitle={t("evaluate.chartStep")}
                                 data={transformDataToChartStep(dataChart, "%")}
-                                domainY={[0, getValueMaxChartStep(dataChart)]}
+                                tickValues={[25, 50, 75, 100]}
                             />
                         </View>
                         :

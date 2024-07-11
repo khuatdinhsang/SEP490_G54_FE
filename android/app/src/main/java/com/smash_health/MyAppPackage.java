@@ -5,11 +5,13 @@ import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.smash_health.counter_step_module.CounterStepModule;
+import com.smash_health.modulenative.NotificationModule;
 import com.smash_health.timer_module.ScheduleAlarmModule;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 
 public class MyAppPackage implements ReactPackage {
     @Override
@@ -24,7 +26,7 @@ public class MyAppPackage implements ReactPackage {
 
         modules.add(new CounterStepModule(reactContext));
         modules.add(new ScheduleAlarmModule(reactContext));
-
+        modules.add(new NotificationModule(reactContext));
         return modules;
     }
 }

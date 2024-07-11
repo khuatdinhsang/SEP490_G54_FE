@@ -31,6 +31,10 @@ const InputNumber = (props: InputComponentProps) => {
                 onBlur={() => setIsFocused(false)}
                 editable={isEditable}
             />
+            {error && <View style={{ position: 'absolute', bottom: -20 }}>
+                <Text style={styles.textError}>{error}</Text>
+            </View>}
+
         </View>
     )
 }
@@ -66,5 +70,10 @@ const styles = StyleSheet.create({
     textFocused: {
         borderColor: colors.primary,
     },
+    textError: {
+        fontSize: 16,
+        fontWeight: "400",
+        color: colors.red,
+    }
 })
 export default InputNumber

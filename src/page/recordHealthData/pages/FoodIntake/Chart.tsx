@@ -10,7 +10,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
 import { chartService } from '../../../../services/charts';
-import { getMondayOfCurrentWeek, getValueMaxChartStep, getValueMaxChartWeight, transformDataToChartStep, transformDataToChartWeight } from '../../../../util';
+import { getMondayOfCurrentWeek, transformDataToChartStep, transformDataToChartWeight } from '../../../../util';
 import LineChart from '../../../../component/line-chart';
 import { valueWeight } from '../../../../constant/type/chart';
 import LoadingScreen from '../../../../component/loading';
@@ -88,7 +88,7 @@ const FoodInTakeChart = ({ route }: any) => {
                                 labelElement={t("planManagement.text.disk")}
                                 textTitle={t("evaluate.chartDiet")}
                                 data={transformDataToChartWeight(dataChart, t("planManagement.text.disk"))}
-                                domainY={[0, getValueMaxChartWeight(dataChart, 5)]}
+                                tickValues={[0, 5, 15, 20]}
                             />
                         </View>
                         :

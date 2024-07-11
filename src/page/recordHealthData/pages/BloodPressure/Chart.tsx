@@ -15,7 +15,7 @@ import { chartService } from '../../../../services/charts';
 import LineChart from '../../../../component/line-chart';
 import { valueBloodPressure } from '../../../../constant/type/chart';
 import TwoLineChart from '../../../../component/twoLine-chart';
-export interface dataTypes {
+interface dataTypes {
     x: string,
     y: number,
     label?: string
@@ -85,6 +85,7 @@ const BloodPressureChart = ({ route }: any) => {
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: isEditable })
     }
+    console.log("88", dataDiastoleChart)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -140,31 +141,31 @@ const BloodPressureChart = ({ route }: any) => {
                             /> */}
                             <LineChart
                                 icon={IMAGE.RECORD_DATA.THERMOMETER}
-                                textTitleMedium={t("evaluate.systoleToday")}
+                                textTitleToday={t("evaluate.systoleToday")}
                                 unit="mg/DL"
-                                valueMedium={systoleToday?.toString()}
+                                valueToday={systoleToday?.toString()}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartBlood")}
                                 data={dataSystoleChart}
-                                domainY={[0, 200]}
                                 textInfo={t("evaluate.maxBlood")}
+                                tickValues={[0, 70, 100, 140, 200]}
                                 backgroundProps={{
                                     color: colors.primary,
-                                    height: 40, //100 -140
-                                    y: 100,
+                                    height: 32, //100 -140
+                                    y: 72,
                                 }}
                             />
                             <View style={{ marginTop: 20 }}>
                                 <LineChart
                                     icon={IMAGE.RECORD_DATA.THERMOMETER}
-                                    textTitleMedium={t("evaluate.diastoleToday")}
+                                    textTitleToday={t("evaluate.diastoleToday")}
                                     textInfo={t("evaluate.minBlood")}
                                     unit="mg/DL"
-                                    valueMedium={diastoleToday?.toString()}
+                                    valueToday={diastoleToday?.toString()}
                                     labelElement="%"
                                     textTitle={t("evaluate.chartBlood")}
                                     data={dataDiastoleChart}
-                                    domainY={[0, 200]}
+                                    tickValues={[0, 60, 90, 150]}
                                     backgroundProps={{
                                         color: colors.primary,
                                         height: 33,//60-90

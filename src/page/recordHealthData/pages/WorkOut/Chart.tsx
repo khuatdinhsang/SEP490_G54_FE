@@ -13,21 +13,20 @@ import { chartService } from '../../../../services/charts';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import { valueActivity, valueSteps } from '../../../../constant/type/chart';
-import { getValueMaxChartActivity, transformDataToChartActivity } from '../../../../util';
+import { convertMinutesToHours, transformDataToChartActivity } from '../../../../util';
 
 const WorkOutChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [checkIsExits, setCheckIsExits] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueActivity[]>([])
     const [dataToday, setDataToday] = useState<number>(0)
-    const [typeToday, setTypeToday] = useState<string>("")
     const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
+    const [typeToday, setTypeToday] = useState<string>("")
     const navigateNumericalRecord = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD, { isEditable: isEditable });
     }
@@ -36,7 +35,6 @@ const WorkOutChart = ({ route }: any) => {
             setIsLoading(true);
             try {
                 const resData = await chartService.getDataActivity();
-                console.log("22", resData)
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setDataChart(resData.result.activityResponseList)
@@ -88,11 +86,11 @@ const WorkOutChart = ({ route }: any) => {
                                 icon={IMAGE.PLAN_MANAGEMENT.HUMAN}
                                 textTitleMedium={t("evaluate.resultActivityToday")}
                                 unit={t("common.text.minutes")}
-                                valueMedium={dataToday.toString()}
+                                valueMedium={` ${typeToday}/${convertMinutesToHours(dataToday).toString()}`}
                                 labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
-                                data={transformDataToChartActivity(dataChart, typeToday)}
-                                domainY={[0, getValueMaxChartActivity(dataChart, 50)]}
+                                data={transformDataToChartActivity(dataChart)}
+                                tickValues={[0, 0.5, 1, 1.5, 2]}
                             />
                         </View>
                         :

@@ -340,6 +340,20 @@
     "mediumChart": "합산 평가 그래프",
     "relatedDiabetes": "당뇨관련 수치",
     "diastoleToday": "오늘의 수축기 혈압 지수",
-    "systoleToday": "오늘의 확장기 혈압 지수"
+    "systoleToday": "오늘의 확장기 혈압 지수",
+    "chartHBA1C": "당화혈색소 그래프",
+    "safeHBA1C": "당화혈색소 정상 범위",
+    "valueHBA1CToday": "오늘 나의 당화혈색소",
+    "chartCholesterol": " 콜레스테롤 그래프",
+    "safeCholesterol": "콜레스테롤 정상 범위",
+    "valueCholesterolToday": "오늘 내 콜레스테롤",
+    "chartBloodSugar": "혈당 그래프",
+    "safeBeforeMeal": "식전조절 목표 범위",
+    "safeAfterMeal": "식후조절 목표 범위",
+    "valueBloodSugarToday": "오늘 나의 혈당",
+    "morning": "아침",
+    "lunch": "점심",
+    "dinner": "저녁",
+    "weightToday": "오늘 몸무게"
   }
 }

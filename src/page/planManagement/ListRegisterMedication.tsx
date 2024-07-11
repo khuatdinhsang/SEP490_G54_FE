@@ -16,12 +16,14 @@ import { HeightDevice } from '../../util/Dimenssion';
 import DialogSingleComponent from '../../component/dialog-single';
 import { listRegisterMedicineData } from '../../constant/type/medical';
 import { planService } from '../../services/plan';
-import { convertFromUTC, getMondayOfCurrentWeek } from '../../util';
+import { convertFromUTC, generateRandomId, getMondayOfCurrentWeek, getWeekTimeForCurrentWeek } from '../../util';
 import LoadingScreen from '../../component/loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { deleteRegisterMedication, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
 import { offsetTime } from '../../constant';
+import TimerModule from '../../native-module/timer.module';
+import { setScreen } from '../../store/screen.slice';
 const ListRegisterMedication = ({ route }: any) => {
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -34,17 +36,30 @@ const ListRegisterMedication = ({ route }: any) => {
     const dispatch = useDispatch()
     useEffect(() => {
         if (route.params?.listRegisterMedication) {
-            dispatch(setListRegisterMedication(route.params?.listRegisterMedication));
+            dispatch(setListRegisterMedication(getWeekTimeForCurrentWeek(route.params?.listRegisterMedication)));
             dispatch(setListRegisterMedicationInterface(route.params?.listRegisterMedication));
         }
     }, [])
-    console.log("listRegisterMedicationSubmit", listRegisterMedicationSubmit)
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
         try {
+            console.log("45", listRegisterMedicationInterface)
             const res = await planService.postMedicine(listRegisterMedicationSubmit)
             if (res.code === 200) {
+                dispatch(setScreen(5));
                 setIsLoading(false)
+                listRegisterMedicationInterface.forEach(registerMedication => {
+                    return (
+                        TimerModule.createSchedule({
+                            id: generateRandomId(10),
+                            title: "bạn có lịch uống thuốc",
+                            description: registerMedication.medicineTitle,
+                            hour: Number(registerMedication.time.split(":")[0]),
+                            minute: Number(registerMedication.time.split(":")[1]),
+                            daysOfWeek: registerMedication.indexDay
+                        })
+                    )
+                })
                 navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
             } else {
                 setMessageError("Unexpected error occurred.");

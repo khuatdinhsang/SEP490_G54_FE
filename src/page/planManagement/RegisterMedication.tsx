@@ -12,7 +12,7 @@ import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
 import LoadingScreen from '../../component/loading';
 import { planService } from '../../services/plan';
-import { getPreviousMonday } from '../../util';
+import { getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
@@ -39,6 +39,7 @@ const RegisterMedication = () => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
+                console.log("42", getPreviousMonday())
                 const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
                 console.log("43", res)
                 if (res.code === 200) {

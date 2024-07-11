@@ -24,6 +24,7 @@ const FoodIntakeRecord = ({ route }: any) => {
     const [messageError, setMessageError] = useState<string>("")
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
+    const [errorBoldOfRice, setErrorBoldOfRice] = useState<string>("")
     const handleViewChart = () => {
         navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART, { isEditable: isEdit });
     };
@@ -58,6 +59,10 @@ const FoodIntakeRecord = ({ route }: any) => {
         getBoldOfRice()
     }, [])
     const nextPage = async (): Promise<void> => {
+        if (Number(numberBoldOfRice) > 20) {
+            setErrorBoldOfRice("Invalid value")
+            return
+        }
         const numericRegex = /^[0-9]*$/;
         if (numberBoldOfRice) {
             if (numericRegex.test(numberBoldOfRice)) {
@@ -194,6 +199,7 @@ const FoodIntakeRecord = ({ route }: any) => {
                                             onChangeText={handleChangeBoldOfRice}
                                             keyboardType="numeric"
                                             styleInput={{ textAlign: "center" }}
+                                            textError={errorBoldOfRice}
                                         />
                                     </View>
                                     <Text style={[styles.text, { color: colors.gray_G09 }]}> {t('planManagement.text.disk')}</Text>

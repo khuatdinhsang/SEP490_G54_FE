@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View, StyleSheet, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { paddingHorizontalScreen } from '../../styles/padding';
@@ -11,13 +11,42 @@ import { useTranslation } from 'react-i18next';
 import colors from '../../constant/color';
 import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 const PlanManagement = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { t, i18n } = useTranslation();
+  const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
+  console.log("21", currentScreen)
   const goBackPreviousPage = () => {
     navigation.goBack();
   }
+  const navigateScreen = (screen: number): void => {
+    switch (screen) {
+      case 2:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
+        break;
+      case 3:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
+        break;
+      case 4:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+        break;
+      case 5:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
+        break;
+      case 6:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+        break;
+      default:
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN);
+        break;
+    }
+  }
+  useEffect(() => {
+    navigateScreen(currentScreen);
+  }, [])
   return (
     <SafeAreaView>
       <View style={styles.container}>
