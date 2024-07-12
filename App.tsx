@@ -38,6 +38,14 @@ function App(): React.JSX.Element {
   // <Text>{t("authentication.login")}</Text>
   // <Button onPress={handleChangeText} title="change lang" />
   useEffect(() => {
+    // TimerModule.createSchedule({
+    //   id: generateRandomId(10),
+    //   title: "bạn có lịch uống thuốc",
+    //   description: "aaaa",
+    //   hour: 20,
+    //   minute: 26,
+    //   daysOfWeek: [5]
+    // })
     const initialize = async () => {
       await requestUserPermission();
       await getToken();

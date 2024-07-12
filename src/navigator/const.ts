@@ -52,7 +52,6 @@ import MonthlyEvaluate from '../page/evaluate/MonthlyEvaluate';
 import SAT_SF_C from '../page/evaluate/SAT_SF_C';
 import SAT_SF_I from '../page/evaluate/SAT_SF_I';
 import SAT_SF_P from '../page/evaluate/SAT_SF_P';
-import BEHAVIORAL from '../page/evaluate/BEHAVIORAL';
 import SuccessSurvey from '../page/evaluate/SuccessSurvey';
 import MainWeight from '../page/recordHealthData/pages/Weight/main';
 import MainWorkOut from '../page/recordHealthData/pages/WorkOut/main';
@@ -61,6 +60,10 @@ import MainFoodIntake from '../page/recordHealthData/pages/FoodIntake/main';
 import MainMedication from '../page/recordHealthData/pages/Medication/main';
 import MainBloodPressure from '../page/recordHealthData/pages/BloodPressure/main';
 import MainHBA1C from '../page/recordHealthData/pages/HBA1C/main';
+import SF_MENTAL from '../page/evaluate/SF_MENTAL';
+import SF_ACTIVITY from '../page/evaluate/SF_ACTIVITY';
+import SF_MEDICATION from '../page/evaluate/SF_MEDICATION';
+import SF_DIET from '../page/evaluate/SF_DIET';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -143,7 +146,10 @@ export const SCREENS_NAME = {
         SAT_SF_C: 'Survey SAT_SF_C',
         SAT_SF_P: 'Survey SAT_SF_P',
         SAT_SF_I: 'Survey SAT_SF_I',
-        BEHAVIORAL_MODEL: 'Behavioral Model',
+        SF_MENTAL: 'Survey SF_MENTAL',
+        SF_ACTIVITY: 'Survey SF_ACTIVITY',
+        SF_DIET: 'Survey SF_DIET',
+        SF_MEDICATION: 'Survey SF_MEDICATION',
         SUCCESS_SURVEY: 'Success Survey'
     }
 };
@@ -414,8 +420,20 @@ const SCREENS_STACK_EVALUATE = [
         component: SAT_SF_P,
     },
     {
-        name: SCREENS_NAME.EVALUATE.BEHAVIORAL_MODEL,
-        component: BEHAVIORAL,
+        name: SCREENS_NAME.EVALUATE.SF_MENTAL,
+        component: SF_MENTAL,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SF_ACTIVITY,
+        component: SF_ACTIVITY,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SF_DIET,
+        component: SF_DIET,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SF_MEDICATION,
+        component: SF_MEDICATION,
     },
     {
         name: SCREENS_NAME.EVALUATE.SUCCESS_SURVEY,
