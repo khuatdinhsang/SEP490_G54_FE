@@ -3,12 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import colors from '../../../constant/color'
 import { flexCenter, flexRowSpaceBetween } from '../../../styles/flex'
-interface questionType {
-    id: number,
-    title: string
-}
+import { questionRes } from '../../../constant/type/question'
 interface questionProps {
-    question: questionType,
+    question: questionRes,
     selectedAnswer: number | null;
     onSelectAnswer: (questionId: number, answerIndex: number) => void;
 }
@@ -23,8 +20,8 @@ const Question = (props: questionProps) => {
     ];
     return (
         <View>
-            <Text style={[styles.text, { marginTop: 10 }]}>{question.id}.</Text>
-            <Text style={styles.text}>{question.title}</Text>
+            <Text style={[styles.text, { marginTop: 10 }]}>{question.questionNumber}.</Text>
+            <Text style={styles.text}>{question.question}</Text>
             <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
                 {answers.map((answer, index) => (
                     <Pressable
@@ -32,14 +29,14 @@ const Question = (props: questionProps) => {
                         style={[
                             flexCenter,
                             styles.answer,
-                            { backgroundColor: selectedAnswer === index ? colors.orange_01 : colors.gray_G01 },
+                            { backgroundColor: selectedAnswer === index + 1 ? colors.orange_01 : colors.gray_G01 },
                         ]}
-                        onPress={() => onSelectAnswer(question.id, index)}
+                        onPress={() => onSelectAnswer(question.questionNumber, index + 1)}
                     >
                         <Text
                             style={[
                                 styles.textAnswer,
-                                { color: selectedAnswer === index ? colors.orange_04 : colors.gray_G06 },
+                                { color: selectedAnswer === index + 1 ? colors.orange_04 : colors.gray_G06 },
                             ]}
                         >
                             {answer}

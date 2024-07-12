@@ -91,6 +91,20 @@ const Home = () => {
         break;
     }
   }, [guide]);
+  useEffect(() => {
+    const checkFirstLogin = async () => {
+      const isNewUser = await AsyncStorage.getItem('isNewUser');
+      if (isNewUser) {
+        setGuide(GuideStep.GUIDE_MODAL);
+        await AsyncStorage.removeItem('isNewUser');
+      } else {
+        setOverlay(false);
+        setGuide(GuideStep.GUIDE_SKIP);
+      }
+    };
+    checkFirstLogin();
+  }, []);
+
 
   useEffect(() => {
     const permissionRecognition = async () => {

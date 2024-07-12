@@ -10,8 +10,6 @@ export const useResetScreenAtStartOfWeek = () => {
         const dayOfWeek = now.getDay();
         const hours = now.getHours();
         const minutes = now.getMinutes();
-        console.log("13", hours)
-        console.log("14", minutes)
         if (dayOfWeek === 1 && hours === 0 && minutes === 0) {
             dispatch(setScreen(1));
         }

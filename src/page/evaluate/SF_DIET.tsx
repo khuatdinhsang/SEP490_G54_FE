@@ -16,11 +16,11 @@ interface questionType {
     id: number,
     title: string
 }
-const SAT_SF_I = ({ route }: any) => {
+const SF_DIET = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const time = route?.params?.time
-    const dataSF_P = route?.params?.data
+    const dataSF_ACTIVITY = route?.params?.data
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -34,7 +34,7 @@ const SAT_SF_I = ({ route }: any) => {
         const getListQuestion = async () => {
             setIsLoading(true)
             try {
-                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SAT_SF_I)
+                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SF_DIET)
                 if (res.code === 200) {
                     setErrorMessage("");
                     setIsLoading(false)
@@ -69,7 +69,7 @@ const SAT_SF_I = ({ route }: any) => {
                 answer: answers[item.questionNumber]
             }
         })
-        navigation.navigate(SCREENS_NAME.EVALUATE.SF_MENTAL, { time, data: [...dataSF_P, ...data] })
+        navigation.navigate(SCREENS_NAME.EVALUATE.SF_MEDICATION, { time, data: [...dataSF_ACTIVITY, ...data] })
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -85,7 +85,8 @@ const SAT_SF_I = ({ route }: any) => {
                 <View style={styles.content}>
                     <View style={styles.introduce}>
                         <Text style={[styles.text, { color: colors.orange_04 }]}>{type}</Text>
-                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 , 삶의 목표와 구체적인 계획을 세울 때 사용할 수 있는 실행전략과 관련된 평가 입니다. 각 문항들을 읽고, 귀하가 지난 한달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.</Text>
+                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>‘효과적인 건강 행동 패턴(Highly Effective Health Behavior Pattern)’이란 건강 습관을 만들기 위해서 6개월 이상 반복해야 하는 건강 행동을 말합니다.</Text>
+                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>다음은 ‘긍정적 마음 가지기'에 해당하는 건강 행동 패턴 문항입니다.  다음 문항들을 읽고 지난 한달간의 본인의 행동에 가장 알맞는 항목에  O 표시하세요.</Text>
                     </View>
                     {listQuestions && listQuestions.map((item) => {
                         return (
@@ -166,4 +167,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default SAT_SF_I
+export default SF_DIET

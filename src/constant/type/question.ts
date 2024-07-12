@@ -1,3 +1,5 @@
+import { TypeQuestion } from ".."
+
 export interface questionData {
     typeUserQuestion: string,
     title: string,
@@ -21,3 +23,23 @@ export interface detailQuestion {
     code: number,
     result: listQuestionDataResponse
 }
+export interface listMonthNumberRes {
+    monthNumber: number,
+    isAnswered: false
+}
+export interface listQuestionRes {
+    type: TypeQuestion,
+    formMonthlyQuestionDTOList: questionRes[]
+}
+export interface questionRes {
+    questionNumber: number,
+    question: string
+}
+export interface postQuestionData {
+    monthNumber: number,
+    monthlyRecordType: TypeQuestion,
+    questionNumber: number,
+    question: string,
+    answer: number
+
+}  

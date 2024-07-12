@@ -7,15 +7,16 @@ import { IMAGE } from '../../../constant/image'
 import { ParamListBase, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { SCREENS_NAME } from '../../../navigator/const'
+import { listMonthNumberRes } from '../../../constant/type/question'
 interface MonthLyComponentProps {
-    time: number
+    data: listMonthNumberRes
 }
 const MonthComponent = (props: MonthLyComponentProps) => {
-    const { time } = props
+    const { data } = props
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const detailEvaluate = () => {
-        navigation.navigate(SCREENS_NAME.EVALUATE.DETAIL_WEEKLY, { time })
+        navigation.navigate(SCREENS_NAME.EVALUATE.DETAIL_WEEKLY, { time: data.monthNumber })
     }
     return (
         <Pressable
@@ -24,16 +25,16 @@ const MonthComponent = (props: MonthLyComponentProps) => {
         >
             <View style={flexRow}>
                 <Image source={IMAGE.EVALUATE.NOTE} width={36} height={36} />
-                <Text style={styles.textTime}>{time}월 실천평가</Text>
+                <Text style={styles.textTime}>{data.monthNumber}월 실천평가</Text>
             </View>
             <View style={flexRow}>
                 <Pressable
-                    onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_C, { time })}
-                    style={[styles.button, { backgroundColor: true ? colors.orange_04 : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: true ? colors.white : colors.gray_G07 }]}>{t("evaluate.answerSurvey")}</Text>
+                    onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_C, { time: data.monthNumber })}
+                    style={[styles.button, { backgroundColor: colors.orange_04 }]}>
+                    <Text style={[styles.textButton, { color: colors.white }]}>{data.isAnswered ? t("evaluate.viewResultSurvey") : t("evaluate.answerSurvey")}</Text>
                 </Pressable>
-                <Pressable style={[styles.button, { marginLeft: 10, backgroundColor: false ? colors.orange_04 : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: false ? colors.white : colors.gray_G07 }]}>{t("evaluate.viewResult")}</Text>
+                <Pressable style={[styles.button, { marginLeft: 10, backgroundColor: data.isAnswered ? colors.orange_04 : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: data.isAnswered ? colors.white : colors.gray_G07 }]}>{t("evaluate.viewResult")}</Text>
                 </Pressable>
             </View>
         </Pressable>
