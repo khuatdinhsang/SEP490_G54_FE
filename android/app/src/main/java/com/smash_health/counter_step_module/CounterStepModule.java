@@ -24,10 +24,8 @@ public class CounterStepModule extends ReactContextBaseJavaModule {
         Context context = this.getReactApplicationContext();
         Intent serviceIntent = new Intent(context, CounterStepService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.d("[StartService]", "O");
             context.startForegroundService(serviceIntent);
         } else {
-            Log.d("[StartService]", "NOT O");
             context.startService(serviceIntent);
         }
     }
@@ -35,8 +33,12 @@ public class CounterStepModule extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public int stepsSinceLastReboot() {
         int val = (int) CounterStepBase.getInstance().getStepsSinceLastReboot();
-//        Log.d("[GetStepsSinceLastReboot]:", "" +val);
         return val;
     }
 
+    @ReactMethod
+    public void setUserIdCounterStep(Integer id) {
+        CounterStepBase.getInstance().initSharedPreferences(this.getReactApplicationContext());
+        CounterStepBase.getInstance().setUserIdCounterStep(id);
+    }
 }

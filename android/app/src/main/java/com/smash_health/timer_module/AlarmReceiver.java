@@ -6,11 +6,14 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 import com.smash_health.R;
+import com.smash_health.counter_step_module.CounterStepBase;
 
 import java.util.Date;
 
@@ -30,13 +33,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
-        String id = intent.getStringExtra(AlarmItem.AlarmIDKey);
-        String title = intent.getStringExtra("title");
-        String description = intent.getStringExtra("description");
+        String action = intent.getAction();
+        if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
 
-        this.createNotificationChannel(context);
-        this.createNotificationMessage(context, title, description);
+        }
+        else {
+            String id = intent.getStringExtra(AlarmItem.AlarmIDKey);
+            String title = intent.getStringExtra("title");
+            String description = intent.getStringExtra("description");
 
+            this.createNotificationChannel(context);
+            this.createNotificationMessage(context, title, description);
+        }
     }
 
     private void createNotificationChannel(Context context) {
