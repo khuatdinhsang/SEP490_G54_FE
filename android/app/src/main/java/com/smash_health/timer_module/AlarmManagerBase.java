@@ -15,7 +15,7 @@ public class AlarmManagerBase {
         intent.putExtra(AlarmItem.AlarmIDKey, id);
         intent.putExtra("title", title);
         intent.putExtra("description", description);
-        return PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public static void createScheduleAlarm(Context context, AlarmManager alarmManager, AlarmItem alarmItem) {

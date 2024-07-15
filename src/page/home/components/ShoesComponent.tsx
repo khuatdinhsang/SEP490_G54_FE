@@ -21,12 +21,11 @@ const ShoesComponent = ({progressBar, guide}: ShoesProps) => {
 
   // Interval to update the step count every 5 seconds
   useEffect(() => {
-    console.log('yes');
-
     const interval = setInterval(async () => {
       const counterServer = await counterStepService.getCounterStep();
       if (counterServer?.code === 200) {
         const counterClient = CounterStepModule.stepsSinceLastReboot();
+        // console.log('[CounterStep]', counterServer?.result, counterClient);
         setCounterStep(counterServer?.result + counterClient);
       }
     }, 5000);

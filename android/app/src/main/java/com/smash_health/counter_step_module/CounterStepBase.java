@@ -162,7 +162,7 @@ public class CounterStepBase {
         String id = "create-schedule-job";
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, CounterStepReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE);
 
         // Đặt alarm mỗi 1 phút (60 * 1000 milliseconds)
         long intervalMillis = 60 * 1000;
@@ -182,6 +182,11 @@ public class CounterStepBase {
     }
 
     public void setUserIdCounterStep(Integer id) {
+        long curId = this.getUseridCounterStep();
+        if(curId != id) {
+            // Set counter step = 0
+            this.resetSumCounterStep();
+        }
         SharedPreferences.Editor editor = userId.edit();
         editor.putLong(userIdKey, id.longValue());
         editor.commit();
