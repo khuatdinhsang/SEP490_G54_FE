@@ -38,6 +38,8 @@ import PermissionRequest from '../../util/Permission';
 import TimerModule, { TimerItem } from '../../native-module/timer.module';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setScreen } from '../../store/screen.slice';
+import { useResetScreenAtStartOfWeek } from '../../hooks/resetScreen';
+import { counterStepService } from '../../services/counterstep';
 import { SCREENS_NAME } from '../../navigator/const';
 
 const widthSidebar = WidthDevice - 20;
@@ -57,7 +59,6 @@ const Home = () => {
       transform: [{ translateX: transformX.value }],
     };
   }, []);
-
 
   useEffect(() => {
     switch (guide) {
@@ -104,16 +105,11 @@ const Home = () => {
     checkFirstLogin();
   }, []);
 
-
   useEffect(() => {
     const permissionRecognition = async () => {
       try {
         await PermissionRequest();
         CounterStepModule.init();
-        // const accessToken = await AsyncStorage.getItem('accessToken');
-        // const refreshToken = await AsyncStorage.getItem('refreshToken');
-        // console.log("a1", accessToken)
-        // console.log("r1", refreshToken)
       } catch (err) {
         console.warn(err);
       }

@@ -96,5 +96,4 @@ public class NotificationModule extends ReactContextBaseJavaModule {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
 }
