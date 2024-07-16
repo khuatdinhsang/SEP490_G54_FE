@@ -33,7 +33,9 @@ export interface listQuestionRes {
 }
 export interface questionRes {
     questionNumber: number,
-    question: string
+    question: string,
+    type?: TypeQuestion,
+    answer?: number
 }
 export interface postQuestionData {
     monthNumber: number,
@@ -41,5 +43,15 @@ export interface postQuestionData {
     questionNumber: number,
     question: string,
     answer: number
-
-}  
+}
+export interface resultQuestionRes {
+    questionNumber: number,
+    question: string,
+    type: TypeQuestion,
+    answer: number
+}
+export interface questionRegular {
+    id: number,
+    question: string,
+    answer: string
+}

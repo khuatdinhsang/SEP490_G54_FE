@@ -33,7 +33,7 @@ const Login = () => {
             .string()
             .required(
                 t("placeholder.err.blank")
-            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            ).matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
                 t("placeholder.err.email")
             ),
         password: yup
@@ -88,7 +88,7 @@ const Login = () => {
     };
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.firstStep}>{t("common.text.firstStep")}</Text>
                 <Formik
                     initialValues={{ email: '', password: '' }}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

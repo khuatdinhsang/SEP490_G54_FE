@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../navigator/const';
@@ -8,33 +8,50 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import { flexCenter, flexRow } from '../../styles/flex';
 import colors from '../../constant/color';
 import RegularQuestionComponent from './component/RegularQuestion';
+import { questionService } from '../../services/question';
+import { questionRegular } from '../../constant/type/question';
+import LoadingScreen from '../../component/loading';
 const RegularQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
     const nextPage = () => {
 
     }
-    const initData = [
-        { id: 1, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁.어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 2, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 3, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 4, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁.어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 5, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-        { id: 6, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '', status: 0 },
-        { id: 7, date: '2023.10.07', content: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', title: '확인해주세요', answer: '어플리케이션 알림이 오지 않습니다. 확인해주세요. 답변부탁', status: 1 },
-    ]
-    const [listQuestion, setListQuestion] = useState<any[]>(initData)
+    const [listQuestion, setListQuestion] = useState<questionRegular[]>([])
+    useEffect(() => {
+        const getListQuestion = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const resData = await questionService.getListQuestionRegular();
+                if (resData.code === 200) {
+                    setIsLoading(false);
+                    setListQuestion(resData.result)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getListQuestion();
+    }, []);
+    console.log("49", listQuestion)
     const handleDetailQuestion = (id: number) => {
         navigation.navigate(SCREENS_NAME.QUESTION.DETAIL, { questionId: id })
     }
     const navigateQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
-    }
-    const navigateRegularQuestion = () => {
-        navigation.navigate(SCREENS_NAME.QUESTION.REGULAR)
     }
     return (
         <SafeAreaView style={styles.container}>
@@ -56,7 +73,6 @@ const RegularQuestion = () => {
                         </Text>
                     </Pressable>
                     <Pressable
-                        onPress={navigateRegularQuestion}
                         style={[styles.navigate, styles.active]}>
                         <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
                             {t('questionManagement.regularQuestion')}
@@ -66,10 +82,11 @@ const RegularQuestion = () => {
                 <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                     {listQuestion && listQuestion.map((item) => {
                         return (
-                            <RegularQuestionComponent key={item.id} question={item} handleDetailQuestion={handleDetailQuestion} />
+                            <RegularQuestionComponent key={item.id} question={item} />
                         )
                     })}
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -79,6 +96,7 @@ const RegularQuestion = () => {
                     <Text style={styles.textButton}> {t('questionManagement.write')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -126,5 +144,10 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 18
     },
+    textError: {
+        fontSize: 14,
+        fontWeight: "500",
+        color: colors.red
+    }
 })
 export default RegularQuestion

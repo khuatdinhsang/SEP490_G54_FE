@@ -14,7 +14,6 @@ import NotificationModule from './src/native-module/NotificationModule';
 import TimerModule from './src/native-module/timer.module';
 import { generateRandomId } from './src/util';
 import { setScreen } from './src/store/screen.slice';
-import { useResetScreenAtStartOfWeek } from './src/hooks/resetScreen';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -38,19 +37,10 @@ function App(): React.JSX.Element {
   // <Text>{t("authentication.login")}</Text>
   // <Button onPress={handleChangeText} title="change lang" />
   useEffect(() => {
-    // TimerModule.createSchedule({
-    //   id: generateRandomId(10),
-    //   title: "bạn có lịch uống thuốc",
-    //   description: "aaaa",
-    //   hour: 20,
-    //   minute: 26,
-    //   daysOfWeek: [5]
-    // })
     const initialize = async () => {
       await requestUserPermission();
       await getToken();
     };
-
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log("Received message", remoteMessage);
       const title = remoteMessage.notification?.title ?? 'No Title';

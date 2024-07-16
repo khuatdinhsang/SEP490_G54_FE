@@ -96,7 +96,7 @@ const Question = () => {
                             )
                         })
                         :
-                        <View style={[flexCenter, { height: '80%' }]}>
+                        <View style={[flexCenter, { marginTop: 100 }]}>
                             <Image source={IMAGE.QUESTION.TEXT} />
                             <Text style={styles.textTitle}>{t('questionManagement.noRequest')}</Text>
                             <Text style={styles.textDesc}>{t('questionManagement.typeToRequest')}</Text>
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         color: colors.red,
         fontWeight: "500"
     },

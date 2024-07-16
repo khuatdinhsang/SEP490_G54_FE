@@ -35,17 +35,22 @@ const ForgotPassword = ({ route }: any) => {
     }
     const handleSubmit = async (values: typeValues): Promise<void> => {
         setIsLoading(true)
-        const data = { password: values.password, email, code }
+        const data = { password: values.password, email }
+        console.log("da", data)
         try {
             const res = await authService.verifyForgetPassword(data);
             if (res.code == 200) {
                 setIsLoading(false)
-                navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+                if (res.result) {
+                    navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+                }
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {
                 if (error.response.data.code == 400 || error.response.data.code == 401) {
                     setError(error.response.data.message)
+                } else {
+                    setError("Unexpected error occurred.");
                 }
             }
         }
@@ -59,7 +64,7 @@ const ForgotPassword = ({ route }: any) => {
     };
     const fotgotPasswordSchema = yup.object().shape({
         password: yup.string().required(t("placeholder.err.blank")).matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
             t("placeholder.err.passwordCorrect")
         ),
         confirmPassword: yup
@@ -183,7 +188,7 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18
+        fontSize: 14
     },
     iconCancel: {
         width: 10,

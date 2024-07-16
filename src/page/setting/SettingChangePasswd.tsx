@@ -55,11 +55,11 @@ const SettingChangePassword = () => {
 
   const changePasswordSchema = yup.object().shape({
     oldPassword: yup.string().required(t("placeholder.err.blank")).matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
       t("placeholder.err.passwordCorrect")
     ),
     newPassword: yup.string().required(t("placeholder.err.blank")).matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
       t("placeholder.err.passwordCorrect")
     ),
     confirmNewPassword: yup
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   textError: {
     color: colors.red,
     fontWeight: "500",
-    fontSize: 18
+    fontSize: 14
   },
   textButton: {
     color: colors.white,

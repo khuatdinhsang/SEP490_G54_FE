@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   textError: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "500",
     color: colors.red
   },

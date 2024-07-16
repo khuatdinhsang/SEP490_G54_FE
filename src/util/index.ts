@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HistoryMedicalResponse, medicinePost } from "../constant/type/medical";
 import { DateTime } from 'luxon';
-import { valueActivity, valueCardinal, valueMental, valueSteps, valueWeight } from "../constant/type/chart";
+import { monthlyQuestionRes, SatResponseDTO, SfResponseDTO, valueActivity, valueCardinal, valueMental, valueSteps, valueWeight, WeekData } from "../constant/type/chart";
 import { IMAGE } from "../constant/image";
 import { ImageProps } from "react-native";
 interface OutputData {
@@ -284,4 +284,85 @@ export const getWeekTimeForCurrentWeek = (medicines: Medicine[]): medicinePost[]
             medicineTypeId: medicineTypeId,
         };
     });
+}
+
+export const padNumber = (num: number): string => {
+    return num < 10 ? `0${num}` : num.toString();
+}
+
+export interface TransformedData {
+    x: string,
+    y1: number,
+    y2: number,
+    y3: number
+    y4: number
+}
+type DataTypeChart = {
+    firstWeek: {
+        satResponseDTO: SatResponseDTO;
+        sfResponseDTO: SfResponseDTO;
+    };
+    chart3Month: Array<{
+        satResponseDTO: SatResponseDTO;
+        sfResponseDTO: SfResponseDTO;
+    }>;
+};
+export const convertToChart1Monthly = (data: DataTypeChart): TransformedData[] => {
+    const result = [
+        {
+            x: '핵심 역량',
+            y1: data.firstWeek?.satResponseDTO?.sat_sf_c_total ?? 0,
+            y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_c_total ?? 0,
+            y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
+            y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_c_total ?? 0
+        },
+        {
+            x: '준비 역량',
+            y1: data.firstWeek?.satResponseDTO?.sat_sf_p_total ?? 0,
+            y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_p_total ?? 0,
+            y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
+            y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_p_total ?? 0
+        },
+        {
+            x: '실행 전략',
+            y1: data.firstWeek?.satResponseDTO?.sat_sf_i_total ?? 0,
+            y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_i_total ?? 0,
+            y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
+            y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_i_total ?? 0
+        }
+    ];
+    return result
+}
+export const convertToChart2Monthly = (data: DataTypeChart): TransformedData[] => {
+    const result = [
+        {
+            x: '긍정적 마음',
+            y1: data.firstWeek?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
+            y2: data.chart3Month[2]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
+            y3: data.chart3Month[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
+            y4: data.chart3Month[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0
+        },
+        {
+            x: '운동',
+            y1: data.firstWeek?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
+            y2: data.chart3Month[2]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
+            y3: data.chart3Month[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
+            y4: data.chart3Month[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0
+        },
+        {
+            x: '식이',
+            y1: data.firstWeek?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
+            y2: data.chart3Month[2]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
+            y3: data.chart3Month[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
+            y4: data.chart3Month[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0
+        },
+        {
+            x: '약물복용',
+            y1: data.firstWeek?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
+            y2: data.chart3Month[2]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
+            y3: data.chart3Month[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
+            y4: data.chart3Month[0]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0
+        }
+    ];
+    return result;
 }

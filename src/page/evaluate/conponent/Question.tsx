@@ -8,9 +8,12 @@ interface questionProps {
     question: questionRes,
     selectedAnswer: number | null;
     onSelectAnswer: (questionId: number, answerIndex: number) => void;
+    reviewMode?: boolean;
+    answerResult?: number,
 }
 const Question = (props: questionProps) => {
-    const { question, selectedAnswer, onSelectAnswer } = props
+    const { question, selectedAnswer, onSelectAnswer, reviewMode, answerResult } = props
+    console.log("16", answerResult)
     const { t } = useTranslation();
     const answers = [
         t('evaluate.abSolutelyNotCorrect'),
@@ -29,14 +32,23 @@ const Question = (props: questionProps) => {
                         style={[
                             flexCenter,
                             styles.answer,
-                            { backgroundColor: selectedAnswer === index + 1 ? colors.orange_01 : colors.gray_G01 },
+                            {
+                                backgroundColor: selectedAnswer === index + 1 ? colors.orange_01 : Number(answerResult) === index + 1
+                                    ? colors.orange_01
+                                    : colors.gray_G01,
+                            },
                         ]}
-                        onPress={() => onSelectAnswer(question.questionNumber, index + 1)}
+                        onPress={() => !reviewMode && onSelectAnswer?.(question.questionNumber, index + 1)}
+                        disabled={reviewMode}
                     >
                         <Text
                             style={[
                                 styles.textAnswer,
-                                { color: selectedAnswer === index + 1 ? colors.orange_04 : colors.gray_G06 },
+                                {
+                                    color: selectedAnswer === index + 1 ? colors.orange_04 : Number(answerResult) === index + 1
+                                        ? colors.orange_04
+                                        : colors.gray_G06
+                                },
                             ]}
                         >
                             {answer}

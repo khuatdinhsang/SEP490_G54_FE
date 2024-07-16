@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18
+        fontSize: 14
     }
 });
 

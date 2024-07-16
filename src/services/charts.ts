@@ -1,4 +1,4 @@
-import { dataChartActivityResponse, dataChartBloodPressureResponse, dataChartCardinalResponse, dataChartDietResponse, dataChartMedicineResponse, dataChartMentalResponse, dataChartStepResponse, dataChartWeeklyReview } from './../constant/type/chart';
+import { dataChartActivityResponse, dataChartBloodPressureResponse, dataChartCardinalResponse, dataChartDietResponse, dataChartMedicineResponse, dataChartMentalResponse, dataChartStepResponse, dataChartWeeklyReview, monthlyQuestionRes } from './../constant/type/chart';
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
@@ -55,5 +55,7 @@ export const chartService = {
     getDataWeeklyReview(): Promise<ResponseForm<dataChartWeeklyReview>> {
         return axiosClient.get(`weekly-reviews/mobile/chart/review`);
     },
-
+    monthlyQuestionChart(): Promise<ResponseForm<monthlyQuestionRes>> {
+        return axiosClient.get(`monthly-question/mobile/screen-total/get-chart`);
+    },
 };

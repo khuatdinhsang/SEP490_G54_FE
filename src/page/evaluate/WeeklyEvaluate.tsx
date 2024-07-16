@@ -26,6 +26,7 @@ const WeeklyEvaluate = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<number[]>([])
+
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
@@ -34,7 +35,24 @@ const WeeklyEvaluate = () => {
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setDataChart(resData.result.percentage.reverse())
-                    setTimes(resData.result.weekStart)
+                    // setTimes(resData.result.weekStart)
+                    try {
+                        const resData = await weeklyReviewService.getWeeklyReviews();
+                        if (resData.code === 200) {
+                            setIsLoading(false);
+                            setTimes(resData.result)
+                        } else {
+                            setMessageError("Unexpected error occurred.");
+                        }
+                    } catch (error: any) {
+                        if (error?.response?.status === 400 || error?.response?.status === 401) {
+                            setMessageError(error.response.data.message);
+                        } else {
+                            setMessageError("Unexpected error occurred.");
+                        }
+                    } finally {
+                        setIsLoading(false);
+                    }
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -50,31 +68,6 @@ const WeeklyEvaluate = () => {
         };
         getDataChart();
     }, []);
-    useEffect(() => {
-        const getDataTimes = async (): Promise<void> => {
-            setIsLoading(true);
-            try {
-                const resData = await weeklyReviewService.getWeeklyReviews();
-                if (resData.code === 200) {
-                    setIsLoading(false);
-                    setTimes(resData.result)
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
-            } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
-                    setMessageError(error.response.data.message);
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        getDataTimes();
-    }, []);
-    console.log("data", dataChart)
-    // console.log("time", extractDayAndMonth(times))
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -159,7 +152,7 @@ const styles = StyleSheet.create({
     },
     textError: {
         fontWeight: '500',
-        fontSize: 18,
+        fontSize: 14,
         color: colors.red
     }
 });

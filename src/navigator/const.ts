@@ -64,6 +64,8 @@ import SF_MENTAL from '../page/evaluate/SF_MENTAL';
 import SF_ACTIVITY from '../page/evaluate/SF_ACTIVITY';
 import SF_MEDICATION from '../page/evaluate/SF_MEDICATION';
 import SF_DIET from '../page/evaluate/SF_DIET';
+import SAT_Evaluate from '../page/evaluate/SAT_Evaluate';
+import SF_Evaluate from '../page/evaluate/SF_Evaluate';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -150,6 +152,8 @@ export const SCREENS_NAME = {
         SF_ACTIVITY: 'Survey SF_ACTIVITY',
         SF_DIET: 'Survey SF_DIET',
         SF_MEDICATION: 'Survey SF_MEDICATION',
+        SAT_EVALUATE: 'SAT Evaluate',
+        SF_EVALUATE: 'SF Evaluate',
         SUCCESS_SURVEY: 'Success Survey'
     }
 };
@@ -434,6 +438,14 @@ const SCREENS_STACK_EVALUATE = [
     {
         name: SCREENS_NAME.EVALUATE.SF_MEDICATION,
         component: SF_MEDICATION,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SAT_EVALUATE,
+        component: SAT_Evaluate,
+    },
+    {
+        name: SCREENS_NAME.EVALUATE.SF_EVALUATE,
+        component: SF_Evaluate,
     },
     {
         name: SCREENS_NAME.EVALUATE.SUCCESS_SURVEY,

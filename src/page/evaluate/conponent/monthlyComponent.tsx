@@ -13,14 +13,23 @@ interface MonthLyComponentProps {
 }
 const MonthComponent = (props: MonthLyComponentProps) => {
     const { data } = props
+    console.log("aa", data)
     const { t, i18n } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const detailEvaluate = () => {
-        navigation.navigate(SCREENS_NAME.EVALUATE.DETAIL_WEEKLY, { time: data.monthNumber })
+    const handleButtonLeft = () => {
+        if (data.isAnswered) {
+            // xem câu trả lời
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_C, { time: data.monthNumber, reviewMode: true })
+        } else {
+            // trả lời khảo sát
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_C, { time: data.monthNumber, reviewMode: false })
+        }
+    }
+    const handleViewChart = () => {
+        navigation.navigate(SCREENS_NAME.EVALUATE.SAT_EVALUATE, { time: data.monthNumber })
     }
     return (
-        <Pressable
-            onPress={detailEvaluate}
+        <View
             style={[styles.item, flexRowSpaceBetween]}
         >
             <View style={flexRow}>
@@ -29,15 +38,18 @@ const MonthComponent = (props: MonthLyComponentProps) => {
             </View>
             <View style={flexRow}>
                 <Pressable
-                    onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_C, { time: data.monthNumber })}
+                    onPress={handleButtonLeft}
                     style={[styles.button, { backgroundColor: colors.orange_04 }]}>
                     <Text style={[styles.textButton, { color: colors.white }]}>{data.isAnswered ? t("evaluate.viewResultSurvey") : t("evaluate.answerSurvey")}</Text>
                 </Pressable>
-                <Pressable style={[styles.button, { marginLeft: 10, backgroundColor: data.isAnswered ? colors.orange_04 : colors.gray_G02 }]}>
+                <Pressable
+                    onPress={handleViewChart}
+                    disabled={!data.isAnswered}
+                    style={[styles.button, { marginLeft: 10, backgroundColor: data.isAnswered ? colors.orange_04 : colors.gray_G02 }]}>
                     <Text style={[styles.textButton, { color: data.isAnswered ? colors.white : colors.gray_G07 }]}>{t("evaluate.viewResult")}</Text>
                 </Pressable>
             </View>
-        </Pressable>
+        </View>
     )
 }
 const styles = StyleSheet.create({

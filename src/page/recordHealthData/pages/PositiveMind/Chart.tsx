@@ -15,6 +15,7 @@ import LineChart from '../../../../component/line-chart';
 import LoadingScreen from '../../../../component/loading';
 import BarChart from '../../../../component/bar-chart';
 import { valueMental, valueSteps } from '../../../../constant/type/chart';
+import MonthlyChart from '../../../../component/monthly-chart';
 
 const PositiveMindChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
         width: 140
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         color: colors.red,
         fontWeight: "500"
     },
