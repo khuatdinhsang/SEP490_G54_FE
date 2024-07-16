@@ -12,7 +12,7 @@ export interface medicalAppointmentData {
     location: string,
     type: TypeMakeHospitalSchedule | undefined,
     note: string,
-    date: Date
+    date: string
 }
 export interface appointment {
     id: number,

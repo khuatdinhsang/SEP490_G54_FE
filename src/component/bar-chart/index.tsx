@@ -105,7 +105,6 @@ const BarChart = (props: BarChartProps) => {
           data={data}
           cornerRadius={{ top: 9, bottom: 9 }}
           barWidth={18}
-          labelComponent={<CustomLabelComponent />}
         />
       </VictoryChart>
       <View>

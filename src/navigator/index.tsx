@@ -5,11 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../component/loading';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
+import { useResetScreenAtStartOfWeek } from '../hooks/resetScreen';
 
 const Stack = createStackNavigator();
 const Navigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState(SCREENS_NAME.LOGIN.MAIN);
+  useResetScreenAtStartOfWeek()
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accessToken');

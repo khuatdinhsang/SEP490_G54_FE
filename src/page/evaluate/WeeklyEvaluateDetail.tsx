@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     },
     textError: {
         fontWeight: '500',
-        fontSize: 18,
+        fontSize: 14,
         color: colors.red
     },
     textEvaluate: {

@@ -9,7 +9,7 @@ import { SCREENS_NAME } from '../../navigator/const';
 import LoadingScreen from '../../component/loading';
 import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { TypeQuestion } from '../../constant';
-import { postQuestionData, questionRes } from '../../constant/type/question';
+import { listQuestionRes, postQuestionData, questionRes, resultQuestionRes } from '../../constant/type/question';
 import Question from './conponent/Question';
 
 interface questionType {
@@ -21,12 +21,14 @@ const SAT_SF_C = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const time = route?.params?.time;
+    const reviewMode = route?.params?.reviewMode;
     const [messageError, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [listQuestions, setListQuestions] = useState<questionRes[]>([]);
     const [answers, setAnswers] = useState<{ [key: number]: number | null }>({});
     const [type, setType] = useState<TypeQuestion>(TypeQuestion.SAT_SF_C);
-
+    const [listQuestionsResult, setListQuestionsResult] = useState<resultQuestionRes[]>([])
+    console.log("31", listQuestionsResult)
     useEffect(() => {
         const getListQuestion = async () => {
             setIsLoading(true);
@@ -49,7 +51,32 @@ const SAT_SF_C = ({ route }: any) => {
                 setIsLoading(false);
             }
         };
-        getListQuestion();
+        const getListQuestionResult = async () => {
+            setIsLoading(true);
+            try {
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SAT_SF_C);
+                if (res.code === 200) {
+                    setErrorMessage("");
+                    setListQuestionsResult(res.result)
+                    setType(res.result[0].type)
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setErrorMessage(error.response.data.message);
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (reviewMode) {
+            getListQuestionResult()
+        } else {
+            getListQuestion();
+        }
     }, []);
 
     const handleSelectAnswer = (questionId: number, answerIndex: number) => {
@@ -57,16 +84,20 @@ const SAT_SF_C = ({ route }: any) => {
     };
 
     const nextPage = () => {
-        const data = listQuestions.map((item) => {
-            return {
-                monthNumber: time,
-                monthlyRecordType: type,
-                questionNumber: item.questionNumber,
-                question: item.question,
-                answer: answers[item.questionNumber]
-            }
-        })
-        navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_P, { time, data });
+        if (reviewMode) {
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_P, { time, reviewMode: true });
+        } else {
+            const data = listQuestions.map((item) => {
+                return {
+                    monthNumber: time,
+                    monthlyRecordType: type,
+                    questionNumber: item.questionNumber,
+                    question: item.question,
+                    answer: answers[item.questionNumber]
+                }
+            })
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_P, { time, data });
+        }
     };
 
     const goBackPreviousPage = () => {
@@ -91,12 +122,23 @@ const SAT_SF_C = ({ route }: any) => {
                             다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 사용할 수 있는 핵심 역량과 관련된 평가입니다. 각 문항들을 읽고, 귀하가 지난 한 달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.
                         </Text>
                     </View>
-                    {listQuestions.map((item) => (
+                    {!reviewMode && listQuestions.map((item) => (
                         <Question
                             question={item}
                             key={item.questionNumber}
                             selectedAnswer={answers[item.questionNumber]}
                             onSelectAnswer={handleSelectAnswer}
+                            reviewMode={reviewMode}
+                        />
+                    ))}
+                    {reviewMode && listQuestionsResult.map((item) => (
+                        <Question
+                            question={item}
+                            key={item.questionNumber}
+                            selectedAnswer={answers[item.questionNumber]}
+                            onSelectAnswer={handleSelectAnswer}
+                            answerResult={item.answer}
+                            reviewMode={reviewMode}
                         />
                     ))}
                 </View>

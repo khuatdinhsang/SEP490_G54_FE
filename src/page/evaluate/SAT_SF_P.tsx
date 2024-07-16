@@ -8,7 +8,7 @@ import colors from '../../constant/color';
 import Question from './conponent/Question';
 import { SCREENS_NAME } from '../../navigator/const';
 import LoadingScreen from '../../component/loading';
-import { questionRes } from '../../constant/type/question';
+import { questionRes, resultQuestionRes } from '../../constant/type/question';
 import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { TypeQuestion } from '../../constant';
 
@@ -21,9 +21,11 @@ const SAT_SF_P = ({ route }: any) => {
     const { t } = useTranslation();
     const time = route?.params?.time
     const dataSF_C = route?.params?.data
+    const reviewMode = route?.params?.reviewMode;
     const [messageError, setErrorMessage] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
     const [type, setType] = useState<string>("")
+    const [listQuestionsResult, setListQuestionsResult] = useState<resultQuestionRes[]>([])
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -34,16 +36,20 @@ const SAT_SF_P = ({ route }: any) => {
         setAnswers((prev) => ({ ...prev, [questionId]: answerIndex }));
     };
     const nextPage = () => {
-        const data = listQuestions.map((item) => {
-            return {
-                monthNumber: time,
-                monthlyRecordType: type,
-                questionNumber: item.questionNumber,
-                question: item.question,
-                answer: answers[item.questionNumber]
-            }
-        })
-        navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time, data: [...dataSF_C, ...data] })
+        if (reviewMode) {
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time, reviewMode: true });
+        } else {
+            const data = listQuestions.map((item) => {
+                return {
+                    monthNumber: time,
+                    monthlyRecordType: type,
+                    questionNumber: item.questionNumber,
+                    question: item.question,
+                    answer: answers[item.questionNumber]
+                }
+            })
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time, data: [...dataSF_C, ...data] })
+        }
     }
     useEffect(() => {
         const getListQuestion = async () => {
@@ -69,7 +75,32 @@ const SAT_SF_P = ({ route }: any) => {
                 setIsLoading(false)
             }
         }
-        getListQuestion()
+        const getListQuestionResult = async () => {
+            setIsLoading(true);
+            try {
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SAT_SF_P);
+                if (res.code === 200) {
+                    setErrorMessage("");
+                    setListQuestionsResult(res.result)
+                    setType(res.result[0].type)
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setErrorMessage(error.response.data.message);
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (reviewMode) {
+            getListQuestionResult()
+        } else {
+            getListQuestion();
+        }
     }, [])
 
     return (
@@ -98,6 +129,16 @@ const SAT_SF_P = ({ route }: any) => {
                             />
                         )
                     })}
+                    {reviewMode && listQuestionsResult.map((item) => (
+                        <Question
+                            question={item}
+                            key={item.questionNumber}
+                            selectedAnswer={answers[item.questionNumber]}
+                            onSelectAnswer={handleSelectAnswer}
+                            answerResult={item.answer}
+                            reviewMode={reviewMode}
+                        />
+                    ))}
                 </View>
                 {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
             </ScrollView>

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         borderColor: colors.primary,
     },
     textError: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "400",
         color: colors.red,
     }

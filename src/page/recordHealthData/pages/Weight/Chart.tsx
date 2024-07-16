@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         width: 140,
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         color: colors.red,
         fontWeight: '500',
     },

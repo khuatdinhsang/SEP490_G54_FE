@@ -75,3 +75,24 @@ export interface dataChartWeeklyReview {
     percentage: number[],
     weekStart: string[]
 }
+export interface SatResponseDTO {
+    sat_sf_c_total: number;
+    sat_sf_p_total: number;
+    sat_sf_i_total: number;
+};
+
+export interface SfResponseDTO {
+    sf_mental_modelPoint: number;
+    sf_activity_modelPoint: number;
+    sf_diet_modelPoint: number;
+    sf_medicine_modelPoint: number;
+};
+
+export interface WeekData {
+    satResponseDTO: SatResponseDTO;
+    sfResponseDTO: SfResponseDTO;
+};
+export interface monthlyQuestionRes {
+    firstWeek: WeekData;
+    chart3Month: WeekData[];
+}

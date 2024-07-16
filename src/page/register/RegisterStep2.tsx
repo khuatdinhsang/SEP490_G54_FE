@@ -40,7 +40,8 @@ const RegisterStep2 = ({ route }: any) => {
     const [gender, setGender] = useState<boolean>(true);
     const [weight, setWeight] = useState<string>('');
     const [height, setHeight] = useState<string>('');
-    const [error, setError] = useState<string>('');
+    const [errorHeight, setErrorHeight] = useState<string>('');
+    const [errorWeight, setErrorWeight] = useState<string>('');
     const { t, i18n } = useTranslation();
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
@@ -51,14 +52,15 @@ const RegisterStep2 = ({ route }: any) => {
     const [showYearScroll, setShowYearScroll] = useState(false);
     const [showMonthScroll, setShowMonthScroll] = useState(false);
     const [showDayScroll, setShowDayScroll] = useState(false);
-    const [time, setTime] = useState(0.5); // Default time in minutes
+    const [time, setTime] = useState(3); // Default time in minutes
     const [checkResetTime, setCheckResetTime] = useState<boolean>(false);
     const [checkCode, setCheckCode] = useState<string>('');
     const [timeUp, setTimeUp] = useState<boolean>(false);
     const [isEmailExits, setIsEmailExits] = useState<string>("");
-    const [codeResponse, setCodeResponse] = useState<string>("")
+    // const [codeResponse, setCodeResponse] = useState<string>("")
     const { valuesStep1 } = route.params;
     const [isGetCode, setIsGetCode] = useState<boolean>(false)
+    const [messageError, setMessageError] = useState<string>("")
     // useEffect(() => {
     //     const isValid = isValidDateForYearMonthDay(year, month, day);
     //     setIsValidDate(isValid);
@@ -111,20 +113,19 @@ const RegisterStep2 = ({ route }: any) => {
     };
 
     const handleResetTime = async (values: RegisterValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
-
         setIsLoading(true)
         clearField('code', setFieldValue)
         try {
             const res = await authService.verifyEmailApi(values.email);
             console.log("118", res)
             if (res.code == 200) {
+                setIsLoading(false)
                 setIsGetCode(true)
                 //resetTime
                 setCheckResetTime(pre => !pre);
                 setTimeUp(false)
-                setIsLoading(false)
                 setCheckCode("loading")
-                setCodeResponse(res.result)
+                // setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
                 setIsEmailExits("")
@@ -151,34 +152,30 @@ const RegisterStep2 = ({ route }: any) => {
     };
     const handleSetWeight = (value: any) => {
         if (!value) {
-            if (!value) {
-                setError(t('placeholder.err.blank'));
-                setWeight('');
-            }
+            setErrorWeight(t('placeholder.err.blank'));
+            setWeight('');
             return;
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setWeight(value);
-            setError('');
+            setErrorWeight('');
         } else {
-            setError(t('placeholder.err.number'));
+            setErrorWeight(t('placeholder.err.number'));
         }
     };
     const handleSetHeight = (value: any) => {
         if (!value) {
-            if (!value) {
-                setError(t('placeholder.err.blank'));
-                setHeight('');
-            }
+            setErrorHeight(t('placeholder.err.blank'));
+            setHeight('');
             return;
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setHeight(value);
-            setError('');
+            setErrorHeight('');
         } else {
-            setError(t('placeholder.err.number'));
+            setErrorHeight(t('placeholder.err.number'));
         }
     };
     const forgotPasswordSchema = yup.object().shape({
@@ -186,23 +183,41 @@ const RegisterStep2 = ({ route }: any) => {
             .string()
             .required(
                 t("placeholder.err.blank")
-            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            ).matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
                 t("placeholder.err.email")
             ),
         code: yup.string().required(t('placeholder.err.blank')),
     });
     const handleCheckCode = async (values: RegisterValues): Promise<void> => {
-        if (values.code === codeResponse) {
-            setCheckCode('success');
-            setIsTimerRunning(false);
-        } else {
-            setCheckCode('error');
-            setIsTimerRunning(true)
+        setIsLoading(true);
+        try {
+            const resData = await authService.checkRegisterEmail(values.email, values.code);
+            if (resData.code === 200) {
+                setIsLoading(false);
+                if (resData.result) {
+                    setCheckCode('success');
+                    setIsTimerRunning(false);
+                } else {
+                    setCheckCode('error');
+                    setIsTimerRunning(true)
+                }
+                console.log("r", resData)
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
     const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
         setFieldValue(field, text);
-        // setIsEmailExits(''); // Clear the error message
+        setIsEmailExits('');
     };
 
     const renderMessage = () => {
@@ -380,7 +395,7 @@ const RegisterStep2 = ({ route }: any) => {
                                                 textRight="cm"
                                                 value={height}
                                                 keyboardType="numeric"
-                                                error={error}
+                                                error={errorHeight}
                                                 handleSetValue={handleSetHeight}
                                             />
                                         </Pressable>
@@ -389,12 +404,11 @@ const RegisterStep2 = ({ route }: any) => {
                                                 textRight="kg"
                                                 value={weight}
                                                 keyboardType="numeric"
-                                                error={error}
+                                                error={errorWeight}
                                                 handleSetValue={handleSetWeight}
                                             />
                                         </Pressable>
                                     </View>
-                                    <Text style={styles.errorText}>{error}</Text>
                                 </View>
                                 <View style={{ marginTop: 20 }}>
                                     <View style={[flexRowSpaceBetween]}>
@@ -485,6 +499,7 @@ const RegisterStep2 = ({ route }: any) => {
                                 </View>
                             </View>
                         </View>
+                        {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                     </ScrollView>
                     <View style={styles.buttonContainer}>
                         <Pressable

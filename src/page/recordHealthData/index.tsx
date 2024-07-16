@@ -64,6 +64,7 @@ const RecordHealthData = () => {
         }
     ]
     const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
+    console.log("â", currentScreen)
     const [listRecord, setListRecord] = useState<recordData[]>(initData)
     const handleNavigate = (screen: string) => {
         navigation.navigate(screen)

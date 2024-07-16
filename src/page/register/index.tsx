@@ -25,11 +25,11 @@ const Register = () => {
     const registerSchema = yup.object().shape({
         name: yup.string().required(t("placeholder.err.blank")),
         phoneNumber: yup.string().required(t("placeholder.err.blank")).matches(
-            /^(010-\d{4}-\d{4}|0\d{1,2}-\d{3,4}-\d{4})$/,
+            /^0\d{8,10}$/,
             t("placeholder.err.phoneNumber")
         ),
         password: yup.string().required(t("placeholder.err.blank")).matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
             t("placeholder.err.passwordCorrect")
         ),
         confirmPassword: yup.string().required(t("placeholder.err.blank")).oneOf([yup.ref('password')], t("placeholder.err.notMatch")),

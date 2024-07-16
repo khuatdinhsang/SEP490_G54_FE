@@ -13,6 +13,9 @@ import { SCREENS_NAME } from '../../navigator/const';
 import LoadingScreen from '../../component/loading';
 import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { listMonthNumberRes } from '../../constant/type/question';
+import MonthlyChart from '../../component/monthly-chart';
+import { chartService } from '../../services/charts';
+import { convertToChart1Monthly, convertToChart2Monthly } from '../../util';
 
 const MonthEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -23,6 +26,8 @@ const MonthEvaluate = () => {
         navigation.goBack();
     };
     const [data, setData] = useState<listMonthNumberRes[]>([])
+    const [chartOne, setChartOne] = useState<any>([])
+    const [chartTwo, setChartTwo] = useState<any>([])
     const getListNumber = async () => {
         setIsLoading(true)
         try {
@@ -32,6 +37,23 @@ const MonthEvaluate = () => {
                 setErrorMessage("");
                 setIsLoading(false)
                 setData(res.result)
+                try {
+                    const resData = await chartService.monthlyQuestionChart();
+                    if (resData.code === 200) {
+                        setChartOne(convertToChart1Monthly(resData.result))
+                        setChartTwo(convertToChart2Monthly(resData.result))
+                    } else {
+                        setErrorMessage("Unexpected error occurred.");
+                    }
+                } catch (error: any) {
+                    if (error?.response?.status === 400 || error?.response?.status === 401) {
+                        setErrorMessage(error.response.data.message);
+                    } else {
+                        setErrorMessage("Unexpected error occurred.");
+                    }
+                } finally {
+                    setIsLoading(false);
+                }
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
@@ -46,11 +68,17 @@ const MonthEvaluate = () => {
             setIsLoading(false)
         }
     }
-    useFocusEffect(
-        useCallback(() => {
-            getListNumber();
-        }, [])
-    );
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         getListNumber();
+    //     }, [])
+    // );
+    useEffect(() => {
+        getListNumber();
+    }, [])
+    console.log("79", chartOne)
+    console.log("80", chartTwo)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -75,7 +103,21 @@ const MonthEvaluate = () => {
                 </Pressable>
             </View>
             {data.length > 0 ? (
-                <ScrollView style={styles.scrollView}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 100 }} style={styles.scrollView}>
+                    <View style={{ paddingTop: 20 }}>
+                        <MonthlyChart
+                            textTitle={"건강 경영 전략 변화 그래프"}
+                            data={chartOne}
+                            tickValues={[0, 20, 40, 60, 80, 100]}
+                        />
+                    </View>
+                    <View style={{ paddingTop: 20 }}>
+                        <MonthlyChart
+                            textTitle={"건강 경영 전략 변화 그래프"}
+                            data={chartTwo}
+                            tickValues={[0, 20, 40, 60, 80, 100]}
+                        />
+                    </View>
                     <View style={styles.content}>
                         {data.map((item, index) => (
                             <MonthComponent
@@ -107,6 +149,7 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
         backgroundColor: colors.background,
+        paddingHorizontal: 20,
     },
     navigate: {
         height: 48,
@@ -126,11 +169,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     content: {
-        paddingHorizontal: 20,
         paddingTop: 30,
     },
     textError: {
-        fontSize: 16,
+        fontSize: 14,
         color: colors.red,
         fontWeight: "500"
     }
