@@ -48,16 +48,42 @@ const CustomLabelComponent = (props: any) => (
                 fontSize: 14,
                 fontWeight: '400',
                 lineHeight: 20,
+
+
             }}
             dy={-15}
             renderInPortal={false}
         />
     </Svg>
 );
+const wrapLabel = (text: string) => {
+    if (typeof text !== 'string') {
+        return text;
+    }
+    const maxLineLength = 5;
+    const words = text?.split('');
+    let currentLine = '';
+    const lines = [];
+
+    for (const word of words) {
+        if ((currentLine + word).length > maxLineLength) {
+            lines.push(currentLine);
+            currentLine = word;
+        } else {
+            currentLine += word;
+        }
+    }
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+    return lines.join('\n');
+};
+
 const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data }) => {
-    const hasY4 = data?.some(item => item.y4 !== 0);
-    const hasY3 = data?.some(item => item.y3 !== 0);
-    const hasY2 = data?.some(item => item.y2 !== 0);
+    const hasY4 = data?.some(item => item.y4 !== undefined);
+    const hasY3 = data?.some(item => item.y3 !== undefined);
+    const hasY2 = data?.some(item => item.y2 !== undefined);
+
     return (
         <View style={[styles.container, styles.shadowBox]}>
             <View style={styles.header}>
@@ -91,7 +117,9 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                     style={{
                         axis: { stroke: colors.gray_G03 },
                         grid: { stroke: 'transparent' },
+                        ticks: { stroke: 'transparent' }
                     }}
+                    tickFormat={(t) => wrapLabel(t)}
                 />
                 <VictoryAxis
                     crossAxis
@@ -103,6 +131,7 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                             stroke: colors.gray_G03,
                             strokeDasharray: '3,3',
                         },
+                        ticks: { stroke: 'transparent' }
                     }}
                 />
                 <VictoryGroup offset={10}>

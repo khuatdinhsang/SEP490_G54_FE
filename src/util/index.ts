@@ -4,6 +4,8 @@ import { DateTime } from 'luxon';
 import { monthlyQuestionRes, SatResponseDTO, SfResponseDTO, valueActivity, valueCardinal, valueMental, valueSteps, valueWeight, WeekData } from "../constant/type/chart";
 import { IMAGE } from "../constant/image";
 import { ImageProps } from "react-native";
+import { satEvaluateRes, sfEvaluateRes } from "../constant/type/question";
+import colors from "../constant/color";
 interface OutputData {
     id: number;
     name: string;
@@ -44,7 +46,7 @@ export const removeAsyncStorageWhenLogout = async () => {
     try {
         await AsyncStorage.removeItem('refreshToken');
         await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('idUser');
+        // await AsyncStorage.removeItem('idUser');
     } catch (error) {
         console.error('error', error);
     }
@@ -294,8 +296,9 @@ export interface TransformedData {
     x: string,
     y1: number,
     y2: number,
-    y3: number
-    y4: number
+    y3?: number,
+    y4?: number,
+    color?: string
 }
 type DataTypeChart = {
     firstWeek: {
@@ -365,4 +368,218 @@ export const convertToChart2Monthly = (data: DataTypeChart): TransformedData[] =
         }
     ];
     return result;
+}
+export const dateNow = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+export const convertToChart1SAT = (data: satEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '핵심역량',
+            y1: data[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_c_total ?? 0,
+        },
+        {
+            x: '준비역량',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_total ?? 0,
+        },
+        {
+            x: '실행전략',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_total ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart1SF = (data: sfEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '긍정적마음',
+            y1: data[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
+        },
+        {
+            x: '운동',
+            y1: data[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
+        },
+        {
+            x: '식이',
+            y1: data[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
+        },
+        {
+            x: '약물복용',
+            y1: data[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart2SAT = (data: satEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '자기주도성',
+            y1: data[1]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
+        },
+        {
+            x: '긍정적사고',
+            y1: data[1]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
+        },
+        {
+            x: '지지관계형성',
+            y1: data[1]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
+        },
+        {
+            x: '비슷한경험공유',
+            y1: data[1]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart2SF = (data: sfEvaluateRes[]): TransformedData[] => {
+    const result = [
+
+        {
+            x: '긍정적인마음',
+            y1: data[1]?.sfResponseDTO?.sf_mentalPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_mentalPoint ?? 0,
+        },
+
+    ];
+    return result
+}
+export const convertToChart3SAT = (data: satEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '삶의가치추구',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
+        },
+        {
+            x: '목표/행동설정',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
+        },
+        {
+            x: '합리적의사결정',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_decision ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_decision ?? 0,
+        },
+        {
+            x: '우선순위중심계획',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
+        },
+        {
+            x: '건강한환경조성',
+            y1: data[1]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart3SF = (data: sfEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '운동점검 및 계획',
+            y1: data[1]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
+        },
+        {
+            x: '운동일상화',
+            y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart4SAT = (data: satEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '자기주도',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
+        },
+        {
+            x: '스트레스대처',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
+        },
+        {
+            x: '끈기있는실행',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
+        },
+
+    ];
+    return result
+}
+export const convertToChart4SF = (data: sfEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '건강한식이패턴',
+            y1: data[1]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
+        },
+        {
+            x: '야채/과일위주 선택',
+            y1: data[1]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
+        },
+        {
+            x: '건강한 식이습관 형성',
+            y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
+        },
+    ];
+    return result
+}
+export const convertToChart5SAT = (data: satEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '에너지보존',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
+        },
+        {
+            x: '자기동기부여',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
+        },
+        {
+            x: '점검',
+            y1: data[1]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
+            y2: data[0]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
+        },
+
+    ];
+    return result
+}
+export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
+    const result = [
+        {
+            x: '약물 순응도',
+            y1: data[1]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
+        },
+        {
+            x: '약물효과',
+            y1: data[1]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
+            y2: data[0]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
+        },
+
+    ];
+    return result
 }

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
-export const baseURL = 'http://13.213.41.149:8080/api';
+export const baseURL = 'http://54.179.151.16:8080/api';
+// export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
   baseURL: baseURL,
   headers: {

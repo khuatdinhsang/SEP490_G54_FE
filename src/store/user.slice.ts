@@ -1,7 +1,7 @@
-import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {authService} from '../services/auth';
-import {LoginData, LoginResponse} from '../constant/type/auth';
-import {ResponseForm} from '../constant/type';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { authService } from '../services/auth';
+import { LoginData, LoginResponse } from '../constant/type/auth';
+import { ResponseForm } from '../constant/type';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CounterStepModule from '../native-module/counter-step.module';
@@ -17,7 +17,7 @@ export interface User {
 }
 export const loginUser = createAsyncThunk(
   'users/loginUser',
-  async (user: LoginData, {rejectWithValue}) => {
+  async (user: LoginData, { rejectWithValue }) => {
     try {
       const res = await authService.login(user);
       if (res.code === 200) {
@@ -53,7 +53,7 @@ const userSlice = createSlice({
       state.id = action.payload.id;
       state.counterStep = action.payload.counterStep;
     },
-    updateCounterStep: (state, action) => {},
+    updateCounterStep: (state, action) => { },
   },
   extraReducers: builder => {
     builder.addCase(loginUser.pending, (state, action) => {
@@ -70,5 +70,5 @@ const userSlice = createSlice({
     });
   },
 });
-export const {updateCounterStep, initUser} = userSlice.actions;
+export const { updateCounterStep, initUser } = userSlice.actions;
 export default userSlice.reducer;

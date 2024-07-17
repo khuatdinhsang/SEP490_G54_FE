@@ -58,10 +58,10 @@ const Login = () => {
             const deviceToken = await AsyncStorage.getItem('deviceToken');
             const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
+                console.log("vaoday")
                 setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
-
             }
         } catch (error: any) {
             if (error.code == 400 || error.code == 401) {

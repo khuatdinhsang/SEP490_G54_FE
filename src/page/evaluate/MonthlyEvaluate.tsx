@@ -15,7 +15,7 @@ import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { listMonthNumberRes } from '../../constant/type/question';
 import MonthlyChart from '../../component/monthly-chart';
 import { chartService } from '../../services/charts';
-import { convertToChart1Monthly, convertToChart2Monthly } from '../../util';
+import { convertToChart1Monthly, convertToChart2Monthly, TransformedData } from '../../util';
 
 const MonthEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -26,8 +26,8 @@ const MonthEvaluate = () => {
         navigation.goBack();
     };
     const [data, setData] = useState<listMonthNumberRes[]>([])
-    const [chartOne, setChartOne] = useState<any>([])
-    const [chartTwo, setChartTwo] = useState<any>([])
+    const [chartOne, setChartOne] = useState<TransformedData[]>([])
+    const [chartTwo, setChartTwo] = useState<TransformedData[]>([])
     const getListNumber = async () => {
         setIsLoading(true)
         try {

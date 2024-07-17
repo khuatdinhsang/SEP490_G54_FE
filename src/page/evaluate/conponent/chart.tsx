@@ -17,11 +17,17 @@ interface MonthlyChartProps {
         x: string;
         label?: number;
         y1: number;
-        y2?: number;
-        y3?: number;
-        y4?: number;
+        y2: number;
     }>;
 }
+
+const getColorForValue = (value: number) => {
+    if ((value > 0 && value < 33)) return colors.orange_04;
+    if ((value >= 33 && value < 67)) return colors.green;
+    if ((value >= 67 && value <= 100)) return colors.blue_01;
+    return colors.gray_G03;
+};
+
 const CustomLabelComponent = (props: any) => (
     <Svg>
         <Defs>
@@ -53,25 +59,50 @@ const CustomLabelComponent = (props: any) => (
         />
     </Svg>
 );
+
+const wrapLabel = (text: string) => {
+    if (typeof text !== 'string') {
+        return text;
+    }
+    const maxLineLength = 5;
+    const words = text?.split('');
+    let currentLine = '';
+    const lines = [];
+
+    for (const word of words) {
+        if ((currentLine + word).length > maxLineLength) {
+            lines.push(currentLine);
+            currentLine = word;
+        } else {
+            currentLine += word;
+        }
+    }
+    if (currentLine) {
+        lines.push(currentLine);
+    }
+    return lines.join('\n');
+};
+
 const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data }) => {
-    const hasY4 = data?.some(item => item.y4 !== 0);
-    const hasY3 = data?.some(item => item.y3 !== 0);
-    const hasY2 = data?.some(item => item.y2 !== 0);
     return (
         <VictoryChart
             height={250}
             theme={VictoryTheme.material}
-            style={{ parent: { marginLeft: -25 } }}
+            style={{ parent: { marginLeft: -30 } }}
+            domainPadding={{ x: [15, 35] }}
         >
             <VictoryAxis
                 crossAxis
                 style={{
                     axis: { stroke: colors.gray_G03 },
                     grid: { stroke: 'transparent' },
+                    tickLabels: { fontSize: 10, padding: 5 },
+                    ticks: { stroke: 'transparent' }
                 }}
+                tickLabelComponent={<VictoryLabel dy={5} dx={-5} />}
+                tickFormat={(t) => wrapLabel(t)}
             />
             <VictoryAxis
-                crossAxis
                 dependentAxis
                 tickValues={tickValues}
                 style={{
@@ -80,6 +111,30 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data })
                         stroke: colors.gray_G03,
                         strokeDasharray: '3,3',
                     },
+                    ticks: { stroke: 'transparent' }
+                }}
+            />
+            <VictoryAxis
+                dependentAxis
+                orientation="right"
+                tickValues={[25, 55, 85]}
+                style={{
+                    axis: { stroke: 'transparent' },
+                    grid: { stroke: 'transparent' },
+                    ticks: { stroke: 'transparent' }
+                }}
+                tickLabelComponent={<VictoryLabel dx={-25} />}
+                tickFormat={(t) => {
+                    switch (t) {
+                        case 25:
+                            return '우수';
+                        case 55:
+                            return '보통';
+                        case 85:
+                            return '우수';
+                        default:
+                            return '';
+                    }
                 }}
             />
             <VictoryGroup offset={10}>
@@ -91,39 +146,21 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data })
                     cornerRadius={{ top: 5, bottom: 5 }}
                     barWidth={10}
                 />
-                {hasY2 &&
-                    <VictoryBar
-                        data={data}
-                        x="x"
-                        y="y2"
-                        style={{ data: { fill: colors.orange_04 } }}
-                        cornerRadius={{ top: 5, bottom: 5 }}
-                        barWidth={10}
-                    />
-                }
-                {hasY3 &&
-                    <VictoryBar
-                        data={data}
-                        x="x"
-                        y="y3"
-                        style={{ data: { fill: colors.green } }}
-                        cornerRadius={{ top: 5, bottom: 5 }}
-                        barWidth={10}
-                    />
-                }
-                {hasY4 &&
-                    <VictoryBar
-                        data={data}
-                        x="x"
-                        y="y4"
-                        style={{ data: { fill: colors.blue_01 } }}
-                        cornerRadius={{ top: 5, bottom: 5 }}
-                        barWidth={10}
-                        labelComponent={<CustomLabelComponent />}
-                    />
-                }
+                <VictoryBar
+                    data={data}
+                    x="x"
+                    y="y2"
+                    style={{
+                        data: {
+                            fill: ({ datum }) => getColorForValue(datum.y2),
+                        },
+                    }}
+                    cornerRadius={{ top: 5, bottom: 5 }}
+                    barWidth={10}
+                />
             </VictoryGroup>
         </VictoryChart>
-    )
+    );
 };
+
 export default MonthlyChartEvaluate;

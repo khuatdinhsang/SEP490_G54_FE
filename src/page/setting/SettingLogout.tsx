@@ -11,18 +11,33 @@ import { SCREENS_NAME } from '../../navigator/const';
 import { useState } from 'react';
 import LoadingScreen from '../../component/loading';
 import { removeAsyncStorageWhenLogout } from '../../util';
+import { authService } from '../../services/auth';
 
 const SettingLogout = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string>("")
   const handlePressYesLogout = async () => {
     setIsLoading(true)
-    setTimeout(() => {
+    try {
+      const res = await authService.logout()
+      if (res.code === 200) {
+        setIsLoading(false)
+        await removeAsyncStorageWhenLogout()
+        navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400 || error?.response?.status === 401) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Unexpected error occurred.");
+      }
+    }
+    finally {
       setIsLoading(false)
-    }, 1000)
-    await removeAsyncStorageWhenLogout()
-    navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
+    }
+
   };
 
   const handlePressNoLogout = () => {
@@ -47,6 +62,7 @@ const SettingLogout = () => {
         handleClick={handlePressNoLogout}
         backgroundColor={colors.black}
       />
+      {errorMessage && !isLoading && <Text style={styles.textError}>{errorMessage}</Text>}
       {isLoading && <LoadingScreen />}
     </View>
   );
@@ -65,6 +81,11 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     marginVertical: 20,
   },
+  textError: {
+    fontWeight: '500',
+    fontSize: 14,
+    color: colors.red
+  }
 });
 
 export default SettingLogout;
