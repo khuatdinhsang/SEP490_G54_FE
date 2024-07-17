@@ -16,7 +16,8 @@ public class ApiHelper {
     private static final OkHttpClient client = new OkHttpClient();
 
     public static boolean sendRequestCounterStep(long userId, String date, long actualValue) throws IOException {
-        String urlString = "http://13.213.41.149:8080/api/step-records/update-cont";
+        String urlString = "http://54.179.151.16:8080/api/step-records/update-cont";
+        // String urlString = "http://10.0.2.2:8080/api/step-records/update-cont";
 
         JSONObject jsonObject = new JSONObject();
         try {

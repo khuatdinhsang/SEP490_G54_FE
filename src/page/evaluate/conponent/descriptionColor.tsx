@@ -8,22 +8,27 @@ import { questionRes } from '../../../constant/type/question'
 const DescriptionColor = () => {
     return (
         <View style={flexRow}>
-            <View style={styles.color}></View>
+            <View style={[styles.color, { backgroundColor: colors.gray_G03 }]}></View>
+            <Text style={[styles.text, { marginRight: 10 }]}>지난달</Text>
+            <View style={[styles.color, { backgroundColor: colors.orange_04 }]}></View>
+            <View style={[styles.color, { backgroundColor: colors.green }]}></View>
+            <View style={[styles.color, { backgroundColor: colors.blue_01 }]}></View>
+            <Text style={styles.text}>이번달</Text>
         </View>
     )
 }
 const styles = StyleSheet.create({
     text: {
-        fontWeight: "600",
-        fontSize: 18,
-        color: colors.gray_G09
+        fontWeight: "400",
+        fontSize: 14,
+        color: colors.gray_G06
 
     },
     color: {
         height: 8,
         width: 8,
         borderRadius: 4,
-        backgroundColor: colors.gray_G03
+        marginRight: 5
     }
 
 })

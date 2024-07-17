@@ -45,12 +45,14 @@ import { SCREENS_NAME } from '../../navigator/const';
 const widthSidebar = WidthDevice - 20;
 
 const Home = () => {
-  const [progressBar, setProgressBar] = useState<number>(0.3);
+  const [progressBar, setProgress] = useState<number>(0.5)
   const [overlay, setOverlay] = useState<boolean>(true);
   const [guide, setGuide] = useState<GuideStep>(GuideStep.GUIDE_MODAL);
   const refScrollHome = React.useRef<ScrollView>(null);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const transformX = useSharedValue(-widthSidebar);
+  const [counterStep, setCounterStep] = useState<number>(0);
+  const [planCounterStep, setPlanCounterStep] = useState<number>(0)
   const user = useAppSelector(state => state.user);
   // dispatch(initUser({id: '1', counterStep: []}));
 
@@ -60,6 +62,33 @@ const Home = () => {
     };
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const counterServer = await counterStepService.getCounterStep();
+      if (counterServer?.code === 200) {
+        const counterClient = CounterStepModule.stepsSinceLastReboot();
+        if (counterServer.result.planedValue === 0) {
+          setProgress(0);
+        } else if (counterServer.result.currentValue + counterClient >= counterServer.result.planedValue) {
+          setProgress(1);
+        } else {
+          setProgress(parseFloat(((counterServer.result.currentValue + counterClient) / counterServer.result.planedValue).toFixed(1)));
+        }
+        setCounterStep(counterServer.result.currentValue + counterClient);
+        setPlanCounterStep(counterServer.result.planedValue);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 1000 * 10);
+    return () => clearInterval(interval);
+  }, []);
   useEffect(() => {
     switch (guide) {
       case GuideStep.GUIDE_TOP:
@@ -149,6 +178,8 @@ const Home = () => {
           <ShoesComponent
             progressBar={progressBar}
             guide={guide === GuideStep.GUIDE_SHOES}
+            counterStep={counterStep}
+            planCounterStep={planCounterStep}
           />
           <View style={{ marginTop: 40 }} />
           <ClockComponent guide={guide === GuideStep.GUIDE_CLOCK} />

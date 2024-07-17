@@ -9,6 +9,9 @@ export const authService = {
     login(data: LoginData): Promise<ResponseForm<LoginResponse>> {
         return axiosClient.post(`${endpoint}/login`, data);
     },
+    logout(): Promise<ResponseForm<string>> {
+        return axiosClient.get(`${endpoint}/logout`);
+    },
     register(data: RegisterData): Promise<RegisterResponse> {
         return axiosClient.post(`${endpoint}/mobile/register`, data);
     },
