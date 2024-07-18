@@ -26,7 +26,8 @@ import { offsetTime } from '../../constant';
 type dataType = {
     id: number,
     name: string,
-    value: string
+    value: string,
+    dayWeek: number
 }
 
 const AddMedication = ({ route }: any) => {
@@ -40,13 +41,13 @@ const AddMedication = ({ route }: any) => {
     const [messageError, setMessageError] = useState<string>("");
     const dispatch = useDispatch()
     const initData = [
-        { id: 1, name: t("common.text.monday"), value: TypeDate.MONDAY },
-        { id: 2, name: t("common.text.tuesday"), value: TypeDate.TUESDAY },
-        { id: 3, name: t("common.text.wednesday"), value: TypeDate.WEDNESDAY },
-        { id: 4, name: t("common.text.thursday"), value: TypeDate.THURSDAY },
-        { id: 5, name: t("common.text.friday"), value: TypeDate.FRIDAY },
-        { id: 6, name: t("common.text.saturday"), value: TypeDate.SATURDAY },
-        { id: 7, name: t("common.text.sunday"), value: TypeDate.SUNDAY },
+        { id: 1, name: t("common.text.monday"), value: TypeDate.MONDAY, dayWeek: 2 },
+        { id: 2, name: t("common.text.tuesday"), value: TypeDate.TUESDAY, dayWeek: 3 },
+        { id: 3, name: t("common.text.wednesday"), value: TypeDate.WEDNESDAY, dayWeek: 4 },
+        { id: 4, name: t("common.text.thursday"), value: TypeDate.THURSDAY, dayWeek: 5 },
+        { id: 5, name: t("common.text.friday"), value: TypeDate.FRIDAY, dayWeek: 6 },
+        { id: 6, name: t("common.text.saturday"), value: TypeDate.SATURDAY, dayWeek: 7 },
+        { id: 7, name: t("common.text.sunday"), value: TypeDate.SUNDAY, dayWeek: 1 },
     ];
 
     const [data, setData] = useState<dataType[]>(initData);
@@ -74,6 +75,7 @@ const AddMedication = ({ route }: any) => {
                 if (res.code === 200) {
                     setIsLoading(false);
                     setDataMedication(res.result);
+                    setMessageError("");
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -108,10 +110,11 @@ const AddMedication = ({ route }: any) => {
         const dataInterface: listRegisterMedicineData = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
-            time: convertToUTC(`${twoDigit(Number(3))}:${twoDigit(Number(20))}:00`, offsetTime),
-            medicineTitle: selectedMedicineTitle.toString()
+            time: convertToUTC(`${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`, offsetTime),
+            medicineTitle: selectedMedicineTitle.toString(),
+            indexDay: dayChoose.map((item) => item.dayWeek),
         };
-
+        console.log("117", dayChoose.map((item) => item.dayWeek))
         const existingMedicationIndex = listRegisterMedication.findIndex(
             item => item.medicineTypeId === selectedMedication
         );
@@ -347,7 +350,7 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18,
+        fontSize: 14,
         marginTop: 10
     }
 });

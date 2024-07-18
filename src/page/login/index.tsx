@@ -16,6 +16,7 @@ import { loginUser } from '../../store/user.slice';
 import { ResponseForm } from '../../constant/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
+import NotificationModule from '../../native-module/NotificationModule';
 
 interface LoginValues {
     email: string;
@@ -32,7 +33,7 @@ const Login = () => {
             .string()
             .required(
                 t("placeholder.err.blank")
-            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            ).matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
                 t("placeholder.err.email")
             ),
         password: yup
@@ -54,25 +55,26 @@ const Login = () => {
     const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
-            const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
+            const deviceToken = await AsyncStorage.getItem('deviceToken');
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
+                console.log("vaoday")
                 setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
-
             }
         } catch (error: any) {
             if (error.code == 400 || error.code == 401) {
                 setMessageError(error.message)
+            }
+            if (error.code === 406) {
+                navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
             }
         } finally {
             setIsLoading(false)
         }
 
     }
-
-
-
     const handleFindId = () => {
         // Handle find ID logic
     }
@@ -86,7 +88,7 @@ const Login = () => {
     };
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.firstStep}>{t("common.text.firstStep")}</Text>
                 <Formik
                     initialValues={{ email: '', password: '' }}
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

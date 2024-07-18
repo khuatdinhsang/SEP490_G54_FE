@@ -9,17 +9,27 @@ export const authService = {
     login(data: LoginData): Promise<ResponseForm<LoginResponse>> {
         return axiosClient.post(`${endpoint}/login`, data);
     },
+    logout(): Promise<ResponseForm<string>> {
+        return axiosClient.get(`${endpoint}/logout`);
+    },
     register(data: RegisterData): Promise<RegisterResponse> {
         return axiosClient.post(`${endpoint}/mobile/register`, data);
     },
     verifyEmailApi(email: string): Promise<VerifyEmailResponse> {
         return axiosClient.get(`${endpoint}/verify-mail/${email}`);
     },
+    checkRegisterEmail(email: string, code: string): Promise<ResponseForm<boolean>> {
+        return axiosClient.get(`${endpoint}/check-register-email/${email}/${code}`);
+    },
+    checkForgetPasswordEmail(email: string, code: string): Promise<ResponseForm<boolean>> {
+        return axiosClient.post(`forget-password/email/verify`, { email: email, code: code });
+    },
     forgetPassword(email: string): Promise<VerifyEmailResponse> {
         return axiosClient.get(`forget-password/email/${email}`);
     },
     verifyForgetPassword(data: VerifyForgetPassword): Promise<VerifyEmailResponse> {
-        return axiosClient.post(`forget-password/email/verify`, data);
+        console.log("a", data)
+        return axiosClient.post(`forget-password/email/change-password`, data);
     },
     changePassword(data: changePassword): Promise<VerifyEmailResponse> {
         return axiosClient.put(`accounts/change-password`, data);

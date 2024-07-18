@@ -12,7 +12,7 @@ import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
 import LoadingScreen from '../../component/loading';
 import { planService } from '../../services/plan';
-import { getPreviousMonday } from '../../util';
+import { getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
@@ -30,128 +30,21 @@ const RegisterMedication = () => {
     const closeModal = () => {
         setIsShowModal(false)
     };
-    const initListRegisterMedication = [
-        {
-            id: 1,
-            name: t("planManagement.medication.highBloodPressure"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.morning"),
-            }
-        },
-        {
-            id: 2,
-            name: t("planManagement.medication.hyperlipidemia"),
-            day: [
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 4,
-                    value: t("common.text.thursday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 11,
-                session: t("common.text.morning"),
-            }
-        },
-        {
-            id: 3,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-        {
-            id: 4,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-        {
-            id: 5,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-    ]
-    const [ListRegisterMedication, setListRegisterMedication] = useState<any[]>([])
+    const handleRetrieveHistory = () => {
+        setIsShowModal(false)
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, { listRegisterMedication })
+    }
+    const [listRegisterMedication, setListRegisterMedication] = useState<any[]>([])
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
+                console.log("42", getPreviousMonday())
                 const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
-                console.log("res", res)
+                console.log("43", res)
                 if (res.code === 200) {
                     setIsLoading(false);
+                    setMessageError("");
                     setListRegisterMedication(res.result);
                     if (res.result.length > 0) {
                         setIsShowModal(true)
@@ -217,17 +110,17 @@ const RegisterMedication = () => {
                         <Text style={[styles.text, { marginBottom: 10 }]}>{t("planManagement.text.retrieveHistoryLastWeek")}</Text>
                         <Text style={[styles.textChooseDay, { marginBottom: 10 }]}>{t("planManagement.text.drugHistoryLastWeek")}</Text>
                         <ScrollView style={styles.scrollView}>
-                            {ListRegisterMedication && ListRegisterMedication.map((item) => {
+                            {listRegisterMedication && listRegisterMedication?.map((item) => {
                                 return <View
-                                    key={item.id}
+                                    key={item.medicineTypeId}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
                                     <View style={[flexRow, { flex: 1 }]}>
                                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                                         <View style={styles.detailExample}>
-                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.name}</Text>
+                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
                                             <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.day.map((item: any) => item.value).join(', ')} | </Text>
-                                                <Text style={styles.textChooseDay}>{item.time.value}{item.time.session}</Text>
+                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => item).join(', ')} | </Text>
+                                                <Text style={styles.textChooseDay}>{item.time}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -241,7 +134,9 @@ const RegisterMedication = () => {
                                 style={[styles.btn, { backgroundColor: colors.gray_G02 }]}>
                                 <Text style={{ textAlign: 'center', color: colors.gray_G04 }}>{t("common.text.cancel")}</Text>
                             </Pressable>
-                            <Pressable style={[styles.btn, { backgroundColor: colors.primary }]}>
+                            <Pressable
+                                onPress={handleRetrieveHistory}
+                                style={[styles.btn, { backgroundColor: colors.primary }]}>
                                 <Text style={{ textAlign: 'center', color: colors.white }}>{t("common.text.retrieveAgain")}</Text>
                             </Pressable>
                         </View>
@@ -268,7 +163,7 @@ const styles = StyleSheet.create({
     textChooseDay: {
         fontSize: 16,
         fontWeight: '500',
-        color: colors.gray_G06
+        color: colors.gray_G06,
     },
     text: {
         fontWeight: '700',

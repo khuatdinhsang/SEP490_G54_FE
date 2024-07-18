@@ -2,30 +2,32 @@ import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { flexRow, flexRowSpaceBetween } from '../../../styles/flex'
 import colors from '../../../constant/color'
-import { dataQuestion } from '../const';
 import { useTranslation } from 'react-i18next';
+import { questionRegular } from '../../../constant/type/question';
 
 type itemQuestion = {
-    question: dataQuestion;
-    handleDetailQuestion: (id: number) => void;
+    handleDetailQuestion?: (id: number) => void;
+    question: questionRegular
 };
 const RegularQuestionComponent: React.FC<itemQuestion> = ({ question, handleDetailQuestion }) => {
     const { t, i18n } = useTranslation();
     return (
         <View style={{ marginBottom: 20 }}>
-            <View style={flexRow}>
-                <Text style={styles.title}>Q</Text>
-                <Text style={styles.title}>1</Text>
-                <Text style={styles.title}>.</Text>
-                <Text style={[styles.title, { color: colors.black }]}>{question.title}</Text>
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: "flex-start" }}>
+                <View style={flexRow}>
+                    <Text style={styles.title}>Q</Text>
+                    <Text style={styles.title}>{question.id}</Text>
+                    <Text style={styles.title}>.</Text>
+                </View>
+                <Text style={[styles.title, { color: colors.black, width: "90%" }]}>{question.question}</Text>
             </View>
             <Pressable
-                onPress={() => handleDetailQuestion(question.id)}
+                // onPress={() => handleDetailQuestion(question.id)}
                 style={styles.question}>
                 <View style={styles.answer}>
                     <Text>{t("common.text.next")}</Text>
                 </View>
-                <Text style={styles.questionText}>{question.content}</Text>
+                <Text style={styles.questionText}>{question.answer}</Text>
             </Pressable>
         </View>
     )

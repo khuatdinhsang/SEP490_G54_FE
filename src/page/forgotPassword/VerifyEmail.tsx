@@ -27,21 +27,22 @@ interface typeValues {
 const VerifyEmail = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [time, setTime] = useState(0.5); // Default time in minutes
+    const [time, setTime] = useState(3); // Default time in minutes
     const [checkResetTime, setCheckResetTime] = useState<boolean>(false);
     const [checkCode, setCheckCode] = useState<string>('')
     const [timeUp, setTimeUp] = useState<boolean>(false)
-    const [codeResponse, setCodeResponse] = useState<string>("")
+    // const [codeResponse, setCodeResponse] = useState<string>("")
     const [isGetCode, setIsGetCode] = useState<boolean>(false)
     const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true)
     const [isEmailExits, setIsEmailExits] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [messageError, setMessageError] = useState<string>("")
+
     const handleResetTime = async (values: typeValues, setFieldValue: (field: string, value: any) => void): Promise<void> => {
         setIsLoading(true)
         clearField('code', setFieldValue)
         try {
             const res = await authService.forgetPassword(values.email);
-            console.log("49", res)
             if (res.code == 200) {
                 setIsGetCode(true)
                 setCheckCode("loading")
@@ -49,7 +50,7 @@ const VerifyEmail = () => {
                 setCheckResetTime(pre => !pre);
                 setTimeUp(false)
                 setIsLoading(false)
-                setCodeResponse(res.result)
+                // setCodeResponse(res.result)
                 setIsTimerRunning(true)
                 clearField('code', setFieldValue)
                 setIsEmailExits("")
@@ -79,12 +80,16 @@ const VerifyEmail = () => {
         //     setGetCode(false);
         // }
     };
+    const handleChangeText = (field: string, setFieldValue: (field: string, value: string) => void) => (text: string) => {
+        setFieldValue(field, text);
+        setIsEmailExits('');
+    };
     const fotgotPasswordSchema = yup.object().shape({
         email: yup
             .string()
             .required(
                 t("placeholder.err.blank")
-            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            ).matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
                 t("placeholder.err.email")
             ),
         code: yup
@@ -94,12 +99,30 @@ const VerifyEmail = () => {
             ),
     });
     const handleCheckCode = async (values: typeValues): Promise<void> => {
-        if (values.code === codeResponse) {
-            setCheckCode('success');
-            setIsTimerRunning(false);
-        } else {
-            setCheckCode('error');
-            setIsTimerRunning(true)
+        setIsLoading(true);
+        try {
+            const resData = await authService.checkForgetPasswordEmail(values.email, values.code);
+            console.log("re", resData)
+            if (resData.code === 200) {
+                setIsLoading(false);
+                if (resData.result) {
+                    setCheckCode('success');
+                    setIsTimerRunning(false);
+                } else {
+                    setCheckCode('error');
+                    setIsTimerRunning(true)
+                }
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400 || error?.response?.status === 401) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } finally {
+            setIsLoading(false);
         }
     }
     const renderMessage = () => {
@@ -176,7 +199,7 @@ const VerifyEmail = () => {
                                             onPressIconRight={() => clearField('email', setFieldValue)}
                                             isIconRight={true}
                                             value={values.email}
-                                            onChangeText={handleChange('email')}
+                                            onChangeText={handleChangeText('email', setFieldValue)}
                                             label={t('common.text.email')}
                                             textError={errors.email}
                                         />
@@ -256,8 +279,6 @@ const VerifyEmail = () => {
                                     </Text>
                                 )}
                             </View>
-
-
                         </View>
                     </View>
                     <Pressable disabled={checkCode === 'success' ? false : true} onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: checkCode == 'success' ? colors.primary : colors.gray }]} >
@@ -308,16 +329,6 @@ const styles = StyleSheet.create({
         bottom: 20,
         width: WidthDevice - 40,
         left: 20,
-    },
-    textField: {
-        color: colors.black
-    },
-    field: {
-        borderColor: colors.primary,
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        paddingRight: 50
     },
     textError: {
         color: colors.red

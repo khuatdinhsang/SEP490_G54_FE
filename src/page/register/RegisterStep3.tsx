@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

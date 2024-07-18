@@ -15,7 +15,7 @@ import LoadingScreen from '../../component/loading';
 const QuestionDetail = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const { questionId } = route.params;
+    const questionId = route?.params?.questionId;
     const [questionDetail, setQuestionDetail] = useState<questionResponse>()
     const [messageError, setErrorMessage] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
@@ -25,6 +25,7 @@ const QuestionDetail = ({ route }: any) => {
             const res = await questionService.getDetailQuestion(questionId);
             console.log("Res", res);
             if (res.code === 200) {
+                setErrorMessage("");
                 setIsLoading(false)
                 setQuestionDetail(res.result);
             } else {
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

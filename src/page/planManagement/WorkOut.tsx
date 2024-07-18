@@ -18,6 +18,8 @@ import { TypeActivityRecord, TypeDate } from './const';
 import { planService } from '../../services/plan';
 import LoadingScreen from '../../component/loading';
 import { getMondayOfCurrentWeek } from '../../util';
+import { useDispatch } from 'react-redux';
+import { setScreen } from '../../store/screen.slice';
 
 type dataType = {
     id: number,
@@ -48,6 +50,7 @@ const WorkOut = () => {
     const [selectedDays, setSelectedDays] = useState<number[]>([]);
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
     const initData = [
         { id: 1, name: t("common.text.monday"), value: TypeDate.MONDAY },
         { id: 2, name: t("common.text.tuesday"), value: TypeDate.TUESDAY },
@@ -117,6 +120,8 @@ const WorkOut = () => {
         try {
             const res = await planService.postActivity(dataSubmit)
             if (res.code === 200) {
+                dispatch(setScreen(3));
+                setMessageError("");
                 setIsLoading(false)
                 navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
             } else {
@@ -355,6 +360,6 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18
+        fontSize: 14
     }
 });

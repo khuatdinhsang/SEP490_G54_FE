@@ -1,10 +1,10 @@
 export interface LoginData {
     email: string;
     password: string;
+    deviceToken: string
 }
 export interface VerifyForgetPassword {
     email: string,
-    code: string,
     password: string;
 }
 export interface changePassword {
@@ -25,7 +25,7 @@ export interface RegisterData {
 }
 export interface VerifyEmailResponse {
     code: number;
-    result: string;
+    result: string | boolean;
 }
 
 export interface LoginResponse {

@@ -32,10 +32,27 @@ const FillRecord = ({ route }: any) => {
     const [isShowModal, setShowModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
+    const isEditable = route?.params?.isEditable;
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
+    const [glycemicError, setGlycemicError] = useState<string>("");
+    const [choresterolError, setChoresterolError] = useState<string>("");
+    const [glucozerError, setGlucozerError] = useState<string>("");
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
+        if (Number(glycemic) > 10) {
+            setGlycemicError("Invalid value");
+            return;
+        }
+        if (Number(choresterol) > 300) {
+            setChoresterolError("Invalid value");
+            return;
+        }
+        if (Number(glucozer) > 200) {
+            setGlucozerError("Invalid value");
+            return;
+        }
         setIsLoading(true)
         const dataSubmit = {
             timeMeasure: selectedItem.value,
@@ -49,7 +66,8 @@ const FillRecord = ({ route }: any) => {
             const res = await planService.postCardinal(dataSubmit)
             if (res.code === 201) {
                 setIsLoading(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { chooseSelectedItem: selectedItem })
+                setIsEdit(false)
+                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -65,33 +83,36 @@ const FillRecord = ({ route }: any) => {
         }
     };
     const handleSetGlycemic = (value: any) => {
+        setGlycemicError("")
         if (isCheckedGlycemic) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setGlycemic(value);
             setIsCheckedGlycemic(false)
         }
     };
     const handleSetChoresterol = (value: any) => {
+        setChoresterolError("")
         if (isCheckedChoresterol) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setChoresterol(value);
             setIsCheckedChoresterol(false)
         }
     };
     const handleSetGlucozer = (value: any) => {
+        setGlucozerError("")
         if (isCheckedGlucozer) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
+        const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value)) {
             setGlucozer(value);
             setIsCheckedGlucozer(false)
@@ -152,6 +173,7 @@ const FillRecord = ({ route }: any) => {
                                         value={glycemic}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetGlycemic}
+                                        error={glycemicError}
                                     />
                                 </View>
                             </View>
@@ -177,6 +199,7 @@ const FillRecord = ({ route }: any) => {
                                         value={choresterol}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetChoresterol}
+                                        error={choresterolError}
                                     />
                                 </View>
                             </View>
@@ -203,6 +226,7 @@ const FillRecord = ({ route }: any) => {
                                             value={glucozer}
                                             keyboardType={"numeric"}
                                             handleSetValue={handleSetGlucozer}
+                                            error={glucozerError}
                                         />
                                     </View>
 
@@ -219,8 +243,8 @@ const FillRecord = ({ route }: any) => {
                             </View>
                         </View>
                     </View>
+                    {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
                 </View>
-                {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable

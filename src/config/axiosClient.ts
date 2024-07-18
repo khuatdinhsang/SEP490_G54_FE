@@ -1,27 +1,27 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
-export const baseURL = 'http://10.0.2.2:8080/api';
+export const baseURL = 'http://54.179.151.16:8080/api';
+// export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
-    baseURL: baseURL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: baseURL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 axiosClient.interceptors.request.use(
-    async (config: any) => {
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        if (accessToken) {
-            config.headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-        return config;
-    },
-    (error) => {
-        console.error('Request error:', error);
-        return Promise.reject(error.response.data.errors[0].message);
+  async (config: any) => {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
+    return config;
+  },
+  error => {
+    console.error('Request error:', error);
+    return Promise.reject(error.response.data.errors[0].message);
+  },
 );
-
 
 // axiosClient.interceptors.response.use(
 //     // Thực hiện các thay đổi trước khi phản hồi được trả về
@@ -58,10 +58,13 @@ axiosClient.interceptors.request.use(
 //     }
 // );
 axiosClient.interceptors.response.use(
-    (response) => response.data,
-    async (error) => {
-        console.error('Response error:', error.response ? error.response.data : error.message);
-        return Promise.reject(error);
-    }
+  response => response.data,
+  async error => {
+    console.error(
+      'Response error:',
+      error.response ? error.response.data : error.message,
+    );
+    return Promise.reject(error);
+  },
 );
 export { axiosClient };

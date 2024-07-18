@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import HeaderNavigatorComponent from '../../component/header-navigator'
 import { ParamListBase, useNavigation } from '@react-navigation/native';
@@ -7,6 +7,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import colors from '../../constant/color';
 import Question from './conponent/Question';
 import { SCREENS_NAME } from '../../navigator/const';
+import LoadingScreen from '../../component/loading';
+import { questionRes, resultQuestionRes } from '../../constant/type/question';
+import { monthlyQuestionService } from '../../services/monthlyQuestion';
+import { TypeQuestion } from '../../constant';
 
 interface questionType {
     id: number,
@@ -15,30 +19,90 @@ interface questionType {
 const SAT_SF_P = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
-    const { time } = route.params
+    const time = route?.params?.time
+    const dataSF_C = route?.params?.data
+    const reviewMode = route?.params?.reviewMode;
+    const [messageError, setErrorMessage] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [type, setType] = useState<string>("")
+    const [listQuestionsResult, setListQuestionsResult] = useState<resultQuestionRes[]>([])
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
-
-    const initQuestion = [
-        { id: 1, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 2, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 3, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 4, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 5, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 6, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-        { id: 7, title: '절망적인 상황에서도 모든 가능성을 열어놓고 긍정적으로 받아들였다.' },
-    ]
-    const [listQuestions, setListQuestions] = useState<questionType[]>(initQuestion)
+    const [listQuestions, setListQuestions] = useState<questionRes[]>([])
     const [answers, setAnswers] = useState<{ [key: number]: number | null }>({});
 
     const handleSelectAnswer = (questionId: number, answerIndex: number) => {
         setAnswers((prev) => ({ ...prev, [questionId]: answerIndex }));
     };
     const nextPage = () => {
-        console.log("Submitted answers: ", answers);
-        navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time })
+        if (reviewMode) {
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time, reviewMode: true });
+        } else {
+            const data = listQuestions.map((item) => {
+                return {
+                    monthNumber: time,
+                    monthlyRecordType: type,
+                    questionNumber: item.questionNumber,
+                    question: item.question,
+                    answer: answers[item.questionNumber]
+                }
+            })
+            navigation.navigate(SCREENS_NAME.EVALUATE.SAT_SF_I, { time, data: [...dataSF_C, ...data] })
+        }
     }
+    useEffect(() => {
+        const getListQuestion = async () => {
+            setIsLoading(true)
+            try {
+                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SAT_SF_P)
+                if (res.code === 200) {
+                    setErrorMessage("");
+                    setIsLoading(false)
+                    setListQuestions(res.result.formMonthlyQuestionDTOList)
+                    setType(res.result.type)
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setErrorMessage(error.response.data.message);
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+        }
+        const getListQuestionResult = async () => {
+            setIsLoading(true);
+            try {
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SAT_SF_P);
+                if (res.code === 200) {
+                    setErrorMessage("");
+                    setListQuestionsResult(res.result)
+                    setType(res.result[0].type)
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    setErrorMessage(error.response.data.message);
+                } else {
+                    setErrorMessage("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (reviewMode) {
+            getListQuestionResult()
+        } else {
+            getListQuestion();
+        }
+    }, [])
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -52,29 +116,41 @@ const SAT_SF_P = ({ route }: any) => {
             <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 80 }} >
                 <View style={styles.content}>
                     <View style={styles.introduce}>
-                        <Text style={[styles.text, { color: colors.orange_04 }]}>SAT-SF-P</Text>
+                        <Text style={[styles.text, { color: colors.orange_04 }]}>{type}</Text>
                         <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 , 삶의 목표와 구체적인 계획을 세울 때 사용할 수 있는 준비전략과 관련된 평가입니다. 각 문항들을 읽고, 귀하가 얼마나 잘 해왔는지를 가장 가깝다고 생각되는 부분에 체크해주십시오</Text>
                     </View>
                     {listQuestions && listQuestions.map((item) => {
                         return (
                             <Question
                                 question={item}
-                                key={item.id}
-                                selectedAnswer={answers[item.id]}
+                                key={item.questionNumber}
+                                selectedAnswer={answers[item.questionNumber]}
                                 onSelectAnswer={handleSelectAnswer}
                             />
                         )
                     })}
+                    {reviewMode && listQuestionsResult.map((item) => (
+                        <Question
+                            question={item}
+                            key={item.questionNumber}
+                            selectedAnswer={answers[item.questionNumber]}
+                            onSelectAnswer={handleSelectAnswer}
+                            answerResult={item.answer}
+                            reviewMode={reviewMode}
+                        />
+                    ))}
                 </View>
+                {messageError && !isLoading && <Text style={[styles.text, { color: colors.red }]}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={Object.keys(answers).length !== initQuestion.length}
+                    disabled={Object.keys(answers).length !== listQuestions.length}
                     onPress={nextPage}
-                    style={[styles.button, { backgroundColor: Object.keys(answers).length === initQuestion.length ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: Object.keys(answers).length === initQuestion.length ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
+                    style={[styles.button, { backgroundColor: Object.keys(answers).length === listQuestions.length ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: Object.keys(answers).length === listQuestions.length ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }

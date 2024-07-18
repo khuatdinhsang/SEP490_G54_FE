@@ -12,7 +12,7 @@ export interface medicalAppointmentData {
     location: string,
     type: TypeMakeHospitalSchedule | undefined,
     note: string,
-    date: Date
+    date: string
 }
 export interface appointment {
     id: number,
@@ -64,13 +64,15 @@ export interface stepsNumberPost {
 export interface medicinePost {
     weekStart: string,
     medicineTypeId: number | undefined,
-    schedule: string[]
+    schedule: string[],
 }
 export interface listRegisterMedicineData {
     medicineTypeId: number,
     medicineTitle: string,
     time: string,
-    weekday: string[]
+    weekday: string[],
+    indexDay: number[],
+    weekTime?: string[]
 }
 export interface cardinalPost {
     id?: number,
@@ -137,4 +139,10 @@ export interface mentalPutResponse {
     weekStart: string,
     mentalRuleId: number,
     date: string
+}
+
+export interface medicinePut {
+    status: boolean,
+    date: string,
+    medicineTypeId: number[]
 }

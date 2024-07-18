@@ -14,6 +14,7 @@ import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
 import { authService } from '../../services/auth';
 import axios from 'axios';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterRules = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -36,6 +37,7 @@ const RegisterRules = ({ route }: any) => {
                 const res = await authService.register(data)
                 if (res.code === 201) {
                     setIsLoading(false)
+                    await AsyncStorage.setItem('isNewUser', 'true');
                     navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
                 }
             } catch (error: any) {
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
         // ],
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

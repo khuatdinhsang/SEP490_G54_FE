@@ -14,6 +14,8 @@ import InputNumber from '../../component/inputNumber';
 import { planService } from '../../services/plan';
 import LoadingScreen from '../../component/loading';
 import { getMondayOfCurrentWeek } from '../../util';
+import { setScreen } from '../../store/screen.slice';
+import { useDispatch } from 'react-redux';
 
 const NumberSteps = () => {
     const { t } = useTranslation();
@@ -21,6 +23,7 @@ const NumberSteps = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
     };
@@ -35,7 +38,9 @@ const NumberSteps = () => {
                 }
                 const res = await planService.postStepsNumber(data)
                 if (res.code === 200) {
+                    dispatch(setScreen(6));
                     setIsLoading(false)
+                    setMessageError("");
                     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18
+        fontSize: 14
     }
 })
 

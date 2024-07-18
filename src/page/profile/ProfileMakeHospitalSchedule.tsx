@@ -25,6 +25,7 @@ const ProfileMakeHospitalSchedule = () => {
     try {
       const res = await medicalAppointmentService.getAll();
       if (res.code === 200) {
+        setMessageError("");
         setIsLoading(false)
         setListAppointments(res.result);
       } else {
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   textError: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "500",
     color: colors.red
   },
