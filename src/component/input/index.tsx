@@ -61,6 +61,7 @@ const InputComponent = (props: InputComponentProps) => {
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           editable={isEditable}
+          maxLength={200}
         />
         {isIconRight && value && (
           <Pressable style={styles.iconRight} onPress={onPressIconRight}>
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: colors.gray_G03,
     width: '100%',
+    paddingRight: 40
   },
   textFocused: {
     borderColor: colors.primary,

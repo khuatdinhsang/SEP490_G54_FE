@@ -205,7 +205,7 @@ const VerifyEmail = () => {
                                         />
                                     </View>
                                     <Pressable
-                                        disabled={errors.email ? true : false}
+                                        disabled={errors.email || isGetCode ? true : false}
                                         onPress={() => handleResetTime(values, setFieldValue)}
                                         style={{
                                             width: '25%',

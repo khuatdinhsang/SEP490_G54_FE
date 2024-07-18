@@ -13,5 +13,6 @@ export const weeklyReviewService = {
     getDetailWeeklyReviews(weekStart: string): Promise<ResponseForm<ResponseWeeklyReview>> {
         return axiosClient.get(`${endpoint}/mobile/review/${weekStart}`);
     }
+    
 
 };

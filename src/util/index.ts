@@ -6,6 +6,7 @@ import { IMAGE } from "../constant/image";
 import { ImageProps } from "react-native";
 import { satEvaluateRes, sfEvaluateRes } from "../constant/type/question";
 import colors from "../constant/color";
+import { offsetTime } from "../constant";
 interface OutputData {
     id: number;
     name: string;
@@ -33,15 +34,15 @@ export const transformData = (data: HistoryMedicalResponse[]): TransformedItem[]
 
 export const twoDigit = (num: number) => num.toString().padStart(2, '0');
 export const getISO8601ForSelectedDays = (hours: string, minutes: string, days: number[]): string[] => {
-    const baseDate = new Date();
-    //baseDate.getDay() lấy ra ngày trong tuần của đối tượng Date hiện tại, từ 0 (Chủ Nhật) đến 6 (Thứ Bảy).
+    const selectedHours = Number(hours);
+    const selectedMinutes = Number(minutes);
     return days.map(day => {
-        const date = new Date(baseDate);
-        date.setDate(baseDate.getDate() + (day - baseDate.getDay() + 7) % 7);
-        date.setHours(Number(hours), Number(minutes), 0, 0);
-        return date.toISOString().replace('.000Z', '') + '.000';
+        let dt: any = DateTime.local();
+        dt = dt.set({ hour: selectedHours, minute: selectedMinutes, second: 0 });
+        dt = dt.plus({ days: day - dt.weekday }).setZone('UTC-7', { keepLocalTime: true });
+        return dt.toISO({ suppressMilliseconds: true }).split(".")[0];
     });
-};
+};;
 export const removeAsyncStorageWhenLogout = async () => {
     try {
         await AsyncStorage.removeItem('refreshToken');
@@ -51,38 +52,41 @@ export const removeAsyncStorageWhenLogout = async () => {
         console.error('error', error);
     }
 };
-export const getMondayOfCurrentWeek = () => {
-    const today = new Date();
-    // Lấy ngày (0 là Chủ Nhật, 1 là Thứ Hai, ..., 6 là Thứ Bảy)
-    const dayOfWeek = today.getDay();
-    // Tính số ngày đã qua từ thứ Hai (nếu Chủ Nhật thì là 6, còn lại là dayOfWeek - 1)
-    const diff = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
-    // Tạo ngày thứ Hai đầu tuần
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - diff);
-    return monday.toISOString();
-}
-
-export const convertToUTC = (time: string, offset: number) => {
-    const [hour, minute, second] = time.split(':').map(Number);
-    const localDate = DateTime.fromObject({ hour, minute, second }, { zone: `UTC+${offset}` });
-    const utcDate = localDate.toUTC();
-    return utcDate.toFormat('HH:mm:ss');
-}
-export const convertFromUTC = (time: string, offset: number) => {
-    const [hour, minute, second] = time.split(':').map(Number);
-    const utcDate = DateTime.fromObject({ hour, minute, second }, { zone: 'utc' });
-    const localDate = utcDate.setZone(`UTC+${offset}`);
-    return localDate.toFormat('HH:mm:ss');
-}
-export const getPreviousMonday = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const daysToLastMonday = dayOfWeek === 0 ? 6 : dayOfWeek + 6;
-    const lastMonday = new Date(today);
-    lastMonday.setDate(today.getDate() - daysToLastMonday);
-    return lastMonday.toISOString();
-}
+export const getMondayOfCurrentWeek = (): string => {
+    const today = DateTime.local();
+    const dayOfWeek = today.weekday;
+    const daysToLastMonday = dayOfWeek === 1 ? 0 : dayOfWeek - 1;
+    const lastMonday = today.minus({ days: daysToLastMonday }).set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true });
+    return lastMondayUtc.toISO() || "";
+};
+// export const convertToUTC = (time: string, offset: number) => {
+//     const [hour, minute, second] = time.split(':').map(Number);
+//     const localDate = DateTime.fromObject({ hour, minute, second }, { zone: `UTC+${offset}` });
+//     const utcDate = localDate.toUTC();
+//     return utcDate.toFormat('HH:mm:ss');
+// }
+// export const convertFromUTC = (time: string, offset: number) => {
+//     const [hour, minute, second] = time.split(':').map(Number);
+//     const utcDate = DateTime.fromObject({ hour, minute, second }, { zone: 'utc' });
+//     const localDate = utcDate.setZone(`UTC+${offset}`);
+//     return localDate.toFormat('HH:mm:ss');
+// }
+// export const getPreviousMonday = () => {
+//     const today = new Date();
+//     const dayOfWeek = today.getDay();
+//     const daysToLastMonday = dayOfWeek === 0 ? 6 : dayOfWeek + 6;
+//     const lastMonday = new Date(today);
+//     lastMonday.setDate(today.getDate() - daysToLastMonday);
+//     return lastMonday.toISOString();
+// }
+export const getPreviousMonday = (): string => {
+    const today = DateTime.local();
+    const daysToLastMonday = today.weekday === 1 ? 14 : today.weekday + 6; // Tính số ngày cần trừ để lấy ngày thứ Hai của tuần trước trước đó
+    const lastMonday = today.minus({ days: daysToLastMonday }); // Lấy ngày thứ Hai của tuần trước trước đó
+    const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true }); // Chuyển sang múi giờ UTC+7 và giữ nguyên thời gian địa phương
+    return lastMondayUtc.toISO() || ""; // Trả về chuỗi ISO 8601 đại diện cho ngày thứ Hai của tuần trước trước đó theo múi giờ UTC+7
+};
 export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] => {
     return Object.keys(obj)
         .filter(key => obj[key])
@@ -370,14 +374,17 @@ export const convertToChart2Monthly = (data: DataTypeChart): TransformedData[] =
     return result;
 }
 export const dateNow = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
-}
+    const utcTime = date.getTime();
+    // Cộng thêm 7 giờ (7 * 60 * 60 * 1000 milliseconds) để chuyển sang UTC+7
+    const vietnamTime = new Date(utcTime + offsetTime * 60 * 60 * 1000);
+    const year = vietnamTime.getUTCFullYear();
+    const month = String(vietnamTime.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(vietnamTime.getUTCDate()).padStart(2, '0');
+    const hours = String(vietnamTime.getUTCHours()).padStart(2, '0');
+    const minutes = String(vietnamTime.getUTCMinutes()).padStart(2, '0');
 
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
 export const convertToChart1SAT = (data: satEvaluateRes[]): TransformedData[] => {
     const result = [
         {

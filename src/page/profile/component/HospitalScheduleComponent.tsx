@@ -25,7 +25,7 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
       : '#ECECFF';
 
   return (
-    <View style={[styles.container, flexRow, styles.shadowBox]}>
+    <View style={[styles.container, flexRow, styles.shadowBox, { alignItems: 'flex-start' }]}>
       <View style={[styles.labelWrapper, { backgroundColor: labelColorWrapper }]}>
         <Text style={[styles.label, { color: labelColor }]}>
           {typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
@@ -33,10 +33,10 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
             : '진료'}
         </Text>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <Text style={styles.text}>{appointment.hospital}</Text>
       </View>
-      <View style={styles.textRightWrapper}>
+      <View >
         <Text style={styles.textRight}>{appointment.date?.split("T")[0]}</Text>
       </View>
     </View>
@@ -67,10 +67,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 28,
     marginLeft: 8,
-  },
-  textRightWrapper: {
-    position: 'absolute',
-    right: 16,
   },
   textRight: {
     color: colors.gray_G04,
