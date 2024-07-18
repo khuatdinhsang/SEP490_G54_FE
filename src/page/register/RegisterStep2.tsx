@@ -156,13 +156,14 @@ const RegisterStep2 = ({ route }: any) => {
             setWeight('');
             return;
         }
-        const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
-            setWeight(value);
-            setErrorWeight('');
-        } else {
-            setErrorWeight(t('placeholder.err.number'));
+        const numericRegex = /^\d{1,3}$/;
+        if (!numericRegex.test(value)) {
+            setErrorWeight(t('placeholder.err.invalidInput'));
+            setWeight('');
+            return;
         }
+        setWeight(value);
+        setErrorWeight('');
     };
     const handleSetHeight = (value: any) => {
         if (!value) {
@@ -170,13 +171,14 @@ const RegisterStep2 = ({ route }: any) => {
             setHeight('');
             return;
         }
-        const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
-            setHeight(value);
-            setErrorHeight('');
-        } else {
-            setErrorHeight(t('placeholder.err.number'));
+        const numericRegex = /^\d{1,3}$/;
+        if (!numericRegex.test(value)) {
+            setErrorHeight(t('placeholder.err.invalidInput'));
+            setHeight('');
+            return;
         }
+        setHeight(value);
+        setErrorHeight('');
     };
     const forgotPasswordSchema = yup.object().shape({
         email: yup
@@ -424,7 +426,7 @@ const RegisterStep2 = ({ route }: any) => {
                                             />
                                         </View>
                                         <Pressable
-                                            disabled={errors.email ? true : false}
+                                            disabled={errors.email || isGetCode ? true : false}
                                             onPress={() => handleResetTime(values, setFieldValue)}
                                             style={{
                                                 width: '25%',
@@ -461,7 +463,8 @@ const RegisterStep2 = ({ route }: any) => {
                                             isEditable={isGetCode}
                                         />
                                         {values.code && (
-                                            <Pressable onPress={() => handleCheckCode(values)}>
+                                            <Pressable
+                                                onPress={() => handleCheckCode(values)}>
                                                 <Text
                                                     style={[
                                                         styles.verification,

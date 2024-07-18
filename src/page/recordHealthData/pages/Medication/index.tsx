@@ -9,7 +9,7 @@ import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image'; // Assuming you have IMAGE imported from your constant files
 import { SCREENS_NAME } from '../../../../navigator/const';
 import { planService } from '../../../../services/plan';
-import { convertFromUTC, convertObjectToArray, getMondayOfCurrentWeek } from '../../../../util';
+import { convertObjectToArray, getMondayOfCurrentWeek } from '../../../../util';
 import { HeightDevice, WidthDevice } from '../../../../util/Dimenssion';
 import LoadingScreen from '../../../../component/loading';
 import { offsetTime } from '../../../../constant';
@@ -140,7 +140,8 @@ const MedicationRecord = ({ route }: any) => {
                                     <View style={{ marginBottom: 30 }} key={item.medicineTypeId}>
                                         <View style={[flexRow, { flexWrap: 'wrap' }]}>
                                             <Text style={styles.text}>오늘</Text>
-                                            <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text>
+                                            {/* <Text style={[styles.text, { color: colors.orange_04 }]}>{convertFromUTC(item.time, offsetTime)}</Text> */}
+                                            <Text style={[styles.text, { color: colors.orange_04 }]}>{item.time}</Text>
                                             <Text style={styles.text}>에</Text>
                                             <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineTitle}</Text>
                                             <Text style={styles.text}>을 먹었나요?</Text>

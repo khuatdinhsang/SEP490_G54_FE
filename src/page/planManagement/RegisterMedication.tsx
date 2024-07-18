@@ -39,7 +39,6 @@ const RegisterMedication = () => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                console.log("42", getPreviousMonday())
                 const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
                 console.log("43", res)
                 if (res.code === 200) {

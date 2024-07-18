@@ -89,7 +89,7 @@ const NumberSteps = () => {
                                 value={numberSteps}
                                 keyboardType={"numeric"}
                                 handleSetValue={handleSetNumberSteps}
-                                styleInput={{ paddingLeft: 50 }}
+                                styleInput={{ paddingLeft: 50, paddingRight: 50 }}
                             />
                             {(!numberSteps) && <View style={flexRowCenter}>
                                 <View style={[flexRow, styles.bridge]}>

@@ -17,7 +17,7 @@ import LoadingScreen from '../../component/loading';
 import { medicineService } from '../../services/medicine';
 import { listRegisterMedicineData, medicinePost, mentalData } from '../../constant/type/medical';
 import InputNumber from '../../component/inputNumber';
-import { convertToUTC, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
+import { getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addRegisterMedication, addRegisterMedicationInterface, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
@@ -56,12 +56,18 @@ const AddMedication = ({ route }: any) => {
     const listRegisterMedication = useSelector((state: RootState) => state.medication.listRegisterMedication);
     const listRegisterMedicationInterface = useSelector((state: RootState) => state.medication.listRegisterMedicationInterface);
     const handleSetHour = (value: string) => {
+        if (Number(value) > 24) {
+            return
+        }
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
             setHours(value);
         }
     }
     const handleSetMinute = (value: string) => {
+        if (Number(value) > 59) {
+            return
+        }
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
             setMinutes(value);
@@ -100,21 +106,23 @@ const AddMedication = ({ route }: any) => {
         const preHours = twoDigit(Number(hour));
         const preMinutes = twoDigit(Number(minute));
         const times = getISO8601ForSelectedDays(preHours, preMinutes, selectedDays);
+        console.log("106 vao day", times)
         const dataSubmit = {
             medicineTypeId: selectedMedication,
             weekStart: getMondayOfCurrentWeek().split("T")[0],
             schedule: times
         };
+        console.log("dit me nam", getMondayOfCurrentWeek().split("T")[0])
         const dayChoose = data.filter(item => selectedDays.includes(item.id));
         const selectedMedicineTitle = dataMedication.find((item) => item.id === selectedMedication)?.title || '';
         const dataInterface: listRegisterMedicineData = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
-            time: convertToUTC(`${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`, offsetTime),
+            time: `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`,
             medicineTitle: selectedMedicineTitle.toString(),
             indexDay: dayChoose.map((item) => item.dayWeek),
         };
-        console.log("117", dayChoose.map((item) => item.dayWeek))
+        // console.log("117", `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`, offsetTime)
         const existingMedicationIndex = listRegisterMedication.findIndex(
             item => item.medicineTypeId === selectedMedication
         );

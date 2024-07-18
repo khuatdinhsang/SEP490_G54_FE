@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -9,40 +9,40 @@ import {
   View,
 } from 'react-native';
 import HeaderNavigatorComponent from '../../component/header-navigator';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import ProgressHeader from '../../component/progessHeader';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {SCREENS_NAME} from '../../navigator/const';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SCREENS_NAME } from '../../navigator/const';
 import colors from '../../constant/color';
-import {flexRow, flexRowCenter, flexRowSpaceBetween} from '../../styles/flex';
+import { flexRow, flexRowCenter, flexRowSpaceBetween } from '../../styles/flex';
 import CheckBox from '@react-native-community/checkbox';
 import DaySelection from '../../component/chooseDate';
 import SelectDate from '../../component/inputSelectDate';
-import {IMAGE} from '../../constant/image';
-import {HeightDevice} from '../../util/Dimenssion';
+import { IMAGE } from '../../constant/image';
+import { HeightDevice } from '../../util/Dimenssion';
 import DialogSingleComponent from '../../component/dialog-single';
-import {listRegisterMedicineData} from '../../constant/type/medical';
-import {planService} from '../../services/plan';
+import { listRegisterMedicineData } from '../../constant/type/medical';
+import { planService } from '../../services/plan';
 import {
-  convertFromUTC,
   generateRandomId,
   getMondayOfCurrentWeek,
+  getPreviousMonday,
   getWeekTimeForCurrentWeek,
 } from '../../util';
 import LoadingScreen from '../../component/loading';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import {
   deleteRegisterMedication,
   setListRegisterMedication,
   setListRegisterMedicationInterface,
 } from '../../store/medication.slice';
-import {offsetTime} from '../../constant';
+import { offsetTime } from '../../constant';
 import TimerModule from '../../native-module/timer.module';
-import {setScreen} from '../../store/screen.slice';
-const ListRegisterMedication = ({route}: any) => {
-  const {t, i18n} = useTranslation();
+import { setScreen } from '../../store/screen.slice';
+const ListRegisterMedication = ({ route }: any) => {
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [messageError, setMessageError] = useState<string>('');
   const [isModalDelete, setIsModalDelete] = useState<boolean>(false);
@@ -72,7 +72,6 @@ const ListRegisterMedication = ({route}: any) => {
   const nextPage = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      console.log('45', listRegisterMedicationInterface);
       const res = await planService.postMedicine(listRegisterMedicationSubmit);
       if (res.code === 200) {
         dispatch(setScreen(5));
@@ -120,9 +119,9 @@ const ListRegisterMedication = ({route}: any) => {
     setIsModalDelete(false);
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
-      <View style={{flex: 1}}>
-        <View style={{paddingHorizontal: 20, backgroundColor: colors.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ paddingHorizontal: 20, backgroundColor: colors.white }}>
           <HeaderNavigatorComponent
             isIconLeft={true}
             isTextRight={true}
@@ -130,16 +129,16 @@ const ListRegisterMedication = ({route}: any) => {
             text={t('planManagement.text.takingMedication')}
             handleClickArrowLeft={goBackPreviousPage}
             handleClickIconRight={nextPage}
-            textRightStyle={{color: colors.primary}}
+            textRightStyle={{ color: colors.primary }}
           />
         </View>
-        <View style={{backgroundColor: colors.white}}>
+        <View style={{ backgroundColor: colors.white }}>
           <ProgressHeader index={[0, 1, 2, 3]} length={5} />
         </View>
-        <ScrollView contentContainerStyle={{paddingBottom: 0}}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 0 }}>
           <View>
-            <View style={{paddingHorizontal: 20, paddingTop: 20}}>
-              <Text style={[styles.textPlan, {marginBottom: 20}]}>
+            <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
+              <Text style={[styles.textPlan, { marginBottom: 20 }]}>
                 {t('planManagement.text.registerMedication')}
               </Text>
               {listRegisterMedicationInterface &&
@@ -150,21 +149,22 @@ const ListRegisterMedication = ({route}: any) => {
                       style={[
                         flexRow,
                         styles.example,
-                        {backgroundColor: colors.white},
+                        { backgroundColor: colors.white },
                       ]}>
-                      <View style={[flexRow, {flex: 1, marginRight: 10}]}>
+                      <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                         <View style={styles.detailExample}>
                           <Text
                             style={[
                               styles.textPlan,
-                              {fontSize: 16, color: colors.primary},
+                              { fontSize: 16, color: colors.primary },
                             ]}>
                             {item.medicineTitle}
                           </Text>
                           <Text style={styles.textChooseDay}>
                             {item.weekday.map(item => item).join(', ')} |{' '}
-                            {convertFromUTC(item.time, offsetTime)}
+                            {/* {convertFromUTC(item.time, offsetTime)} */}
+                            {item.time}
                           </Text>
                         </View>
                       </View>
@@ -179,7 +179,7 @@ const ListRegisterMedication = ({route}: any) => {
                     </View>
                   );
                 })}
-              <View style={{marginVertical: 20}}>
+              <View style={{ marginVertical: 20 }}>
                 <Pressable
                   onPress={handleRegisterMedication}
                   style={[flexRowCenter, styles.buttonAdd]}>
@@ -190,7 +190,7 @@ const ListRegisterMedication = ({route}: any) => {
                 </Pressable>
               </View>
               {messageError && !isLoading && (
-                <Text style={[styles.textAddSchedule, {color: colors.red}]}>
+                <Text style={[styles.textAddSchedule, { color: colors.red }]}>
                   {messageError}
                 </Text>
               )}
@@ -198,11 +198,11 @@ const ListRegisterMedication = ({route}: any) => {
           </View>
         </ScrollView>
       </View>
-      <View style={{paddingHorizontal: 20}}>
+      <View style={{ paddingHorizontal: 20 }}>
         <Pressable
           onPress={() => nextPage()}
-          style={[styles.button, {backgroundColor: colors.primary}]}>
-          <Text style={[styles.text, {color: colors.white}]}>
+          style={[styles.button, { backgroundColor: colors.primary }]}>
+          <Text style={[styles.text, { color: colors.white }]}>
             {' '}
             {t('common.text.next')}
           </Text>
