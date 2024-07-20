@@ -52,7 +52,7 @@ const RegisterMedication = () => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -68,12 +68,12 @@ const RegisterMedication = () => {
             <View style={{ flex: 1 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRightStyle={{ color: colors.primary }}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.takingMedication")}
-                        handleClickArrowLeft={goBackPreviousPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
                         handleClickIconRight={nextPage}
                     />
                 </View>

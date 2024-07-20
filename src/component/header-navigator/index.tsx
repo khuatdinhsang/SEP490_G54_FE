@@ -21,6 +21,8 @@ interface HeaderNavigatorComponentProps {
   text: string;
   handleClickArrowLeft?: () => void;
   handleClickIconRight?: () => void;
+  disabledRight?: boolean,
+  disabledLeft?: boolean;
 }
 
 const HeaderNavigatorComponent = ({
@@ -30,6 +32,8 @@ const HeaderNavigatorComponent = ({
   textRightStyle,
   text,
   isIconLeft,
+  disabledRight,
+  disabledLeft,
   handleClickArrowLeft,
   handleClickIconRight,
 }: HeaderNavigatorComponentProps) => {
@@ -47,17 +51,23 @@ const HeaderNavigatorComponent = ({
 
   return (
     <View style={[flexRowCenter, styles.container]}>
-      {isIconLeft && <Pressable onPress={handleClickArrowLeftInternal} style={styles.left}>
+      {isIconLeft && <Pressable
+        disabled={disabledLeft ?? false}
+        onPress={handleClickArrowLeftInternal} style={styles.left}>
         <Image source={IMAGE.ICON_ARROW_LEFT_BLACK} style={styles.iconLeft} />
       </Pressable>}
       <Text style={styles.text}>{text}</Text>
       {isIconXRight && (
-        <Pressable onPress={handleClickIconRightInternal} style={styles.right}>
+        <Pressable
+          disabled={disabledRight ?? false}
+          onPress={handleClickIconRightInternal} style={styles.right}>
           <Image source={IMAGE.ICON_X} style={styles.iconRight} />
         </Pressable>
       )}
       {isTextRight && (
-        <Pressable onPress={handleClickIconRightInternal} style={styles.right}>
+        <Pressable
+          disabled={disabledRight ?? false}
+          onPress={handleClickIconRightInternal} style={styles.right}>
           <Text style={textRightStyle}>{textRight}</Text>
         </Pressable>
       )}

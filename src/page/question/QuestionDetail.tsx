@@ -32,7 +32,7 @@ const QuestionDetail = ({ route }: any) => {
                 setErrorMessage("Failed to fetch questions.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setErrorMessage(error.response.data.message);
             } else {
                 setErrorMessage("Unexpected error occurred.");
@@ -91,6 +91,7 @@ const QuestionDetail = ({ route }: any) => {
                         styleInput={{ backgroundColor: colors.white }}
                         multiline={true}
                         textAlignVertical="center"
+                        isEditable={false}
                     />
                     <View style={{ marginTop: 15 }}>
                         <InputComponent
@@ -98,6 +99,7 @@ const QuestionDetail = ({ route }: any) => {
                             label={t("questionManagement.content")}
                             styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                             multiline={true}
+                            isEditable={false}
                         />
                     </View>
                     {questionDetail?.answer &&
@@ -107,6 +109,7 @@ const QuestionDetail = ({ route }: any) => {
                                 label={t("questionManagement.answerResponse")}
                                 styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                                 multiline={true}
+                                isEditable={false}
                             />
                         </View>
                     }

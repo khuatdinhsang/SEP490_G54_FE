@@ -28,11 +28,12 @@ const medicationSlice = createSlice({
             state.listRegisterMedicationInterface.push(action.payload);
         },
         deleteRegisterMedication: (state, action: PayloadAction<number>) => {
+            const index = action.payload;
             state.listRegisterMedication = state.listRegisterMedication.filter(
-                item => item.medicineTypeId !== action.payload
+                (item, i) => i !== index
             );
             state.listRegisterMedicationInterface = state.listRegisterMedicationInterface.filter(
-                item => item.medicineTypeId !== action.payload
+                (item, i) => i !== index
             );
         },
     },

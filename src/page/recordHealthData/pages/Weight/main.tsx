@@ -28,7 +28,7 @@ const MainWeight = () => {
                     navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT, { isEditable: true })
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 }
             } finally {

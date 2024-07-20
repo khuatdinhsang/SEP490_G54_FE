@@ -42,7 +42,7 @@ const SAT_SF_C = ({ route }: any) => {
                     setErrorMessage("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setErrorMessage(error.response.data.message);
                 } else {
                     setErrorMessage("Unexpected error occurred.");
@@ -63,7 +63,7 @@ const SAT_SF_C = ({ route }: any) => {
                     setErrorMessage("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setErrorMessage(error.response.data.message);
                 } else {
                     setErrorMessage("Unexpected error occurred.");

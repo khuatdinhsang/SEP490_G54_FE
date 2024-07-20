@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { axiosClient, baseURL } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
-import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changePassword } from '../constant/type/auth';
+import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changePassword, refreshTokenResponse } from '../constant/type/auth';
 
 const endpoint = '/auth';
 
@@ -34,8 +34,7 @@ export const authService = {
     changePassword(data: changePassword): Promise<VerifyEmailResponse> {
         return axiosClient.put(`accounts/change-password`, data);
     },
-    refreshToken(refreshToken: string, accessToken: string): Promise<ResponseForm<LoginResponse>> {
-        console.log("vao day may lan")
+    refreshToken(refreshToken: string, accessToken: string): Promise<any> {
         return axios.get(`${baseURL}${endpoint}/refresh-token/${refreshToken}`, {
             headers: {
                 'Content-Type': 'application/json',

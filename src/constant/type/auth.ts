@@ -34,6 +34,10 @@ export interface LoginResponse {
     idUser: number;
     refreshToken: string
 }
+export interface refreshTokenResponse {
+    accessToken: string;
+    refreshToken: string
+}
 export interface RegisterResponse {
     code: number,
     message: string

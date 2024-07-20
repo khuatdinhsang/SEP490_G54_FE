@@ -12,13 +12,16 @@ import RecordComponent from './component/Record';
 import { recordData } from './contant';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
+import { weeklyReviewService } from '../../services/weeklyReviews';
+import { getMondayOfCurrentWeek } from '../../util';
+import LoadingScreen from '../../component/loading';
 
 
 const RecordHealthData = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const goBackPreviousPage = () => {
-        navigation.goBack();
+        navigation.navigate(SCREENS_NAME.HOME.MAIN)
     }
     const initData = [
         {
@@ -63,18 +66,12 @@ const RecordHealthData = () => {
             screen: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART
         }
     ]
-    const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
-    console.log("â", currentScreen)
+    // const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
     const [listRecord, setListRecord] = useState<recordData[]>(initData)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const handleNavigate = (screen: string) => {
         navigation.navigate(screen)
     }
-    const [checkIsExistRecord, setCheckIsExistRecord] = useState<boolean>(false)
-    useEffect(() => {
-        if (currentScreen === 6) {
-            setCheckIsExistRecord(true)
-        }
-    }, [])
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -84,37 +81,23 @@ const RecordHealthData = () => {
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>
-            {checkIsExistRecord ?
-                <ScrollView contentContainerStyle={styles.scrollView}>
-                    <View style={styles.content}>
-                        <View style={[flexRowCenter, { marginBottom: 40 }]}>
-                            <Text style={styles.textContent}>{t('recordHealthData.myToday')}</Text>
-                            <Text style={[styles.textContent, { color: colors.orange_04 }]}>{t('recordHealthData.healthActives')}</Text>
-                            <Text style={styles.textContent}>{t('recordHealthData.letRecord')}</Text>
-                        </View>
-                        <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
-                            {listRecord && listRecord.map((item) => {
-                                return (
-                                    <RecordComponent key={item.id} record={item} handleNavigate={handleNavigate} />
-                                )
-                            })}
-                        </View>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                <View style={styles.content}>
+                    <View style={[flexRowCenter, { marginBottom: 40 }]}>
+                        <Text style={styles.textContent}>{t('recordHealthData.myToday')}</Text>
+                        <Text style={[styles.textContent, { color: colors.orange_04 }]}>{t('recordHealthData.healthActives')}</Text>
+                        <Text style={styles.textContent}>{t('recordHealthData.letRecord')}</Text>
                     </View>
-                </ScrollView>
-                :
-                <View style={[flexCenter, { marginTop: 100 }]}>
-                    <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                    <Text style={styles.textTitle}>{t('evaluate.noPlan')}</Text>
-                    <Text style={styles.textDesc}>{t('evaluate.actionPlan')}</Text>
-                    <Pressable
-                        onPress={() => {
-                            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN);
-                        }}
-                        style={styles.buttonChart}>
-                        <Text style={styles.textButtonChart}>{t('evaluate.buttonActionPlan')}</Text>
-                    </Pressable>
+                    <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
+                        {listRecord && listRecord.map((item) => {
+                            return (
+                                <RecordComponent key={item.id} record={item} handleNavigate={handleNavigate} />
+                            )
+                        })}
+                    </View>
                 </View>
-            }
+            </ScrollView>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -139,30 +122,5 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: colors.gray_G07
     },
-    textTitle: {
-        fontWeight: '700',
-        fontSize: 20,
-        color: colors.gray_G10,
-        textAlign: 'center',
-    },
-    textDesc: {
-        fontWeight: '400',
-        fontSize: 16,
-        color: colors.gray_G06,
-        textAlign: 'center',
-    },
-    buttonChart: {
-        marginTop: 20,
-        backgroundColor: colors.gray_G08,
-        borderRadius: 8,
-        paddingVertical: 17,
-        width: 140,
-    },
-    textButtonChart: {
-        fontWeight: '500',
-        fontSize: 16,
-        textAlign: 'center',
-        color: colors.white,
-    }
 })
 export default RecordHealthData
