@@ -41,12 +41,13 @@ import {
 import { offsetTime } from '../../constant';
 import TimerModule from '../../native-module/timer.module';
 import { setScreen } from '../../store/screen.slice';
+
 const ListRegisterMedication = ({ route }: any) => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [messageError, setMessageError] = useState<string>('');
   const [isModalDelete, setIsModalDelete] = useState<boolean>(false);
-  const [itemSelected, setItemSelected] = useState<number>();
+  const [itemSelected, setItemSelected] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const listRegisterMedicationInterface = useSelector(
     (state: RootState) => state.medication.listRegisterMedicationInterface,
@@ -55,6 +56,7 @@ const ListRegisterMedication = ({ route }: any) => {
     (state: RootState) => state.medication.listRegisterMedication,
   );
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (route.params?.listRegisterMedication) {
       dispatch(
@@ -69,12 +71,13 @@ const ListRegisterMedication = ({ route }: any) => {
       );
     }
   }, []);
+
   const nextPage = async (): Promise<void> => {
     setIsLoading(true);
     try {
       const res = await planService.postMedicine(listRegisterMedicationSubmit);
       if (res.code === 200) {
-        dispatch(setScreen(5));
+        // dispatch(setScreen(5));
         setIsLoading(false);
         listRegisterMedicationInterface.forEach(registerMedication => {
           return TimerModule.createSchedule({
@@ -86,12 +89,12 @@ const ListRegisterMedication = ({ route }: any) => {
             daysOfWeek: registerMedication.indexDay,
           });
         });
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
+        navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
       } else {
         setMessageError('Unexpected error occurred.');
       }
     } catch (error: any) {
-      if (error?.response?.status === 400 || error?.response?.status === 401) {
+      if (error?.response?.status === 400) {
         setMessageError(error.response.data.message);
       } else {
         setMessageError('Unexpected error occurred.');
@@ -100,13 +103,16 @@ const ListRegisterMedication = ({ route }: any) => {
       setIsLoading(false);
     }
   };
+
   const handleRegisterMedication = () => {
     navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
     setMessageError('');
   };
+
   const goBackPreviousPage = () => {
     navigation.goBack();
   };
+
   const handleDeleteMedication = (id: number) => {
     setItemSelected(id);
     setIsModalDelete(true);
@@ -114,10 +120,15 @@ const ListRegisterMedication = ({ route }: any) => {
   const handleClickButtonCancel = () => {
     setIsModalDelete(false);
   };
-  const handleClickButtonConfirm = (id: number) => {
-    dispatch(deleteRegisterMedication(id));
+
+  const handleClickButtonConfirm = () => {
+    console.log("item", itemSelected)
+    if (itemSelected !== null) {
+      dispatch(deleteRegisterMedication(itemSelected));
+    }
     setIsModalDelete(false);
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
@@ -142,43 +153,36 @@ const ListRegisterMedication = ({ route }: any) => {
                 {t('planManagement.text.registerMedication')}
               </Text>
               {listRegisterMedicationInterface &&
-                listRegisterMedicationInterface?.map(item => {
-                  return (
-                    <View
-                      key={item.medicineTypeId}
-                      style={[
-                        flexRow,
-                        styles.example,
-                        { backgroundColor: colors.white },
-                      ]}>
-                      <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
-                        <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
-                        <View style={styles.detailExample}>
-                          <Text
-                            style={[
-                              styles.textPlan,
-                              { fontSize: 16, color: colors.primary },
-                            ]}>
-                            {item.medicineTitle}
-                          </Text>
-                          <Text style={styles.textChooseDay}>
-                            {item.weekday.map(item => item).join(', ')} |{' '}
-                            {/* {convertFromUTC(item.time, offsetTime)} */}
-                            {item.time}
-                          </Text>
-                        </View>
-                      </View>
-                      <Pressable
-                        onPress={() =>
-                          handleDeleteMedication(item?.medicineTypeId)
-                        }>
-                        <Text style={styles.textDelete}>
-                          {t('common.text.delete')}
+                listRegisterMedicationInterface.map((item, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      flexRow,
+                      styles.example,
+                      { backgroundColor: colors.white },
+                    ]}>
+                    <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
+                      <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
+                      <View style={styles.detailExample}>
+                        <Text
+                          style={[
+                            styles.textPlan,
+                            { fontSize: 16, color: colors.primary },
+                          ]}>
+                          {item.medicineTitle}
                         </Text>
-                      </Pressable>
+                        <Text style={styles.textChooseDay}>
+                          {item.weekday.join(', ')} | {item.time}
+                        </Text>
+                      </View>
                     </View>
-                  );
-                })}
+                    <Pressable onPress={() => handleDeleteMedication(index)}>
+                      <Text style={styles.textDelete}>
+                        {t('common.text.delete')}
+                      </Text>
+                    </Pressable>
+                  </View>
+                ))}
               <View style={{ marginVertical: 20 }}>
                 <Pressable
                   onPress={handleRegisterMedication}
@@ -203,7 +207,6 @@ const ListRegisterMedication = ({ route }: any) => {
           onPress={() => nextPage()}
           style={[styles.button, { backgroundColor: colors.primary }]}>
           <Text style={[styles.text, { color: colors.white }]}>
-            {' '}
             {t('common.text.next')}
           </Text>
         </Pressable>
@@ -225,6 +228,7 @@ const ListRegisterMedication = ({ route }: any) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   textPlan: {
     fontWeight: '700',
@@ -295,4 +299,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 export default ListRegisterMedication;

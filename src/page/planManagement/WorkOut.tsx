@@ -120,15 +120,15 @@ const WorkOut = () => {
         try {
             const res = await planService.postActivity(dataSubmit)
             if (res.code === 200) {
-                dispatch(setScreen(3));
+                // dispatch(setScreen(3));
                 setMessageError("");
                 setIsLoading(false)
-                navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
+                navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
             } else {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
@@ -151,12 +151,17 @@ const WorkOut = () => {
             <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.workout")}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={() => {
+                            if (!isNextButtonDisabled) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={isNextButtonDisabled}
                         textRightStyle={{ color: !isNextButtonDisabled ? colors.primary : colors.gray_G04 }}
                     />
                 </View>

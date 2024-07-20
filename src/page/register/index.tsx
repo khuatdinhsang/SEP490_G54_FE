@@ -23,7 +23,10 @@ const Register = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const registerSchema = yup.object().shape({
-        name: yup.string().required(t("placeholder.err.blank")),
+        name: yup.string().required(t("placeholder.err.blank"))
+            .test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+                return value.trim().length > 0;
+            }),
         phoneNumber: yup.string().required(t("placeholder.err.blank")).matches(
             /^0\d{8,10}$/,
             t("placeholder.err.phoneNumber")

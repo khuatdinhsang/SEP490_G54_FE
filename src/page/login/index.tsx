@@ -30,24 +30,23 @@ const Login = () => {
     const [messageError, setMessageError] = useState<string>('')
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     console.log("32", isLoggedIn)
-    // useEffect(() => {
-    //     const backAction = () => {
-    //         if (isLoggedIn) {
-    //             BackHandler.exitApp();
-    //             return true;
-    //         } else {
-    //             navigation.goBack()
-    //             return true
-    //         }
+    useEffect(() => {
+        const backAction = () => {
+            if (isLoggedIn) {
+                BackHandler.exitApp();
+                return true;
+            } else {
+                navigation.goBack()
+                return true
+            }
 
-    //     };
-
-    //     const backHandler = BackHandler.addEventListener(
-    //         'hardwareBackPress',
-    //         backAction
-    //     );
-    //     return () => backHandler.remove();
-    // }, []);
+        };
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
     const loginSchema = yup.object().shape({
         email: yup
             .string()
@@ -84,7 +83,7 @@ const Login = () => {
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
-            if (error.code == 400 || error.code == 401) {
+            if (error.code == 400) {
                 setMessageError(error.message)
             }
             if (error.code === 406) {

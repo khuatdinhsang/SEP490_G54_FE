@@ -27,7 +27,7 @@ const FoodIntake = () => {
     const dispatch = useDispatch();
     const handleSetSizeDisk = (value: string) => {
         const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 2) {
             setSizeDisk(value);
         }
     }
@@ -45,15 +45,15 @@ const FoodIntake = () => {
                 }
                 const res = await planService.postDiet(data)
                 if (res.code === 200) {
-                    dispatch(setScreen(4));
+                    // dispatch(setScreen(4));
                     setIsLoading(false)
                     setMessageError("");
-                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -69,13 +69,18 @@ const FoodIntake = () => {
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.header}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.foodIntake")}
                         textRightStyle={{ color: sizeDisk ? colors.primary : colors.gray_G04 }}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={() => {
+                            if (sizeDisk) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={sizeDisk ? false : true}
                     />
                 </View>
                 <ProgressHeader index={[0, 1, 2]} length={5} />
@@ -90,7 +95,7 @@ const FoodIntake = () => {
                                 value={sizeDisk}
                                 keyboardType={"numeric"}
                                 handleSetValue={handleSetSizeDisk}
-                                styleInput={{ paddingLeft: 50 }}
+                                styleInput={{ paddingLeft: 50, paddingRight: 50 }}
                             />
                             {(!sizeDisk) && <View style={flexRowCenter}>
                                 <View style={styles.bridge}>

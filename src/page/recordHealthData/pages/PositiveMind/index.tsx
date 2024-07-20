@@ -50,7 +50,7 @@ const PositiveMindRecord = ({ route }: any) => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -83,7 +83,7 @@ const PositiveMindRecord = ({ route }: any) => {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");

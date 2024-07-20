@@ -73,7 +73,7 @@ const NumericalRecordChart = ({ route }: any) => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -117,7 +117,8 @@ const NumericalRecordChart = ({ route }: any) => {
             <ScrollView contentContainerStyle={styles.scrollView}>
 
                 {
-                    dataChartHBA1C || dataChartCholesterol ?
+                    dataChartHBA1C.length > 0 ||
+                        dataChartCholesterol.length > 0 ?
                         <View style={styles.chart}>
                             <View>
                                 <LineChart
@@ -198,7 +199,7 @@ const NumericalRecordChart = ({ route }: any) => {
                         </View>
 
                         :
-                        <View style={[flexCenter, { height: '60%' }]}>
+                        <View style={[flexCenter, { marginTop: 100 }]}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>

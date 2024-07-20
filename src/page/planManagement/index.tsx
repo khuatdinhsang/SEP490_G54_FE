@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { paddingHorizontalScreen } from '../../styles/padding';
@@ -13,48 +13,29 @@ import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
+import { weeklyReviewService } from '../../services/weeklyReviews';
+import { getMondayOfCurrentWeek } from '../../util';
 
 const PlanManagement = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { t, i18n } = useTranslation();
-  const currentScreen = useSelector((state: RootState) => state.screen.currentScreen);
-  console.log("21", currentScreen)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [messageError, setMessageError] = useState<string>("")
   const goBackPreviousPage = () => {
     navigation.goBack();
   }
-  const navigateScreen = (screen: number): void => {
-    switch (screen) {
-      case 2:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
-        break;
-      case 3:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
-        break;
-      case 4:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
-        break;
-      case 5:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
-        break;
-      case 6:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
-        break;
-      default:
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN);
-        break;
-    }
-  }
-  useEffect(() => {
-    navigateScreen(currentScreen);
-  }, [])
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <HeaderNavigatorComponent
-          isIconLeft={true}
-          text={t("planManagement.text.positiveMind")}
-          handleClickArrowLeft={goBackPreviousPage}
-        />
+        <View style={{ paddingHorizontal: 10 }}>
+          <HeaderNavigatorComponent
+            isIconLeft={true}
+            text={t("planManagement.text.positiveMind")}
+            handleClickArrowLeft={goBackPreviousPage}
+          />
+        </View>
         <View style={styles.content}>
           <View style={[flexRowCenter]}>
             <Text style={styles.textPlan}>
@@ -113,7 +94,9 @@ const PlanManagement = () => {
             </Pressable>
           </View>
         </View>
+        {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -212,6 +195,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
     transform: [{ rotate: '45deg' }],
   },
+  textError: {
+    color: colors.red,
+    fontSize: 14,
+    fontWeight: "500"
+  }
 });
 
 export default PlanManagement;

@@ -29,7 +29,7 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
         )}
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>
           <Pressable
-            onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN)}
+            onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN_INDEX)}
           >
             <Image
               source={IMAGE.HOME.CATEGORY1}
@@ -38,7 +38,7 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
             <Text style={styles.categoryItemText}>실천계획 관리</Text>
           </Pressable>
           <Pressable
-            onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN)}
+            onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_INDEX)}
           >
             <Image
               source={IMAGE.HOME.CATEGORY2}
@@ -73,7 +73,7 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
             </Pressable>
             <Text style={styles.categoryItemText}>문의작성</Text>
 
-            
+
           </View>
           <Pressable onPress={() => { navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE) }}>
             <Image
