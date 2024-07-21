@@ -17,7 +17,7 @@ const QuestionComponent: React.FC<itemQuestion> = ({ question, handleDetailQuest
             style={[flexRowSpaceBetween, styles.question]}>
             <View style={{ width: '70%' }}>
                 <Text style={styles.textQuestion}>{question.questionDate?.split("T")[0]}</Text>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.body}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.title.trim()}</Text>
             </View>
             <View style={[styles.statusQuestion, { backgroundColor: question.answer ? colors.blue_background : colors.orange_01 }]}>
                 <Text style={[styles.textQuestion, { color: question.answer ? colors.blue_01 : colors.orange_04 }]}>{question.answer ? t('questionManagement.answered') : t('questionManagement.waitForReply')}</Text>

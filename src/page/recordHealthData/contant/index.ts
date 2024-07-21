@@ -12,3 +12,12 @@ export enum TypeTimeMeasure {
     BEFORE_DINNER = 'BEFORE_DINNER',
     AFTER_DINNER = 'AFTER_DINNER'
 }
+export enum TypeValueTimeMeasure {
+    beforeBreakfast = 'beforeBreakfast',
+    afterBreakfast = 'afterBreakfast',
+    beforeLunch = 'beforeLunch',
+    afterLunch = 'afterLunch',
+    beforeDinner = 'beforeDinner',
+    afterDinner = 'afterDinner'
+
+}

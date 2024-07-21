@@ -22,9 +22,9 @@ const MainIndexRecordHealthData = () => {
                 if (res.code === 200) {
                     setIsLoading(false)
                     if (res.result === 5) {
-                        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN)
+                        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN)
                     } else {
-                        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NO_DATA)
+                        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.NO_DATA)
                     }
 
                 } else {

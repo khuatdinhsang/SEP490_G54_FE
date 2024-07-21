@@ -22,10 +22,10 @@ const MainMedication = () => {
                 if (res.result === true) {
                     setIsLoading(false);
                     setMessageError("");
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false })
                 } else {
                     setIsLoading(false);
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD, { isEditable: true })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD, { isEditable: true })
                 }
             } catch (error: any) {
                 if (error?.response?.status === 400) {

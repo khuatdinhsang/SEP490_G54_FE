@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../../../navigator/const';
@@ -16,13 +16,14 @@ import LineChart from '../../../../component/line-chart';
 import { valueSteps, valueWeight } from '../../../../constant/type/chart';
 
 const NumberStepsChart = () => {
+    console.log("a vao day",)
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [dataChart, setDataChart] = useState<valueSteps[]>([])
     const [dataToday, setDataToday] = useState<number>(0)
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
@@ -49,9 +50,9 @@ const NumberStepsChart = () => {
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
-    const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT)
-    }
+    // const navigateNumericalRecord = () => {
+    //     navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT)
+    // }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -81,11 +82,11 @@ const NumberStepsChart = () => {
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
-                            <Pressable
+                            {/* <Pressable
                                 onPress={navigateNumericalRecord}
                                 style={styles.button}>
                                 <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
-                            </Pressable>
+                            </Pressable> */}
                         </View>
                 }
                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}

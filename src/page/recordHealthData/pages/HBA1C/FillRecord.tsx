@@ -32,42 +32,39 @@ const FillRecord = ({ route }: any) => {
     const [isShowModal, setShowModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
-    const isEditable = route?.params?.isEditable;
-    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const [glycemicError, setGlycemicError] = useState<string>("");
     const [choresterolError, setChoresterolError] = useState<string>("");
     const [glucozerError, setGlucozerError] = useState<string>("");
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
         if (Number(glycemic) > 10) {
-            setGlycemicError("Invalid value");
+            setGlycemicError(t('placeholder.err.invalidInput'));
             return;
         }
         if (Number(choresterol) > 300) {
-            setChoresterolError("Invalid value");
+            setChoresterolError(t('placeholder.err.invalidInput'));
             return;
         }
         if (Number(glucozer) > 200) {
-            setGlucozerError("Invalid value");
+            setGlucozerError(t('placeholder.err.invalidInput'));
             return;
         }
-        setIsLoading(true)
+        // setIsLoading(true)
         const dataSubmit = {
             timeMeasure: selectedItem.value,
             weekStart: getMondayOfCurrentWeek().split("T")[0],
             date: new Date().toISOString().split("T")[0],
-            cholesterol: Number(choresterol),
-            bloodSugar: Number(choresterol),
-            hba1c: Number(glycemic)
+            cholesterol: Number(choresterol) || null,
+            bloodSugar: Number(choresterol) || null,
+            hba1c: Number(glycemic) || null
         }
         try {
             const res = await planService.postCardinal(dataSubmit)
             if (res.code === 201) {
                 setIsLoading(false)
-                setIsEdit(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART);
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -89,7 +86,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 3) {
             setGlycemic(value);
             setIsCheckedGlycemic(false)
         }
@@ -101,7 +98,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 5) {
             setChoresterol(value);
             setIsCheckedChoresterol(false)
         }
@@ -113,7 +110,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 5) {
             setGlucozer(value);
             setIsCheckedGlucozer(false)
         }

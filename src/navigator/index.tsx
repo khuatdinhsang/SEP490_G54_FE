@@ -28,7 +28,7 @@ const Navigator = () => {
   }
   //  initialRouteName={initialRoute}
   return (
-    <Stack.Navigator initialRouteName={SCREENS_NAME.LOGIN.MAIN} screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       {SCREENS_STACK.map(screen => (
         <Stack.Screen
           key={screen.name}

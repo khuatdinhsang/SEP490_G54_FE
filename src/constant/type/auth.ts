@@ -28,6 +28,12 @@ export interface VerifyEmailResponse {
     result: string | boolean;
 }
 
+export interface heightWeightResponse {
+    name: string,
+    height: number,
+    weight: number
+}
+
 export interface LoginResponse {
     type: 'ADMIN' | 'USER' | 'MEDICAL_SPECIALIST' | 'DELETED';
     accessToken: string;
