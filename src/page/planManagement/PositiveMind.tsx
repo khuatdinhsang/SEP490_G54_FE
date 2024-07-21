@@ -50,7 +50,7 @@ const PositiveMind: React.FC = () => {
                     setMessageError("Failed to fetch questions.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -76,15 +76,15 @@ const PositiveMind: React.FC = () => {
             try {
                 const res = await planService.postListMental(data)
                 if (res.code === 200) {
-                    dispatch(setScreen(2));
+                    // dispatch(setScreen(2));
                     setMessageError("");
                     setIsLoading(false)
-                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -142,7 +142,12 @@ const PositiveMind: React.FC = () => {
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.positiveMind")}
                         handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        handleClickIconRight={() => {
+                            if (selectedItems.length === 3) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={selectedItems.length !== 3}
                     />
                 </View>
                 <ProgressHeader index={[0]} length={5} />

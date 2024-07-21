@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as yup from "yup";
-import { Button, FlatList, Image, Pressable, SafeAreaView, ScrollView, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { BackHandler, Button, FlatList, Image, Pressable, SafeAreaView, ScrollView, SectionList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
@@ -24,6 +24,17 @@ const PlanSuccess = () => {
     const homePage = () => {
         navigation.navigate(SCREENS_NAME.HOME.MAIN)
     }
+    useEffect(() => {
+        const backAction = () => {
+            homePage();
+            return true;
+        }
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        )
+        return () => backHandler.remove()
+    }, [])
     return (
         <SafeAreaView style={styles.container} >
             <HeaderNavigatorComponent

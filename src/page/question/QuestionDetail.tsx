@@ -32,7 +32,7 @@ const QuestionDetail = ({ route }: any) => {
                 setErrorMessage("Failed to fetch questions.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setErrorMessage(error.response.data.message);
             } else {
                 setErrorMessage("Unexpected error occurred.");
@@ -86,27 +86,30 @@ const QuestionDetail = ({ route }: any) => {
                 </View>
                 <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20, }}>
                     <InputComponent
-                        value={questionDetail?.title}
+                        value={questionDetail?.title.trim()}
                         label={t("questionManagement.title")}
                         styleInput={{ backgroundColor: colors.white }}
                         multiline={true}
                         textAlignVertical="center"
+                        isEditable={false}
                     />
                     <View style={{ marginTop: 15 }}>
                         <InputComponent
-                            value={questionDetail?.body}
+                            value={questionDetail?.body.trim()}
                             label={t("questionManagement.content")}
                             styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                             multiline={true}
+                            isEditable={false}
                         />
                     </View>
                     {questionDetail?.answer &&
                         <View style={{ marginTop: 15 }}>
                             <InputComponent
-                                value={questionDetail?.answer}
+                                value={questionDetail?.answer.trim()}
                                 label={t("questionManagement.answerResponse")}
                                 styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                                 multiline={true}
+                                isEditable={false}
                             />
                         </View>
                     }

@@ -50,7 +50,7 @@ const PositiveMindRecord = ({ route }: any) => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -62,7 +62,7 @@ const PositiveMindRecord = ({ route }: any) => {
         fetchDataMentalRecord();
     }, []);
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
@@ -77,13 +77,13 @@ const PositiveMindRecord = ({ route }: any) => {
                 setMessageError("");
                 setIsLoading(false)
                 setIsEdit(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false });
 
             } else {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
@@ -103,7 +103,7 @@ const PositiveMindRecord = ({ route }: any) => {
         });
     };
     const viewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: isEdit });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: isEdit });
     }
     console.log("a", isEdit)
     return (
@@ -150,7 +150,7 @@ const PositiveMindRecord = ({ route }: any) => {
                     <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
                     <Pressable
                         onPress={() => {
-                            navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false });
+                            navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false });
                         }}
                         style={styles.buttonChart}>
                         <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>

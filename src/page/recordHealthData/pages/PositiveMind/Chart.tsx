@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../../../navigator/const';
@@ -26,12 +26,12 @@ const PositiveMindChart = ({ route }: any) => {
     const [mediumData, setMediumData] = useState<number>(0)
     const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: isEditable });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: isEditable });
     }
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
@@ -44,7 +44,7 @@ const PositiveMindChart = ({ route }: any) => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -92,7 +92,7 @@ const PositiveMindChart = ({ route }: any) => {
                             />
                         </View>
                         :
-                        <View style={[flexCenter, { height: '60%' }]}>
+                        <View style={[flexCenter, { marginTop: 100 }]}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>

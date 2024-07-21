@@ -12,6 +12,9 @@ export const weeklyReviewService = {
     },
     getDetailWeeklyReviews(weekStart: string): Promise<ResponseForm<ResponseWeeklyReview>> {
         return axiosClient.get(`${endpoint}/mobile/review/${weekStart}`);
-    }
+    },
+    getMadePlan(weekStart: string): Promise<ResponseForm<number>> {
+        return axiosClient.get(`${endpoint}/mobile/getMadePlan/${weekStart}`);
+    },
 
 };

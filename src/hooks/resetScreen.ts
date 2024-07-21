@@ -1,22 +1,26 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setScreen } from '../store/screen.slice';
+import { DateTime } from 'luxon';
 
-export const useResetScreenAtStartOfWeek = () => {
-    const dispatch = useDispatch();
-    // dispatch(setScreen(6));
-    const checkAndResetScreen = () => {
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        console.log("13", dayOfWeek, hours, minutes)
-        if (dayOfWeek === 1 && hours === 0 && minutes === 0) {
-            dispatch(setScreen(1));
-        }
-    };
-    useEffect(() => {
-        const intervalId = setInterval(checkAndResetScreen, 60000);
-        return () => clearInterval(intervalId);
-    }, []);
-};
+// export const useResetScreenAtStartOfWeek = () => {
+//     const dispatch = useDispatch();
+//     dispatch(setScreen(1));
+//     const checkAndResetScreen = () => {
+//         const now = DateTime.local().setZone('UTC+7');
+//         const dayOfWeek = now.weekday;
+//         const hours = now.hour;
+//         const minutes = now.minute;
+//         console.log("13", dayOfWeek, hours, minutes);
+
+//         // Kiểm tra nếu là Thứ Hai và đúng giờ 0:00
+//         if (dayOfWeek === 1 && hours === 0 && minutes === 0) {
+//             console.log("vao day")
+//             dispatch(setScreen(1));
+//         }
+//     };
+//     useEffect(() => {
+//         const intervalId = setInterval(checkAndResetScreen, 30000);
+//         return () => clearInterval(intervalId);
+//     }, []);
+// };

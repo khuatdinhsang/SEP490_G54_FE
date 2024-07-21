@@ -2,7 +2,6 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import {
-  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -24,28 +23,81 @@ import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { ErrorMessage } from 'formik';
 import { SCREENS_NAME } from '../../navigator/const';
 import LoadingScreen from '../../component/loading';
-import InputNumber from '../../component/inputNumber';
-import { padNumber } from '../../util';
+import { dateNow, padNumber } from '../../util';
+import { offsetTime } from '../../constant';
 
 const ProfileNewHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [typeMakeHospitalSchedule, setTypeMakeHospitalSchedule] = useState<
     TypeMakeHospitalSchedule | undefined
   >(undefined);
-  const [year, setYear] = useState<string>("")
-  const [month, setMonth] = useState<string>("")
-  const [day, setDay] = useState<string>("")
+  const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+  const [day, setDay] = useState<number>(new Date().getDate());
   const [address, setAddress] = useState<string>('');
   const [note, setNote] = useState<string>('');
+  const [showYearScroll, setShowYearScroll] = useState(false);
+  const [showMonthScroll, setShowMonthScroll] = useState(false);
+  const [showDayScroll, setShowDayScroll] = useState(false);
   const { t, i18n } = useTranslation();
+  // const [isValidDate, setIsValidDate] = useState(true);
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string>("")
+  const [checkDate, setCheckDate] = useState<Date>(new Date())
+  const [date, setDate] = useState<string>("")
+  const handleYearChange = (newYear: number) => {
+    setYear(newYear)
+    setIsValidTime("")
+  };
+  const handleMonthChange = (newMonth: number) => {
+    setMonth(newMonth);
+    setIsValidTime("")
+  }
+  const handleDayChange = (newDay: number) => {
+    setDay(newDay)
+    setIsValidTime("")
+  }
+  const toggleYearScroll = () => setShowYearScroll(!showYearScroll);
+  const toggleMonthScroll = () => setShowMonthScroll(!showMonthScroll);
+  const toggleDayScroll = () => setShowDayScroll(!showDayScroll);
   const [messageError, setMessageError] = useState<string>("")
   const [isValidTime, setIsValidTime] = useState<string>("")
+  // useEffect(() => {
+  //   const isValid = isValidDateForYearMonthDay(year, month, day);
+  //   setIsValidDate(isValid);
+  // }, [year, month, day]);
+  useEffect(() => {
+    setDate(`${year}-${padNumber(month)}-${day}`)
+    const localDate = new Date(Date.UTC(year, month - 1, day));
+    setCheckDate(localDate);
+  }, [day, month, year]);
+
+  const isLeapYear = (year: number): boolean => {
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  };
+  const getMaxDaysInMonth = (year: number, month: number) => {
+    if (month === 2 && isLeapYear(year)) {
+      return 29; // Leap year February
+    } else if (month === 2) {
+      return 28; // Regular February
+    } else if ([4, 6, 9, 11].includes(month)) {
+      return 30; // Months with 30 days
+    } else {
+      return 31; // Months with 31 days
+    }
+  };
+
+  const isValidDateForYearMonthDay = (
+    year: number,
+    month: number,
+    day: number,
+  ) => {
+    const maxDays = getMaxDaysInMonth(year, month);
+    return day >= 1 && day <= maxDays;
+  };
+
   const handleCreateSchedule = async (): Promise<any> => {
-    const date = new Date(Date.UTC(Number(year)), Number(Number(month) - 1), Number(day))
     setIsLoading(true)
-    if (date.getTime() < Date.now()) {
+    if (checkDate.getTime() < Date.now()) {
       setIsValidTime("Invalid time")
       setIsLoading(false)
       return
@@ -53,9 +105,10 @@ const ProfileNewHospitalSchedule = () => {
     const transformData = {
       location: address,
       note,
-      date: `${year}-${padNumber(Number(month))}-${day}`,
+      date,
       type: typeMakeHospitalSchedule
     }
+
     try {
       const res = await medicalAppointmentService.create(transformData)
       if (res.code === 201) {
@@ -63,7 +116,7 @@ const ProfileNewHospitalSchedule = () => {
         navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE)
       }
     } catch (error: any) {
-      if (error?.response?.status === 400 || error?.response?.status === 401) {
+      if (error?.response?.status === 400) {
         setMessageError(error.response.data.message);
       } else {
         setMessageError("Unexpected error occurred.");
@@ -74,58 +127,15 @@ const ProfileNewHospitalSchedule = () => {
     }
 
   };
+
   const handleSetTypeMakeHospitalScheduleSeeDoctor = () => {
     setTypeMakeHospitalSchedule(TypeMakeHospitalSchedule.DIAGNOSIS);
   };
   const handleSetTypeMakeHospitalScheduleHealthCheckup = () => {
     setTypeMakeHospitalSchedule(TypeMakeHospitalSchedule.MEDICAL_CHECKUP);
   };
-  const isDisable = typeMakeHospitalSchedule && year && month && day && address && note ? false : true
-  const handleSetYear = (value: any) => {
-    setIsValidTime("")
-    if (!value) {
-      setError(t('placeholder.err.blank'));
-      setYear("")
-      return;
-    }
-    const numericRegex = /^[0-9]*$/;
-    if (numericRegex.test(value)) {
-      setYear(value);
-      setError('');
-    } else {
-      setError(t('placeholder.err.number'));
-    }
-  };
-  const handleSetMonth = (value: any) => {
-    setIsValidTime("")
-    if (!value) {
-      setError(t('placeholder.err.blank'));
-      setMonth("")
-      return;
-    }
-    const numericRegex = /^[0-9]*$/;
-    if (numericRegex.test(value)) {
-      setMonth(value);
-      setError('');
-    } else {
-      setError(t('placeholder.err.number'));
-    }
-  };
-  const handleSetDay = (value: any) => {
-    setIsValidTime("")
-    if (!value) {
-      setError(t('placeholder.err.blank'));
-      setDay("")
-      return;
-    }
-    const numericRegex = /^[0-9]*$/;
-    if (numericRegex.test(value)) {
-      setDay(value);
-      setError('');
-    } else {
-      setError(t('placeholder.err.number'));
-    }
-  };
+  const isDisable = typeMakeHospitalSchedule && address && note ? false : true
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -158,7 +168,7 @@ const ProfileNewHospitalSchedule = () => {
           </View>
           <View style={styles.component}>
             <Text style={styles.label}>날짜선택</Text>
-            {/* <View style={[flexRowSpaceBetween, { width: '100%' }]}>
+            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
               <View style={{ width: '31%' }}>
                 <SelectDate
                   value={year}
@@ -195,41 +205,15 @@ const ProfileNewHospitalSchedule = () => {
                   type={'day'}
                 />
               </View>
-            </View> */}
-            <View style={[flexRowSpaceBetween, { width: '100%' }]}>
-              <Pressable style={{ width: '30%' }}>
-                <InputNumber
-                  textRight={t('common.text.year')}
-                  value={year}
-                  keyboardType="numeric"
-                  handleSetValue={handleSetYear}
-                />
-              </Pressable>
-              <Pressable style={{ width: '30%' }}>
-                <InputNumber
-                  textRight={t('common.text.month')}
-                  value={month}
-                  keyboardType="numeric"
-                  handleSetValue={handleSetMonth}
-                />
-              </Pressable>
-              <Pressable style={{ width: '30%' }}>
-                <InputNumber
-                  textRight={t('common.text.day')}
-                  value={day}
-                  keyboardType="numeric"
-                  handleSetValue={handleSetDay}
-                />
-              </Pressable>
             </View>
-            {error && <Text style={styles.textError}>{error}</Text>}
-            {isValidTime && !isLoading && <Text style={styles.textError}>{isValidTime}</Text>}
+            {isValidTime && <Text style={styles.textError}>{isValidTime}</Text>}
           </View>
           <View style={styles.component}>
             <Text style={styles.label}>장소</Text>
             <TextInput
               style={styles.input}
               placeholder="예시) 서울대병원"
+              maxLength={200}
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
                 setAddress(text);
@@ -240,6 +224,7 @@ const ProfileNewHospitalSchedule = () => {
             <Text style={styles.label}>메모</Text>
             <TextInput
               multiline
+              maxLength={200}
               textAlignVertical='top'
               style={[styles.input, { height: 120 }]}
               placeholder="예시) 서울대병원"
@@ -294,7 +279,7 @@ const styles = StyleSheet.create({
   textError: {
     color: colors.red,
     fontWeight: "500",
-    fontSize: 14
+    fontSize: 18
   }
 });
 

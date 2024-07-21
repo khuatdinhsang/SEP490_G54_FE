@@ -116,7 +116,7 @@ const VerifyEmail = () => {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
@@ -205,7 +205,7 @@ const VerifyEmail = () => {
                                         />
                                     </View>
                                     <Pressable
-                                        disabled={errors.email ? true : false}
+                                        disabled={errors.email || isGetCode ? true : false}
                                         onPress={() => handleResetTime(values, setFieldValue)}
                                         style={{
                                             width: '25%',

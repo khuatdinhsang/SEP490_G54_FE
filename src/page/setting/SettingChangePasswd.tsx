@@ -41,7 +41,7 @@ const SettingChangePassword = () => {
       }
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.data.code == 400 || error.response.data.code == 401) {
+        if (error.response.data.code == 400) {
           setError(error.response.data.message);
         }
       }

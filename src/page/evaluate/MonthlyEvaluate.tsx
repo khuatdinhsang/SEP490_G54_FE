@@ -46,7 +46,7 @@ const MonthEvaluate = () => {
                         setErrorMessage("Unexpected error occurred.");
                     }
                 } catch (error: any) {
-                    if (error?.response?.status === 400 || error?.response?.status === 401) {
+                    if (error?.response?.status === 400) {
                         setErrorMessage(error.response.data.message);
                     } else {
                         setErrorMessage("Unexpected error occurred.");
@@ -58,7 +58,7 @@ const MonthEvaluate = () => {
                 setErrorMessage("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setErrorMessage(error.response.data.message);
             } else {
                 setErrorMessage("Unexpected error occurred.");
@@ -77,8 +77,6 @@ const MonthEvaluate = () => {
     useEffect(() => {
         getListNumber();
     }, [])
-    console.log("79", chartOne)
-    console.log("80", chartTwo)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -128,7 +126,7 @@ const MonthEvaluate = () => {
                     </View>
                 </ScrollView>
             ) : (
-                <View style={[flexRowCenter, { flexDirection: 'column', flex: 1 }]}>
+                <View style={[flexRowCenter, { flexDirection: 'column', marginTop: 100 }]}>
                     <Image source={IMAGE.EVALUATE.CATEGORY} />
                     <Text style={[styles.textNavigate, { color: colors.gray_G08 }]}>
                         {t("evaluate.noReview")}

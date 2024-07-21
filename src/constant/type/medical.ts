@@ -1,5 +1,5 @@
 import { TypeActivityRecord } from "../../page/planManagement/const";
-import { TypeMakeHospitalSchedule } from "../../page/profile/const";
+import { TypeMakeHospitalSchedule, TypeStatusMedicalAppointment } from "../../page/profile/const";
 import { TypeTimeMeasure } from "../../page/recordHealthData/contant";
 
 export interface HistoryMedicalResponse {
@@ -20,7 +20,7 @@ export interface appointment {
     date: string,
     hospital: string,
     typeMedicalAppointment: TypeMakeHospitalSchedule,
-    statusMedicalAppointment: string,
+    statusMedicalAppointment: TypeStatusMedicalAppointment,
     note: string
 }
 export interface appointMentResponse {
@@ -79,9 +79,9 @@ export interface cardinalPost {
     timeMeasure: TypeTimeMeasure,
     weekStart: string,
     date: string,
-    cholesterol: number,
-    bloodSugar: number,
-    hba1c: number
+    cholesterol: number | null,
+    bloodSugar: number | null,
+    hba1c: number | null
 }
 export interface bloodPressurePost {
     id?: number,
@@ -106,6 +106,14 @@ export interface activityRecordResponse {
     planDuration: number,
     actualDuration: number,
     date: string
+}
+export interface timeMeasureDone {
+    beforeBreakfast: boolean,
+    afterBreakfast: boolean,
+    beforeLunch: boolean,
+    afterLunch: boolean,
+    beforeDinner: boolean,
+    afterDinner: boolean
 }
 export interface activityPut {
     actualType: TypeActivityRecord | undefined,

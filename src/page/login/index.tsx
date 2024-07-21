@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as yup from "yup";
-import { ActivityIndicator, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
@@ -28,6 +28,25 @@ const Login = () => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>('')
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    console.log("32", isLoggedIn)
+    useEffect(() => {
+        const backAction = () => {
+            if (isLoggedIn) {
+                BackHandler.exitApp();
+                return true;
+            } else {
+                navigation.goBack()
+                return true
+            }
+
+        };
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
     const loginSchema = yup.object().shape({
         email: yup
             .string()
@@ -58,13 +77,13 @@ const Login = () => {
             const deviceToken = await AsyncStorage.getItem('deviceToken');
             const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
-                console.log("vaoday")
+                setIsLoggedIn(true)
                 setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
-            if (error.code == 400 || error.code == 401) {
+            if (error.code == 400) {
                 setMessageError(error.message)
             }
             if (error.code === 406) {
@@ -133,9 +152,6 @@ const Login = () => {
                                         <Text style={styles.text}>{t("authentication.register")}</Text>
                                     </Pressable>
                                     <View style={flexRowCenter}>
-                                        <Pressable onPress={handleFindId}>
-                                            <Text> {t("authentication.findId")}  |  </Text>
-                                        </Pressable>
                                         <Pressable onPress={handleFindPassword}>
                                             <Text>{t("authentication.findPassword")}</Text>
                                         </Pressable>

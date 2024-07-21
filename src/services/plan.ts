@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { axiosClient } from '../config/axiosClient';
-import { activityPost, activityPut, activityRecordResponse, bloodPressurePost, cardinalPost, dietPut, dietRecordResponse, foodIntakePost, listRegisterMedicineData, medicationResponse, medicinePost, medicinePut, mentalData, mentalPost, mentalPutResponse, mentalResponse, stepsNumberPost, weightPost } from '../constant/type/medical';
+import { activityPost, activityPut, activityRecordResponse, bloodPressurePost, cardinalPost, dietPut, dietRecordResponse, foodIntakePost, listRegisterMedicineData, medicationResponse, medicinePost, medicinePut, mentalData, mentalPost, mentalPutResponse, mentalResponse, stepsNumberPost, timeMeasureDone, weightPost } from '../constant/type/medical';
 import { VerifyEmailResponse } from '../constant/type/auth';
 import { ResponseForm } from '../constant/type';
 
@@ -56,7 +56,9 @@ export const planService = {
     putMedicine(data: medicinePut): Promise<ResponseForm<any>> {
         return axiosClient.put(`medicine-records`, data);
     },
-
+    getTimeMeasureDone(): Promise<ResponseForm<timeMeasureDone>> {
+        return axiosClient.get(`cardinal-records/get-time-measure-done`);
+    },
 
 
 };

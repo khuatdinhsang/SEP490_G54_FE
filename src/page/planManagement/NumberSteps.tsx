@@ -38,15 +38,15 @@ const NumberSteps = () => {
                 }
                 const res = await planService.postStepsNumber(data)
                 if (res.code === 200) {
-                    dispatch(setScreen(6));
+                    // dispatch(setScreen(6));
                     setIsLoading(false)
                     setMessageError("");
-                    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -60,7 +60,7 @@ const NumberSteps = () => {
     };
     const handleSetNumberSteps = (value: string) => {
         const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 5) {
             setNumberSteps(value);
         }
     }
@@ -70,11 +70,17 @@ const NumberSteps = () => {
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
                         isTextRight={true}
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.numberSteps")}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        // handleClickIconRight={nextPage}
+                        handleClickIconRight={() => {
+                            if (numberSteps) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={numberSteps ? false : true}
                         textRightStyle={{ color: numberSteps ? colors.primary : colors.gray_G04 }}
                     />
                 </View>
@@ -89,7 +95,7 @@ const NumberSteps = () => {
                                 value={numberSteps}
                                 keyboardType={"numeric"}
                                 handleSetValue={handleSetNumberSteps}
-                                styleInput={{ paddingLeft: 50 }}
+                                styleInput={{ paddingLeft: 50, paddingRight: 50 }}
                             />
                             {(!numberSteps) && <View style={flexRowCenter}>
                                 <View style={[flexRow, styles.bridge]}>

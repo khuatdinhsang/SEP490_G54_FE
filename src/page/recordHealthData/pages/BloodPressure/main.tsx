@@ -22,13 +22,13 @@ const MainBloodPressure = () => {
                 if (res.result === true) {
                     setIsLoading(false);
                     setMessageError("");
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false })
                 } else {
                     setIsLoading(false);
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: true })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: true })
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 }
             } finally {

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from "yup";
-import { Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Image, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
@@ -23,7 +23,10 @@ const Register = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const registerSchema = yup.object().shape({
-        name: yup.string().required(t("placeholder.err.blank")),
+        name: yup.string().required(t("placeholder.err.blank"))
+            .test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+                return value.trim().length > 0;
+            }),
         phoneNumber: yup.string().required(t("placeholder.err.blank")).matches(
             /^0\d{8,10}$/,
             t("placeholder.err.phoneNumber")
@@ -33,7 +36,9 @@ const Register = () => {
             t("placeholder.err.passwordCorrect")
         ),
         confirmPassword: yup.string().required(t("placeholder.err.blank")).oneOf([yup.ref('password')], t("placeholder.err.notMatch")),
-        numberRegHospital: yup.string().required(t("placeholder.err.blank")),
+        numberRegHospital: yup.string().required(t("placeholder.err.blank")).matches(
+            /^[0-9]*$/, t("placeholder.err.number")
+        ),
     });
 
     const handleSubmit = (values: RegisterValues): void => {
@@ -125,6 +130,7 @@ const Register = () => {
                                         onChangeText={handleChange('numberRegHospital')}
                                         label={t("common.text.numberRegHospital")}
                                         textError={errors.numberRegHospital}
+                                        keyboardType={"numeric"}
                                     />
                                 </View>
                             </View>
@@ -135,7 +141,7 @@ const Register = () => {
                                 style={[
                                     styles.button,
                                     {
-                                        backgroundColor: (errors.name || errors.password || errors.confirmPassword || errors.numberRegHospital)
+                                        backgroundColor: (errors.phoneNumber || errors.name || errors.password || errors.confirmPassword || errors.numberRegHospital)
                                             ? colors.gray
                                             : colors.primary
                                     }

@@ -59,13 +59,16 @@ import MainPositiveMind from '../page/recordHealthData/pages/PositiveMind/main';
 import MainFoodIntake from '../page/recordHealthData/pages/FoodIntake/main';
 import MainMedication from '../page/recordHealthData/pages/Medication/main';
 import MainBloodPressure from '../page/recordHealthData/pages/BloodPressure/main';
-import MainHBA1C from '../page/recordHealthData/pages/HBA1C/main';
+// import MainHBA1C from '../page/recordHealthData/pages/HBA1C/main';
 import SF_MENTAL from '../page/evaluate/SF_MENTAL';
 import SF_ACTIVITY from '../page/evaluate/SF_ACTIVITY';
 import SF_MEDICATION from '../page/evaluate/SF_MEDICATION';
 import SF_DIET from '../page/evaluate/SF_DIET';
 import SAT_Evaluate from '../page/evaluate/SAT_Evaluate';
 import SF_Evaluate from '../page/evaluate/SF_Evaluate';
+import MainIndexMedication from '../page/planManagement/main';
+import NoDataRecordHealthData from '../page/recordHealthData/nodata';
+import MainIndexRecordHealthData from '../page/recordHealthData/main';
 
 export const SCREENS_NAME = {
     LOGIN: {
@@ -100,6 +103,7 @@ export const SCREENS_NAME = {
     },
     PLAN_MANAGEMENT: {
         MAIN: 'Main Plan Management',
+        MAIN_INDEX: 'Main Plan Management Index',
         POSITIVE_MIND: 'Positive Mind',
         WORK_OUT: 'Work Out',
         FOOD_INTAKE: 'Food Intake',
@@ -117,7 +121,9 @@ export const SCREENS_NAME = {
     },
     RECORD_HEALTH_DATA: {
         MAIN: 'Main Record Health',
-        MAIN_HBA1C: 'Main HBA1C',
+        MAIN_INDEX: 'Main Record Health Index',
+        NO_DATA: 'Main Record Health No Data',
+        // MAIN_HBA1C: 'Main HBA1C',
         NUMERICAL_RECORD: 'Numerical Record',
         FILL_RECORD: 'Fill Record',
         NUMERICAL_RECORD_CHART: 'Number Record Chart',
@@ -235,6 +241,10 @@ const SCREENS_STACK_PLAN_MANAGEMENT = [
         component: PlanManagement,
     },
     {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN_INDEX,
+        component: MainIndexMedication,
+    },
+    {
         name: SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND,
         component: PositiveMind,
     },
@@ -305,9 +315,17 @@ const SCREENS_STACK_RECORD_DATA = [
         component: RecordHealthData,
     },
     {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_HBA1C,
-        component: MainHBA1C,
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NO_DATA,
+        component: NoDataRecordHealthData,
     },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_INDEX,
+        component: MainIndexRecordHealthData,
+    },
+    // {
+    //     name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_HBA1C,
+    //     component: MainHBA1C,
+    // },
     {
         name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
         component: NumericalRecord,

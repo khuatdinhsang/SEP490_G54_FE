@@ -16,11 +16,46 @@ import {
 } from '../../styles/flex';
 import CategoryComponent from '../../component/category';
 import { SCREENS_NAME } from '../../navigator/const';
+import { useEffect, useState } from 'react';
+import { medicalAppointmentService } from '../../services/medicalAppointment';
+import LoadingScreen from '../../component/loading';
+import { authService } from '../../services/auth';
 
 const Profile = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageError, setMessageError] = useState<string>("");
+  const [height, setHeight] = useState<number>(0)
+  const [weight, setWeight] = useState<number>(0)
+  const [name, setName] = useState<string>("")
   const handleMyHealthMissionStatement = () => { };
+  useEffect(() => {
+    const fetchWeightAndHeight = async () => {
+      setIsLoading(true)
+      try {
+        const res = await authService.getHeightWeight();
+        if (res.code === 200) {
+          setIsLoading(false)
+          setHeight(res.result.height)
+          setWeight(res.result.weight)
+          setName(res.result.name)
+          setMessageError("");
+        } else {
+          setMessageError("Failed to fetch questions.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    };
+    fetchWeightAndHeight()
+  }, [])
 
   const handleClinicalSurvey = () => { };
 
@@ -41,17 +76,17 @@ const Profile = () => {
         <View style={{ marginTop: 20 }} />
         <View style={[flexRow]}>
           <Image source={IMAGE.HOME.SIDEBAR.프로필이미지} />
-          <Text style={styles.textName}>프로필이미지</Text>
+          <Text style={styles.textName}>{name}</Text>
         </View>
         <Text style={styles.labelSection}>나의 생체 데이터</Text>
         <View style={[styles.sectionContainer, flexRowSpaceBetween]}>
           <View style={flexCenter}>
             <Text style={styles.nameSection}>키</Text>
-            <Text style={styles.valueSection}>170cm</Text>
+            <Text style={styles.valueSection}>{height}cm</Text>
           </View>
           <View style={flexCenter}>
             <Text style={styles.nameSection}>몸무게</Text>
-            <Text style={styles.valueSection}>60kg</Text>
+            <Text style={styles.valueSection}>{weight}kg</Text>
           </View>
           <View style={flexCenter}>
             <Text style={styles.nameSection}>암종</Text>
@@ -78,6 +113,7 @@ const Profile = () => {
           />
         </View>
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };

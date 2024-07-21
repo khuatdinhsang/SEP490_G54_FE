@@ -22,17 +22,22 @@ const BloodPressure = ({ route }: any) => {
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>("")
     const isEditable = route?.params?.isEditable;
-    const [bloodError, setBloodError] = useState<string>("");
+    const [bloodMinError, setBloodMinError] = useState<string>("");
+    const [bloodMaxError, setBloodMaxError] = useState<string>("");
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const viewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: isEdit })
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: isEdit })
     }
     const nextPage = async (): Promise<void> => {
-        if (Number(minBloodPressure) > 200 || Number(maxBloodPressure)) {
-            setBloodError("Invalid value");
+        if (Number(minBloodPressure) > 200) {
+            setBloodMinError(t('placeholder.err.invalidInput'));
+            return;
+        }
+        if (Number(maxBloodPressure) > 200) {
+            setBloodMaxError(t('placeholder.err.invalidInput'));
             return;
         }
         setIsLoading(true)
@@ -47,12 +52,12 @@ const BloodPressure = ({ route }: any) => {
             if (res.code === 201) {
                 setIsLoading(false)
                 setIsEdit(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");
@@ -64,13 +69,13 @@ const BloodPressure = ({ route }: any) => {
     }
     const handleSetMaxBloodPressure = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 5) {
             setMaxBloodPressure(value);
         }
     }
     const handleSetMinBloodPressure = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 5) {
             setMinBloodPressure(value);
         }
     }
@@ -111,6 +116,7 @@ const BloodPressure = ({ route }: any) => {
                                     keyboardType={"numeric"}
                                     handleSetValue={handleSetMaxBloodPressure}
                                     styleInput={{ paddingLeft: 50 }}
+                                    error={bloodMaxError}
                                 />
                             </View>
                         </View>
@@ -123,7 +129,7 @@ const BloodPressure = ({ route }: any) => {
                                     keyboardType={"numeric"}
                                     handleSetValue={handleSetMinBloodPressure}
                                     styleInput={{ paddingLeft: 50 }}
-                                    error={bloodError}
+                                    error={bloodMinError}
                                 />
                             </View>
                         </View>
@@ -136,7 +142,7 @@ const BloodPressure = ({ route }: any) => {
                         <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
                         <Pressable
                             onPress={() => {
-                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false });
+                                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART, { isEditable: false });
                             }}
                             style={styles.buttonChart}>
                             <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>

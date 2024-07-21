@@ -17,7 +17,7 @@ import LoadingScreen from '../../component/loading';
 import { medicineService } from '../../services/medicine';
 import { listRegisterMedicineData, medicinePost, mentalData } from '../../constant/type/medical';
 import InputNumber from '../../component/inputNumber';
-import { convertToUTC, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
+import { generateRandomId, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addRegisterMedication, addRegisterMedicationInterface, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
@@ -56,12 +56,18 @@ const AddMedication = ({ route }: any) => {
     const listRegisterMedication = useSelector((state: RootState) => state.medication.listRegisterMedication);
     const listRegisterMedicationInterface = useSelector((state: RootState) => state.medication.listRegisterMedicationInterface);
     const handleSetHour = (value: string) => {
+        if (Number(value) > 24) {
+            return
+        }
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
             setHours(value);
         }
     }
     const handleSetMinute = (value: string) => {
+        if (Number(value) > 59) {
+            return
+        }
         const numericRegex = /^[0-9]*$/;
         if (numericRegex.test(value)) {
             setMinutes(value);
@@ -80,7 +86,7 @@ const AddMedication = ({ route }: any) => {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400 || error?.response?.status === 401) {
+                if (error?.response?.status === 400) {
                     setMessageError(error.response.data.message);
                 } else {
                     setMessageError("Unexpected error occurred.");
@@ -110,35 +116,27 @@ const AddMedication = ({ route }: any) => {
         const dataInterface: listRegisterMedicineData = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
-            time: convertToUTC(`${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`, offsetTime),
+            time: `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`,
             medicineTitle: selectedMedicineTitle.toString(),
             indexDay: dayChoose.map((item) => item.dayWeek),
         };
-        console.log("117", dayChoose.map((item) => item.dayWeek))
-        const existingMedicationIndex = listRegisterMedication.findIndex(
-            item => item.medicineTypeId === selectedMedication
-        );
-        if (existingMedicationIndex !== -1) {
-            const updatedListRegisterMedication = [...listRegisterMedication];
-            const updatedListRegisterMedicationInterface = [...listRegisterMedicationInterface];
 
-            updatedListRegisterMedication[existingMedicationIndex] = dataSubmit;
-            updatedListRegisterMedicationInterface[existingMedicationIndex] = dataInterface;
-
-            dispatch(setListRegisterMedication(updatedListRegisterMedication));
-            dispatch(setListRegisterMedicationInterface(updatedListRegisterMedicationInterface));
-
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
-                listRegisterMedicationSubmit: updatedListRegisterMedication,
-                listRegisterMedicationInterface: updatedListRegisterMedicationInterface
-            });
-        } else {
+        const isDuplicate = listRegisterMedicationInterface.some(item => {
+            const hasSameDay = item.indexDay.some(day => dataInterface.indexDay.includes(day));
+            return item.medicineTypeId === dataInterface.medicineTypeId &&
+                item.time === dataInterface.time &&
+                hasSameDay;
+        });
+        console.log("130", isDuplicate)
+        if (!isDuplicate) {
             dispatch(addRegisterMedication(dataSubmit));
             dispatch(addRegisterMedicationInterface(dataInterface));
             navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
                 listRegisterMedicationSubmit: [...listRegisterMedication, dataSubmit],
                 listRegisterMedicationInterface: [...listRegisterMedicationInterface, dataInterface]
             });
+        } else {
+            setMessageError("Medication with the same date, time, and type already exists.");
         }
     };
 
@@ -176,7 +174,12 @@ const AddMedication = ({ route }: any) => {
                         textRightStyle={{ color: hour && minute && selectedDays.length ? colors.primary : colors.gray_G04 }}
                         text={t("planManagement.text.takingMedication")}
                         handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        handleClickIconRight={() => {
+                            if (hour && minute && selectedDays.length) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={hour && minute && selectedDays.length ? false : true}
                     />
                 </View>
                 <ProgressHeader index={[0, 1, 2, 3]} length={5} />
@@ -190,7 +193,8 @@ const AddMedication = ({ route }: any) => {
                                 {dataMedication && dataMedication.map((item) => {
                                     return (
                                         <Pressable
-                                            onPress={() => handleSelectMedication(item.id)} key={item.id}
+                                            onPress={() => handleSelectMedication(item.id)}
+                                            key={item.id}
                                             style={[styles.chooseMedication, {
                                                 backgroundColor: item.id === selectedMedication ? colors.orange_01 : colors.white
                                             }]}>
@@ -256,9 +260,9 @@ const AddMedication = ({ route }: any) => {
                                 </View>
                             </View>}
                         </View>
+                        {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                     </View>
                 </ScrollView >
-                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </View>
             <View style={styles.buttonContainer}>
                 <Pressable

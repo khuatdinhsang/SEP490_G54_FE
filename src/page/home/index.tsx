@@ -38,7 +38,6 @@ import PermissionRequest from '../../util/Permission';
 import TimerModule, { TimerItem } from '../../native-module/timer.module';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setScreen } from '../../store/screen.slice';
-import { useResetScreenAtStartOfWeek } from '../../hooks/resetScreen';
 import { counterStepService } from '../../services/counterstep';
 import { SCREENS_NAME } from '../../navigator/const';
 

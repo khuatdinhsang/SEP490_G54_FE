@@ -31,8 +31,12 @@ const AddQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.MAIN);
     }
     const addQuestionSchema = yup.object().shape({
-        title: yup.string().required(t("questionManagement.error.title")),
-        content: yup.string().required(t("questionManagement.error.content")),
+        title: yup.string().required(t("questionManagement.error.title")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+            return value.trim().length > 0;
+        }),
+        content: yup.string().required(t("questionManagement.error.content")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+            return value.trim().length > 0;
+        }),
     });
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
         setFieldValue(field, '');
@@ -53,7 +57,7 @@ const AddQuestion = () => {
                 clearField('content', setFieldValue)
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
+            if (error?.response?.status === 400) {
                 setMessageError(error.response.data.message);
             } else {
                 setMessageError("Unexpected error occurred.");

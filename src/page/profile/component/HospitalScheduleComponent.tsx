@@ -2,8 +2,8 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import { flexRow } from '../../../styles/flex';
-import { TypeMakeHospitalSchedule } from '../const';
+import { flexRow, flexRowSpaceBetween } from '../../../styles/flex';
+import { TypeMakeHospitalSchedule, TypeStatusMedicalAppointment } from '../const';
 import { appointment } from '../../../constant/type/medical';
 
 interface HospitalScheduleComponentProps {
@@ -21,62 +21,64 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
       : colors.blue_01;
   const labelColorWrapper =
     typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
-      ? '#EAFFFC'
-      : '#ECECFF';
-
+      ? colors.green_background
+      : colors.blue_background;
+  let labelStatusAppoint = ""
+  let labelStatusAppointWrapper = ""
+  switch (appointment.statusMedicalAppointment) {
+    case TypeStatusMedicalAppointment.DONE:
+      labelStatusAppoint = colors.green;
+      labelStatusAppointWrapper = colors.green_background
+      break;
+    case TypeStatusMedicalAppointment.PENDING:
+      labelStatusAppoint = colors.orange_04;
+      labelStatusAppointWrapper = colors.orange_01
+      break;
+    case TypeStatusMedicalAppointment.CONFIRM:
+      labelStatusAppoint = colors.blue_01;
+      labelStatusAppointWrapper = colors.blue_background
+      break;
+    default:
+      labelStatusAppoint = colors.blue_01;
+      labelStatusAppointWrapper = colors.blue_background
+  }
   return (
-    <View style={[styles.container, flexRow, styles.shadowBox]}>
-      <View style={[styles.labelWrapper, { backgroundColor: labelColorWrapper }]}>
-        <Text style={[styles.label, { color: labelColor }]}>
-          {typeMakeHospitalSchedule === TypeMakeHospitalSchedule.MEDICAL_CHECKUP
-            ? '건강검진'
-            : '진료'}
-        </Text>
+    <View style={[flexRowSpaceBetween, styles.question, styles.shadowBox]}>
+      <View style={{ width: '60%' }}>
+        <Text style={styles.textQuestion}>{appointment.date?.split("T")[0]}</Text>
+        <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{appointment.hospital}</Text>
       </View>
-      <View>
-        <Text style={styles.text}>{appointment.hospital}</Text>
-      </View>
-      <View style={styles.textRightWrapper}>
-        <Text style={styles.textRight}>{appointment.date?.split("T")[0]}</Text>
+      <View style={{ flex: 1 }}>
+        <View style={[styles.statusQuestion, styles.centered, { marginBottom: 5, backgroundColor: labelColorWrapper }]}>
+          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelColor }]}>{appointment.typeMedicalAppointment}</Text>
+        </View>
+        <View style={[styles.statusQuestion, styles.centered, { backgroundColor: labelStatusAppointWrapper }]}>
+          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelStatusAppoint }]}>{appointment.statusMedicalAppointment}</Text>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    borderRadius: 16,
+  question: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.gray_G02,
+    paddingVertical: 16,
+    paddingHorizontal: 14,
     backgroundColor: colors.white,
-    marginVertical: 8,
+    marginBottom: 15
   },
-  labelWrapper: {
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-  },
-  label: {
-    fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  text: {
-    color: colors.black,
-    fontWeight: '500',
-    fontSize: 18,
-    lineHeight: 28,
-    marginLeft: 8,
-  },
-  textRightWrapper: {
-    position: 'absolute',
-    right: 16,
-  },
-  textRight: {
-    color: colors.gray_G04,
-    fontWeight: '400',
+  textQuestion: {
+    fontWeight: "500",
     fontSize: 16,
-    lineHeight: 24,
+    color: colors.gray_G04,
+  },
+  statusQuestion: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 10,
   },
   shadowBox: {
     backgroundColor: '#FFFFFF',
@@ -87,6 +89,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 22,
     elevation: 3,
+  },
+  centered: {
+    justifyContent: 'center',
   },
 });
 
