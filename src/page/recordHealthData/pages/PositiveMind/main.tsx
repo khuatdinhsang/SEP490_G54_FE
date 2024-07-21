@@ -22,10 +22,10 @@ const MainPositiveMind = () => {
                 if (res.result === true) {
                     setIsLoading(false);
                     setMessageError("");
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false })
                 } else {
                     setIsLoading(false);
-                    navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: true })
+                    navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD, { isEditable: true })
                 }
             } catch (error: any) {
                 if (error?.response?.status === 400) {

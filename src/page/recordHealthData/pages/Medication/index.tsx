@@ -63,7 +63,7 @@ const MedicationRecord = ({ route }: any) => {
     }, [selectedItems, dataListMedication, today]);
 
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
 
     const nextPage = async (): Promise<void> => {
@@ -79,7 +79,7 @@ const MedicationRecord = ({ route }: any) => {
                 setMessageError("");
                 setIsLoading(false);
                 setIsEdit(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -95,7 +95,7 @@ const MedicationRecord = ({ route }: any) => {
     };
 
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: isEdit });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: isEdit });
     };
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
@@ -198,7 +198,7 @@ const MedicationRecord = ({ route }: any) => {
                         <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
                         <Pressable
                             onPress={() => {
-                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
+                                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART, { isEditable: false });
                             }}
                             style={styles.buttonChart}>
                             <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>

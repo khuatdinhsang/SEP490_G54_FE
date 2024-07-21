@@ -23,11 +23,11 @@ const Weight = ({ route }: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const [errorWeight, setErrorWeight] = useState<string>("")
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
     };
 
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
 
     const nextPage = async (): Promise<void> => {
@@ -47,7 +47,7 @@ const Weight = ({ route }: any) => {
                 setIsLoading(false);
                 setIsEdit(false)
                 setWeight("")
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -64,7 +64,7 @@ const Weight = ({ route }: any) => {
 
     const handleSetWeight = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value)) {
+        if (numericRegex.test(value) && value.length <= 4) {
             setWeight(value);
         }
     };

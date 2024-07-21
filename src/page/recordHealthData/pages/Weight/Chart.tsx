@@ -20,10 +20,10 @@ const WeightChart = ({ route }: any) => {
     const { t, i18n } = useTranslation();
     const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT, { isEditable: isEditable });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT, { isEditable: isEditable });
     };
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");

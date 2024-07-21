@@ -89,7 +89,7 @@ const PlanManagement = () => {
             <View style={styles.diamond} />
           </View>
           <View style={{ paddingHorizontal: 20, width: WidthDevice }}>
-            <Pressable onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND)} style={styles.button}>
+            <Pressable onPress={() => navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND)} style={styles.button}>
               <Text style={styles.buttonText}>{t('common.text.start')}</Text>
             </Pressable>
           </View>

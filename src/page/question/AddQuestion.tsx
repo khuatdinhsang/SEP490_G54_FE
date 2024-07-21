@@ -31,8 +31,12 @@ const AddQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.MAIN);
     }
     const addQuestionSchema = yup.object().shape({
-        title: yup.string().required(t("questionManagement.error.title")),
-        content: yup.string().required(t("questionManagement.error.content")),
+        title: yup.string().required(t("questionManagement.error.title")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+            return value.trim().length > 0;
+        }),
+        content: yup.string().required(t("questionManagement.error.content")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
+            return value.trim().length > 0;
+        }),
     });
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
         setFieldValue(field, '');

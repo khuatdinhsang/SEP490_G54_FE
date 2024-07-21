@@ -11,63 +11,56 @@ import { IMAGE } from '../../constant/image';
 import { SCREENS_NAME } from '../../navigator/const';
 import { chartService } from '../../services/charts';
 import LoadingScreen from '../../component/loading';
-import { valueWeight } from '../../constant/type/chart';
 import LineChart from '../../component/line-chart-no-x';
 import { weeklyReviewService } from '../../services/weeklyReviews';
-import { extractDayAndMonth, formatDateRange, transformDataToChartNoX } from '../../util';
+import { formatDateRange, transformDataToChartNoX } from '../../util';
 
 const WeeklyEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
-    const [times, setTimes] = useState<string[]>([])
-    const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.HOME.MAIN)
-    };
+    const [times, setTimes] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
-    const [dataChart, setDataChart] = useState<number[]>([])
+    const [dataChart, setDataChart] = useState<number[]>([]);
+
+    const goBackPreviousPage = () => {
+        navigation.navigate(SCREENS_NAME.HOME.MAIN);
+    };
 
     useEffect(() => {
-        const getDataChart = async (): Promise<void> => {
+        const getDataChart = async () => {
             setIsLoading(true);
             try {
-                const resData = await chartService.getDataWeeklyReview();
-                if (resData.code === 200) {
-                    setIsLoading(false);
-                    setDataChart(resData.result.percentage.reverse())
-                    // setTimes(resData.result.weekStart)
+                const chartRes = await chartService.getDataWeeklyReview();
+
+                if (chartRes.code === 200) {
+                    setDataChart(chartRes.result.percentage.reverse());
+
                     try {
-                        const resData = await weeklyReviewService.getWeeklyReviews();
-                        if (resData.code === 200) {
-                            setIsLoading(false);
-                            setTimes(resData.result)
+                        const weeklyReviewRes = await weeklyReviewService.getWeeklyReviews();
+                        if (weeklyReviewRes.code === 200) {
+                            setTimes(weeklyReviewRes.result);
                         } else {
                             setMessageError("Unexpected error occurred.");
                         }
                     } catch (error: any) {
-                        if (error?.response?.status === 400) {
-                            setMessageError(error.response.data.message);
-                        } else {
-                            setMessageError("Unexpected error occurred.");
-                        }
-                    } finally {
-                        setIsLoading(false);
+                        const errorMessage = error?.response?.status === 400 ? error.response.data.message : "Unexpected error occurred.";
+                        setMessageError(errorMessage);
                     }
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
             } catch (error: any) {
-                if (error?.response?.status === 400) {
-                    setMessageError(error.response.data.message);
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
+                const errorMessage = error?.response?.status === 400 ? error.response.data.message : "Unexpected error occurred.";
+                setMessageError(errorMessage);
             } finally {
                 setIsLoading(false);
             }
         };
+
         getDataChart();
     }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -91,32 +84,31 @@ const WeeklyEvaluate = () => {
                     </Text>
                 </Pressable>
             </View>
-            {times.length > 0 ? <ScrollView style={styles.scrollView}>
-                <View style={styles.content}>
-                    <LineChart
-                        data={transformDataToChartNoX(dataChart)}
-                        textTitle={t("evaluate.mediumChart")}
-                        labelElement="사용X"
-                        tickValues={[0, 33, 67, 100]}
-                    />
-                    <View style={{ marginBottom: 20, marginTop: 20 }}>
-                        {times && times?.map((item, index) => {
-                            return (
-                                <WeeklyComponent key={index} time={item} isNew={index == 0 ? true : false} timeRender={`${formatDateRange(item)}`} />
-                            )
-                        })}
+            {times.length > 0 ? (
+                <ScrollView style={styles.scrollView}>
+                    <View style={styles.content}>
+                        <LineChart
+                            data={transformDataToChartNoX(dataChart)}
+                            textTitle={t("evaluate.mediumChart")}
+                            labelElement="사용X"
+                            tickValues={[0, 33, 67, 100]}
+                        />
+                        <View style={{ marginBottom: 20, marginTop: 20 }}>
+                            {times.map((item, index) => (
+                                <WeeklyComponent key={index} time={item} isNew={index === 0} timeRender={formatDateRange(item)} />
+                            ))}
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
-                :
+                </ScrollView>
+            ) : (
                 <View style={[flexRowCenter, { flexDirection: 'column', marginTop: 100 }]}>
                     <Image source={IMAGE.EVALUATE.CATEGORY} />
                     <Text style={[styles.textNavigate, { color: colors.gray_G08 }]}>{t("evaluate.noReview")}</Text>
                 </View>
-            }
+            )}
             {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             {isLoading && <LoadingScreen />}
-        </SafeAreaView >
+        </SafeAreaView>
     );
 };
 
@@ -153,8 +145,8 @@ const styles = StyleSheet.create({
     textError: {
         fontWeight: '500',
         fontSize: 14,
-        color: colors.red
-    }
+        color: colors.red,
+    },
 });
 
 export default WeeklyEvaluate;
