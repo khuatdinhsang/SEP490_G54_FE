@@ -1,7 +1,7 @@
 export const IMAGE = {
   HOME: {
     CATEGORY: require('assets/image/home/category.png'),
-    CATEGORY1: require('assets/image/home/category/category1.png'),
+    INFORMATION_HEALTH: require('assets/image/home/category/information-health.png'),
     CATEGORY2: require('assets/image/home/category/category2.png'),
     CATEGORY3: require('assets/image/home/category/category3.png'),
     CATEGORY4: require('assets/image/home/category/category4.png'),
@@ -92,5 +92,14 @@ export const IMAGE = {
     SAD1: require('assets/image/evaluate/icon_sad1.png'),
     DOCTOR: require('assets/image/evaluate/icon__doctor.png'),
     CATEGORY: require('assets/image/evaluate/Category.png'),
+  },
+  INFORMATION_HEALTH: {
+    ICON_DOCTOR: require('assets/image/information-health/icon__doctor.png'),
+    POLYGON_LEFT: require('assets/image/information-health/Polygon_18.png'),
+    ICON_WARNING: require('assets/image/information-health/icon_warning.png'),
+    CATEGORY: require('assets/image/information-health/Category.png'),
+    IMAGE188: require('assets/image/information-health/image-188.png'),
+    PATIENT: require('assets/image/information-health/icon_patient.png'),
+    LOCK: require('assets/image/information-health/lock.png'),
   },
 };
