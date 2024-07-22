@@ -2,11 +2,17 @@ import {StyleSheet, Text, View} from 'react-native';
 import colors from '../../../constant/color';
 import {flexRow} from '../../../styles/flex';
 
-const StepComponent = () => {
+interface StepComponentProps {
+  textLeft: string;
+  text: string;
+}
+const StepComponent = (props: StepComponentProps) => {
+  const {textLeft, text} = props;
+
   return (
     <View style={[styles.container, flexRow, styles.shadowBox]}>
-      <Text style={styles.textLeft}>Step1</Text>
-      <Text style={styles.text}>건강경영과 효과적인 전략</Text>
+      <Text style={styles.textLeft}>{textLeft}</Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 };

@@ -114,6 +114,136 @@ export const SCREENS_NAME = {
         FOOD_INTAKE_RECORD: 'Food Injection Record',
         FOOD_INTAKE_CHART: 'Food Injection Chart',
     },
+import WeeklyEvaluate from '../page/evaluate/WeeklyEvaluate';
+import WeeklyEvaluateDetail from '../page/evaluate/WeeklyEvaluateDetail';
+import MonthlyEvaluate from '../page/evaluate/MonthlyEvaluate';
+import SAT_SF_C from '../page/evaluate/SAT_SF_C';
+import SAT_SF_I from '../page/evaluate/SAT_SF_I';
+import SAT_SF_P from '../page/evaluate/SAT_SF_P';
+import SuccessSurvey from '../page/evaluate/SuccessSurvey';
+import MainWeight from '../page/recordHealthData/pages/Weight/main';
+import MainWorkOut from '../page/recordHealthData/pages/WorkOut/main';
+import MainPositiveMind from '../page/recordHealthData/pages/PositiveMind/main';
+import MainFoodIntake from '../page/recordHealthData/pages/FoodIntake/main';
+import MainMedication from '../page/recordHealthData/pages/Medication/main';
+import MainBloodPressure from '../page/recordHealthData/pages/BloodPressure/main';
+// import MainHBA1C from '../page/recordHealthData/pages/HBA1C/main';
+import SF_MENTAL from '../page/evaluate/SF_MENTAL';
+import SF_ACTIVITY from '../page/evaluate/SF_ACTIVITY';
+import SF_MEDICATION from '../page/evaluate/SF_MEDICATION';
+import SF_DIET from '../page/evaluate/SF_DIET';
+import SAT_Evaluate from '../page/evaluate/SAT_Evaluate';
+import SF_Evaluate from '../page/evaluate/SF_Evaluate';
+import MainIndexMedication from '../page/planManagement/main';
+import NoDataRecordHealthData from '../page/recordHealthData/nodata';
+import MainIndexRecordHealthData from '../page/recordHealthData/main';
+import InformationHealth from '../page/informationHealth';
+import Week1Day1 from '../page/informationHealth/stack/week1/day1';
+import Week1Day2 from '../page/informationHealth/stack/week1/day2';
+import Week1Day3 from '../page/informationHealth/stack/week1/day3';
+import Week1Day4 from '../page/informationHealth/stack/week1/day4';
+import Week1Day5 from '../page/informationHealth/stack/week1/day5';
+
+export const SCREENS_NAME = {
+  LOGIN: {
+    MAIN: 'Main Login',
+  },
+  REGISTER: {
+    STEP1: 'Register Step 1',
+    STEP2: 'Register Step 2',
+    STEP3: 'Register Step 3',
+    STEP4: 'Register Step 4',
+    RULES: 'Register Rules',
+    SUCCESS: 'Register Success',
+  },
+  HOME: {
+    MAIN: 'Main Home',
+  },
+  SETTING: {
+    MAIN: 'Main Setting',
+    SETTING_NOTIFICATION: 'Setting Notification',
+    SETTING_LOGOUT: 'Setting Logout',
+    CHANGE_PASSWORD: 'Change Password',
+  },
+  PROFILE: {
+    MAIN: 'Main Profile',
+    MAKE_HOSPITAL_SCHEDULE: 'Make Hospital Schedule',
+    NEW_HOSPITAL_SCHEDULE: 'New Hospital Schedule',
+  },
+  FORGOT_PASSWORD: {
+    VERIFY_EMAIL: 'Verify ForgotPassword',
+    MAIN: 'Main ForgotPassword',
+    SUCCESS: 'Forgot Password Success',
+  },
+  PLAN_MANAGEMENT: {
+    MAIN: 'Main Plan Management',
+    MAIN_INDEX: 'Main Plan Management Index',
+    POSITIVE_MIND: 'Positive Mind',
+    WORK_OUT: 'Work Out',
+    FOOD_INTAKE: 'Food Intake',
+    REGISTER_MEDICATION: 'Register Medication',
+    ADD_MEDICATION: 'Add Medication',
+    LIST_REGISTER_MEDICATION: 'List Register Medication',
+    NUMBER_STEPS: 'Number Steps',
+    SUCCESS: 'Plan Success',
+  },
+  QUESTION: {
+    MAIN: 'Main Question',
+    ADD: 'Add Question',
+    DETAIL: 'Detail Question',
+    REGULAR: 'Regular Question',
+  },
+  RECORD_HEALTH_DATA: {
+    MAIN: 'Main Record Health',
+    MAIN_INDEX: 'Main Record Health Index',
+    NO_DATA: 'Main Record Health No Data',
+    // MAIN_HBA1C: 'Main HBA1C',
+    NUMERICAL_RECORD: 'Numerical Record',
+    FILL_RECORD: 'Fill Record',
+    NUMERICAL_RECORD_CHART: 'Number Record Chart',
+    MAIN_BLOOD_PRESSURE: 'Main Blood Pressure',
+    BLOOD_PRESSURE: 'Blood Pressure',
+    BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
+    MAIN_WEIGHT: 'Main Weight',
+    WEIGHT: 'Weight',
+    WEIGHT_CHART: 'Weight Chart',
+    MAIN_POSITIVE_MIND: 'Main Positive Mind',
+    POSITIVE_MIND_RECORD: 'Positive Mind Record',
+    POSITIVE_MIND_CHART: 'Positive Mind Chart',
+    MAIN_WORK_OUT: 'Main Work Out',
+    WORK_OUT_RECORD: 'Work Out Record',
+    WORD_OUT_CHART: 'Word Out Chart',
+    MAIN_MEDICATION: 'Main Medication',
+    MEDICATION_RECORD: 'Medication Record',
+    MEDICATION_CHART: 'Medication Chart',
+    NUMBER_STEPS_CHART: 'Number Steps Chart',
+    MAIN_FOOD_INTAKE: 'Main Food Intake',
+    FOOD_INTAKE_RECORD: 'Food Injection Record',
+    FOOD_INTAKE_CHART: 'Food Injection Chart',
+  },
+  EVALUATE: {
+    WEEKLY: 'Evaluate Week',
+    DETAIL_WEEKLY: 'Evaluate Detail Week',
+    MONTHLY: 'Evaluate Month',
+    SAT_SF_C: 'Survey SAT_SF_C',
+    SAT_SF_P: 'Survey SAT_SF_P',
+    SAT_SF_I: 'Survey SAT_SF_I',
+    SF_MENTAL: 'Survey SF_MENTAL',
+    SF_ACTIVITY: 'Survey SF_ACTIVITY',
+    SF_DIET: 'Survey SF_DIET',
+    SF_MEDICATION: 'Survey SF_MEDICATION',
+    SAT_EVALUATE: 'SAT Evaluate',
+    SF_EVALUATE: 'SF Evaluate',
+    SUCCESS_SURVEY: 'Success Survey',
+  },
+  INFORMATION_HEALTH: {
+    MAIN: 'Main Information Health',
+    WEEK1DAY1: 'Week 1 Day 1',
+    WEEK1DAY2: 'Week 1 Day 2',
+    WEEK1DAY3: 'Week 1 Day 3',
+    WEEK1DAY4: 'Week 1 Day 4',
+    WEEK1DAY5: 'Week 1 Day 5',
+  },
 };
 
 const SCREENS_STACK_LOGIN = [
@@ -188,42 +318,46 @@ const SCREENS_STACK_FORGOT_PASSWORD = [
   },
 ];
 const SCREENS_STACK_PLAN_MANAGEMENT = [
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN,
-        component: PlanManagement,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND,
-        component: PositiveMind,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT,
-        component: WorkOut,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE,
-        component: FoodIntake,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION,
-        component: RegisterMedication,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION,
-        component: AddMedication,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION,
-        component: ListRegisterMedication,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS,
-        component: NumberSteps,
-    },
-    {
-        name: SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS,
-        component: PlanSuccess,
-    },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN,
+    component: PlanManagement,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN_INDEX,
+    component: MainIndexMedication,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND,
+    component: PositiveMind,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT,
+    component: WorkOut,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE,
+    component: FoodIntake,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION,
+    component: RegisterMedication,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION,
+    component: AddMedication,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION,
+    component: ListRegisterMedication,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS,
+    component: NumberSteps,
+  },
+  {
+    name: SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS,
+    component: PlanSuccess,
+  },
 ];
 const SCREENS_STACK_PROFILE = [
   {
@@ -258,86 +392,205 @@ const SCREENS_STACK_QUESTION = [
   },
 ];
 const SCREENS_STACK_RECORD_DATA = [
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
-        component: RecordHealthData,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
-        component: NumericalRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD,
-        component: FillRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
-        component: NumericalRecordChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE,
-        component: BloodPressure,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART,
-        component: BloodPressureChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT,
-        component: Weight,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART,
-        component: WeightChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD,
-        component: PositiveMindRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART,
-        component: PositiveMindChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD,
-        component: WorkOutRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART,
-        component: WorkOutChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD,
-        component: MedicationRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART,
-        component: MedicationChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART,
-        component: NumberStepsChart,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD,
-        component: FoodIntakeRecord,
-    },
-    {
-        name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART,
-        component: FoodInTakeChart,
-    },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
+    component: RecordHealthData,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.NO_DATA,
+    component: NoDataRecordHealthData,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_INDEX,
+    component: MainIndexRecordHealthData,
+  },
+  // {
+  //     name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_HBA1C,
+  //     component: MainHBA1C,
+  // },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
+    component: NumericalRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD,
+    component: FillRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
+    component: NumericalRecordChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_BLOOD_PRESSURE,
+    component: MainBloodPressure,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE,
+    component: BloodPressure,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART,
+    component: BloodPressureChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WEIGHT,
+    component: MainWeight,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT,
+    component: Weight,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART,
+    component: WeightChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_POSITIVE_MIND,
+    component: MainPositiveMind,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD,
+    component: PositiveMindRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART,
+    component: PositiveMindChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WORK_OUT,
+    component: MainWorkOut,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD,
+    component: WorkOutRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART,
+    component: WorkOutChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_MEDICATION,
+    component: MainMedication,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD,
+    component: MedicationRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART,
+    component: MedicationChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART,
+    component: NumberStepsChart,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_FOOD_INTAKE,
+    component: MainFoodIntake,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD,
+    component: FoodIntakeRecord,
+  },
+  {
+    name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART,
+    component: FoodInTakeChart,
+  },
 ];
 
+const SCREENS_STACK_EVALUATE = [
+  {
+    name: SCREENS_NAME.EVALUATE.WEEKLY,
+    component: WeeklyEvaluate,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.DETAIL_WEEKLY,
+    component: WeeklyEvaluateDetail,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.MONTHLY,
+    component: MonthlyEvaluate,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SAT_SF_C,
+    component: SAT_SF_C,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SAT_SF_I,
+    component: SAT_SF_I,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SAT_SF_P,
+    component: SAT_SF_P,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SF_MENTAL,
+    component: SF_MENTAL,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SF_ACTIVITY,
+    component: SF_ACTIVITY,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SF_DIET,
+    component: SF_DIET,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SF_MEDICATION,
+    component: SF_MEDICATION,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SAT_EVALUATE,
+    component: SAT_Evaluate,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SF_EVALUATE,
+    component: SF_Evaluate,
+  },
+  {
+    name: SCREENS_NAME.EVALUATE.SUCCESS_SURVEY,
+    component: SuccessSurvey,
+  },
+];
+
+const SCREEN_STACK_INFORMATION_HEALTH = [
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.MAIN,
+    component: InformationHealth,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY1,
+    component: Week1Day1,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY2,
+    component: Week1Day2,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY3,
+    component: Week1Day3,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY4,
+    component: Week1Day4,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY5,
+    component: Week1Day5,
+  },
+];
 
 const SCREENS_STACK = [
-    ...SCREENS_STACK_SETTING,
-    ...SCREENS_STACK_LOGIN,
-    ...SCREENS_STACK_HOME,
-    ...SCREENS_STACK_REGISTER,
-    ...SCREENS_STACK_FORGOT_PASSWORD,
-    ...SCREENS_STACK_PLAN_MANAGEMENT,
-    ...SCREENS_STACK_PROFILE,
-    ...SCREENS_STACK_QUESTION,
-    ...SCREENS_STACK_RECORD_DATA,
+  ...SCREENS_STACK_SETTING,
+  ...SCREENS_STACK_LOGIN,
+  ...SCREENS_STACK_HOME,
+  ...SCREENS_STACK_REGISTER,
+  ...SCREENS_STACK_FORGOT_PASSWORD,
+  ...SCREENS_STACK_PLAN_MANAGEMENT,
+  ...SCREENS_STACK_PROFILE,
+  ...SCREENS_STACK_QUESTION,
+  ...SCREENS_STACK_RECORD_DATA,
+  ...SCREENS_STACK_EVALUATE,
+  ...SCREEN_STACK_INFORMATION_HEALTH,
 ];
 export {SCREENS_STACK};
