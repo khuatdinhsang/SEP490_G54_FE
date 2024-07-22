@@ -93,4 +93,13 @@ export const IMAGE = {
     DOCTOR: require('assets/image/evaluate/icon__doctor.png'),
     CATEGORY: require('assets/image/evaluate/Category.png'),
   },
+  INFORMATION_HEALTH: {
+    ICON_DOCTOR: require('assets/image/information-health/icon__doctor.png'),
+    POLYGON_LEFT: require('assets/image/information-health/Polygon_18.png'),
+    ICON_WARNING: require('assets/image/information-health/icon_warning.png'),
+    CATEGORY: require('assets/image/information-health/Category.png'),
+    IMAGE188: require('assets/image/information-health/image-188.png'),
+    PATIENT: require('assets/image/information-health/icon_patient.png'),
+    LOCK: require('assets/image/information-health/lock.png'),
+  },
 };
