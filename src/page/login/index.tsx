@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as yup from "yup";
-import { ActivityIndicator, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Button, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
@@ -16,6 +16,7 @@ import { loginUser } from '../../store/user.slice';
 import { ResponseForm } from '../../constant/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
+import NotificationModule from '../../native-module/NotificationModule';
 
 interface LoginValues {
     email: string;
@@ -27,12 +28,31 @@ const Login = () => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>('')
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    console.log("32", isLoggedIn)
+    useEffect(() => {
+        const backAction = () => {
+            if (isLoggedIn) {
+                BackHandler.exitApp();
+                return true;
+            } else {
+                navigation.goBack()
+                return true
+            }
+
+        };
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
     const loginSchema = yup.object().shape({
         email: yup
             .string()
             .required(
                 t("placeholder.err.blank")
-            ).matches(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            ).matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/,
                 t("placeholder.err.email")
             ),
         password: yup
@@ -54,27 +74,26 @@ const Login = () => {
     const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
-            const res = await dispatch(loginUser({ email: values.email, password: values.password })).unwrap()
+            const deviceToken = await AsyncStorage.getItem('deviceToken');
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
+                setIsLoggedIn(true)
+                setIsLoading(false);
                 resetForm()
                 navigation.navigate(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
-            if (error?.code == 400) {
-                setMessageError(error.message)
-            } if (error?.code == 401) {
+            if (error.code == 400) {
                 setMessageError(error.message)
             }
+            if (error.code === 406) {
+                navigation.navigate(SCREENS_NAME.REGISTER.SUCCESS)
+            }
         } finally {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 1000);
+            setIsLoading(false)
         }
 
     }
-
-
-
     const handleFindId = () => {
         // Handle find ID logic
     }
@@ -88,7 +107,7 @@ const Login = () => {
     };
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
                 <Text style={styles.firstStep}>{t("common.text.firstStep")}</Text>
                 <Formik
                     initialValues={{ email: '', password: '' }}
@@ -133,9 +152,6 @@ const Login = () => {
                                         <Text style={styles.text}>{t("authentication.register")}</Text>
                                     </Pressable>
                                     <View style={flexRowCenter}>
-                                        <Pressable onPress={handleFindId}>
-                                            <Text> {t("authentication.findId")}  |  </Text>
-                                        </Pressable>
                                         <Pressable onPress={handleFindPassword}>
                                             <Text>{t("authentication.findPassword")}</Text>
                                         </Pressable>
@@ -177,7 +193,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     textError: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: "500",
         color: colors.red
     },

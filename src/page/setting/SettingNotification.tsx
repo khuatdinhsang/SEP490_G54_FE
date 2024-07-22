@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import ButtonComponent from '../../component/button';
@@ -9,33 +9,175 @@ import HeaderNavigatorComponent from '../../component/header-navigator';
 import SwitchComponent from '../../component/switch';
 import { IMAGE } from '../../constant/image';
 import { paddingHorizontalScreen } from '../../styles/padding';
+import { notificationService } from '../../services/notification';
+import LoadingScreen from '../../component/loading';
+import { notificationsResponse } from '../../constant/type/notification';
+import { Notification } from '../../constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingNotification = () => {
   const { t, i18n } = useTranslation();
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
-  const [notificationAllowed, setNotificationAllowed] =
-    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [notificationAllowed, setNotificationAllowed] = useState<boolean>(false);
   const [notificationUseApp, setNotificationUseApp] = useState<boolean>(false);
-  const [notificationScheduleHealthCheck, setNotificationScheduleHealthCheck] =
-    useState<boolean>(true);
-  const [notificationPlanManagement, setNotificationPlanManagement] =
-    useState<boolean>(false);
-  const [notificationReviewMonthly, setNotificationReviewMonthly] =
-    useState<boolean>(false);
-  const [notificationReviewWeekly, setNotificationReviewWeekly] =
-    useState<boolean>(true);
+  const [notificationScheduleHealthCheck, setNotificationScheduleHealthCheck] = useState<boolean>(false);
+  const [notificationPlanManagement, setNotificationPlanManagement] = useState<boolean>(false);
+  const [notificationReviewMonthly, setNotificationReviewMonthly] = useState<boolean>(false);
+  const [notificationReviewWeekly, setNotificationReviewWeekly] = useState<boolean>(false);
   const [notificationQA, setNotificationQA] = useState<boolean>(false);
-
+  const [messageError, setMessageError] = useState<string>("")
+  const [arrayNotificationSubmit, setArrayNotificationSubmit] = useState<notificationsResponse[]>([])
   const handleClickDialog = () => {
-    console.log('YES');
-    setIsShowDialog(false);
+    setIsShowDialog(false)
   };
-
-  const handleOnPressButton = () => {
+  useEffect(() => {
+    const typeNotificationList = [];
+    typeNotificationList.push(
+      { typeNotification: Notification.WEEKLY_REPORT_NOTIFICATION, status: notificationReviewWeekly });
+    typeNotificationList.push(
+      { typeNotification: Notification.MONTHLY_REPORT_NOTIFICATION, status: notificationReviewMonthly });
+    typeNotificationList.push(
+      { typeNotification: Notification.PLAN_NOTIFICATION, status: notificationPlanManagement });
+    typeNotificationList.push(
+      { typeNotification: Notification.MEDICAL_APPOINTMENT_NOTIFICATION, status: notificationScheduleHealthCheck });
+    typeNotificationList.push(
+      { typeNotification: Notification.DAILY_NOTIFICATION, status: notificationUseApp });
+    typeNotificationList.push(
+      { typeNotification: Notification.QUESTION_NOTIFICATION, status: notificationQA });
+    console.log("typeNotificationList", typeNotificationList)
+    setArrayNotificationSubmit(typeNotificationList)
+  }, [
+    notificationReviewWeekly,
+    notificationReviewMonthly,
+    notificationPlanManagement,
+    notificationScheduleHealthCheck,
+    notificationUseApp,
+    notificationQA
+  ]);
+  const handleOnPressButton = async (): Promise<void> => {
+    setIsLoading(true)
+    try {
+      const deviceToken = await AsyncStorage.getItem('deviceToken');
+      console.log("58", deviceToken)
+      const data = {
+        notificationStatusList: arrayNotificationSubmit,
+        deviceToken: deviceToken ?? ""
+      }
+      const res = await notificationService.putNotification(data);
+      if (res.code === 200) {
+        setIsLoading(false)
+        setMessageError("");
+        setArrayNotificationSubmit([])
+        setIsShowDialog(true)
+      } else {
+        setMessageError("Failed to fetch questions.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    }
+    finally {
+      setIsLoading(false)
+    }
     setIsShowDialog(true);
   };
+  const updateNotifications = (notifications: notificationsResponse[]) => {
+    notifications.forEach(notification => {
+      switch (notification.typeNotification) {
+        case Notification.DAILY_NOTIFICATION:
+          setNotificationUseApp(notification.status)
+          break;
+        case Notification.PLAN_NOTIFICATION:
+          setNotificationPlanManagement(notification.status)
+          break;
+        case Notification.WEEKLY_REPORT_NOTIFICATION:
+          setNotificationReviewWeekly(notification.status)
+          break;
+        case Notification.MEDICAL_APPOINTMENT_NOTIFICATION:
+          setNotificationScheduleHealthCheck(notification.status)
+          break;
+        case Notification.MONTHLY_REPORT_NOTIFICATION:
+          setNotificationReviewMonthly(notification.status)
+          break;
+        case Notification.QUESTION_NOTIFICATION:
+          setNotificationQA(notification.status)
+          break;
+        default:
+          break;
+      }
+    })
+  }
+  useEffect(() => {
+    const getListNotification = async () => {
+      setIsLoading(true)
+      try {
+        const res = await notificationService.getListNotification();
+        if (res.code === 200) {
+          setMessageError("");
+          updateNotifications(res.result)
+          setIsLoading(false)
+        } else {
+          setMessageError("Failed to fetch questions.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    };
+    getListNotification()
+  }, [])
+
+
+  const toggleMainSwitch = (value: boolean) => {
+    setNotificationAllowed(value);
+    setNotificationUseApp(value);
+    setNotificationScheduleHealthCheck(value);
+    setNotificationPlanManagement(value);
+    setNotificationReviewMonthly(value);
+    setNotificationReviewWeekly(value);
+    setNotificationQA(value);
+  };
+
+  const toggleIndividualSwitch = (setFunction: React.Dispatch<React.SetStateAction<boolean>>, value: boolean) => {
+    setFunction(value);
+  };
+
+  useEffect(() => {
+    const allNotificationsEnabled =
+      notificationUseApp &&
+      notificationScheduleHealthCheck &&
+      notificationPlanManagement &&
+      notificationReviewMonthly &&
+      notificationReviewWeekly &&
+      notificationQA;
+
+    if (allNotificationsEnabled) {
+      setNotificationAllowed(true);
+    } else if (!notificationUseApp || !notificationScheduleHealthCheck
+      || !notificationPlanManagement || !notificationReviewMonthly
+      || !notificationReviewWeekly || !notificationQA
+    ) {
+      setNotificationAllowed(false);
+    }
+  }, [
+    notificationUseApp,
+    notificationScheduleHealthCheck,
+    notificationPlanManagement,
+    notificationReviewMonthly,
+    notificationReviewWeekly,
+    notificationQA,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -51,43 +193,43 @@ const SettingNotification = () => {
         <SwitchComponent
           text="전체 알림 설정"
           value={notificationAllowed}
-          onChangeValue={setNotificationAllowed}
+          onChangeValue={toggleMainSwitch}
           style={styles.switch}
         />
         <SwitchComponent
           text="주기적 앱 사용 알림"
           value={notificationUseApp}
-          onChangeValue={setNotificationUseApp}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationUseApp, value)}
           style={styles.switch}
         />
         <SwitchComponent
           text="건강검진 및 진료 알림"
           value={notificationScheduleHealthCheck}
-          onChangeValue={setNotificationScheduleHealthCheck}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationScheduleHealthCheck, value)}
           style={styles.switch}
         />
         <SwitchComponent
           text="실천계획 관리 작성 알림"
           value={notificationPlanManagement}
-          onChangeValue={setNotificationPlanManagement}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationPlanManagement, value)}
           style={styles.switch}
         />
         <SwitchComponent
           text="월간평가 알림"
           value={notificationReviewMonthly}
-          onChangeValue={setNotificationReviewMonthly}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewMonthly, value)}
           style={styles.switch}
         />
         <SwitchComponent
           text="주간평가 알림"
           value={notificationReviewWeekly}
-          onChangeValue={setNotificationReviewWeekly}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewWeekly, value)}
           style={styles.switch}
         />
         <SwitchComponent
           text="문의하기 알림"
           value={notificationQA}
-          onChangeValue={setNotificationQA}
+          onChangeValue={(value) => toggleIndividualSwitch(setNotificationQA, value)}
           style={styles.switch}
         />
       </View>
@@ -101,6 +243,7 @@ const SettingNotification = () => {
         imageSource={IMAGE.ICON_CHECK_COLOR}
         buttonText="확인"
       />
+      {isLoading && <LoadingScreen />}
     </View>
   );
 };

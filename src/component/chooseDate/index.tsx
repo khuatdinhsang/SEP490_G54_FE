@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
 
 type DaySelectionProps = {
-    data: { id: number, name: string }[],
+    data: { id: number, name: string, value: string }[],
     selectedDays: number[],
     handleSelectDays: (itemId: number) => void,
     isChecked: boolean

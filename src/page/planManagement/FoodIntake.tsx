@@ -11,34 +11,76 @@ import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import ProgressHeader from '../../component/progessHeader';
 import TableExample from './component/TableExample';
+import InputNumber from '../../component/inputNumber';
+import { planService } from '../../services/plan';
+import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
+import { setScreen } from '../../store/screen.slice';
+import { useDispatch } from 'react-redux';
 
 const FoodIntake = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const [sizeDisk, setSizeDisk] = useState<string>();
-
+    const [sizeDisk, setSizeDisk] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
+    const handleSetSizeDisk = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value) && value.length <= 2) {
+            setSizeDisk(value);
+        }
+    }
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
     }
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (sizeDisk) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+            try {
+                const data = {
+                    dishPerDay: Number(sizeDisk),
+                    weekStart: getMondayOfCurrentWeek().split("T")[0],
+                }
+                const res = await planService.postDiet(data)
+                if (res.code === 200) {
+                    // dispatch(setScreen(4));
+                    setIsLoading(false)
+                    setMessageError("");
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
         }
     }
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.header}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.foodIntake")}
                         textRightStyle={{ color: sizeDisk ? colors.primary : colors.gray_G04 }}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={() => {
+                            if (sizeDisk) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={sizeDisk ? false : true}
                     />
                 </View>
                 <ProgressHeader index={[0, 1, 2]} length={5} />
@@ -48,15 +90,13 @@ const FoodIntake = () => {
                     <View style={[flexRowCenter, { flexDirection: 'column' }]}>
                         <Image source={IMAGE.PLAN_MANAGEMENT.FORK_KNIFE} />
                         <Pressable style={styles.inputContainer}>
-                            <View style={[styles.box, { borderColor: !sizeDisk ? colors.primary : colors.gray }]}>
-                                <Text style={styles.unit}>{t("planManagement.text.disk")}</Text>
-                                <TextInput
-                                    style={styles.unitInput}
-                                    keyboardType="numeric"
-                                    value={sizeDisk}
-                                    onChangeText={setSizeDisk}
-                                />
-                            </View>
+                            <InputNumber
+                                textRight={t("planManagement.text.disk")}
+                                value={sizeDisk}
+                                keyboardType={"numeric"}
+                                handleSetValue={handleSetSizeDisk}
+                                styleInput={{ paddingLeft: 50, paddingRight: 50 }}
+                            />
                             {(!sizeDisk) && <View style={flexRowCenter}>
                                 <View style={styles.bridge}>
                                     <View style={styles.diamond} />
@@ -73,6 +113,7 @@ const FoodIntake = () => {
                         <TableExample />
                     </View>
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -82,6 +123,7 @@ const FoodIntake = () => {
                     <Text style={styles.text}> {t('common.text.next')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -117,19 +159,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: 170,
     },
-    box: {
-        borderRadius: 8,
-        borderWidth: 1,
-        height: 56,
-        position: 'relative',
-    },
-    unit: {
-        lineHeight: 56,
-        position: 'absolute',
-        zIndex: 1000,
-        right: 20,
-        color: colors.black,
-    },
     unitInput: {
         width: '100%',
         height: 56,
@@ -139,6 +168,8 @@ const styles = StyleSheet.create({
     bridge: {
         position: 'absolute',
         top: 5,
+        left: "50%",
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,
@@ -188,6 +219,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
     },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 14
+    }
 });
 
 export default FoodIntake;

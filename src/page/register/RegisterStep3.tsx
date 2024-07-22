@@ -13,10 +13,13 @@ import ProgressHeader from '../../component/progessHeader';
 import { HistoryMedicalResponse } from '../../constant/type/medical';
 import { medicalService } from '../../services/medicalHistory';
 import { transformData } from '../../util';
+import LoadingScreen from '../../component/loading';
 const RegisterStep3 = ({ route }: any) => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const { t } = useTranslation();
     const { valuesStep2 } = route.params;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [messageError, setMessageError] = useState<string>("");
     // const [data, setData] = useState<dataTypes>([
     //     {
     //         title: t("common.diseases.chronic"),
@@ -51,13 +54,22 @@ const RegisterStep3 = ({ route }: any) => {
     const [data, setData] = useState<DataType[]>([])
     useEffect(() => {
         const fetchMedicalHistory = async () => {
+            setIsLoading(true)
             try {
                 const res = await medicalService.getMedicalHistory();
                 if (res.code == 200 && Array.isArray(res.result)) {
+                    setIsLoading(false)
                     setData(transformData(res.result))
                 }
-            } catch (error) {
-                console.error(error);
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
             }
         };
 
@@ -111,6 +123,7 @@ const RegisterStep3 = ({ route }: any) => {
                                 />
                             ))}
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </SafeAreaView>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -123,6 +136,7 @@ const RegisterStep3 = ({ route }: any) => {
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </View>
     );
 };
@@ -167,6 +181,11 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 12,
         justifyContent: 'center',
+    },
+    textError: {
+        fontSize: 14,
+        fontWeight: "500",
+        color: colors.red
     },
 });
 

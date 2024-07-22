@@ -1,7 +1,8 @@
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 
 const PermissionsRequest = [
   PermissionsAndroid.PERMISSIONS.ACTIVITY_RECOGNITION,
+  PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
 ];
 
 const PermissionRequest = async () => {

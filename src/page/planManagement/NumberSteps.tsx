@@ -10,34 +10,77 @@ import colors from '../../constant/color';
 import { flexCenter, flexRow, flexRowCenter } from '../../styles/flex';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice } from '../../util/Dimenssion';
+import InputNumber from '../../component/inputNumber';
+import { planService } from '../../services/plan';
+import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
+import { setScreen } from '../../store/screen.slice';
+import { useDispatch } from 'react-redux';
 
 const NumberSteps = () => {
     const { t } = useTranslation();
+    const [numberSteps, setNumberSteps] = useState<string>("");
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION);
     };
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (numberSteps) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+            try {
+                const data = {
+                    plannedStepPerDay: Number(numberSteps),
+                    weekStart: getMondayOfCurrentWeek().split("T")[0],
+                }
+                const res = await planService.postStepsNumber(data)
+                if (res.code === 200) {
+                    // dispatch(setScreen(6));
+                    setIsLoading(false)
+                    setMessageError("");
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+
         }
     };
-
-    const [numberSteps, setNumberSteps] = useState<string>();
-
+    const handleSetNumberSteps = (value: string) => {
+        const numericRegex = /^[0-9]*$/;
+        if (numericRegex.test(value) && value.length <= 5) {
+            setNumberSteps(value);
+        }
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={{ flex: 1 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
                         isTextRight={true}
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.numberSteps")}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        // handleClickIconRight={nextPage}
+                        handleClickIconRight={() => {
+                            if (numberSteps) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={numberSteps ? false : true}
                         textRightStyle={{ color: numberSteps ? colors.primary : colors.gray_G04 }}
                     />
                 </View>
@@ -47,18 +90,13 @@ const NumberSteps = () => {
                     <View style={[flexCenter, { flexDirection: 'column' }]}>
                         <Image style={{ marginTop: 30, height: 100, width: 100, marginBottom: 20 }} source={IMAGE.PLAN_MANAGEMENT.SHOES} />
                         <Pressable style={{ width: 170 }}>
-                            <View
-                                style={[styles.box, {
-                                    borderColor: !numberSteps ? colors.primary : colors.gray
-                                }]}>
-                                <Text style={styles.unit}>{t("common.text.step")}</Text>
-                                <TextInput
-                                    style={styles.unitInput}
-                                    keyboardType="numeric"
-                                    value={numberSteps}
-                                    onChangeText={setNumberSteps}
-                                />
-                            </View>
+                            <InputNumber
+                                textRight={t("common.text.step")}
+                                value={numberSteps}
+                                keyboardType={"numeric"}
+                                handleSetValue={handleSetNumberSteps}
+                                styleInput={{ paddingLeft: 50, paddingRight: 50 }}
+                            />
                             {(!numberSteps) && <View style={flexRowCenter}>
                                 <View style={[flexRow, styles.bridge]}>
                                     <View style={styles.diamond} />
@@ -70,6 +108,7 @@ const NumberSteps = () => {
                             </View>}
                         </Pressable>
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </ScrollView>
             </View>
             <Pressable
@@ -78,6 +117,7 @@ const NumberSteps = () => {
                 style={[styles.button, { backgroundColor: numberSteps ? colors.primary : colors.gray_G02 }]}>
                 <Text style={[styles.text, { color: numberSteps ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
             </Pressable>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 }
@@ -102,27 +142,11 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize: 18,
     },
-    box: {
-        borderRadius: 8,
-        borderWidth: 1,
-        height: 56,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    unit: {
-        position: 'absolute',
-        right: 20,
-        color: colors.black,
-    },
-    unitInput: {
-        width: '100%',
-        height: 56,
-        position: 'absolute',
-        paddingLeft: '30%',
-    },
     bridge: {
         position: 'absolute',
         top: 5,
+        left: "50%",
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,
@@ -145,6 +169,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.white
     },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 14
+    }
 })
 
 export default NumberSteps;

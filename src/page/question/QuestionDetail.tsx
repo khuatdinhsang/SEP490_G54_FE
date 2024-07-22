@@ -10,28 +10,35 @@ import colors from '../../constant/color';
 import InputComponent from '../../component/input';
 import { questionResponse } from './const';
 import { questionService } from '../../services/question';
+import LoadingScreen from '../../component/loading';
 
 const QuestionDetail = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
-    const { questionId } = route.params;
+    const questionId = route?.params?.questionId;
     const [questionDetail, setQuestionDetail] = useState<questionResponse>()
     const [messageError, setErrorMessage] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
     const fetchDetailQuestion = async () => {
+        setIsLoading(true)
         try {
             const res = await questionService.getDetailQuestion(questionId);
             console.log("Res", res);
             if (res.code === 200) {
+                setErrorMessage("");
+                setIsLoading(false)
                 setQuestionDetail(res.result);
             } else {
                 setErrorMessage("Failed to fetch questions.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400 || error?.response?.status === 401) {
-                setErrorMessage(error.message);
+            if (error?.response?.status === 400) {
+                setErrorMessage(error.response.data.message);
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
+        } finally {
+            setIsLoading(false)
         }
     };
     useEffect(() => {
@@ -42,6 +49,7 @@ const QuestionDetail = ({ route }: any) => {
         navigation.goBack()
     }
     const nextPage = () => {
+        navigateQuestion()
     }
     const navigateQuestion = () => {
         navigation.navigate(SCREENS_NAME.QUESTION.MAIN)
@@ -78,30 +86,34 @@ const QuestionDetail = ({ route }: any) => {
                 </View>
                 <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20, }}>
                     <InputComponent
-                        value={questionDetail?.title}
+                        value={questionDetail?.title.trim()}
                         label={t("questionManagement.title")}
                         styleInput={{ backgroundColor: colors.white }}
                         multiline={true}
                         textAlignVertical="center"
+                        isEditable={false}
                     />
                     <View style={{ marginTop: 15 }}>
                         <InputComponent
-                            value={questionDetail?.body}
+                            value={questionDetail?.body.trim()}
                             label={t("questionManagement.content")}
                             styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                             multiline={true}
+                            isEditable={false}
                         />
                     </View>
                     {questionDetail?.answer &&
                         <View style={{ marginTop: 15 }}>
                             <InputComponent
-                                value={questionDetail?.answer}
+                                value={questionDetail?.answer.trim()}
                                 label={t("questionManagement.answerResponse")}
                                 styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                                 multiline={true}
+                                isEditable={false}
                             />
                         </View>
                     }
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -112,6 +124,7 @@ const QuestionDetail = ({ route }: any) => {
                     <Text style={styles.textButton}> {t('common.text.confirm')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -158,6 +171,11 @@ const styles = StyleSheet.create({
         lineHeight: 60,
         fontWeight: "500",
         fontSize: 18
+    },
+    textError: {
+        fontSize: 14,
+        fontWeight: "500",
+        color: colors.red
     },
 })
 export default QuestionDetail

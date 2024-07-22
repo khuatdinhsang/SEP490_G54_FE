@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
   FLUSH,
   PAUSE,
@@ -11,10 +11,14 @@ import {
   persistStore,
 } from 'redux-persist';
 import userReducer from './user.slice';
-import {useDispatch, useSelector} from 'react-redux';
+import medicationReducer from './medication.slice';
+import screenReducer from './screen.slice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const reducers = combineReducers({
   user: userReducer,
+  medication: medicationReducer,
+  screen: screenReducer
 });
 
 const persistConfig = {

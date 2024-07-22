@@ -15,10 +15,9 @@ import DialogSingleComponent from '../../../../component/dialog-single';
 import { WidthDevice } from '../../../../util/Dimenssion';
 import { paddingHorizontalScreen } from '../../../../styles/padding';
 import RangeBlock from '../../../../component/range-block';
-interface dataType {
-    id: number,
-    value: string
-}
+import { getMondayOfCurrentWeek } from '../../../../util';
+import { planService } from '../../../../services/plan';
+import LoadingScreen from '../../../../component/loading';
 const widthProgressBar = WidthDevice - 2 * paddingHorizontalScreen - 50;
 const FillRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -31,41 +30,87 @@ const FillRecord = ({ route }: any) => {
     const [isCheckedChoresterol, setIsCheckedChoresterol] = useState(false);
     const [isCheckedGlucozer, setIsCheckedGlucozer] = useState(false);
     const [isShowModal, setShowModal] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
+    const [glycemicError, setGlycemicError] = useState<string>("");
+    const [choresterolError, setChoresterolError] = useState<string>("");
+    const [glucozerError, setGlucozerError] = useState<string>("");
     const goBackPreviousPage = () => {
-        navigation.goBack()
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD, { chooseSelectedItem: selectedItem })
-    }
+    const nextPage = async (): Promise<void> => {
+        if (Number(glycemic) > 10) {
+            setGlycemicError(t('placeholder.err.invalidInput'));
+            return;
+        }
+        if (Number(choresterol) > 300) {
+            setChoresterolError(t('placeholder.err.invalidInput'));
+            return;
+        }
+        if (Number(glucozer) > 200) {
+            setGlucozerError(t('placeholder.err.invalidInput'));
+            return;
+        }
+        // setIsLoading(true)
+        const dataSubmit = {
+            timeMeasure: selectedItem.value,
+            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            date: new Date().toISOString().split("T")[0],
+            cholesterol: Number(choresterol) || null,
+            bloodSugar: Number(choresterol) || null,
+            hba1c: Number(glycemic) || null
+        }
+        try {
+            const res = await planService.postCardinal(dataSubmit)
+            if (res.code === 201) {
+                setIsLoading(false)
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
+    };
     const handleSetGlycemic = (value: any) => {
+        setGlycemicError("")
         if (isCheckedGlycemic) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
+        const numericRegex = /^(\d*\.?\d*)$/;
+        if (numericRegex.test(value) && value.length <= 3) {
             setGlycemic(value);
             setIsCheckedGlycemic(false)
         }
     };
     const handleSetChoresterol = (value: any) => {
+        setChoresterolError("")
         if (isCheckedChoresterol) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
+        const numericRegex = /^(\d*\.?\d*)$/;
+        if (numericRegex.test(value) && value.length <= 5) {
             setChoresterol(value);
             setIsCheckedChoresterol(false)
         }
     };
     const handleSetGlucozer = (value: any) => {
+        setGlucozerError("")
         if (isCheckedGlucozer) {
             setShowModal(true)
             return
         }
-        const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value)) {
+        const numericRegex = /^(\d*\.?\d*)$/;
+        if (numericRegex.test(value) && value.length <= 5) {
             setGlucozer(value);
             setIsCheckedGlucozer(false)
         }
@@ -118,13 +163,14 @@ const FillRecord = ({ route }: any) => {
                         <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
                             <View style={[flexRow]}>
-                                <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                <Text style={styles.itemText}>{selectedItem.name}</Text>
                                 <View style={{ width: '50%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='%'
                                         value={glycemic}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetGlycemic}
+                                        error={glycemicError}
                                     />
                                 </View>
                             </View>
@@ -143,13 +189,14 @@ const FillRecord = ({ route }: any) => {
                         <Text style={styles.textTitle}>콜레스테롤을 입력해주세요</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
                             <View style={[flexRow]}>
-                                <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                <Text style={styles.itemText}>{selectedItem.name}</Text>
                                 <View style={{ width: '50%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='mg/DL'
                                         value={choresterol}
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetChoresterol}
+                                        error={choresterolError}
                                     />
                                 </View>
                             </View>
@@ -165,17 +212,18 @@ const FillRecord = ({ route }: any) => {
                         </View>
                     </View>
                     <View>
-                        <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
+                        <Text style={styles.textTitle}>혈당을 입력해주세요</Text>
                         <View style={styles.item}>
                             <View style={flexRowSpaceBetween}>
                                 <View style={[flexRow]}>
-                                    <Text style={styles.itemText}>{selectedItem.value}</Text>
+                                    <Text style={styles.itemText}>{selectedItem.name}</Text>
                                     <View style={{ width: '50%', marginLeft: 10 }}>
                                         <InputNumber
                                             textRight='mg/DL'
                                             value={glucozer}
                                             keyboardType={"numeric"}
                                             handleSetValue={handleSetGlucozer}
+                                            error={glucozerError}
                                         />
                                     </View>
 
@@ -192,6 +240,7 @@ const FillRecord = ({ route }: any) => {
                             </View>
                         </View>
                     </View>
+                    {messageError && !isLoading && <Text style={[styles.textTitle, { color: colors.red }]}>{messageError}</Text>}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -202,6 +251,7 @@ const FillRecord = ({ route }: any) => {
                     <Text style={[styles.textButton, { color: !disableButton ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }

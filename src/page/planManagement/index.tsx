@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { paddingHorizontalScreen } from '../../styles/padding';
@@ -11,23 +11,31 @@ import { useTranslation } from 'react-i18next';
 import colors from '../../constant/color';
 import { SCREENS_NAME } from '../../navigator/const';
 import HeaderNavigatorComponent from '../../component/header-navigator';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
+import { weeklyReviewService } from '../../services/weeklyReviews';
+import { getMondayOfCurrentWeek } from '../../util';
 
 const PlanManagement = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { t, i18n } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [messageError, setMessageError] = useState<string>("")
   const goBackPreviousPage = () => {
     navigation.goBack();
   }
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <HeaderNavigatorComponent
-          isIconXRight={false}
-          isTextRight={false}
-          textRight={t('planManagement.text.implementationPlan')}
-          text={t("planManagement.text.positiveMind")}
-          handleClickArrowLeft={goBackPreviousPage}
-        />
+        <View style={{ paddingHorizontal: 10 }}>
+          <HeaderNavigatorComponent
+            isIconLeft={true}
+            text={t("planManagement.text.positiveMind")}
+            handleClickArrowLeft={goBackPreviousPage}
+          />
+        </View>
         <View style={styles.content}>
           <View style={[flexRowCenter]}>
             <Text style={styles.textPlan}>
@@ -81,12 +89,14 @@ const PlanManagement = () => {
             <View style={styles.diamond} />
           </View>
           <View style={{ paddingHorizontal: 20, width: WidthDevice }}>
-            <Pressable onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND)} style={styles.button}>
+            <Pressable onPress={() => navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND)} style={styles.button}>
               <Text style={styles.buttonText}>{t('common.text.start')}</Text>
             </Pressable>
           </View>
         </View>
+        {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -175,10 +185,9 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   bridge: {
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'absolute',
     top: '-50%',
+    transform: [{ translateX: 7.5 }]
   },
   diamond: {
     width: 15,
@@ -186,6 +195,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.green,
     transform: [{ rotate: '45deg' }],
   },
+  textError: {
+    color: colors.red,
+    fontSize: 14,
+    fontWeight: "500"
+  }
 });
 
 export default PlanManagement;

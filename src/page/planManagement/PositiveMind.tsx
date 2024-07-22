@@ -17,11 +17,13 @@ import DialogSingleComponent from '../../component/dialog-single';
 import WarningSelected from './component/WarningSelected';
 import { IMAGE } from '../../constant/image';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+import { planService } from '../../services/plan';
+import { mentalData } from '../../constant/type/medical';
+import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
+import { useDispatch } from 'react-redux';
+import { setScreen } from '../../store/screen.slice';
 
-type dataType = {
-    id: number;
-    name: string;
-};
 
 const PositiveMind: React.FC = () => {
     const { t, i18n } = useTranslation();
@@ -29,23 +31,68 @@ const PositiveMind: React.FC = () => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN);
     };
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const [warning, setWarning] = useState(false);
-    const initData = [
-        { id: 1, name: t("planManagement.advice.worry") },
-        { id: 2, name: t("planManagement.advice.felling") },
-        { id: 3, name: t("planManagement.advice.share") },
-        { id: 4, name: t("planManagement.advice.regret") },
-        { id: 5, name: t("planManagement.advice.negativeMind") },
-        { id: 6, name: t("planManagement.advice.negativeMind") },
-        { id: 7, name: t("planManagement.advice.negativeMind") },
-        { id: 8, name: t("planManagement.advice.negativeMind") },
-    ];
-    const [data, setData] = useState<dataType[]>(initData);
-    const [selectedItems, setSelectedItems] = useState<dataType[]>([]);
+    const [data, setData] = useState<mentalData[]>([]);
+    const [selectedItems, setSelectedItems] = useState<mentalData[]>([]);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const fetchListMental = async () => {
+            setIsLoading(true)
+            try {
+                const res = await planService.getListMental()
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    setMessageError("");
+                    setData(res.result);
+                } else {
+                    setMessageError("Failed to fetch questions.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+        };
+        fetchListMental()
+    }, [])
 
-    const nextPage = () => {
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
         if (selectedItems.length === 3) {
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT);
+            const mentalRuleId = selectedItems.map(item => item.id)
+            const data = {
+                mentalRuleId,
+                status: true,
+                weekStart: getMondayOfCurrentWeek().split("T")[0],
+                date: new Date().toISOString()
+            }
+            try {
+                const res = await planService.postListMental(data)
+                if (res.code === 200) {
+                    // dispatch(setScreen(2));
+                    setMessageError("");
+                    setIsLoading(false)
+                    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT)
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
         }
     };
 
@@ -87,19 +134,24 @@ const PositiveMind: React.FC = () => {
                 </TouchableOpacity>
             )}
             <View style={{ flex: 1 }}>
+                <View style={{ paddingHorizontal: 20 }}>
+                    <HeaderNavigatorComponent
+                        isIconLeft={true}
+                        isTextRight={true}
+                        textRightStyle={{ color: selectedItems.length === 3 ? colors.primary : colors.gray_G04 }}
+                        textRight={t("common.text.next")}
+                        text={t("planManagement.text.positiveMind")}
+                        handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={() => {
+                            if (selectedItems.length === 3) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={selectedItems.length !== 3}
+                    />
+                </View>
+                <ProgressHeader index={[0]} length={5} />
                 <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-                    <View style={{ paddingHorizontal: 20 }}>
-                        <HeaderNavigatorComponent
-                            isIconLeft={true}
-                            isTextRight={true}
-                            textRightStyle={{ color: selectedItems.length === 3 ? colors.primary : colors.gray_G04 }}
-                            textRight={t("common.text.next")}
-                            text={t("planManagement.text.positiveMind")}
-                            handleClickArrowLeft={goBackPreviousPage}
-                            handleClickIconRight={nextPage}
-                        />
-                    </View>
-                    <ProgressHeader index={[0]} length={5} />
                     <View>
                         <Text style={styles.mentalRules}>{t("planManagement.text.mentalRules")}</Text>
                         <View style={{ marginTop: 10 }}>
@@ -119,19 +171,20 @@ const PositiveMind: React.FC = () => {
                             </View>
                             {selectedItems.length > 0 && (
                                 <View style={styles.selectedItem}>
-                                    {selectedItems.map((item: dataType) => (
+                                    {selectedItems.map((item: mentalData) => (
                                         <ItemAdviceSelect key={item.id} item={item} handleSelectItem={handleSelectItem} />
                                     ))}
                                 </View>
                             )}
                             <View style={{ paddingHorizontal: 20 }}>
-                                {data.map((item: dataType) => {
+                                {data.map((item: mentalData) => {
                                     return (
                                         <ItemAdvice key={item.id} item={item} handleSelectItem={handleSelectItem} />
                                     );
                                 })}
                             </View>
                         </View>
+                        {messageError && !isLoading && <Text style={[styles.textError, { paddingHorizontal: 20 }]}>{messageError}</Text>}
                     </View>
                 </ScrollView>
                 <View style={styles.buttonContainer}>
@@ -143,6 +196,7 @@ const PositiveMind: React.FC = () => {
                     </Pressable>
                 </View>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -198,6 +252,7 @@ const styles = StyleSheet.create({
         top: 32,
         left: '50%',
         zIndex: 10,
+        transform: [{ translateX: -7.5 }]
     },
     diamond: {
         width: 15,
@@ -222,6 +277,7 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         paddingBottom: 20,
+        paddingTop: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
     },
     warning: {
@@ -234,6 +290,11 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 16,
         color: colors.white,
+    },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 14
     }
 });
 

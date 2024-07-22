@@ -32,9 +32,7 @@ const RegisterStep4 = ({ route }: any) => {
 
     const handleSubmit = () => {
         const data = { ...valuesStep3, listMedicalHistory: [...valuesStep3.listMedicalHistory, ...selectedItems] }
-        if (selectedItems.length > 0) {
-            navigation.navigate(SCREENS_NAME.REGISTER.RULES, { data })
-        }
+        navigation.navigate(SCREENS_NAME.REGISTER.RULES, { data })
     };
 
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
@@ -134,7 +132,7 @@ const RegisterStep4 = ({ route }: any) => {
                 </SafeAreaView>
             </ScrollView>
             <View style={styles.buttonContainer}>
-                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray }]}>
+                <Pressable onPress={handleSubmit} style={[styles.button, { backgroundColor: colors.primary }]}>
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>
             </View>

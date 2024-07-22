@@ -18,6 +18,7 @@ import CountdownTimer from '../../component/countDownTime';
 import { authService } from '../../services/auth';
 import axios from 'axios';
 import InputComponent from '../../component/input';
+import LoadingScreen from '../../component/loading';
 interface typeValues {
     password: string,
     confirmPassword: string
@@ -28,23 +29,33 @@ const ForgotPassword = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [error, setError] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const loginPage = () => {
         navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
     }
     const handleSubmit = async (values: typeValues): Promise<void> => {
-        const data = { password: values.password, email, code }
+        setIsLoading(true)
+        const data = { password: values.password, email }
+        console.log("da", data)
         try {
             const res = await authService.verifyForgetPassword(data);
-            console.log("118", res)
             if (res.code == 200) {
-                navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+                setIsLoading(false)
+                if (res.result) {
+                    navigation.navigate(SCREENS_NAME.FORGOT_PASSWORD.SUCCESS)
+                }
             }
         } catch (error: any) {
             if (axios.isAxiosError(error) && error.response) {
                 if (error.response.data.code == 400) {
                     setError(error.response.data.message)
+                } else {
+                    setError("Unexpected error occurred.");
                 }
             }
+        }
+        finally {
+            setIsLoading(false)
         }
     }
 
@@ -53,7 +64,7 @@ const ForgotPassword = ({ route }: any) => {
     };
     const fotgotPasswordSchema = yup.object().shape({
         password: yup.string().required(t("placeholder.err.blank")).matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
             t("placeholder.err.passwordCorrect")
         ),
         confirmPassword: yup
@@ -120,6 +131,7 @@ const ForgotPassword = ({ route }: any) => {
                     )}
                 </Formik>
             </SafeAreaView >
+            {isLoading && <LoadingScreen />}
         </View>
     );
 };
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
     textError: {
         color: colors.red,
         fontWeight: "500",
-        fontSize: 18
+        fontSize: 14
     },
     iconCancel: {
         width: 10,
@@ -184,12 +196,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 20,
         top: -31,
-        zIndex: 1000
-    },
-    verification: {
-        position: 'absolute',
-        right: 20,
-        top: -35,
         zIndex: 1000
     },
     backGrIcon: {

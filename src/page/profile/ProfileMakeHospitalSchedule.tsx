@@ -10,28 +10,37 @@ import { SCREENS_NAME } from '../../navigator/const';
 import { useCallback, useState } from 'react';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { appointment } from '../../constant/type/medical';
+import LoadingScreen from '../../component/loading';
 
 const ProfileMakeHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [listAppointments, setListAppointments] = useState<appointment[]>([]);
   const [messageError, setMessageError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false)
   const handleCreateSchedule = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.NEW_HOSPITAL_SCHEDULE);
   };
   const fetchListAppointment = async () => {
+    setIsLoading(true)
     try {
       const res = await medicalAppointmentService.getAll();
       if (res.code === 200) {
+        console.log("aa", res.result)
+        setMessageError("");
+        setIsLoading(false)
         setListAppointments(res.result);
       } else {
         setMessageError("Failed to fetch questions.");
       }
     } catch (error: any) {
-      if (error?.response?.status === 400 || error?.response?.status === 401) {
-        setMessageError(error.message);
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
       } else {
         setMessageError("Unexpected error occurred.");
       }
+    }
+    finally {
+      setIsLoading(false)
     }
   };
   useFocusEffect(
@@ -41,17 +50,17 @@ const ProfileMakeHospitalSchedule = () => {
   );
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <HeaderNavigatorComponent
-          text="병원 일정 설정"
-          isIconLeft={true}
-          handleClickArrowLeft={() => {
-            navigation.goBack();
-          }}
-        />
-      </View>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.header}>
+          <HeaderNavigatorComponent
+            text="병원 일정 설정"
+            isIconLeft={true}
+            handleClickArrowLeft={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+        <View style={styles.container}>
           {listAppointments && listAppointments.map((item) => (
             <HospitalScheduleComponent
               key={item.id}
@@ -59,11 +68,13 @@ const ProfileMakeHospitalSchedule = () => {
               appointment={item}
             />
           ))}
-        </ScrollView>
-        <View style={styles.buttonContainer}>
-          <HospitalScheduleButtonComponent handleOnPress={handleCreateSchedule} />
+          {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
+          <View style={styles.buttonContainer}>
+            <HospitalScheduleButtonComponent handleOnPress={handleCreateSchedule} />
+          </View>
         </View>
-      </View>
+      </ScrollView>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -94,6 +105,11 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: colors.black,
     marginLeft: 12,
+  },
+  textError: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.red
   },
 });
 

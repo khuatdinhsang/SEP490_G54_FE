@@ -46,80 +46,74 @@ import MedicationChart from '../page/recordHealthData/pages/Medication/Chart';
 import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
 import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
-import InformationHealth from '../page/informationHealth';
-import Week1Day1 from '../page/login/stack/week1/day1/index.tsx';
 
 export const SCREENS_NAME = {
-  LOGIN: {
-    MAIN: 'Main Login',
-  },
-  REGISTER: {
-    STEP1: 'Register Step 1',
-    STEP2: 'Register Step 2',
-    STEP3: 'Register Step 3',
-    STEP4: 'Register Step 4',
-    RULES: 'Register Rules',
-    SUCCESS: 'Register Success',
-  },
-  HOME: {
-    MAIN: 'Main Home',
-  },
-  SETTING: {
-    MAIN: 'Main Setting',
-    SETTING_NOTIFICATION: 'Setting Notification',
-    SETTING_LOGOUT: 'Setting Logout',
-    CHANGE_PASSWORD: 'Change Password',
-  },
-  PROFILE: {
-    MAIN: 'Main Profile',
-    MAKE_HOSPITAL_SCHEDULE: 'Make Hospital Schedule',
-    NEW_HOSPITAL_SCHEDULE: 'New Hospital Schedule',
-  },
-  FORGOT_PASSWORD: {
-    VERIFY_EMAIL: 'Verify ForgotPassword',
-    MAIN: 'Main ForgotPassword',
-    SUCCESS: 'Forgot Password Success',
-  },
-  PLAN_MANAGEMENT: {
-    MAIN: 'Main Plan Management',
-    POSITIVE_MIND: 'Positive Mind',
-    WORK_OUT: 'Work Out',
-    FOOD_INTAKE: 'Food Intake',
-    REGISTER_MEDICATION: 'Register Medication',
-    ADD_MEDICATION: 'Add Medication',
-    LIST_REGISTER_MEDICATION: 'List Register Medication',
-    NUMBER_STEPS: 'Number Steps',
-    SUCCESS: 'Plan Success',
-  },
-  QUESTION: {
-    MAIN: 'Main Question',
-    ADD: 'Add Question',
-    DETAIL: 'Detail Question',
-    REGULAR: 'Regular Question',
-  },
-  RECORD_HEALTH_DATA: {
-    MAIN: 'Main Record Health',
-    NUMERICAL_RECORD: 'Numerical Record',
-    FILL_RECORD: 'Fill Record',
-    NUMERICAL_RECORD_CHART: 'Number Record Chart',
-    BLOOD_PRESSURE: 'Blood Pressure',
-    BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
-    WEIGHT: 'Weight',
-    WEIGHT_CHART: 'Weight Chart',
-    POSITIVE_MIND_RECORD: 'Positive Mind Record',
-    POSITIVE_MIND_CHART: 'Positive Mind Chart',
-    WORK_OUT_RECORD: 'Work Out Record',
-    WORD_OUT_CHART: 'Word Out Chart',
-    MEDICATION_RECORD: 'Medication Record',
-    MEDICATION_CHART: 'Medication Chart',
-    NUMBER_STEPS_CHART: 'Number Steps Chart',
-    FOOD_INTAKE_RECORD: 'Food Injection Record',
-    FOOD_INTAKE_CHART: 'Food Injection Chart',
-  },
-  INFORMATION_HEALTH: {
-    MAIN: 'Main Information Health',
-    WEEK1DAY1: 'Week 1 Day 1',
-  },
+    LOGIN: {
+        MAIN: 'Main Login',
+    },
+    REGISTER: {
+        STEP1: 'Register Step 1',
+        STEP2: 'Register Step 2',
+        STEP3: 'Register Step 3',
+        STEP4: 'Register Step 4',
+        RULES: 'Register Rules',
+        SUCCESS: 'Register Success',
+    },
+    HOME: {
+        MAIN: 'Main Home',
+    },
+    SETTING: {
+        MAIN: 'Main Setting',
+        SETTING_NOTIFICATION: 'Setting Notification',
+        SETTING_LOGOUT: 'Setting Logout',
+        CHANGE_PASSWORD: 'Change Password',
+    },
+    PROFILE: {
+        MAIN: 'Main Profile',
+        MAKE_HOSPITAL_SCHEDULE: 'Make Hospital Schedule',
+        NEW_HOSPITAL_SCHEDULE: 'New Hospital Schedule',
+    },
+    FORGOT_PASSWORD: {
+        VERIFY_EMAIL: 'Verify ForgotPassword',
+        MAIN: 'Main ForgotPassword',
+        SUCCESS: 'Forgot Password Success',
+    },
+    PLAN_MANAGEMENT: {
+        MAIN: 'Main Plan Management',
+        POSITIVE_MIND: 'Positive Mind',
+        WORK_OUT: 'Work Out',
+        FOOD_INTAKE: 'Food Intake',
+        REGISTER_MEDICATION: 'Register Medication',
+        ADD_MEDICATION: 'Add Medication',
+        LIST_REGISTER_MEDICATION: 'List Register Medication',
+        NUMBER_STEPS: 'Number Steps',
+        SUCCESS: 'Plan Success',
+    },
+    QUESTION: {
+        MAIN: 'Main Question',
+        ADD: 'Add Question',
+        DETAIL: 'Detail Question',
+        REGULAR: 'Regular Question',
+    },
+    RECORD_HEALTH_DATA: {
+        MAIN: 'Main Record Health',
+        NUMERICAL_RECORD: 'Numerical Record',
+        FILL_RECORD: 'Fill Record',
+        NUMERICAL_RECORD_CHART: 'Number Record Chart',
+        BLOOD_PRESSURE: 'Blood Pressure',
+        BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
+        WEIGHT: 'Weight',
+        WEIGHT_CHART: 'Weight Chart',
+        POSITIVE_MIND_RECORD: 'Positive Mind Record',
+        POSITIVE_MIND_CHART: 'Positive Mind Chart',
+        WORK_OUT_RECORD: 'Work Out Record',
+        WORD_OUT_CHART: 'Word Out Chart',
+        MEDICATION_RECORD: 'Medication Record',
+        MEDICATION_CHART: 'Medication Chart',
+        NUMBER_STEPS_CHART: 'Number Steps Chart',
+        FOOD_INTAKE_RECORD: 'Food Injection Record',
+        FOOD_INTAKE_CHART: 'Food Injection Chart',
+    },
 };
 
 const SCREENS_STACK_LOGIN = [
@@ -194,42 +188,42 @@ const SCREENS_STACK_FORGOT_PASSWORD = [
   },
 ];
 const SCREENS_STACK_PLAN_MANAGEMENT = [
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN,
-    component: PlanManagement,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND,
-    component: PositiveMind,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT,
-    component: WorkOut,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE,
-    component: FoodIntake,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION,
-    component: RegisterMedication,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION,
-    component: AddMedication,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION,
-    component: ListRegisterMedication,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS,
-    component: NumberSteps,
-  },
-  {
-    name: SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS,
-    component: PlanSuccess,
-  },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.MAIN,
+        component: PlanManagement,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND,
+        component: PositiveMind,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.WORK_OUT,
+        component: WorkOut,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE,
+        component: FoodIntake,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.REGISTER_MEDICATION,
+        component: RegisterMedication,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION,
+        component: AddMedication,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION,
+        component: ListRegisterMedication,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS,
+        component: NumberSteps,
+    },
+    {
+        name: SCREENS_NAME.PLAN_MANAGEMENT.SUCCESS,
+        component: PlanSuccess,
+    },
 ];
 const SCREENS_STACK_PROFILE = [
   {
@@ -264,96 +258,86 @@ const SCREENS_STACK_QUESTION = [
   },
 ];
 const SCREENS_STACK_RECORD_DATA = [
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
-    component: RecordHealthData,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
-    component: NumericalRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD,
-    component: FillRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
-    component: NumericalRecordChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE,
-    component: BloodPressure,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART,
-    component: BloodPressureChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT,
-    component: Weight,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART,
-    component: WeightChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD,
-    component: PositiveMindRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART,
-    component: PositiveMindChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD,
-    component: WorkOutRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART,
-    component: WorkOutChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD,
-    component: MedicationRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART,
-    component: MedicationChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART,
-    component: NumberStepsChart,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD,
-    component: FoodIntakeRecord,
-  },
-  {
-    name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART,
-    component: FoodInTakeChart,
-  },
-];
-const SCREEN_STACK_INFORMATION_HEALTH = [
-  {
-    name: SCREENS_NAME.INFORMATION_HEALTH.MAIN,
-    component: InformationHealth,
-  },
-  {
-    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY1,
-    component: Week1Day1,
-  },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MAIN,
+        component: RecordHealthData,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD,
+        component: NumericalRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.FILL_RECORD,
+        component: FillRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD_CHART,
+        component: NumericalRecordChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE,
+        component: BloodPressure,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE_CHART,
+        component: BloodPressureChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT,
+        component: Weight,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART,
+        component: WeightChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_RECORD,
+        component: PositiveMindRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART,
+        component: PositiveMindChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD,
+        component: WorkOutRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART,
+        component: WorkOutChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_RECORD,
+        component: MedicationRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.MEDICATION_CHART,
+        component: MedicationChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART,
+        component: NumberStepsChart,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_RECORD,
+        component: FoodIntakeRecord,
+    },
+    {
+        name: SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART,
+        component: FoodInTakeChart,
+    },
 ];
 
+
 const SCREENS_STACK = [
-  ...SCREENS_STACK_SETTING,
-  ...SCREENS_STACK_LOGIN,
-  ...SCREENS_STACK_HOME,
-  ...SCREENS_STACK_REGISTER,
-  ...SCREENS_STACK_FORGOT_PASSWORD,
-  ...SCREENS_STACK_PLAN_MANAGEMENT,
-  ...SCREENS_STACK_PROFILE,
-  ...SCREENS_STACK_QUESTION,
-  ...SCREENS_STACK_RECORD_DATA,
-  ...SCREEN_STACK_INFORMATION_HEALTH,
+    ...SCREENS_STACK_SETTING,
+    ...SCREENS_STACK_LOGIN,
+    ...SCREENS_STACK_HOME,
+    ...SCREENS_STACK_REGISTER,
+    ...SCREENS_STACK_FORGOT_PASSWORD,
+    ...SCREENS_STACK_PLAN_MANAGEMENT,
+    ...SCREENS_STACK_PROFILE,
+    ...SCREENS_STACK_QUESTION,
+    ...SCREENS_STACK_RECORD_DATA,
 ];
 export {SCREENS_STACK};

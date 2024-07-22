@@ -14,16 +14,24 @@ import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
 import SelectDate from '../../component/inputSelectDate';
 import DaySelection from '../../component/chooseDate';
+import { TypeActivityRecord, TypeDate } from './const';
+import { planService } from '../../services/plan';
+import LoadingScreen from '../../component/loading';
+import { getMondayOfCurrentWeek } from '../../util';
+import { useDispatch } from 'react-redux';
+import { setScreen } from '../../store/screen.slice';
 
 type dataType = {
     id: number,
-    name: string
+    name: string,
+    value: string
 }
 type dataTypeWorkOut = {
     id: number,
     intensity: string,
     des: string,
-    image: string
+    image: string,
+    planType: string
 }
 const WorkOut = () => {
     const { t, i18n } = useTranslation();
@@ -38,39 +46,46 @@ const WorkOut = () => {
     const handleMinuteChange = (newMinute: number) => setMinutes(newMinute);
     const toggleHourScroll = () => setShowHourScroll(!showHourScroll);
     const toggleMinuteScroll = () => setShowMinuteScroll(!showMinuteScroll);
-    const [selectedItem, setSelectedItem] = useState<number>();
+    const [selectedItem, setSelectedItem] = useState<TypeActivityRecord | undefined>();
     const [selectedDays, setSelectedDays] = useState<number[]>([]);
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
+    const dispatch = useDispatch();
     const initData = [
-        { id: 1, name: t("common.text.monday") },
-        { id: 2, name: t("common.text.tuesday") },
-        { id: 3, name: t("common.text.wednesday") },
-        { id: 4, name: t("common.text.thursday") },
-        { id: 5, name: t("common.text.friday") },
-        { id: 6, name: t("common.text.saturday") },
-        { id: 7, name: t("common.text.sunday") },
+        { id: 1, name: t("common.text.monday"), value: TypeDate.MONDAY },
+        { id: 2, name: t("common.text.tuesday"), value: TypeDate.TUESDAY },
+        { id: 3, name: t("common.text.wednesday"), value: TypeDate.WEDNESDAY },
+        { id: 4, name: t("common.text.thursday"), value: TypeDate.THURSDAY },
+        { id: 5, name: t("common.text.friday"), value: TypeDate.FRIDAY },
+        { id: 6, name: t("common.text.saturday"), value: TypeDate.SATURDAY },
+        { id: 7, name: t("common.text.sunday"), value: TypeDate.SUNDAY },
     ]
     const initDataWorkOut = [
         {
             id: 1,
             intensity: t("planManagement.text.highIntensity"),
             des: t("planManagement.text.examplesHighIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.SOCCER
+            image: IMAGE.PLAN_MANAGEMENT.SOCCER,
+            planType: TypeActivityRecord.HEAVY
         },
         {
             id: 2,
             intensity: t("planManagement.text.mediumIntensity"),
             des: t("planManagement.text.exampleMediumIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.BADMINTON
+            image: IMAGE.PLAN_MANAGEMENT.BADMINTON,
+            planType: TypeActivityRecord.MEDIUM
         },
         {
             id: 3,
             intensity: t("planManagement.text.lowIntensity"),
             des: t("planManagement.text.examplesLowIntensity"),
-            image: IMAGE.PLAN_MANAGEMENT.BOLLING
+            image: IMAGE.PLAN_MANAGEMENT.BOLLING,
+            planType: TypeActivityRecord.LIGHT
         },
     ]
     const handleSelectItem = (itemId: number) => {
-        setSelectedItem(itemId);
+        const activityChoose = initDataWorkOut.find((item) => item.id === itemId)
+        setSelectedItem(activityChoose?.planType);
     };
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {
@@ -91,13 +106,42 @@ const WorkOut = () => {
         }
         setIsChecked(!isChecked);
     };
-    const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
+    const nextPage = async (): Promise<void> => {
+        setIsLoading(true)
+        const selectedDaysModify = data.filter(item => selectedDays.includes(item.id))
+        const schedule = selectedDaysModify.map(item => item.value)
+        const convertTime = hour * 60 + minute;
+        const dataSubmit = {
+            schedule,
+            planType: selectedItem,
+            planDuration: Number(convertTime),
+            weekStart: getMondayOfCurrentWeek().split("T")[0]
+        }
+        try {
+            const res = await planService.postActivity(dataSubmit)
+            if (res.code === 200) {
+                // dispatch(setScreen(3));
+                setMessageError("");
+                setIsLoading(false)
+                navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
     };
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND);
     };
-    const isNextButtonDisabled = !(hour && minute && selectedDays.length > 0 && selectedItem);
+    const isNextButtonDisabled = !(hour && selectedDays.length > 0 && selectedItem);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -107,12 +151,17 @@ const WorkOut = () => {
             <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.workout")}
-                        handleClickArrowLeft={goBackPreviousPage}
-                        handleClickIconRight={nextPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
+                        handleClickIconRight={() => {
+                            if (!isNextButtonDisabled) {
+                                nextPage();
+                            }
+                        }}
+                        disabledRight={isNextButtonDisabled}
                         textRightStyle={{ color: !isNextButtonDisabled ? colors.primary : colors.gray_G04 }}
                     />
                 </View>
@@ -186,17 +235,19 @@ const WorkOut = () => {
                             return (
                                 <Pressable onPress={() => handleSelectItem(item.id)}
                                     key={item.id}
-                                    style={[flexRow, styles.example, { backgroundColor: selectedItem === item.id ? colors.orange_01 : colors.white, borderColor: selectedItem === item.id ? colors.primary : colors.gray }]}>
+                                    style={[flexRow, styles.example, { backgroundColor: selectedItem === item.planType ? colors.orange_01 : colors.white, borderColor: selectedItem === item.planType ? colors.primary : colors.gray }]}>
                                     <Image source={item.image || IMAGE.PLAN_MANAGEMENT.SOCCER} />
                                     <View style={styles.detailExample}>
-                                        <Text style={[styles.textPlan, { color: selectedItem === item.id ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
+                                        <Text style={[styles.textPlan, { color: selectedItem === item.planType ? colors.primary : colors.gray_G07 }]}>{item.intensity}</Text>
                                         <Text style={[styles.textChooseDay, { fontSize: 12 }]}>{item.des}</Text>
                                     </View>
                                 </Pressable>
                             )
                         })}
                     </View>
+                    {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                 </View>
+
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -208,6 +259,7 @@ const WorkOut = () => {
                     </Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )
 }
@@ -264,6 +316,8 @@ const styles = StyleSheet.create({
     bridge: {
         position: 'absolute',
         top: -20,
+        transform: [{ translateX: -7.5 }],
+        left: "50%"
     },
     diamond: {
         width: 15,
@@ -308,4 +362,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         width: '100%'
     },
+    textError: {
+        color: colors.red,
+        fontWeight: "500",
+        fontSize: 14
+    }
 });

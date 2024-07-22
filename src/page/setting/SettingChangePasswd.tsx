@@ -16,6 +16,7 @@ import axios from 'axios';
 import * as yup from "yup";
 import { Formik } from 'formik';
 import { HeightDevice, WidthDevice } from '../../util/Dimenssion';
+import LoadingScreen from '../../component/loading';
 
 interface typeValues {
   oldPassword: string;
@@ -26,24 +27,26 @@ interface typeValues {
 const SettingChangePassword = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const [isDisable, setIsDisable] = useState<boolean>(true);
   const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-
+  const [isLoading, setIsLoading] = useState(false)
   const handleSubmit = async (values: typeValues): Promise<void> => {
+    setIsLoading(true)
     const data = { oldPassword: values.oldPassword, newPassword: values.newPassword };
     try {
       const res = await authService.changePassword(data);
-      console.log("118", res);
       if (res.code == 200) {
+        setIsLoading(false)
         setIsShowDialog(true)
       }
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.data.code == 400 || error.response.data.code == 401) {
+        if (error.response.data.code == 400) {
           setError(error.response.data.message);
         }
       }
+    } finally {
+      setIsLoading(false)
     }
   };
   const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {
@@ -52,11 +55,11 @@ const SettingChangePassword = () => {
 
   const changePasswordSchema = yup.object().shape({
     oldPassword: yup.string().required(t("placeholder.err.blank")).matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
       t("placeholder.err.passwordCorrect")
     ),
     newPassword: yup.string().required(t("placeholder.err.blank")).matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[A-Za-z\d\W]{8,}$/,
       t("placeholder.err.passwordCorrect")
     ),
     confirmNewPassword: yup
@@ -129,7 +132,7 @@ const SettingChangePassword = () => {
                     />
                   </View>
                 </View>
-                {error && <Text style={styles.textError}>{error}</Text>}
+                {error && !isLoading && <Text style={styles.textError}>{error}</Text>}
               </View>
             </ScrollView>
             <Pressable
@@ -151,6 +154,7 @@ const SettingChangePassword = () => {
         imageSource={IMAGE.ICON_CHECK_COLOR}
         buttonText="확인"
       />
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
   textError: {
     color: colors.red,
     fontWeight: "500",
-    fontSize: 18
+    fontSize: 14
   },
   textButton: {
     color: colors.white,

@@ -18,7 +18,7 @@ interface DialogSingleProps {
   textButtonConfirm?: string
   handleClickButtonCancel?: () => void;
   handleClickButtonConfirm?: (id: number) => void;
-  itemSelected?: number;
+  itemSelected?: number | null;
 }
 
 const
@@ -50,9 +50,8 @@ const
       }
     }
     const handleClickButtonRight = (): void => {
-      if (handleClickButtonConfirm && itemSelected) {
-        handleClickButtonConfirm(itemSelected)
-      }
+      console.log("vaoday", itemSelected)
+      handleClickButtonConfirm(itemSelected)
     }
     if (!isActive) {
       return null;

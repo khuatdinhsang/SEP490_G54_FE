@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Modal, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import { useTranslation } from 'react-i18next';
@@ -10,11 +10,16 @@ import colors from '../../constant/color';
 import { flexRow, flexRowCenter, flexRowSpaceBetween } from '../../styles/flex';
 import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
+import LoadingScreen from '../../component/loading';
+import { planService } from '../../services/plan';
+import { getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const [isShowModal, setIsShowModal] = useState<boolean>(true)
+    const [isShowModal, setIsShowModal] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageError, setMessageError] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
     };
@@ -24,133 +29,51 @@ const RegisterMedication = () => {
 
     const closeModal = () => {
         setIsShowModal(false)
-        // Implement close modal functionality
     };
-    const initListRegisterMedication = [
-        {
-            id: 1,
-            name: t("planManagement.medication.highBloodPressure"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.morning"),
+    const handleRetrieveHistory = () => {
+        setIsShowModal(false)
+        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, { listRegisterMedication })
+    }
+    const [listRegisterMedication, setListRegisterMedication] = useState<any[]>([])
+    useEffect(() => {
+        const fetchDataMedication = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
+                console.log("43", res)
+                if (res.code === 200) {
+                    setIsLoading(false);
+                    setMessageError("");
+                    setListRegisterMedication(res.result);
+                    if (res.result.length > 0) {
+                        setIsShowModal(true)
+                    }
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
             }
-        },
-        {
-            id: 2,
-            name: t("planManagement.medication.hyperlipidemia"),
-            day: [
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 4,
-                    value: t("common.text.thursday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 11,
-                session: t("common.text.morning"),
-            }
-        },
-        {
-            id: 3,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-        {
-            id: 4,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-        {
-            id: 5,
-            name: t("planManagement.medication.diabetes"),
-            day: [
-                {
-                    id: 1,
-                    value: t("common.text.monday"),
-                },
-                {
-                    id: 2,
-                    value: t("common.text.tuesday"),
-                },
-                {
-                    id: 3,
-                    value: t("common.text.wednesday"),
-                },
-            ],
-            time: {
-                id: 1,
-                value: 9,
-                session: t("common.text.afternoon"),
-            }
-        },
-    ]
-    const [ListRegisterMedication, setListRegisterMedication] = useState(initListRegisterMedication)
+        };
+        fetchDataMedication();
+    }, []);
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
                 <View style={{ paddingHorizontal: 20 }}>
                     <HeaderNavigatorComponent
-                        isIconLeft={true}
+                        // isIconLeft={true}
                         isTextRight={true}
                         textRightStyle={{ color: colors.primary }}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.takingMedication")}
-                        handleClickArrowLeft={goBackPreviousPage}
+                        // handleClickArrowLeft={goBackPreviousPage}
                         handleClickIconRight={nextPage}
                     />
                 </View>
@@ -186,34 +109,40 @@ const RegisterMedication = () => {
                         <Text style={[styles.text, { marginBottom: 10 }]}>{t("planManagement.text.retrieveHistoryLastWeek")}</Text>
                         <Text style={[styles.textChooseDay, { marginBottom: 10 }]}>{t("planManagement.text.drugHistoryLastWeek")}</Text>
                         <ScrollView style={styles.scrollView}>
-                            {ListRegisterMedication && ListRegisterMedication.map((item) => {
+                            {listRegisterMedication && listRegisterMedication?.map((item) => {
                                 return <View
-                                    key={item.id}
+                                    key={item.medicineTypeId}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
                                     <View style={[flexRow, { flex: 1 }]}>
                                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                                         <View style={styles.detailExample}>
-                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.name}</Text>
+                                            <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
                                             <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.day.map(item => item.value).join(', ')} | </Text>
-                                                <Text style={styles.textChooseDay}>{item.time.value}{item.time.session}</Text>
+                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => item).join(', ')} | </Text>
+                                                <Text style={styles.textChooseDay}>{item.time}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
                             })}
+                            {messageError && !isLoading && <Text style={[styles.textAddSchedule, { color: 'red' }]}>{messageError}</Text>}
                         </ScrollView>
                         <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
-                            <Pressable style={[styles.btn, { backgroundColor: colors.gray_G02 }]}>
+                            <Pressable
+                                onPress={closeModal}
+                                style={[styles.btn, { backgroundColor: colors.gray_G02 }]}>
                                 <Text style={{ textAlign: 'center', color: colors.gray_G04 }}>{t("common.text.cancel")}</Text>
                             </Pressable>
-                            <Pressable style={[styles.btn, { backgroundColor: colors.primary }]}>
+                            <Pressable
+                                onPress={handleRetrieveHistory}
+                                style={[styles.btn, { backgroundColor: colors.primary }]}>
                                 <Text style={{ textAlign: 'center', color: colors.white }}>{t("common.text.retrieveAgain")}</Text>
                             </Pressable>
                         </View>
                     </View>
                 </View>
             </Modal>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -233,7 +162,7 @@ const styles = StyleSheet.create({
     textChooseDay: {
         fontSize: 16,
         fontWeight: '500',
-        color: colors.gray_G06
+        color: colors.gray_G06,
     },
     text: {
         fontWeight: '700',

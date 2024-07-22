@@ -1,11 +1,15 @@
 export interface LoginData {
     email: string;
     password: string;
+    deviceToken: string
 }
 export interface VerifyForgetPassword {
     email: string,
-    code: string,
     password: string;
+}
+export interface changePassword {
+    oldPassword: string,
+    newPassword: string;
 }
 export interface RegisterData {
     email: string;
@@ -21,7 +25,13 @@ export interface RegisterData {
 }
 export interface VerifyEmailResponse {
     code: number;
-    result: string;
+    result: string | boolean;
+}
+
+export interface heightWeightResponse {
+    name: string,
+    height: number,
+    weight: number
 }
 
 export interface LoginResponse {
@@ -30,7 +40,15 @@ export interface LoginResponse {
     idUser: number;
     refreshToken: string
 }
+export interface refreshTokenResponse {
+    accessToken: string;
+    refreshToken: string
+}
 export interface RegisterResponse {
     code: number,
     message: string
+}
+export interface refreshTokenResponse {
+    accessToken: string,
+    refreshToken: string
 }

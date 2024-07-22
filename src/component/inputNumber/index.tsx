@@ -8,19 +8,20 @@ interface InputComponentProps {
     error?: string,
     handleSetValue: (value: string) => void
     keyboardType: KeyboardTypeOptions,
-    styleInput?: StyleProp<TextStyle>
+    styleInput?: StyleProp<TextStyle>,
+    isEditable?: boolean
 }
 
 const InputNumber = (props: InputComponentProps) => {
     const [isFocused, setIsFocused] = useState(false);
-    const { textRight, error, value, handleSetValue, styleInput } = props
+    const { textRight, error, value, handleSetValue, styleInput, isEditable } = props
     return (
         <View
             style={[
                 styles.box,
                 isFocused && styles.textFocused
             ]}>
-            <Text style={[styles.unit, value.length !== 0 && styles.textRightFocused]}>{textRight}</Text>
+            <Text style={[styles.unit, value?.length !== 0 && styles.textRightFocused]}>{textRight}</Text>
             <TextInput
                 style={[styles.unitInput, styleInput]}
                 keyboardType="numeric"
@@ -28,7 +29,12 @@ const InputNumber = (props: InputComponentProps) => {
                 onChangeText={handleSetValue}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                editable={isEditable}
             />
+            {error && <View style={{ position: 'absolute', bottom: -20 }}>
+                <Text style={styles.textError}>{error}</Text>
+            </View>}
+
         </View>
     )
 }
@@ -64,5 +70,10 @@ const styles = StyleSheet.create({
     textFocused: {
         borderColor: colors.primary,
     },
+    textError: {
+        fontSize: 14,
+        fontWeight: "400",
+        color: colors.red,
+    }
 })
 export default InputNumber
