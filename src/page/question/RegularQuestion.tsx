@@ -88,14 +88,6 @@ const RegularQuestion = () => {
                 </View>
                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
-            <View style={styles.buttonContainer}>
-                <Pressable
-                    disabled={false}
-                    onPress={nextPage}
-                    style={[flexCenter, styles.button, { backgroundColor: colors.primary }]}>
-                    <Text style={styles.textButton}> {t('questionManagement.write')}</Text>
-                </Pressable>
-            </View>
             {isLoading && <LoadingScreen />}
         </SafeAreaView>
     )

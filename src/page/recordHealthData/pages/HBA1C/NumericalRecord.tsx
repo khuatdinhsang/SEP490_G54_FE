@@ -11,6 +11,7 @@ import { IMAGE } from '../../../../constant/image';
 import { TypeTimeMeasure, TypeValueTimeMeasure } from '../../contant';
 import { planService } from '../../../../services/plan';
 import { timeMeasureDone } from '../../../../constant/type/medical';
+import LoadingScreen from '../../../../component/loading';
 
 interface DataType {
     id: number;
@@ -142,6 +143,7 @@ const NumericalRecord = ({ route }: any) => {
                         );
                     })}
                 </View>
+                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
@@ -153,6 +155,7 @@ const NumericalRecord = ({ route }: any) => {
                     </Text>
                 </Pressable>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };
@@ -258,6 +261,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: colors.white,
+    },
+    textError: {
+        fontWeight: "500",
+        fontSize: 14,
+        color: colors.red
     }
 });
 

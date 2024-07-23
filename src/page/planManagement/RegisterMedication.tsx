@@ -38,6 +38,7 @@ const RegisterMedication = () => {
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
+            console.log("41", getPreviousMonday().split("T")[0])
             try {
                 const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
                 console.log("43", res)

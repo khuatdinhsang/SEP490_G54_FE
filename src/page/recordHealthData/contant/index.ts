@@ -19,5 +19,9 @@ export enum TypeValueTimeMeasure {
     afterLunch = 'afterLunch',
     beforeDinner = 'beforeDinner',
     afterDinner = 'afterDinner'
-
+}
+export enum TypeTimeDay {
+    MORNING = 'MORNING',
+    LUNCH = 'LUNCH',
+    DINNER = 'DINNER',
 }
