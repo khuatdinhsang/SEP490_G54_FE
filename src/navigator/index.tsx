@@ -1,6 +1,6 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import { SCREENS_NAME, SCREENS_STACK } from './const';
-import { useEffect, useState } from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import {SCREENS_NAME, SCREENS_STACK} from './const';
+import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../component/loading';
 import { RootState } from '../store/store';
