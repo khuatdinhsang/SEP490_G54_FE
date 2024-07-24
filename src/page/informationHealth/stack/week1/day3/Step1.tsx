@@ -1,6 +1,6 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 
@@ -8,12 +8,11 @@ const text = `반갑습니다!\n\n오늘부터 여러분과 함께 12주간 ‘�
 const Step1 = () => {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent text="360도 평가 실시" textLeft="Step1" />
-        <View style={{marginTop: 25}} />
+        <View style={{ marginTop: 25 }} />
         <DoctorComponent content="360도 평가를 실시해봅시다." height={65} />
-        <View style={{marginTop: 20}} />
-        <View>
+        <View style={{ marginTop: 10 }}>
           <Text style={styles.text}>
             {
               '1) 나를 가장 잘 알고 있는 사람들을 4명 선정합니다. 가족, 친구 멘토, 의료진 등 누구든 상관 없습니다.'

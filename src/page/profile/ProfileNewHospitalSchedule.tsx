@@ -222,7 +222,6 @@ const ProfileNewHospitalSchedule = () => {
                 if (text.trim().length === 0) {
                   setAddressError(t("placeholder.err.invalidInput"))
                   setAddress("")
-                  return;
                 }
                 setAddress(text);
               }}
@@ -243,7 +242,6 @@ const ProfileNewHospitalSchedule = () => {
                 if (text.trim().length === 0) {
                   setNoteError(t("placeholder.err.invalidInput"))
                   setNote("")
-                  return
                 }
                 setNote(text);
               }}

@@ -17,6 +17,7 @@ import { ResponseForm } from '../../constant/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
 import NotificationModule from '../../native-module/NotificationModule';
+import { getToken } from '../../config/firebase.config';
 
 interface LoginValues {
     email: string;
@@ -74,7 +75,9 @@ const Login = () => {
     const handleSubmit = async (values: LoginValues, resetForm: () => void): Promise<void> => {
         setIsLoading(true)
         try {
+            await getToken();
             const deviceToken = await AsyncStorage.getItem('deviceToken');
+            console.log("80", deviceToken);
             const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
             if (res.code == 200) {
                 setIsLoggedIn(true)

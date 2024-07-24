@@ -47,6 +47,7 @@ export const removeAsyncStorageWhenLogout = async () => {
     try {
         await AsyncStorage.removeItem('refreshToken');
         await AsyncStorage.removeItem('accessToken');
+        await AsyncStorage.removeItem('deviceToken');
         // await AsyncStorage.removeItem('idUser');
     } catch (error) {
         console.error('error', error);

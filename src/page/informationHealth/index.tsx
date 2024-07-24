@@ -16,12 +16,41 @@ import { flexCenter, flexRowCenter, flexRowSpaceEvenly } from '../../styles/flex
 import { paddingHorizontalScreen } from '../../styles/padding';
 import { HeightDevice } from '../../util/Dimenssion';
 import WeekComponent from './components/WeekComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import LoadingScreen from '../../component/loading';
+import { lessonService } from '../../services/lesson';
 
 const InformationHealth = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const [curDay, setCurDay] = useState(1);
-
+    const [messageError, setErrorMessage] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
+    const getListLesson = async () => {
+        setIsLoading(true)
+        try {
+            const res = await lessonService.getLessonUnLocked()
+            if (res.code === 200) {
+                console.log("sa", res.result)
+                setCurDay(res.result)
+                setErrorMessage("");
+                setIsLoading(false)
+            } else {
+                setErrorMessage("Unexpected error occurred.");
+            }
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setErrorMessage(error.response.data.message);
+            } else {
+                setErrorMessage("Unexpected error occurred.");
+            }
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+    useEffect(() => {
+        getListLesson()
+    }, [])
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
@@ -193,6 +222,7 @@ const InformationHealth = () => {
                     </Text>
                 </View>
             </View>
+            {isLoading && <LoadingScreen />}
         </SafeAreaView>
     );
 };

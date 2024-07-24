@@ -1,11 +1,11 @@
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
 import ButtonComponent from '../../../../../component/button';
 import HeaderNavigatorComponent from '../../../../../component/header-navigator';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import GreetingComponent from '../../../../informationHealth/components/GreetingComponent';
 import Done from './Done';
 import Step1 from './Step1';
@@ -27,8 +27,8 @@ const Week1Day5 = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{paddingHorizontal: paddingHorizontalScreen * 2}}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
         <HeaderNavigatorComponent
           isIconLeft={true}
           text="학습하기"
@@ -38,7 +38,7 @@ const Week1Day5 = () => {
         />
       </View>
       <GreetingComponent text="인사말" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
         {step === 2 && <Step2 />}
         {step === 0 && <Done />}
@@ -46,7 +46,7 @@ const Week1Day5 = () => {
       <View
         style={{
           paddingHorizontal: paddingHorizontalScreen * 2,
-          marginBottom: 35,
+          marginBottom: 20,
         }}>
         <ButtonComponent
           text={step ? '다음' : '홈으로 돌아가기'}

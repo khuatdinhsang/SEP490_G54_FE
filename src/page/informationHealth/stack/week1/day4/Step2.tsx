@@ -1,36 +1,41 @@
-import {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputChart from './components/InputChart';
 import LineChart from './components/LineChart';
+import { TypeErrorDay4 } from '.';
 
-interface Step2Props {}
+interface Step2Props {
+  error: TypeErrorDay4,
+  setError: (error: TypeErrorDay4) => void;
+  data: Array<{ x: string; y: number; label?: string }>
+  setData: (data: Array<{ x: string; y: number; label?: string }>) => void;
+}
 const Step2 = (props: Step2Props) => {
-  const [data, setData] = useState<
-    Array<{x: string; y: number; label?: string}>
-  >([
-    {x: '10대', y: 0},
-    {x: '20대', y: 0},
-    {x: '30대', y: 0},
-    {x: '40대', y: 0},
-    {x: '50대', y: 0},
-  ]);
+  const { error, setError, data, setData } = props;
+
+
 
   return (
     <View style={[styles.container]}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent textLeft="Step2" text="인생 곡선 그리기" />
-        <View style={{marginTop: 32}} />
+        <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
           content="아래의 그래프에 각 연령대 별 점수를 설정해 보도록 합시다."
         />
         <LineChart domainY={[0, 100]} data={data} />
-        <InputChart data={data} setData={setData} />
-        <View style={{paddingBottom: 30}} />
+        <InputChart
+          data={data}
+          setData={setData}
+          error={error}
+          setError={setError}
+        />
+        <View style={{ paddingBottom: 30 }} />
       </ScrollView>
     </View>
   );

@@ -1,32 +1,45 @@
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import {flexRowCenter} from '../../../styles/flex';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { flexRowCenter } from '../../../styles/flex';
 import colors from '../../../constant/color';
-import {useState} from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 interface InputShareComponentProps {
   text: string;
   placeholder: string;
   textButton: string;
+  closePerson: string;
+  step: number
+  setStep: (value: number) => void,
+  setUser: () => void,
+  setClosePerson: (value: string) => void,
+
 }
 const InputShareComponent = (props: InputShareComponentProps) => {
-  const {text, placeholder, textButton} = props;
+  const { text, placeholder, textButton, closePerson, setUser, step, setStep, setClosePerson } = props;
   const [isFocused, setIsFocused] = useState(false);
   const borderWidth = isFocused ? 1 : 0;
-  console.log(borderWidth);
-
   return (
-    <View style={[flexRowCenter, styles.container, {borderWidth}]}>
+    <View style={[flexRowCenter, styles.container, { borderWidth }]}>
       <Text style={styles.text}>{text}</Text>
-      <View style={{marginLeft: 10}} />
+      <View style={{ marginLeft: 10 }} />
       <TextInput
         placeholder={placeholder}
         style={styles.input}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        value={closePerson}
+        onChangeText={(text) => setClosePerson(text)}
       />
-      <View style={{marginLeft: 15}} />
-      <Pressable style={styles.button}>
-        <Text>{textButton}</Text>
+      <View style={{ marginLeft: 15 }} />
+      <Pressable
+        disabled={!closePerson}
+        onPress={() => { setStep(2.2); setUser() }}
+        style={[styles.button, {
+          backgroundColor: closePerson.trim().length > 0 ? colors.orange_01 : colors.gray_G02,
+
+        }]}>
+        <Text style={{ color: closePerson.trim().length > 0 ? colors.orange_04 : colors.gray_G04 }}>{textButton}</Text>
       </Pressable>
     </View>
   );
@@ -54,7 +67,6 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 17,
     paddingHorizontal: 25,
-    backgroundColor: colors.gray_G02,
     borderRadius: 8,
   },
 });

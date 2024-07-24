@@ -39,7 +39,7 @@ function App(): React.JSX.Element {
   useEffect(() => {
     const initialize = async () => {
       await requestUserPermission();
-      await getToken();
+      // await getToken()
     };
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log("Received message", remoteMessage);
