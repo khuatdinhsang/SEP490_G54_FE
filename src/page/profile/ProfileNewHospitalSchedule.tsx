@@ -36,6 +36,8 @@ const ProfileNewHospitalSchedule = () => {
   const [day, setDay] = useState<number>(new Date().getDate());
   const [address, setAddress] = useState<string>('');
   const [note, setNote] = useState<string>('');
+  const [addressError, setAddressError] = useState<string>('');
+  const [noteError, setNoteError] = useState<string>('');
   const [showYearScroll, setShowYearScroll] = useState(false);
   const [showMonthScroll, setShowMonthScroll] = useState(false);
   const [showDayScroll, setShowDayScroll] = useState(false);
@@ -216,10 +218,16 @@ const ProfileNewHospitalSchedule = () => {
               maxLength={200}
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
+                setAddressError("")
+                if (text.trim().length === 0) {
+                  setAddressError(t("placeholder.err.invalidInput"))
+                  setAddress("")
+                }
                 setAddress(text);
               }}
             />
           </View>
+          {addressError && <Text style={styles.textError}>{addressError}</Text>}
           <View style={styles.component}>
             <Text style={styles.label}>메모</Text>
             <TextInput
@@ -230,10 +238,16 @@ const ProfileNewHospitalSchedule = () => {
               placeholder="예시) 서울대병원"
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
+                setNoteError("")
+                if (text.trim().length === 0) {
+                  setNoteError(t("placeholder.err.invalidInput"))
+                  setNote("")
+                }
                 setNote(text);
               }}
             />
           </View>
+          {noteError && <Text style={styles.textError}>{noteError}</Text>}
           {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
           <View style={{ marginTop: 15 }} />
           <ButtonComponent
@@ -279,7 +293,7 @@ const styles = StyleSheet.create({
   textError: {
     color: colors.red,
     fontWeight: "500",
-    fontSize: 18
+    fontSize: 14
   }
 });
 

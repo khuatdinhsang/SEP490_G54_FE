@@ -1,3 +1,6 @@
+import { TypeTimeDay } from './../../page/recordHealthData/contant/index';
+import { TypeTimeMeasure } from "../../page/recordHealthData/contant"
+
 export interface dataChartWeightResponse {
     avgValue: number,
     valueToday: number,
@@ -69,8 +72,18 @@ export interface dataChartCardinalResponse {
     hba1cList: valueCardinal[],
     cholesterolList: valueCardinal[],
     bloodSugarList: valueBloodSugar[],
-    detailDataBloodSugar: Record<string, any>;
+    detailDataBloodSugar: BloodSugarDetails
 }
+export interface BloodSugarDetails {
+    [TypeTimeDay.DINNER]: BloodSugarMeasurement[];
+    [TypeTimeDay.MORNING]: BloodSugarMeasurement[];
+    [TypeTimeDay.LUNCH]: BloodSugarMeasurement[];
+};
+export interface BloodSugarMeasurement {
+    data: number;
+    typeTimeMeasure: TypeTimeMeasure;
+};
+
 export interface dataChartWeeklyReview {
     percentage: number[],
     weekStart: string[]

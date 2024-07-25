@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SCREENS_NAME } from '../../../../navigator/const';
 import HeaderNavigatorComponent from '../../../../component/header-navigator';
-import { flexCenter, flexRow } from '../../../../styles/flex';
+import { flexCenter, flexRow, flexRowSpaceAround } from '../../../../styles/flex';
 import colors from '../../../../constant/color';
 import { IMAGE } from '../../../../constant/image';
 import { HeightDevice } from '../../../../util/Dimenssion';
@@ -14,7 +14,7 @@ import LineChart from '../../../../component/line-chart';
 import { chartService } from '../../../../services/charts';
 import { extractDayAndMonth, getMondayOfCurrentWeek, transformDataToChartHBA1C } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
-import { valueBloodSugar, valueCardinal } from '../../../../constant/type/chart';
+import { BloodSugarDetails, valueBloodSugar, valueCardinal } from '../../../../constant/type/chart';
 
 interface dataTypes {
     x: string,
@@ -32,6 +32,7 @@ const NumericalRecordChart = ({ route }: any) => {
     const [cholesterolDataToday, setCholesterolDataToday] = useState<number>()
     const [beforeEat, setBeforeEat] = useState<dataTypes[]>([])
     const [afterEat, setAfterEat] = useState<dataTypes[]>([])
+    const [detailBloodSugar, setDetailBloodSugar] = useState<BloodSugarDetails>()
     useLayoutEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
@@ -39,12 +40,13 @@ const NumericalRecordChart = ({ route }: any) => {
                 const resData = await chartService.getDataCardinal();
                 console.log("r", resData)
                 if (resData.code === 200) {
-                    console.log("aaaa", resData.result.detailDataBloodSugar)
+                    console.log("mmmm", resData.result.detailDataBloodSugar)
                     setIsLoading(false);
                     setDataCholesterol(resData.result.cholesterolList)
                     setDataChartHBA1C(resData.result.hba1cList)
                     setHba1cDataToday(resData.result.hba1cDataToday)
                     setCholesterolDataToday(resData.result.cholesterolDataToday)
+                    setDetailBloodSugar(resData.result.detailDataBloodSugar)
                     const beforeEatData = resData.result.bloodSugarList.map((item, index, array) => {
                         const dataPoint: dataTypes = {
                             x: extractDayAndMonth(item.date),
@@ -113,7 +115,6 @@ const NumericalRecordChart = ({ route }: any) => {
                 </Pressable>
             </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-
                 {
                     dataChartHBA1C.length > 0 ||
                         dataChartCholesterol.length > 0 ?
@@ -194,6 +195,55 @@ const NumericalRecordChart = ({ route }: any) => {
                                     }}
                                 />
                             </View>
+                            <Text style={[styles.textTitleMedium, { marginTop: 20 }]}>오늘 나의 혈당</Text>
+                            {(detailBloodSugar?.MORNING?.length ?? 0) > 0 &&
+                                <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
+                                    <Text style={{
+                                        fontWeight: "500", fontSize: 16,
+                                        color: colors.gray_G06
+                                    }} >아침</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[0]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>아침 식전</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[0]?.data}mg/DL</Text>
+                                    </View>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[1]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>아침 식후</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[1]?.data}mg/DL</Text>
+                                    </View>
+                                </View>
+                            }
+                            {(detailBloodSugar?.LUNCH?.length ?? 0) > 0 &&
+                                <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
+                                    <Text style={{
+                                        fontWeight: "500", fontSize: 16,
+                                        color: colors.gray_G06
+                                    }} >점심</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[0]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>점심 식전</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.LUNCH[0]?.data}mg/DL</Text>
+                                    </View>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[1]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>점심 식사 후</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.LUNCH[1]?.data}mg/DL</Text>
+                                    </View>
+                                </View>
+                            }
+                            {(detailBloodSugar?.DINNER?.length ?? 0) > 0 &&
+                                <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
+                                    <Text style={{
+                                        fontWeight: "500", fontSize: 16,
+                                        color: colors.gray_G06
+                                    }} >저녁</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[0]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>저녁 식전</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.DINNER[0]?.data}mg/DL</Text>
+                                    </View>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[1]?.data ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>저녁 식사 후</Text>
+                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.DINNER[1]?.data}mg/DL</Text>
+                                    </View>
+                                </View>
+                            }
                         </View>
 
                         :
@@ -220,7 +270,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        paddingBottom: 100
+        paddingBottom: 100,
+        backgroundColor: colors.background
     }, navigate: {
         height: 48,
         width: '50%'
@@ -273,6 +324,26 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
         paddingTop: 20
+    },
+    textTitleMedium: {
+        fontWeight: "500",
+        fontSize: 16,
+        color: colors.gray_G07,
+        paddingLeft: 10,
+        borderLeftWidth: 2,
+        borderLeftColor: colors.orange_04
+    },
+    bloodDetail: {
+        borderRadius: 12,
+        backgroundColor: colors.white,
+        width: 124,
+        height: 64
+    },
+    textBloodDetail: {
+        fontWeight: "700",
+        fontSize: 14,
+        color: colors.gray_G07,
+        textAlign: 'center',
     }
 })
 export default NumericalRecordChart

@@ -67,12 +67,10 @@ export interface medicinePost {
     schedule: string[],
 }
 export interface listRegisterMedicineData {
-    medicineTypeId: number,
-    medicineTitle: string,
-    time: string,
-    weekday: string[],
-    indexDay: number[],
-    weekTime?: string[]
+    date: string
+    id: number,
+    medicineId: number,
+    medicineName: string
 }
 export interface cardinalPost {
     id?: number,
@@ -152,5 +150,5 @@ export interface mentalPutResponse {
 export interface medicinePut {
     status: boolean,
     date: string,
-    medicineTypeId: number[]
+    ids: number[]
 }

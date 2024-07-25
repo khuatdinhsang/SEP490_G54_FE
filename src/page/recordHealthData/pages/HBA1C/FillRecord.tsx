@@ -18,6 +18,7 @@ import RangeBlock from '../../../../component/range-block';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import { planService } from '../../../../services/plan';
 import LoadingScreen from '../../../../component/loading';
+import { DateTime } from 'luxon';
 const widthProgressBar = WidthDevice - 2 * paddingHorizontalScreen - 50;
 const FillRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -55,7 +56,7 @@ const FillRecord = ({ route }: any) => {
         const dataSubmit = {
             timeMeasure: selectedItem.value,
             weekStart: getMondayOfCurrentWeek().split("T")[0],
-            date: new Date().toISOString().split("T")[0],
+            date: DateTime.local().toString().split("T")[0],
             cholesterol: Number(choresterol) || null,
             bloodSugar: Number(choresterol) || null,
             hba1c: Number(glycemic) || null

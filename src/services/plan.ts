@@ -48,7 +48,7 @@ export const planService = {
         return axiosClient.put(`mental-records`, data);
     },
     getListMedicationRecords(weekStart: string): Promise<ResponseForm<listRegisterMedicineData[]>> {
-        return axiosClient.get(`medicine-records/mobile/plan-medicine/${weekStart}`);
+        return axiosClient.get(`medicine-records/mobile/medicine-day/${weekStart}`);
     },
     getDietRecord(weekStart: string): Promise<ResponseForm<number>> {
         return axiosClient.get(`diet-records/mobile/dish-plan/${weekStart}`);

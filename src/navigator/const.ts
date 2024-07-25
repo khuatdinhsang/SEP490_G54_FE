@@ -1,119 +1,4 @@
-import ForgotPassword from '../page/forgotPassword';
-import ForgotSuccess from '../page/forgotPassword/ForgotSuccess';
-import VerifyEmail from '../page/forgotPassword/VerifyEmail';
-import Home from '../page/home';
-import Login from '../page/login';
-import PlanManagement from '../page/planManagement';
-import AddMedication from '../page/planManagement/AddMedication';
-import FoodIntake from '../page/planManagement/FoodIntake';
-import ListRegisterMedication from '../page/planManagement/ListRegisterMedication';
-import NumberSteps from '../page/planManagement/NumberSteps';
-import PlanSuccess from '../page/planManagement/PlanSuccess';
-import PositiveMind from '../page/planManagement/PositiveMind';
-import RegisterMedication from '../page/planManagement/RegisterMedication';
-import WorkOut from '../page/planManagement/WorkOut';
-import Profile from '../page/profile';
-import ProfileMakeHospitalSchedule from '../page/profile/ProfileMakeHospitalSchedule';
-import ProfileNewHospitalSchedule from '../page/profile/ProfileNewHospitalSchedule';
-import Question from '../page/question';
-import AddQuestion from '../page/question/AddQuestion';
-import QuestionDetail from '../page/question/QuestionDetail';
-import RegularQuestion from '../page/question/RegularQuestion';
-import RecordHealthData from '../page/recordHealthData';
-import FillRecord from '../page/recordHealthData/pages/HBA1C/FillRecord';
-import NumericalRecord from '../page/recordHealthData/pages/HBA1C/NumericalRecord';
-import Register from '../page/register';
-import RegisterRules from '../page/register/RegisterRules';
-import RegisterStep2 from '../page/register/RegisterStep2';
-import RegisterStep3 from '../page/register/RegisterStep3';
-import RegisterStep4 from '../page/register/RegisterStep4';
-import RegisterSuccess from '../page/register/RegisterSuccess';
-import Setting from '../page/setting';
-import SettingChangePassword from '../page/setting/SettingChangePasswd';
-import SettingLogout from '../page/setting/SettingLogout';
-import SettingNotification from '../page/setting/SettingNotification';
-import BloodPressure from '../page/recordHealthData/pages/BloodPressure';
-import NumericalRecordChart from '../page/recordHealthData/pages/HBA1C/NumericalRecordChart';
-import BloodPressureChart from '../page/recordHealthData/pages/BloodPressure/Chart';
-import Weight from '../page/recordHealthData/pages/Weight';
-import WeightChart from '../page/recordHealthData/pages/Weight/Chart';
-import PositiveMindRecord from '../page/recordHealthData/pages/PositiveMind';
-import PositiveMindChart from '../page/recordHealthData/pages/PositiveMind/Chart';
-import WorkOutRecord from '../page/recordHealthData/pages/WorkOut';
-import WorkOutChart from '../page/recordHealthData/pages/WorkOut/Chart';
-import MedicationRecord from '../page/recordHealthData/pages/Medication';
-import MedicationChart from '../page/recordHealthData/pages/Medication/Chart';
-import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
-import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
-import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 
-export const SCREENS_NAME = {
-    LOGIN: {
-        MAIN: 'Main Login',
-    },
-    REGISTER: {
-        STEP1: 'Register Step 1',
-        STEP2: 'Register Step 2',
-        STEP3: 'Register Step 3',
-        STEP4: 'Register Step 4',
-        RULES: 'Register Rules',
-        SUCCESS: 'Register Success',
-    },
-    HOME: {
-        MAIN: 'Main Home',
-    },
-    SETTING: {
-        MAIN: 'Main Setting',
-        SETTING_NOTIFICATION: 'Setting Notification',
-        SETTING_LOGOUT: 'Setting Logout',
-        CHANGE_PASSWORD: 'Change Password',
-    },
-    PROFILE: {
-        MAIN: 'Main Profile',
-        MAKE_HOSPITAL_SCHEDULE: 'Make Hospital Schedule',
-        NEW_HOSPITAL_SCHEDULE: 'New Hospital Schedule',
-    },
-    FORGOT_PASSWORD: {
-        VERIFY_EMAIL: 'Verify ForgotPassword',
-        MAIN: 'Main ForgotPassword',
-        SUCCESS: 'Forgot Password Success',
-    },
-    PLAN_MANAGEMENT: {
-        MAIN: 'Main Plan Management',
-        POSITIVE_MIND: 'Positive Mind',
-        WORK_OUT: 'Work Out',
-        FOOD_INTAKE: 'Food Intake',
-        REGISTER_MEDICATION: 'Register Medication',
-        ADD_MEDICATION: 'Add Medication',
-        LIST_REGISTER_MEDICATION: 'List Register Medication',
-        NUMBER_STEPS: 'Number Steps',
-        SUCCESS: 'Plan Success',
-    },
-    QUESTION: {
-        MAIN: 'Main Question',
-        ADD: 'Add Question',
-        DETAIL: 'Detail Question',
-        REGULAR: 'Regular Question',
-    },
-    RECORD_HEALTH_DATA: {
-        MAIN: 'Main Record Health',
-        NUMERICAL_RECORD: 'Numerical Record',
-        FILL_RECORD: 'Fill Record',
-        NUMERICAL_RECORD_CHART: 'Number Record Chart',
-        BLOOD_PRESSURE: 'Blood Pressure',
-        BLOOD_PRESSURE_CHART: 'Blood Pressure Chart',
-        WEIGHT: 'Weight',
-        WEIGHT_CHART: 'Weight Chart',
-        POSITIVE_MIND_RECORD: 'Positive Mind Record',
-        POSITIVE_MIND_CHART: 'Positive Mind Chart',
-        WORK_OUT_RECORD: 'Work Out Record',
-        WORD_OUT_CHART: 'Word Out Chart',
-        MEDICATION_RECORD: 'Medication Record',
-        MEDICATION_CHART: 'Medication Chart',
-        NUMBER_STEPS_CHART: 'Number Steps Chart',
-        FOOD_INTAKE_RECORD: 'Food Injection Record',
-        FOOD_INTAKE_CHART: 'Food Injection Chart',
-    },
 import WeeklyEvaluate from '../page/evaluate/WeeklyEvaluate';
 import WeeklyEvaluateDetail from '../page/evaluate/WeeklyEvaluateDetail';
 import MonthlyEvaluate from '../page/evaluate/MonthlyEvaluate';
@@ -143,7 +28,54 @@ import Week1Day2 from '../page/informationHealth/stack/week1/day2';
 import Week1Day3 from '../page/informationHealth/stack/week1/day3';
 import Week1Day4 from '../page/informationHealth/stack/week1/day4';
 import Week1Day5 from '../page/informationHealth/stack/week1/day5';
-
+import Login from '../page/login';
+import Register from '../page/register';
+import RegisterStep2 from '../page/register/RegisterStep2';
+import RegisterStep3 from '../page/register/RegisterStep3';
+import RegisterStep4 from '../page/register/RegisterStep4';
+import RegisterRules from '../page/register/RegisterRules';
+import RegisterSuccess from '../page/register/RegisterSuccess';
+import Home from '../page/home';
+import Setting from '../page/setting';
+import SettingNotification from '../page/setting/SettingNotification';
+import SettingLogout from '../page/setting/SettingLogout';
+import SettingChangePassword from '../page/setting/SettingChangePasswd';
+import VerifyEmail from '../page/forgotPassword/VerifyEmail';
+import ForgotPassword from '../page/forgotPassword';
+import ForgotSuccess from '../page/forgotPassword/ForgotSuccess';
+import PlanManagement from '../page/planManagement';
+import PositiveMind from '../page/planManagement/PositiveMind';
+import WorkOut from '../page/planManagement/WorkOut';
+import FoodIntake from '../page/planManagement/FoodIntake';
+import RegisterMedication from '../page/planManagement/RegisterMedication';
+import AddMedication from '../page/planManagement/AddMedication';
+import ListRegisterMedication from '../page/planManagement/ListRegisterMedication';
+import NumberSteps from '../page/planManagement/NumberSteps';
+import PlanSuccess from '../page/planManagement/PlanSuccess';
+import Profile from '../page/profile';
+import ProfileMakeHospitalSchedule from '../page/profile/ProfileMakeHospitalSchedule';
+import ProfileNewHospitalSchedule from '../page/profile/ProfileNewHospitalSchedule';
+import Question from '../page/question';
+import AddQuestion from '../page/question/AddQuestion';
+import QuestionDetail from '../page/question/QuestionDetail';
+import RegularQuestion from '../page/question/RegularQuestion';
+import RecordHealthData from '../page/recordHealthData';
+import NumericalRecord from '../page/recordHealthData/pages/HBA1C/NumericalRecord';
+import FillRecord from '../page/recordHealthData/pages/HBA1C/FillRecord';
+import NumericalRecordChart from '../page/recordHealthData/pages/HBA1C/NumericalRecordChart';
+import BloodPressure from '../page/recordHealthData/pages/BloodPressure';
+import BloodPressureChart from '../page/recordHealthData/pages/BloodPressure/Chart';
+import Weight from '../page/recordHealthData/pages/Weight';
+import WeightChart from '../page/recordHealthData/pages/Weight/Chart';
+import PositiveMindRecord from '../page/recordHealthData/pages/PositiveMind';
+import PositiveMindChart from '../page/recordHealthData/pages/PositiveMind/Chart';
+import WorkOutRecord from '../page/recordHealthData/pages/WorkOut';
+import WorkOutChart from '../page/recordHealthData/pages/WorkOut/Chart';
+import MedicationRecord from '../page/recordHealthData/pages/Medication';
+import MedicationChart from '../page/recordHealthData/pages/Medication/Chart';
+import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
+import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
+import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 export const SCREENS_NAME = {
   LOGIN: {
     MAIN: 'Main Login',
@@ -593,4 +525,4 @@ const SCREENS_STACK = [
   ...SCREENS_STACK_EVALUATE,
   ...SCREEN_STACK_INFORMATION_HEALTH,
 ];
-export {SCREENS_STACK};
+export { SCREENS_STACK };

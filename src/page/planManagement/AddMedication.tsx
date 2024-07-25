@@ -113,7 +113,7 @@ const AddMedication = ({ route }: any) => {
         };
         const dayChoose = data.filter(item => selectedDays.includes(item.id));
         const selectedMedicineTitle = dataMedication.find((item) => item.id === selectedMedication)?.title || '';
-        const dataInterface: listRegisterMedicineData = {
+        const dataInterface: listRegisterMedicineData | any = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
             time: `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`,
@@ -122,7 +122,7 @@ const AddMedication = ({ route }: any) => {
         };
 
         const isDuplicate = listRegisterMedicationInterface.some(item => {
-            const hasSameDay = item.indexDay.some(day => dataInterface.indexDay.includes(day));
+            const hasSameDay = item.indexDay.some((day: any) => dataInterface.indexDay.includes(day));
             return item.medicineTypeId === dataInterface.medicineTypeId &&
                 item.time === dataInterface.time &&
                 hasSameDay;

@@ -1,39 +1,86 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputShareComponent from '../../../components/InputShareComponent';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../store/store';
+import { setClosePerson1Redux, setClosePerson2Redux } from '../../../../../store/closePerson.slice';
 
-interface Step2Props {}
+interface Step2Props {
+  setIsDisabled: (value: boolean) => void,
+  step: number,
+  setStep: (value: number) => void,
+  setUser: (value: number) => void,
+}
 const Step2 = (props: Step2Props) => {
+  const {
+    setIsDisabled, step, setStep, setUser
+  } = props
+  const dispatch = useDispatch();
+
+  const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1);
+  const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
+  const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
+  const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
+  const closePerson1EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson1Evaluation);
+  const closePerson2EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson2Evaluation);
+  const closePerson1MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson1Message);
+  const closePerson2MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson2Message);
+
+  useEffect(() => {
+    dispatch(setClosePerson1Redux(closePerson1.trim()));
+    dispatch(setClosePerson2Redux(closePerson2.trim()));
+  }, [closePerson1, closePerson2, dispatch]);
+
+  useEffect(() => {
+    const isDisable = (closePerson1EvaluationRedux.trim().length === 0 ||
+      closePerson2EvaluationRedux.trim().length === 0 ||
+      closePerson1MessageRedux.trim().length === 0 ||
+      closePerson2MessageRedux.trim().length === 0 ||
+      closePerson1.trim().length === 0 || closePerson2.trim().length === 0
+    )
+    setIsDisabled(isDisable)
+  }, [closePerson1, closePerson2, setIsDisabled])
   return (
     <View style={[styles.container]}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent textLeft="Step2" text="사랑하는 사람 작성해보기" />
-        <View style={{marginTop: 32}} />
+        <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
           content="사랑하는 사람 3명을 작성해봅시다."
         />
-        <View style={{marginTop: 20}} />
+        <View style={{ marginTop: 20 }} />
         <Text style={styles.text}>
           나에 대한 평가와 긍정적인 메시지도 받아 봅시다. 이름 작성 후
           공유하기를 눌러 카카오톡이나 메시지로 전송해서 작성을 부탁해보세요.
           이름을 누르면 지인의 작성 내용을 확인할 수 있습니다.
         </Text>
-        <View style={{marginTop: 32}} />
+        <View style={{ marginTop: 32 }} />
         <InputShareComponent
           text="1."
           textButton="공유하기"
           placeholder="이름"
+          closePerson={closePerson1}
+          step={step}
+          setStep={setStep}
+          setClosePerson={setClosePerson1}
+          setUser={() => setUser(1)}
         />
         <InputShareComponent
           text="2."
           textButton="공유하기"
           placeholder="이름"
+          closePerson={closePerson2}
+          step={step}
+          setStep={setStep}
+          setClosePerson={setClosePerson2}
+          setUser={() => setUser(2)}
         />
-        <View style={{paddingBottom: 40}} />
+        <View style={{ paddingBottom: 40 }} />
       </ScrollView>
     </View>
   );

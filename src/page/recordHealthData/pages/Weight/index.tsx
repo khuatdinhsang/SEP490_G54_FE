@@ -12,6 +12,7 @@ import LoadingScreen from '../../../../component/loading';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import { planService } from '../../../../services/plan';
 import { IMAGE } from '../../../../constant/image';
+import { DateTime } from 'luxon';
 
 const Weight = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -38,7 +39,7 @@ const Weight = ({ route }: any) => {
         setIsLoading(true);
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek().split("T")[0],
-            date: new Date().toISOString().split("T")[0],
+            date: DateTime.local().toString().split("T")[0],
             weight: Number(weight)
         };
         try {

@@ -13,6 +13,7 @@ import { IMAGE } from '../../../../constant/image';
 import { TypeActivityRecord } from '../../../planManagement/const';
 import LoadingScreen from '../../../../component/loading';
 import { planService } from '../../../../services/plan';
+import { DateTime } from 'luxon';
 
 type dataTypeWorkOut = {
     id: number,
@@ -73,7 +74,7 @@ const WorkOutRecord = ({ route }: any) => {
         const dataSubmit = {
             actualType: selectedItem,
             actualDuration: Number(convertTime),
-            date: new Date().toISOString()
+            date: DateTime.local().toString().split("T")[0]
         }
         try {
             const res = await planService.putActivity(dataSubmit)

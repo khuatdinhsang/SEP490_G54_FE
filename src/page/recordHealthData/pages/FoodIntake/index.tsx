@@ -12,6 +12,7 @@ import LoadingScreen from '../../../../component/loading';
 import { planService } from '../../../../services/plan';
 import { getMondayOfCurrentWeek } from '../../../../util';
 import { IMAGE } from '../../../../constant/image';
+import { DateTime } from 'luxon';
 
 const FoodIntakeRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -69,7 +70,7 @@ const FoodIntakeRecord = ({ route }: any) => {
                 setError(false);
                 setIsLoading(true)
                 const dataSubmit = {
-                    date: new Date().toISOString().split("T")[0],
+                    date: DateTime.local().toString().split("T")[0],
                     actualValue: Number(numberBoldOfRice),
                 }
                 try {
@@ -92,7 +93,6 @@ const FoodIntakeRecord = ({ route }: any) => {
                 finally {
                     setIsLoading(false)
                 }
-
             } else {
                 setError(true);
             }

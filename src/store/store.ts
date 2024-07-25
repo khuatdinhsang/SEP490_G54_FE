@@ -13,12 +13,14 @@ import {
 import userReducer from './user.slice';
 import medicationReducer from './medication.slice';
 import screenReducer from './screen.slice';
+import closePersonReducer from './closePerson.slice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const reducers = combineReducers({
   user: userReducer,
   medication: medicationReducer,
-  screen: screenReducer
+  screen: screenReducer,
+  closePerson: closePersonReducer
 });
 
 const persistConfig = {

@@ -23,6 +23,7 @@ import LoadingScreen from '../../component/loading';
 import { getMondayOfCurrentWeek } from '../../util';
 import { useDispatch } from 'react-redux';
 import { setScreen } from '../../store/screen.slice';
+import { DateTime } from 'luxon';
 
 
 const PositiveMind: React.FC = () => {
@@ -71,7 +72,7 @@ const PositiveMind: React.FC = () => {
                 mentalRuleId,
                 status: true,
                 weekStart: getMondayOfCurrentWeek().split("T")[0],
-                date: new Date().toISOString()
+                date: DateTime.local().toString().split("T")[0]
             }
             try {
                 const res = await planService.postListMental(data)

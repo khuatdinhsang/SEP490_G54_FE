@@ -1,23 +1,31 @@
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import ButtonComponent from '../../../../../component/button';
 import HeaderNavigatorComponent from '../../../../../component/header-navigator';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import GreetingComponent from '../../../../informationHealth/components/GreetingComponent';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import DialogSingleComponent from '../../../../../component/dialog-single';
-import {IMAGE} from '../../../../../constant/image';
+import { IMAGE } from '../../../../../constant/image';
 import Done from './Done';
+import LoadingScreen from '../../../../../component/loading';
+import { lessonService } from '../../../../../services/lesson';
+import { SCREENS_NAME } from '../../../../../navigator/const';
 
 const Week1Day1 = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [step, setStep] = useState(1);
   const [isDialog, setIsDialog] = useState(false);
-
+  const [midTermGoal, setMidTermGoal] = useState('');
+  const [errMidTermGoal, setErrMidTermGoal] = useState('')
+  const [oneYearGoal, setOneYearGoal] = useState('');
+  const [errOneYearGoal, setErrOneYearGoal] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [messageError, setMessageError] = useState<string>('')
   const handleClickNext = () => {
     if (step === 1) {
       setStep(2);
@@ -32,14 +40,33 @@ const Week1Day1 = () => {
   const handleClickButtonCancelStep2 = () => {
     setIsDialog(false);
   };
-  const handleClickButtonConfirmStep2 = () => {
-    setIsDialog(false);
-    setStep(0);
+  const handleClickButtonConfirmStep2 = async (): Promise<void> => {
+    setIsLoading(true)
+    try {
+      const data = {
+        endOfYearGoal: oneYearGoal.trim(),
+        intermediateGoal: midTermGoal.trim()
+      }
+      const res = await lessonService.putLesson1(data)
+      if (res.code === 201) {
+        setIsLoading(false)
+        setIsDialog(false);
+        setStep(0);
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    }
+    finally {
+      setIsLoading(false)
+    }
   };
-
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{paddingHorizontal: paddingHorizontalScreen * 2}}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
         <HeaderNavigatorComponent
           isIconLeft={true}
           text="학습하기"
@@ -49,17 +76,27 @@ const Week1Day1 = () => {
         />
       </View>
       <GreetingComponent text="인사말" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
-        {step === 2 && <Step2 />}
+        {step === 2 && <Step2
+          oneYearGoal={oneYearGoal}
+          midTermGoal={midTermGoal}
+          errMidTermGoal={errMidTermGoal}
+          errOneYearGoal={errOneYearGoal}
+          setErrOneYearGoal={setErrOneYearGoal}
+          setOneYearGoal={setOneYearGoal}
+          setMidTermGoal={setMidTermGoal}
+          setErrMidTermGoal={setErrMidTermGoal}
+        />}
         {step === 0 && <Done />}
       </View>
       <View
         style={{
           paddingHorizontal: paddingHorizontalScreen * 2,
-          marginBottom: 35,
+          marginBottom: 20,
         }}>
         <ButtonComponent
+          isDisable={((midTermGoal && oneYearGoal) || step !== 2) ? false : true}
           text={step ? '다음' : '홈으로 돌아가기'}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
@@ -80,6 +117,8 @@ const Week1Day1 = () => {
           itemSelected={1}
         />
       )}
+      {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -95,5 +134,10 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: colors.black,
   },
+  textError: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: colors.red
+  }
 });
 export default Week1Day1;
