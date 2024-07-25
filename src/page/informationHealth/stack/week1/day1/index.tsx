@@ -47,7 +47,7 @@ const Week1Day1 = () => {
         endOfYearGoal: oneYearGoal.trim(),
         intermediateGoal: midTermGoal.trim()
       }
-      const res = await lessonService.putLesson("lesson1", data)
+      const res = await lessonService.putLesson1(data)
       if (res.code === 201) {
         setIsLoading(false)
         setIsDialog(false);

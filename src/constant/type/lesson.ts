@@ -1,6 +1,32 @@
-export interface putLesson {
-    intermediateGoal?: string,
-    endOfYearGoal?: string,
-    strength?: string,
-    weakPoint?: string
+export interface putLesson1 {
+    intermediateGoal: string,
+    endOfYearGoal: string,
+
+}
+export interface putLesson2 {
+    strength: string,
+    weakPoint: string
+}
+export interface putLesson3 {
+    closePerson1: string,
+    closePerson2: string,
+    closePerson1Message: string,
+    closePerson2Message: string,
+    prefrerredEnvironment: string,
+    prefrerredTime: string,
+    notPreferredLocation: string,
+    notPreferredTime: string,
+    closePerson1Evaluation: string,
+    closePerson2Evaluation: string
+}
+export interface putLesson4 {
+    score10: number,
+    score20: number,
+    score30: number,
+    score40: number,
+    score50: number,
+    recentValues: string,
+    influenceOnLife: string,
+    newValues: string,
+    reasonForChanging: string
 }

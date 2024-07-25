@@ -69,11 +69,11 @@ const MonthEvaluate = () => {
         }
     }
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         getListNumber();
-    //     }, [])
-    // );
+    useFocusEffect(
+        useCallback(() => {
+            getListNumber();
+        }, [])
+    );
     useEffect(() => {
         getListNumber();
     }, [])

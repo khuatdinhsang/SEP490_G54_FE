@@ -4,13 +4,12 @@ import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputShareComponent from '../../../components/InputShareComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/store';
 import { setClosePerson1Redux, setClosePerson2Redux } from '../../../../../store/closePerson.slice';
 
 interface Step2Props {
-  isDisabled: boolean,
   setIsDisabled: (value: boolean) => void,
   step: number,
   setStep: (value: number) => void,
@@ -18,17 +17,33 @@ interface Step2Props {
 }
 const Step2 = (props: Step2Props) => {
   const {
-    isDisabled, setIsDisabled, step, setStep, setUser
+    setIsDisabled, step, setStep, setUser
   } = props
   const dispatch = useDispatch();
 
   const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1);
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
-
   const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
   const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
-  dispatch(setClosePerson1Redux(closePerson1.trim()))
-  dispatch(setClosePerson2Redux(closePerson2.trim()))
+  const closePerson1EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson1Evaluation);
+  const closePerson2EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson2Evaluation);
+  const closePerson1MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson1Message);
+  const closePerson2MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson2Message);
+
+  useEffect(() => {
+    dispatch(setClosePerson1Redux(closePerson1.trim()));
+    dispatch(setClosePerson2Redux(closePerson2.trim()));
+  }, [closePerson1, closePerson2, dispatch]);
+
+  useEffect(() => {
+    const isDisable = (closePerson1EvaluationRedux.trim().length === 0 ||
+      closePerson2EvaluationRedux.trim().length === 0 ||
+      closePerson1MessageRedux.trim().length === 0 ||
+      closePerson2MessageRedux.trim().length === 0 ||
+      closePerson1.trim().length === 0 || closePerson2.trim().length === 0
+    )
+    setIsDisabled(isDisable)
+  }, [closePerson1, closePerson2, setIsDisabled])
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -54,7 +69,6 @@ const Step2 = (props: Step2Props) => {
           setStep={setStep}
           setClosePerson={setClosePerson1}
           setUser={() => setUser(1)}
-
         />
         <InputShareComponent
           text="2."
@@ -65,7 +79,6 @@ const Step2 = (props: Step2Props) => {
           setStep={setStep}
           setClosePerson={setClosePerson2}
           setUser={() => setUser(2)}
-
         />
         <View style={{ paddingBottom: 40 }} />
       </ScrollView>

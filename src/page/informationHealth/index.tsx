@@ -1,4 +1,4 @@
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { ParamListBase, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
     Image,
@@ -16,7 +16,7 @@ import { flexCenter, flexRowCenter, flexRowSpaceEvenly } from '../../styles/flex
 import { paddingHorizontalScreen } from '../../styles/padding';
 import { HeightDevice } from '../../util/Dimenssion';
 import WeekComponent from './components/WeekComponent';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import LoadingScreen from '../../component/loading';
 import { lessonService } from '../../services/lesson';
 
@@ -51,6 +51,11 @@ const InformationHealth = () => {
     useEffect(() => {
         getListLesson()
     }, [])
+    useFocusEffect(
+        useCallback(() => {
+            getListLesson();
+        }, [])
+    );
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>

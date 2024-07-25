@@ -4,27 +4,42 @@ import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import colors from '../../../../../constant/color';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputComponent from '../../../../../component/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+
+export interface valuesStep3 {
+  recentValues: string,
+  influenceOnLife: string,
+  newValues: string,
+  reasonForChanging: string
+}
+
 interface Step3Props {
-  inputText1: string,
-  inputText2: string,
-  inputText3: string,
-  inputText4: string,
-  setInputText1: (value: string) => void,
-  setInputText2: (value: string) => void,
-  setInputText3: (value: string) => void,
-  setInputText4: (value: string) => void,
+  setIsDisabled: (value: boolean) => void;
+  onSubmit: (value: valuesStep3) => void;
 }
 const Step3 = ({
-  inputText1,
-  inputText2,
-  inputText3,
-  inputText4,
-  setInputText1,
-  setInputText2,
-  setInputText3,
-  setInputText4,
+  setIsDisabled, onSubmit
 }: Step3Props) => {
+  const [err1, setErr1] = useState<string>("")
+  const [err2, setErr2] = useState<string>("")
+  const [err3, setErr3] = useState<string>("")
+  const [err4, setErr4] = useState<string>("")
+  const [recentValues, setRecentValues] = useState('');
+  const [influenceOnLife, setInfluenceOnLife] = useState('');
+  const [newValues, setNewValues] = useState('');
+  const [reasonForChanging, setReasonForChanging] = useState('');
+  const { t } = useTranslation()
+  useEffect(() => {
+    if (recentValues && influenceOnLife && newValues && reasonForChanging) {
+      setIsDisabled(false)
+      onSubmit({ recentValues, influenceOnLife, newValues, reasonForChanging })
+    }
+    else {
+      setIsDisabled(true)
+    }
+  }, [recentValues, influenceOnLife, newValues, reasonForChanging])
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -36,41 +51,73 @@ const Step3 = ({
         />
         <View style={{ marginTop: 24 }}>
           <InputComponent
-            value={inputText1}
-            onChangeText={setInputText1}
+            value={recentValues}
+            onChangeText={(text: string) => {
+              setErr1("")
+              if (text.trim().length === 0) {
+                setErr1(t("placeholder.err.invalidInput"))
+                setRecentValues("")
+              }
+              setRecentValues(text)
+            }}
             placeholder="예시) 사회적 성공을 중요하게 생각"
             label="지금까지 나의 가치관"
             heightLine={120}
             multiline={true}
           />
+          {err1 && <Text style={styles.textErr}>{err1}</Text>}
           <View style={{ marginTop: 20 }} />
           <InputComponent
-            value={inputText2}
-            onChangeText={setInputText2}
+            value={influenceOnLife}
+            onChangeText={(text: string) => {
+              setErr2("")
+              if (text.trim().length === 0) {
+                setErr2(t("placeholder.err.invalidInput"))
+                setInfluenceOnLife("")
+              }
+              setInfluenceOnLife(text)
+            }}
             placeholder="예시) 식사 규칙적으로 하기"
             label="가치관이 건강에 미친 영향"
             heightLine={120}
             multiline={true}
           />
+          {err2 && <Text style={styles.textErr}>{err2}</Text>}
           <View style={{ marginTop: 20 }} />
           <InputComponent
-            value={inputText3}
-            onChangeText={setInputText3}
+            value={newValues}
+            onChangeText={(text: string) => {
+              setErr3("")
+              if (text.trim().length === 0) {
+                setErr3(t("placeholder.err.invalidInput"))
+                setNewValues("")
+              }
+              setNewValues(text)
+            }}
             placeholder="예시) 건강을 중요하게 생각"
             label="변화하고자 하는 가치관"
             heightLine={120}
             multiline={true}
           />
+          {err3 && <Text style={styles.textErr}>{err3}</Text>}
           <View style={{ marginTop: 20 }} />
           <InputComponent
-            value={inputText4}
-            onChangeText={setInputText4}
+            value={reasonForChanging}
+            onChangeText={(text: string) => {
+              setErr4("")
+              if (text.trim().length === 0) {
+                setErr4(t("placeholder.err.invalidInput"))
+                setReasonForChanging("")
+              }
+              setReasonForChanging(text)
+            }}
             placeholder="예시) 지인들과 행복하게 오래 함께 하고 싶음"
             label="변화하고자 하는 이유"
             heightLine={120}
             multiline={true}
           />
         </View>
+        {err4 && <Text style={styles.textErr}>{err4}</Text>}
         <View style={{ paddingBottom: 30 }} />
       </ScrollView>
     </View>
@@ -89,5 +136,10 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     paddingHorizontal: 25,
   },
+  textErr: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: colors.red
+  }
 });
 export default Step3;

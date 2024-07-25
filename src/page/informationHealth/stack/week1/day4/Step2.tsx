@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
@@ -6,18 +6,41 @@ import StepComponent from '../../../../informationHealth/components/StepComponen
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputChart from './components/InputChart';
 import LineChart from './components/LineChart';
-import { TypeErrorDay4 } from '.';
-
+export interface TypeErrorDay4 {
+  err1?: string,
+  err2?: string,
+  err3?: string,
+  err4?: string,
+  err5?: string
+}
 interface Step2Props {
-  error: TypeErrorDay4,
-  setError: (error: TypeErrorDay4) => void;
-  data: Array<{ x: string; y: number; label?: string }>
-  setData: (data: Array<{ x: string; y: number; label?: string }>) => void;
+  step: number,
+  setIsDisabled: (value: boolean) => void
+  onSubmit: (value: { x: string, y: number }[]) => void
 }
 const Step2 = (props: Step2Props) => {
-  const { error, setError, data, setData } = props;
-
-
+  const { step, setIsDisabled, onSubmit } = props
+  const [error, setError] = useState<TypeErrorDay4>({})
+  const [data, setData] = useState<
+    Array<{ x: string; y: number; label?: string }>
+  >([
+    { x: '10대', y: 0 },
+    { x: '20대', y: 0 },
+    { x: '30대', y: 0 },
+    { x: '40대', y: 0 },
+    { x: '50대', y: 0 },
+  ]);
+  useEffect(() => {
+    const isAllErrorsEmpty = (error: TypeErrorDay4) => {
+      return Object.values(error).every(value => value === '');
+    };
+    const areAllFieldsFilled = (data: Array<{ x: string; y: number; label?: string }>) => {
+      return data.every(field => field.y > 0);
+    };
+    const isDisable = !(step === 2 && areAllFieldsFilled(data) && isAllErrorsEmpty(error));
+    setIsDisabled(isDisable)
+    onSubmit(data)
+  }, [step, data, error])
 
   return (
     <View style={[styles.container]}>

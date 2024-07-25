@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
-import StepComponent from '../../../../informationHealth/components/StepComponent';
+import StepComponent from '../../../components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputShareComponent from '../../../components/InputShareComponent';
 import InputComponent from '../../../../../component/input';
@@ -12,7 +12,7 @@ interface Step3Props {
   onSubmit: (values: { address: string, time: string }) => void,
   setIsDisabled: (value: boolean) => void
 }
-const Step3 = (props: Step3Props) => {
+const Step3_1 = (props: Step3Props) => {
   const { onSubmit, setIsDisabled } = props
   const { t } = useTranslation()
   const [address, setAddress] = useState<string>('');
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
     color: colors.gray_G07,
   },
 });
-export default Step3;
+export default Step3_1;
