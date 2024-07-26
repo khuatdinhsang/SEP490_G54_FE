@@ -30,3 +30,25 @@ export interface putLesson4 {
     newValues: string,
     reasonForChanging: string
 }
+export interface putLesson5 {
+    currentEmotion: boolean,
+    whyIfRealistic: string,
+    whyIfNotBetterForLife: string
+}
+export interface putLesson6 {
+    noMoreThan2: boolean,
+    todoList: boolean,
+    noProcastinating: boolean,
+    doExercises: boolean
+}
+export interface putLesson7 {
+    whatIsHealth: string,
+    activityCommitment: string,
+    dietCommitment: string,
+    mentalCommitment: string,
+    medicineCommitment: string,
+    roadBlock: string,
+    solution: string,
+    commitment: string,
+    diary: string
+}

@@ -16,6 +16,7 @@ import { RootState } from '../../../../../store/store';
 import Step3_1 from './Step3_1';
 import Step3_2 from './Step3_2';
 import { lessonService } from '../../../../../services/lesson';
+import LoadingScreen from '../../../../../component/loading';
 
 const Week1Day3 = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -91,6 +92,8 @@ const Week1Day3 = () => {
     setNotPreferredLocation(value.address)
     setNotPreferredTime(value.time)
   }
+  console.log("94", isLoading)
+  console.log("95", isDisabled)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
@@ -110,15 +113,21 @@ const Week1Day3 = () => {
           setStep={setStep}
           setIsDisabled={setIsDisabled}
           setUser={setUser}
-
+          setIsLoading={setIsLoading}
+          closePerson2EvaluationRedux={closePerson2Evaluation}
+          closePerson1EvaluationRedux={closePerson1Evaluation}
+          closePerson1MessageRedux={closePerson1Message}
+          closePerson2MessageRedux={closePerson1Message}
         />}
         {step === 3.1 && <Step3_1
           onSubmit={handleSubmitStep3}
           setIsDisabled={setIsDisabled}
+          setIsLoading={setIsLoading}
         />}
         {step === 3.2 && <Step3_2
           setIsDisabled={setIsDisabled}
           onSubmit={handleSubmitStep3_2}
+          setIsLoading={setIsLoading}
         />}
         {step === 0 && <Done />}
         {step === 2.2 && <Step2_2
@@ -128,6 +137,7 @@ const Week1Day3 = () => {
           setClosePersonMessage={user === 1 ? setClosePerson1Message : setClosePerson2Message}
           setIsDisabled={setIsDisabled}
           user={user}
+          setIsLoading={setIsLoading}
         />}
       </View>
       {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
@@ -143,6 +153,7 @@ const Week1Day3 = () => {
           handleClick={step ? handleClickNext : handleClickDone}
         />
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };

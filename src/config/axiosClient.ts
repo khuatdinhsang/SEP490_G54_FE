@@ -31,6 +31,10 @@ axiosClient.interceptors.response.use(
     return response.data;
   },
   async (error) => {
+    const handleLogout = async () => {
+      await AsyncStorage.removeItem('accessToken');
+      await AsyncStorage.removeItem('refreshToken');
+    };
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
       const accessToken = await AsyncStorage.getItem('accessToken');
@@ -45,10 +49,11 @@ axiosClient.interceptors.response.use(
           await AsyncStorage.setItem('refreshToken', newRefreshToken);
           return axiosClient(originalRequest);
         } catch (refreshError: any) {
-          await AsyncStorage.removeItem('refreshToken');
+          await handleLogout();
           return Promise.reject(error);
         }
       } else {
+        await handleLogout();
         return Promise.reject(error);
       }
     }

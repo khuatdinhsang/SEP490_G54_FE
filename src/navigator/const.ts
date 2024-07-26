@@ -76,6 +76,8 @@ import MedicationChart from '../page/recordHealthData/pages/Medication/Chart';
 import NumberStepsChart from '../page/recordHealthData/pages/NumberSteps/Chart';
 import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
+import Week1Day6 from '../page/informationHealth/stack/week1/day6';
+import Week1Day7 from '../page/informationHealth/stack/week1/day7';
 export const SCREENS_NAME = {
   LOGIN: {
     MAIN: 'Main Login',
@@ -175,6 +177,8 @@ export const SCREENS_NAME = {
     WEEK1DAY3: 'Week 1 Day 3',
     WEEK1DAY4: 'Week 1 Day 4',
     WEEK1DAY5: 'Week 1 Day 5',
+    WEEK1DAY6: 'Week 1 Day 6',
+    WEEK1DAY7: 'Week 1 Day 7',
   },
 };
 
@@ -509,6 +513,14 @@ const SCREEN_STACK_INFORMATION_HEALTH = [
   {
     name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY5,
     component: Week1Day5,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY6,
+    component: Week1Day6,
+  },
+  {
+    name: SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY7,
+    component: Week1Day7,
   },
 ];
 

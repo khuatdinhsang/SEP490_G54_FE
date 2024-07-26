@@ -101,5 +101,9 @@ export const IMAGE = {
     IMAGE188: require('assets/image/information-health/image-188.png'),
     PATIENT: require('assets/image/information-health/icon_patient.png'),
     LOCK: require('assets/image/information-health/lock.png'),
+    CHECK: require('assets/image/information-health/icon_check.png'),
+    CHECK_PRIMARY: require('assets/image/information-health/icon_check_primary.png'),
+    POLYGON3: require('assets/image/information-health/Polygon-3.png'),
+    SUBTRACT: require('assets/image/information-health/Subtract.png'),
   },
 };

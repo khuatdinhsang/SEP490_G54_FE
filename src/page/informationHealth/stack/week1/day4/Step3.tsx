@@ -6,6 +6,7 @@ import DoctorComponent from '../../../components/DoctorComponent';
 import InputComponent from '../../../../../component/input';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { lessonService } from '../../../../../services/lesson';
 
 
 export interface valuesStep3 {
@@ -18,9 +19,10 @@ export interface valuesStep3 {
 interface Step3Props {
   setIsDisabled: (value: boolean) => void;
   onSubmit: (value: valuesStep3) => void;
+  setIsLoading: (value: boolean) => void;
 }
 const Step3 = ({
-  setIsDisabled, onSubmit
+  setIsDisabled, onSubmit, setIsLoading
 }: Step3Props) => {
   const [err1, setErr1] = useState<string>("")
   const [err2, setErr2] = useState<string>("")
@@ -30,7 +32,37 @@ const Step3 = ({
   const [influenceOnLife, setInfluenceOnLife] = useState('');
   const [newValues, setNewValues] = useState('');
   const [reasonForChanging, setReasonForChanging] = useState('');
+  const [messageError, setMessageError] = useState('');
   const { t } = useTranslation()
+  useEffect(() => {
+    const getDataLesson4 = async () => {
+      setIsLoading(true)
+      try {
+        const res = await lessonService.getLesson4()
+        if (res.code === 200) {
+          console.log("44", res.result.score10)
+          setIsLoading(false)
+          setMessageError("");
+          setRecentValues(res.result.recentValues)
+          setInfluenceOnLife(res.result.influenceOnLife)
+          setNewValues(res.result.recentValues)
+          setReasonForChanging(res.result.reasonForChanging)
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
+    getDataLesson4()
+  }, [])
   useEffect(() => {
     if (recentValues && influenceOnLife && newValues && reasonForChanging) {
       setIsDisabled(false)
@@ -118,6 +150,7 @@ const Step3 = ({
           />
         </View>
         {err4 && <Text style={styles.textErr}>{err4}</Text>}
+        {messageError && <Text style={styles.textErr}>{messageError}</Text>}
         <View style={{ paddingBottom: 30 }} />
       </ScrollView>
     </View>
@@ -140,6 +173,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 14,
     color: colors.red
-  }
+  },
+
 });
 export default Step3;

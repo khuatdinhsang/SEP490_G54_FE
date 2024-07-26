@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputChart from './components/InputChart';
 import LineChart from './components/LineChart';
+import { lessonService } from '../../../../../services/lesson';
+import LoadingScreen from '../../../../../component/loading';
 export interface TypeErrorDay4 {
   err1?: string,
   err2?: string,
@@ -16,11 +18,13 @@ export interface TypeErrorDay4 {
 interface Step2Props {
   step: number,
   setIsDisabled: (value: boolean) => void
-  onSubmit: (value: { x: string, y: number }[]) => void
+  onSubmit: (value: { x: string, y: number }[]) => void,
+  setIsLoading: (value: boolean) => void,
 }
 const Step2 = (props: Step2Props) => {
-  const { step, setIsDisabled, onSubmit } = props
+  const { step, setIsDisabled, onSubmit, setIsLoading } = props
   const [error, setError] = useState<TypeErrorDay4>({})
+  const [messageError, setMessageError] = useState<string>("")
   const [data, setData] = useState<
     Array<{ x: string; y: number; label?: string }>
   >([
@@ -30,6 +34,39 @@ const Step2 = (props: Step2Props) => {
     { x: '40대', y: 0 },
     { x: '50대', y: 0 },
   ]);
+  useEffect(() => {
+    const getDataLesson4 = async () => {
+      setIsLoading(true)
+      try {
+        const res = await lessonService.getLesson4()
+        if (res.code === 200) {
+          console.log("44", res.result.score10)
+          setIsLoading(false)
+          setMessageError("");
+          const oldData = [
+            { x: '10대', y: res.result.score10 },
+            { x: '20대', y: res.result.score20 },
+            { x: '30대', y: res.result.score30 },
+            { x: '40대', y: res.result.score40 },
+            { x: '50대', y: res.result.score50 },
+          ]
+          setData(oldData)
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
+    getDataLesson4()
+  }, [])
   useEffect(() => {
     const isAllErrorsEmpty = (error: TypeErrorDay4) => {
       return Object.values(error).every(value => value === '');
@@ -58,6 +95,7 @@ const Step2 = (props: Step2Props) => {
           error={error}
           setError={setError}
         />
+        {messageError && <Text style={styles.textError}>{messageError}</Text>}
         <View style={{ paddingBottom: 30 }} />
       </ScrollView>
     </View>
@@ -75,5 +113,10 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: colors.gray_G07,
   },
+  textError: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: colors.red
+  }
 });
 export default Step2;
