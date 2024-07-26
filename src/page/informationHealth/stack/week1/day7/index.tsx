@@ -7,45 +7,40 @@ import HeaderNavigatorComponent from '../../../../../component/header-navigator'
 import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import GreetingComponent from '../../../../informationHealth/components/GreetingComponent';
-import Done from './Done';
 import Step1 from './Step1';
 import Step2 from './Step2';
-import Step3, { valuesStep3 } from './Step3';
+import DialogSingleComponent from '../../../../../component/dialog-single';
+import { IMAGE } from '../../../../../constant/image';
+import Done from './Done';
+import Step3 from './Step3';
+import Step2Filled from './Step2-filled';
 import LoadingScreen from '../../../../../component/loading';
+import { putLesson7 } from '../../../../../constant/type/lesson';
 import { lessonService } from '../../../../../services/lesson';
+import { use } from 'i18next';
 
-const Week1Day4 = () => {
+const Week1Day7 = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [step, setStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDisabled, setIsDisabled] = useState<boolean>(false)
-  const [messageError, setMessageError] = useState<string>('')
-  const [valueStep2, setValueStep2] = useState<{ x: string, y: number }[] | any>()
-  const [valueStep3, setValueStep3] = useState<valuesStep3 | any>()
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageError, setMessageError] = useState<string>("")
+  const [valuesSubmit, setValuesSubmit] = useState<putLesson7 | any>()
+  const [diary, setDiary] = useState<string | any>("")
   const handleClickNext = async () => {
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
+      setStep(2.5);
+    } else if (step === 2.5) {
       setStep(3);
-    } else if (step === 3) {
-      const dataSubmit = {
-        score10: valueStep2[0].y,
-        score20: valueStep2[1].y,
-        score30: valueStep2[2].y,
-        score40: valueStep2[3].y,
-        score50: valueStep2[4].y,
-        recentValues: valueStep3?.recentValues,
-        influenceOnLife: valueStep3?.influenceOnLife,
-        newValues: valueStep3?.newValues,
-        reasonForChanging: valueStep3?.reasonForChanging
-      }
+    } else {
       setIsLoading(true)
       try {
-        const res = await lessonService.putLesson4(dataSubmit)
+        const res = await lessonService.putLesson7({ ...valuesSubmit, diary })
         if (res.code === 201) {
           setIsLoading(false)
           setStep(0);
-
         }
       } catch (error: any) {
         if (error?.response?.status === 400) {
@@ -59,14 +54,15 @@ const Week1Day4 = () => {
       }
     }
   };
+
   const handleClickDone = () => {
     navigation.goBack();
   };
-  const handleGetValueStep2 = (value: { x: string, y: number }[]) => {
-    setValueStep2(value)
+  const getValuesSubmitStep2 = (values: putLesson7) => {
+    setValuesSubmit(values)
   }
-  const handleGetValueStep3 = (value: valuesStep3) => {
-    setValueStep3(value)
+  const getValuesSubmitStep3 = (value: string) => {
+    setDiary(value)
   }
 
   return (
@@ -83,30 +79,31 @@ const Week1Day4 = () => {
       <GreetingComponent text="인사말" />
       <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
-        {step === 2 && <Step2
-          step={step}
-          setIsDisabled={setIsDisabled}
-          onSubmit={handleGetValueStep2}
+        {step === 2 && <Step2Filled
+          isDisabled
+          setIsDisabled={setDisabled}
+          onSubmit={getValuesSubmitStep2}
           setIsLoading={setIsLoading}
         />}
+        {step === 2.5 && <Step2 />}
         {step === 3 && <Step3
-          setIsDisabled={setIsDisabled}
-          onSubmit={handleGetValueStep3}
+          setIsDisabled={setDisabled}
+          onSubmit={getValuesSubmitStep3}
           setIsLoading={setIsLoading}
         />}
         {step === 0 && <Done />}
       </View>
-      {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
+      {messageError && <Text style={styles.textError}>{messageError}</Text>}
       <View
         style={{
           paddingHorizontal: paddingHorizontalScreen * 2,
           marginBottom: 20,
         }}>
         <ButtonComponent
-          isDisable={isDisabled}
           text={step ? '다음' : '홈으로 돌아가기'}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
+          isDisable={disabled}
         />
       </View>
       {isLoading && <LoadingScreen />}
@@ -114,10 +111,21 @@ const Week1Day4 = () => {
   );
 };
 const styles = StyleSheet.create({
+  container: {
+    marginTop: 24,
+    paddingHorizontal: paddingHorizontalScreen * 2,
+    backgroundColor: colors.white,
+  },
+  title: {
+    fontWeight: '500',
+    fontSize: 18,
+    lineHeight: 28,
+    color: colors.black,
+  },
   textError: {
     fontWeight: "500",
-    fontSize: 14,
-    color: colors.red
+    color: colors.red,
+    fontSize: 14
   }
-})
-export default Week1Day4;
+});
+export default Week1Day7;
