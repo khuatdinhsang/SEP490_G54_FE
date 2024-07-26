@@ -3,7 +3,7 @@ import { listRegisterMedicineData, medicinePost } from '../constant/type/medical
 
 interface MedicationState {
     listRegisterMedication: medicinePost[];
-    listRegisterMedicationInterface: listRegisterMedicineData[];
+    listRegisterMedicationInterface: listRegisterMedicineData[] | any[];
 }
 
 const initialState: MedicationState = {

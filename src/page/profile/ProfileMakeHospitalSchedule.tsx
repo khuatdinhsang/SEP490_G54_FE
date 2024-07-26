@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import HospitalScheduleComponent from './component/HospitalScheduleComponent';
 import HospitalScheduleButtonComponent from './component/HospitalScheduleButtonComponent';
 import { SCREENS_NAME } from '../../navigator/const';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { appointment } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
@@ -43,6 +43,9 @@ const ProfileMakeHospitalSchedule = () => {
       setIsLoading(false)
     }
   };
+  useEffect(() => {
+    fetchListAppointment()
+  }, [])
   useFocusEffect(
     useCallback(() => {
       fetchListAppointment();

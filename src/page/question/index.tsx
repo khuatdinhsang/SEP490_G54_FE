@@ -48,6 +48,9 @@ const Question = () => {
             setIsLoading(false)
         }
     };
+    useEffect(() => {
+        fetchListQuestion()
+    }, [])
     useFocusEffect(
         useCallback(() => {
             fetchListQuestion();

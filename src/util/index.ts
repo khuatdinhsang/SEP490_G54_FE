@@ -47,6 +47,7 @@ export const removeAsyncStorageWhenLogout = async () => {
     try {
         await AsyncStorage.removeItem('refreshToken');
         await AsyncStorage.removeItem('accessToken');
+        await AsyncStorage.removeItem('deviceToken');
         // await AsyncStorage.removeItem('idUser');
     } catch (error) {
         console.error('error', error);
@@ -80,13 +81,23 @@ export const getMondayOfCurrentWeek = (): string => {
 //     lastMonday.setDate(today.getDate() - daysToLastMonday);
 //     return lastMonday.toISOString();
 // }
+// export const getPreviousMonday = (): string => {
+//     const today = DateTime.local();
+//     const daysToLastMonday = today.weekday === 1 ? 14 : today.weekday + 6; // Tính số ngày cần trừ để lấy ngày thứ Hai của tuần trước trước đó
+//     const lastMonday = today.minus({ days: daysToLastMonday }); // Lấy ngày thứ Hai của tuần trước trước đó
+//     const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true }); // Chuyển sang múi giờ UTC+7 và giữ nguyên thời gian địa phương
+//     return lastMondayUtc.toISO() || ""; // Trả về chuỗi ISO 8601 đại diện cho ngày thứ Hai của tuần trước trước đó theo múi giờ UTC+7
+// };
+
 export const getPreviousMonday = (): string => {
     const today = DateTime.local();
-    const daysToLastMonday = today.weekday === 1 ? 14 : today.weekday + 6; // Tính số ngày cần trừ để lấy ngày thứ Hai của tuần trước trước đó
-    const lastMonday = today.minus({ days: daysToLastMonday }); // Lấy ngày thứ Hai của tuần trước trước đó
-    const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true }); // Chuyển sang múi giờ UTC+7 và giữ nguyên thời gian địa phương
-    return lastMondayUtc.toISO() || ""; // Trả về chuỗi ISO 8601 đại diện cho ngày thứ Hai của tuần trước trước đó theo múi giờ UTC+7
+    // Calculate how many days to subtract to get to the previous Monday
+    const daysToLastMonday = (today.weekday + 6) % 7 + 7; // Days from today to last Monday
+    const lastMonday = today.minus({ days: daysToLastMonday });
+    const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true });
+    return lastMondayUtc.toISO() || ""; // Return ISO 8601 string representing the previous Monday in UTC+7 timezone
 };
+
 export const convertObjectToArray = (obj: { [key: string]: boolean }): number[] => {
     return Object.keys(obj)
         .filter(key => obj[key])

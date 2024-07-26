@@ -60,7 +60,6 @@ const SettingNotification = () => {
     setIsLoading(true)
     try {
       const deviceToken = await AsyncStorage.getItem('deviceToken');
-      console.log("58", deviceToken)
       const data = {
         notificationStatusList: arrayNotificationSubmit,
         deviceToken: deviceToken ?? ""

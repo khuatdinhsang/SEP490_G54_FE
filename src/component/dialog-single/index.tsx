@@ -50,9 +50,11 @@ const
       }
     }
     const handleClickButtonRight = (): void => {
-      console.log("vaoday", itemSelected)
-      handleClickButtonConfirm(itemSelected)
-    }
+      console.log("vaoday", itemSelected);
+      if (handleClickButtonConfirm && itemSelected !== null && itemSelected !== undefined) {
+        handleClickButtonConfirm(itemSelected);
+      }
+    };
     if (!isActive) {
       return null;
     }

@@ -1,20 +1,20 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import DoctorComponent from '../../../components/DoctorComponent';
 import StepComponent from '../../../components/StepComponent';
 
 const Step1 = () => {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent text="건강경영과 효과적인 전략" textLeft="Step1" />
-        <View style={{marginTop: 24}} />
+        <View style={{ marginTop: 24 }} />
         <DoctorComponent
           height={85}
           content="앞으로 우리가 함께 공부할 건강습관 12대 수칙에 대해 알아봅시다."
         />
-        <View>
+        <View style={{ marginTop: 20 }}>
           <Text style={styles.text}>{'1) 긍정적인 마음 갖기'}</Text>
           <Text style={styles.text}>{'2) 규칙적인 운동 실천하기'}</Text>
           <Text style={styles.text}>{'3) 건강한 음식 바르게 먹기'}</Text>
@@ -32,7 +32,7 @@ const Step1 = () => {
             {'12) 사랑하는 사람과 함께하는 삶 생각하기'}
           </Text>
         </View>
-        <View style={{paddingBottom: 30}} />
+        <View style={{ paddingBottom: 30 }} />
       </ScrollView>
     </View>
   );
