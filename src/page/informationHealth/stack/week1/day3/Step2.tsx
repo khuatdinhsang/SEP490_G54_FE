@@ -8,16 +8,27 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/store';
 import { setClosePerson1Redux, setClosePerson2Redux } from '../../../../../store/closePerson.slice';
+import LoadingScreen from '../../../../../component/loading';
+import { lessonService } from '../../../../../services/lesson';
 
 interface Step2Props {
   setIsDisabled: (value: boolean) => void,
   step: number,
   setStep: (value: number) => void,
   setUser: (value: number) => void,
+  setIsLoading: (value: boolean) => void,
+  closePerson2EvaluationRedux: string,
+  closePerson1EvaluationRedux: string,
+  closePerson1MessageRedux: string,
+  closePerson2MessageRedux: string
 }
 const Step2 = (props: Step2Props) => {
   const {
-    setIsDisabled, step, setStep, setUser
+    setIsDisabled, step, setStep, setUser, setIsLoading,
+    closePerson2EvaluationRedux,
+    closePerson1EvaluationRedux,
+    closePerson1MessageRedux,
+    closePerson2MessageRedux
   } = props
   const dispatch = useDispatch();
 
@@ -25,10 +36,33 @@ const Step2 = (props: Step2Props) => {
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
   const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
   const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
-  const closePerson1EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson1Evaluation);
-  const closePerson2EvaluationRedux = useSelector((state: RootState) => state.closePerson.closePerson2Evaluation);
-  const closePerson1MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson1Message);
-  const closePerson2MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson2Message);
+  const [messageError, setMessageError] = useState<string>("")
+  useEffect(() => {
+    const getDataLesson3 = async () => {
+      setIsLoading(true)
+      try {
+        const res = await lessonService.getLesson3()
+        if (res.code === 200) {
+          setMessageError("");
+          setClosePerson1(res.result.closePerson1)
+          setClosePerson2(res.result.closePerson2)
+          setIsLoading(false)
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
+    getDataLesson3()
+  }, [])
 
   useEffect(() => {
     dispatch(setClosePerson1Redux(closePerson1.trim()));
@@ -44,6 +78,9 @@ const Step2 = (props: Step2Props) => {
     )
     setIsDisabled(isDisable)
   }, [closePerson1, closePerson2, setIsDisabled])
+
+
+
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -80,6 +117,7 @@ const Step2 = (props: Step2Props) => {
           setClosePerson={setClosePerson2}
           setUser={() => setUser(2)}
         />
+        {messageError && <Text style={styles.textError}>{messageError}</Text>}
         <View style={{ paddingBottom: 40 }} />
       </ScrollView>
     </View>
@@ -97,5 +135,10 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: colors.gray_G07,
   },
+  textError: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: colors.red
+  }
 });
 export default Step2;

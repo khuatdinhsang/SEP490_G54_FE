@@ -76,6 +76,7 @@ const InformationHealth = () => {
             <View style={[flexRowSpaceEvenly]}>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 1}
                     onPress={() =>
                         navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY1)
                     }>
@@ -98,6 +99,7 @@ const InformationHealth = () => {
                 </Pressable>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 2}
                     onPress={() => {
                         navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY2);
                     }}>
@@ -120,6 +122,7 @@ const InformationHealth = () => {
                 </Pressable>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 3}
                     onPress={() => {
                         navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY3);
                     }}>
@@ -145,6 +148,7 @@ const InformationHealth = () => {
             <View style={[flexRowSpaceEvenly]}>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 4}
                     onPress={() => {
                         navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY4);
                     }}>
@@ -167,6 +171,7 @@ const InformationHealth = () => {
                 </Pressable>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 5}
                     onPress={() => {
                         navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY5);
                     }}>
@@ -187,7 +192,12 @@ const InformationHealth = () => {
                         5일차
                     </Text>
                 </Pressable>
-                <View style={[flexCenter, styles.imageWrap]}>
+                <Pressable style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 6}
+                    onPress={() => {
+                        navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY6);
+                    }}>
+
                     <Image
                         source={
                             curDay >= 6
@@ -204,11 +214,15 @@ const InformationHealth = () => {
                         ]}>
                         6일차
                     </Text>
-                </View>
+                </Pressable>
             </View>
             <View style={{ marginTop: 28 }} />
             <View style={{ flexDirection: 'row', marginLeft: 30 }}>
-                <View style={[flexCenter, styles.imageWrap]}>
+                <Pressable style={[flexCenter, styles.imageWrap]}
+                    disabled={curDay < 7}
+                    onPress={() => {
+                        navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY7);
+                    }}>
                     <Image
                         source={
                             curDay >= 7
@@ -225,7 +239,7 @@ const InformationHealth = () => {
                         ]}>
                         7일차
                     </Text>
-                </View>
+                </Pressable>
             </View>
             {isLoading && <LoadingScreen />}
         </SafeAreaView>

@@ -3,7 +3,7 @@ import { flexRow } from '../../../../../../styles/flex';
 import colors from '../../../../../../constant/color';
 import { useState, useTransition } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TypeErrorDay4 } from '..';
+import { TypeErrorDay4 } from '../Step2';
 
 interface InputChartProps {
   data: Array<{ x: string; y: number; label?: string }>;
@@ -28,7 +28,7 @@ const InputChart = (props: InputChartProps) => {
     }
     setData(newData);
   };
-
+  console.log("31", data)
 
   return (
     <View style={[styles.container, { borderWidth }]}>
@@ -36,6 +36,7 @@ const InputChart = (props: InputChartProps) => {
         <Text style={styles.text}>10대 점수</Text>
         <View>
           <TextInput
+            value={data[0].y.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -51,6 +52,7 @@ const InputChart = (props: InputChartProps) => {
         <Text style={styles.text}>20대 점수</Text>
         <View>
           <TextInput
+            value={data[1].y.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -67,6 +69,7 @@ const InputChart = (props: InputChartProps) => {
         <Text style={styles.text}>30대 점수</Text>
         <View>
           <TextInput
+            value={data[2].y.toString()}
             placeholder="0"
             keyboardType='numeric'
             style={[styles.input, styles.text]}
@@ -82,6 +85,7 @@ const InputChart = (props: InputChartProps) => {
         <Text style={styles.text}>40대 점수</Text>
         <View>
           <TextInput
+            value={data[3].y.toString()}
             placeholder="0"
             style={[styles.input, styles.text]}
             onFocus={() => setIsForced(true)}
@@ -96,6 +100,7 @@ const InputChart = (props: InputChartProps) => {
         <Text style={styles.text}>50대 점수</Text>
         <View>
           <TextInput
+            value={data[4].y.toString()}
             placeholder="0"
             style={[styles.input, styles.text]}
             onFocus={() => setIsForced(true)}

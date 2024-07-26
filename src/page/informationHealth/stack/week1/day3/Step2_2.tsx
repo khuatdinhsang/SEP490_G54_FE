@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/store';
 import { setClosePerson1EvaluationRedux, setClosePerson1MessageRedux, setClosePerson2EvaluationRedux, setClosePerson2MessageRedux } from '../../../../../store/closePerson.slice';
+import { lessonService } from '../../../../../services/lesson';
 
 interface Step2_2Props {
     closePersonEvaluation: string
@@ -16,21 +17,56 @@ interface Step2_2Props {
     setIsDisabled: (value: boolean) => void,
     user: number,
     setClosePersonEvaluation: (value: string) => void,
-    setClosePersonMessage: (value: string) => void
+    setClosePersonMessage: (value: string) => void,
+    setIsLoading: (value: boolean) => void
 }
 const Step2_2 = (props: Step2_2Props) => {
     const { closePersonEvaluation, closePersonMessage, setIsDisabled,
-        user, setClosePersonEvaluation, setClosePersonMessage } = props
+        user, setClosePersonEvaluation, setClosePersonMessage, setIsLoading } = props
     const { t } = useTranslation();
     const [comment, setComment] = useState<string>(closePersonEvaluation)
     const [errComment, setErrComment] = useState<string>("")
     const [messagePositive, setMessagePositive] = useState<string>(closePersonMessage)
     const [errMessagePositive, setErrMessagePositive] = useState<string>("")
+    const [messageError, setMessageError] = useState<string>("")
     const dispatch = useDispatch()
     useEffect(() => {
         const isDisable = (comment && messagePositive && !errComment.length && !errMessagePositive.length) ? false : true;
         setIsDisabled(isDisable);
     }, [comment, messagePositive, setIsDisabled]);
+
+
+    useEffect(() => {
+        const getDataLesson3 = async () => {
+            setIsLoading(true)
+            try {
+                const res = await lessonService.getLesson3()
+                if (res.code === 200) {
+                    setIsLoading(false)
+                    setMessageError("");
+                    if (user === 1) {
+                        if (!closePersonEvaluation) setComment(res.result.closePerson1Evaluation)
+                        if (!closePersonMessage) setMessagePositive(res.result.closePerson1Message)
+                    } else {
+                        if (!closePersonEvaluation) setComment(res.result.closePerson2Evaluation)
+                        if (!closePersonMessage) setMessagePositive(res.result.closePerson2Message)
+                    }
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                if (error?.response?.status === 400) {
+                    setMessageError(error.response.data.message);
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            }
+            finally {
+                setIsLoading(false)
+            }
+        }
+        getDataLesson3()
+    }, [])
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.container]}>
@@ -86,6 +122,7 @@ const Step2_2 = (props: Step2_2Props) => {
                         />
                     </View>
                     {errMessagePositive && <Text style={styles.textError}>{errMessagePositive}</Text>}
+                    {messageError && <Text style={styles.textError}>{messageError}</Text>}
                     <View style={{ marginTop: 32 }} />
                     <View style={{ paddingBottom: 40 }} />
                 </ScrollView>

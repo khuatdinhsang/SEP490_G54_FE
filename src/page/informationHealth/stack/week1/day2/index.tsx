@@ -1,6 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import ButtonComponent from '../../../../../component/button';
 import HeaderNavigatorComponent from '../../../../../component/header-navigator';
@@ -22,6 +22,32 @@ const Week1Day2 = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [messageError, setMessageError] = useState<string>('')
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  useEffect(() => {
+    const getDataLesson2 = async () => {
+      setIsLoading(true)
+      try {
+        const res = await lessonService.getLesson2()
+        if (res.code === 200) {
+          setMessageError("");
+          setAdvantage(res.result.strength)
+          setDefect(res.result.weakPoint)
+          setIsLoading(false)
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setMessageError(error.response.data.message);
+        } else {
+          setMessageError("Unexpected error occurred.");
+        }
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
+    getDataLesson2()
+  }, [])
   const handleClickNext = async () => {
     if (step === 1) {
       setStep(2);
