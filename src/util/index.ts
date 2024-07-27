@@ -42,7 +42,9 @@ export const getISO8601ForSelectedDays = (hours: string, minutes: string, days: 
         dt = dt.plus({ days: day - dt.weekday }).setZone('UTC-7', { keepLocalTime: true });
         return dt.toISO({ suppressMilliseconds: true }).split(".")[0];
     });
-};;
+};
+
+
 export const removeAsyncStorageWhenLogout = async () => {
     try {
         await AsyncStorage.removeItem('refreshToken');
@@ -272,9 +274,10 @@ interface Medicine {
     weekTime: string[];
     weekday: string[];
 }
+
 export const getWeekTimeForCurrentWeek = (medicines: Medicine[]): medicinePost[] => {
     const weekdaysMap: { [key: string]: number } = {
-        "Sunday": 0,
+        "Sunday": 7,
         "Monday": 1,
         "Tuesday": 2,
         "Wednesday": 3,
@@ -283,25 +286,25 @@ export const getWeekTimeForCurrentWeek = (medicines: Medicine[]): medicinePost[]
         "Saturday": 6
     };
 
-    const today = new Date();
-    const currentDay = today.getDay();
-    const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+    const today = DateTime.local().setZone('UTC+7');
+    const currentDay = today.weekday;
+    const startOfWeek = today.minus({ days: currentDay - 1 }).startOf('day');
 
     return medicines.map(medicine => {
-        const { time, weekday, medicineTypeId, indexDay } = medicine;
+        const { time, weekday, medicineTypeId } = medicine;
         const weekTimes = weekday.map(day => {
             const targetDay = weekdaysMap[day];
-            const date = new Date(startOfWeek);
-            date.setDate(startOfWeek.getDate() + targetDay);
-            return `${date.toISOString().split('T')[0]}T${time}.000+00:00`;
+            const date = startOfWeek.plus({ days: targetDay - 1 });
+            return `${date.toISODate()}T${time}`;
         });
+
         return {
             weekStart: getMondayOfCurrentWeek().split("T")[0],
             schedule: weekTimes,
             medicineTypeId: medicineTypeId,
         };
     });
-}
+};
 
 export const padNumber = (num: number): string => {
     return num < 10 ? `0${num}` : num.toString();

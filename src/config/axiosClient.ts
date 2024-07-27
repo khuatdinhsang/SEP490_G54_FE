@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS_NAME } from '../navigator/const';
-export const baseURL = 'http://54.179.151.16:8080/api';
-// export const baseURL = 'http://10.0.2.2:8080/api';
+// export const baseURL = 'http://54.179.151.16:8080/api';
+export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
   baseURL: baseURL,
   headers: {

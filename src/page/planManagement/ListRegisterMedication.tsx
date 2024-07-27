@@ -74,6 +74,7 @@ const ListRegisterMedication = ({ route }: any) => {
 
   const nextPage = async (): Promise<void> => {
     setIsLoading(true);
+    console.log("da", listRegisterMedicationSubmit)
     try {
       const res = await planService.postMedicine(listRegisterMedicationSubmit);
       if (res.code === 200) {

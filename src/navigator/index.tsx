@@ -5,8 +5,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../component/loading';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-
+import jwtDecode from 'jwt-decode';
 const Stack = createStackNavigator();
+const isTokenExpired = (token: string) => {
+  try {
+    const decodedToken: { exp: number } = jwtDecode(token);
+    if (decodedToken.exp * 1000 < Date.now()) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return true;
+  }
+};
 const Navigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState(SCREENS_NAME.LOGIN.MAIN);
@@ -14,7 +25,7 @@ const Navigator = () => {
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('accessToken');
-      token
+      token && !isTokenExpired(token)
         ? setInitialRoute(SCREENS_NAME.HOME.MAIN)
         : setInitialRoute(SCREENS_NAME.LOGIN.MAIN);
       setIsLoading(false);

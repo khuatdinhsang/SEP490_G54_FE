@@ -90,7 +90,7 @@ const WorkOutChart = ({ route }: any) => {
                                 labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
                                 data={transformDataToChartActivity(dataChart)}
-                                tickValues={[0, 0.5, 1, 1.5, 2]}
+                                tickValues={[0, 1, 2, 3, 4]}
                             />
                         </View>
                         :
