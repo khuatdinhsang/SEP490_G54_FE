@@ -32,7 +32,7 @@ const Weight = ({ route }: any) => {
     };
 
     const nextPage = async (): Promise<void> => {
-        if (Number(weight) > 200) {
+        if (Number(weight) > 100) {
             setErrorWeight("Invalid value")
             return
         }

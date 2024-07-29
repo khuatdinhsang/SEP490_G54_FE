@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/store';
-import { setClosePerson1EvaluationRedux, setClosePerson1MessageRedux, setClosePerson1Redux, setClosePerson2EvaluationRedux, setClosePerson2MessageRedux } from '../../../../../store/closePerson.slice';
+import { setClosePerson1EvaluationRedux, setClosePerson1MessageRedux, setClosePerson2EvaluationRedux, setClosePerson2MessageRedux } from '../../../../../store/closePerson.slice';
 import { lessonService } from '../../../../../services/lesson';
 
 interface Step2_2Props {
@@ -45,23 +45,11 @@ const Step2_2 = (props: Step2_2Props) => {
                     setIsLoading(false)
                     setMessageError("");
                     if (user === 1) {
-                        if (!closePersonEvaluation) {
-                            setComment(res.result.closePerson1Evaluation)
-                            dispatch(setClosePerson1EvaluationRedux(res.result.closePerson1Evaluation))
-                        }
-                        if (!closePersonMessage) {
-                            setMessagePositive(res.result.closePerson1Message)
-                            dispatch(setClosePerson1MessageRedux(res.result.closePerson1Message))
-                        }
+                        if (!closePersonEvaluation) setComment(res.result.closePerson1Evaluation)
+                        if (!closePersonMessage) setMessagePositive(res.result.closePerson1Message)
                     } else {
-                        if (!closePersonEvaluation) {
-                            setComment(res.result.closePerson2Evaluation)
-                            dispatch(setClosePerson2EvaluationRedux(res.result.closePerson2Evaluation))
-                        }
-                        if (!closePersonMessage) {
-                            setMessagePositive(res.result.closePerson2Message)
-                            dispatch(setClosePerson2MessageRedux(res.result.closePerson2Message))
-                        }
+                        if (!closePersonEvaluation) setComment(res.result.closePerson2Evaluation)
+                        if (!closePersonMessage) setMessagePositive(res.result.closePerson2Message)
                     }
                 } else {
                     setMessageError("Unexpected error occurred.");

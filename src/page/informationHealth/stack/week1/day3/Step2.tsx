@@ -22,7 +22,6 @@ interface Step2Props {
   closePerson1MessageRedux: string,
   closePerson2MessageRedux: string
 }
-
 const Step2 = (props: Step2Props) => {
   const {
     setIsDisabled, step, setStep, setUser, setIsLoading,
@@ -30,25 +29,24 @@ const Step2 = (props: Step2Props) => {
     closePerson1EvaluationRedux,
     closePerson1MessageRedux,
     closePerson2MessageRedux
-  } = props;
-
+  } = props
   const dispatch = useDispatch();
+
   const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1);
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
-  const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux ?? '');
-  const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux ?? '');
-  const [messageError, setMessageError] = useState<string>("");
-
+  const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
+  const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
+  const [messageError, setMessageError] = useState<string>("")
   useEffect(() => {
     const getDataLesson3 = async () => {
-      setIsLoading(true);
+      setIsLoading(true)
       try {
-        const res = await lessonService.getLesson3();
+        const res = await lessonService.getLesson3()
         if (res.code === 200) {
           setMessageError("");
-          setClosePerson1(res.result.closePerson1);
-          setClosePerson2(res.result.closePerson2);
-          setIsLoading(false);
+          setClosePerson1(res.result.closePerson1)
+          setClosePerson2(res.result.closePerson2)
+          setIsLoading(false)
         } else {
           setMessageError("Unexpected error occurred.");
         }
@@ -58,51 +56,33 @@ const Step2 = (props: Step2Props) => {
         } else {
           setMessageError("Unexpected error occurred.");
         }
-      } finally {
-        setIsLoading(false);
       }
-    };
-    getDataLesson3();
-  }, [setIsLoading]);
+      finally {
+        setIsLoading(false)
+      }
+    }
+    getDataLesson3()
+  }, [])
 
   useEffect(() => {
     dispatch(setClosePerson1Redux(closePerson1.trim()));
     dispatch(setClosePerson2Redux(closePerson2.trim()));
   }, [closePerson1, closePerson2, dispatch]);
 
-
   useEffect(() => {
-    console.log("75", closePerson1)
-    console.log("76", closePerson2)
-    console.log("77", closePerson1EvaluationRedux)
-    console.log("78", closePerson2EvaluationRedux)
-    console.log("79", closePerson1MessageRedux)
-    console.log("80", closePerson2MessageRedux)
-    if (
-      (closePerson1EvaluationRedux?.trim().length === 0) ||
-      (closePerson2EvaluationRedux?.trim().length === 0) ||
-      (closePerson1MessageRedux?.trim().length === 0) ||
-      (closePerson2MessageRedux?.trim().length === 0) ||
-      (closePerson1?.trim().length === 0) ||
-      (closePerson2?.trim().length === 0)
-    ) {
-      setIsDisabled(true)
-    } else {
-      setIsDisabled(false)
-    }
+    const isDisable = (closePerson1EvaluationRedux.trim().length === 0 ||
+      closePerson2EvaluationRedux.trim().length === 0 ||
+      closePerson1MessageRedux.trim().length === 0 ||
+      closePerson2MessageRedux.trim().length === 0 ||
+      closePerson1.trim().length === 0 || closePerson2.trim().length === 0
+    )
+    setIsDisabled(isDisable)
+  }, [closePerson1, closePerson2, setIsDisabled])
 
-  }, [
-    closePerson1,
-    closePerson2,
-    closePerson1EvaluationRedux,
-    closePerson2EvaluationRedux,
-    closePerson1MessageRedux,
-    closePerson2MessageRedux,
-    setIsDisabled
-  ]);
+
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent textLeft="Step2" text="사랑하는 사람 작성해보기" />
         <View style={{ marginTop: 32 }} />
@@ -143,7 +123,6 @@ const Step2 = (props: Step2Props) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginTop: 24,
@@ -162,5 +141,4 @@ const styles = StyleSheet.create({
     color: colors.red
   }
 });
-
 export default Step2;

@@ -30,6 +30,7 @@ const Week1Day3 = () => {
   const closePerson2MessageRedux = useSelector((state: RootState) => state.closePerson.closePerson2Message);
   const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1)
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
+
   const [closePerson1Evaluation, setClosePerson1Evaluation] = useState<string>(closePerson1EvaluationRedux)
   const [closePerson2Evaluation, setClosePerson2Evaluation] = useState<string>(closePerson2EvaluationRedux)
   const [closePerson1Message, setClosePerson1Message] = useState<string>(closePerson1MessageRedux)
@@ -91,6 +92,7 @@ const Week1Day3 = () => {
     setNotPreferredLocation(value.address)
     setNotPreferredTime(value.time)
   }
+  console.log("94", isLoading)
   console.log("95", isDisabled)
   return (
     <SafeAreaView style={{ flex: 1 }}>

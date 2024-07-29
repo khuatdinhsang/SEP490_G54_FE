@@ -88,12 +88,12 @@ const WeightChart = ({ route }: any) => {
                                 textTitleMedium={t('evaluate.mediumWeight')}
                                 valueMedium={mediumData.toString()}
                                 unit='kg'
-                                labelElement="kg"
+                                labelElement="%"
                                 textTitleToday={t('evaluate.weightToday')}
                                 valueToday={dataToday.toString()}
                                 textTitle={t("evaluate.chartWeight")}
                                 data={transformDataToChartWeight(dataChart, "kg")}
-                                tickValues={[0, 20, 40, 60, 80, 100, 200]}
+                                tickValues={[0, 20, 40, 60, 80, 100]}
                                 textInfo={t("evaluate.normalWeightRange")}
                                 // chua xets theo figma
                                 backgroundProps={{
