@@ -46,8 +46,8 @@ const Step2 = (props: Step2Props) => {
         const res = await lessonService.getLesson3();
         if (res.code === 200) {
           setMessageError("");
-          setClosePerson1(res.result.closePerson1 ?? '');
-          setClosePerson2(res.result.closePerson2 ?? '');
+          setClosePerson1(res.result.closePerson1);
+          setClosePerson2(res.result.closePerson2);
           setIsLoading(false);
         } else {
           setMessageError("Unexpected error occurred.");
@@ -70,16 +70,27 @@ const Step2 = (props: Step2Props) => {
     dispatch(setClosePerson2Redux(closePerson2.trim()));
   }, [closePerson1, closePerson2, dispatch]);
 
+
   useEffect(() => {
-    const isDisable = (
+    console.log("75", closePerson1)
+    console.log("76", closePerson2)
+    console.log("77", closePerson1EvaluationRedux)
+    console.log("78", closePerson2EvaluationRedux)
+    console.log("79", closePerson1MessageRedux)
+    console.log("80", closePerson2MessageRedux)
+    if (
       (closePerson1EvaluationRedux?.trim().length === 0) ||
       (closePerson2EvaluationRedux?.trim().length === 0) ||
       (closePerson1MessageRedux?.trim().length === 0) ||
       (closePerson2MessageRedux?.trim().length === 0) ||
       (closePerson1?.trim().length === 0) ||
       (closePerson2?.trim().length === 0)
-    );
-    setIsDisabled(isDisable);
+    ) {
+      setIsDisabled(true)
+    } else {
+      setIsDisabled(false)
+    }
+
   }, [
     closePerson1,
     closePerson2,

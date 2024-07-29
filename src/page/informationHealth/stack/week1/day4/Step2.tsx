@@ -44,11 +44,11 @@ const Step2 = (props: Step2Props) => {
           setIsLoading(false)
           setMessageError("");
           const oldData = [
-            { x: '10대', y: res.result.score10 },
-            { x: '20대', y: res.result.score20 },
-            { x: '30대', y: res.result.score30 },
-            { x: '40대', y: res.result.score40 },
-            { x: '50대', y: res.result.score50 },
+            { x: '10대', y: res.result.score10 ?? 0 },
+            { x: '20대', y: res.result.score20 ?? 0 },
+            { x: '30대', y: res.result.score30 ?? 0 },
+            { x: '40대', y: res.result.score40 ?? 0 },
+            { x: '50대', y: res.result.score50 ?? 0 },
           ]
           setData(oldData)
         } else {

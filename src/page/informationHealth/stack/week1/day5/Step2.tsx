@@ -129,7 +129,7 @@ const Step2 = (props: Step2Props) => {
                 heightLine={120}
                 value={textNegative1}
                 onChangeText={(text) => {
-                  if (text.length === 0) {
+                  if (text.trim().length === 0) {
                     setTextNegative1("")
                   } else {
                     setTextNegative1(text)
@@ -158,7 +158,7 @@ const Step2 = (props: Step2Props) => {
                 heightLine={120}
                 value={textNegative2}
                 onChangeText={(text) => {
-                  if (text.length === 0) {
+                  if (text.trim().length === 0) {
                     setTextNegative2("")
                   } else {
                     setTextNegative2(text)

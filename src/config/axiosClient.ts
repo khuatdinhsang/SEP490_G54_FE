@@ -2,8 +2,15 @@ import { refreshTokenResponse } from './../constant/type/auth';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
-import { useNavigation } from '@react-navigation/native';
+import { createNavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { SCREENS_NAME } from '../navigator/const';
+import { navigate, navigationRef } from '../util/navigation';
+import { jwtDecode } from 'jwt-decode';
+const isTokenExpired = (token: string): boolean => {
+  const decoded: { exp: number } = jwtDecode(token);
+  const currentTime = Date.now() / 1000;
+  return decoded.exp < currentTime;
+};
 // export const baseURL = 'http://54.179.151.16:8080/api';
 export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
@@ -15,7 +22,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   async (config: any) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    if (accessToken) {
+    if (accessToken && !isTokenExpired(accessToken)) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
@@ -34,6 +41,10 @@ axiosClient.interceptors.response.use(
     const handleLogout = async () => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
+      if (navigationRef.current) {
+        navigate(SCREENS_NAME.LOGIN.MAIN);
+      }
+
     };
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
@@ -41,6 +52,7 @@ axiosClient.interceptors.response.use(
       const refreshToken = await AsyncStorage.getItem('refreshToken');
       if (refreshToken && accessToken) {
         try {
+          console.log("")
           const response = await authService.refreshToken(refreshToken, accessToken);
           const newAccessToken = response.data.result.accessToken;
           const newRefreshToken = response.data.result.refreshToken
@@ -49,7 +61,7 @@ axiosClient.interceptors.response.use(
           await AsyncStorage.setItem('refreshToken', newRefreshToken);
           return axiosClient(originalRequest);
         } catch (refreshError: any) {
-          await handleLogout();
+          await handleLogout()
           return Promise.reject(error);
         }
       } else {
