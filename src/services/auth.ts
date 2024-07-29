@@ -6,6 +6,9 @@ import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailRe
 const endpoint = '/auth';
 
 export const authService = {
+    startApp(): Promise<ResponseForm<string>> {
+        return axiosClient.get(`${endpoint}/start-app`);
+    },
     login(data: LoginData): Promise<ResponseForm<LoginResponse>> {
         return axiosClient.post(`${endpoint}/login`, data);
     },

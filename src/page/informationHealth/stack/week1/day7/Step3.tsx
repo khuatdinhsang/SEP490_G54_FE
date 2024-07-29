@@ -32,7 +32,7 @@ const Step3 = (props: Step2Props) => {
         if (res.code === 200) {
           setMessageError("");
           setIsLoading(false)
-          setText(res.result.diary)
+          setText(res.result.diary ?? "")
         } else {
           setMessageError("Unexpected error occurred.");
         }
