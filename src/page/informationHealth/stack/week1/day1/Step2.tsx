@@ -40,7 +40,7 @@ const Step2 = ({ errOneYearGoal,
           textAlignVertical='top'
           onChangeText={(text) => {
             setErrMidTermGoal("");
-            if (text.trim().length === 0) {
+            if (text?.trim().length === 0) {
               setErrMidTermGoal(t("placeholder.err.invalidInput"));
               setMidTermGoal("")
             }
@@ -59,7 +59,7 @@ const Step2 = ({ errOneYearGoal,
           textAlignVertical='top'
           onChangeText={(text) => {
             setErrOneYearGoal("");
-            if (text.trim().length === 0) {
+            if (text?.trim().length === 0) {
               setErrOneYearGoal(t("placeholder.err.invalidInput"));
               setOneYearGoal("")
             }

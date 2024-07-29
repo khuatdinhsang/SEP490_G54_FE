@@ -2,7 +2,7 @@ import { axiosClient } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
 import { putLesson1, putLesson2, putLesson3, putLesson4, putLesson5, putLesson6, putLesson7 } from '../constant/type/lesson';
 export const lessonService = {
-    getLessonUnLocked(): Promise<ResponseForm<number>> {
+    getLessonUnLocked(): Promise<ResponseForm<{ lesson: number, statusCheck: boolean }>> {
         return axiosClient.get(`user-lessons/unlocked-lessons`);
     },
     getLesson1(): Promise<ResponseForm<putLesson1>> {

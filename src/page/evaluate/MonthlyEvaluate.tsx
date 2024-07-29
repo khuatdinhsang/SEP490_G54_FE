@@ -77,6 +77,7 @@ const MonthEvaluate = () => {
     useEffect(() => {
         getListNumber();
     }, [])
+    console.log("12", chartOne)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>

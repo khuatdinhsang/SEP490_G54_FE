@@ -40,7 +40,6 @@ const Step2 = (props: Step2Props) => {
       try {
         const res = await lessonService.getLesson5()
         if (res.code === 200) {
-          console.log("resss", res.result)
           setIsLoading(false)
           setIndexActive(res.result.currentEmotion === true ? 2 : 1)
           if (res.result.whyIfNotBetterForLife.length > 0 || res.result.whyIfRealistic.length > 0) {
@@ -79,7 +78,8 @@ const Step2 = (props: Step2Props) => {
     onSubmit({
       currentEmotion: indexActive === 1 ? false : true,
       whyIfRealistic: textNegative1,
-      whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
+      // whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
+      whyIfNotBetterForLife: textNegative2,
     })
     if (indexActive) {
       setDisabled(false)

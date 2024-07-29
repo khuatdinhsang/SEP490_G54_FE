@@ -2,8 +2,10 @@ import { refreshTokenResponse } from './../constant/type/auth';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/auth';
-import { useNavigation } from '@react-navigation/native';
+import { createNavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { SCREENS_NAME } from '../navigator/const';
+import { navigate, navigationRef } from '../util/navigation';
+import { jwtDecode } from 'jwt-decode';
 export const baseURL = 'http://54.179.151.16:8080/api';
 // export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
@@ -12,6 +14,15 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+const isTokenExpired = (token: string): boolean => {
+  try {
+    const decoded: { exp: number } = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decoded.exp < currentTime;
+  } catch (error) {
+    return true;
+  }
+};
 axiosClient.interceptors.request.use(
   async (config: any) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -34,6 +45,13 @@ axiosClient.interceptors.response.use(
     const handleLogout = async () => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
+      console.log("vao day1")
+
+      if (navigationRef.current) {
+        console.log("vao day2")
+        navigate(SCREENS_NAME.LOGIN.MAIN);
+      }
+
     };
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;
@@ -49,7 +67,7 @@ axiosClient.interceptors.response.use(
           await AsyncStorage.setItem('refreshToken', newRefreshToken);
           return axiosClient(originalRequest);
         } catch (refreshError: any) {
-          await handleLogout();
+          await handleLogout()
           return Promise.reject(error);
         }
       } else {
@@ -71,5 +89,3 @@ axiosClient.interceptors.response.use(
 //   },
 // );
 export { axiosClient };
-
-
