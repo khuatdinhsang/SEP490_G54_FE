@@ -70,6 +70,8 @@ export const IMAGE = {
       TYPE1: require('assets/image/profile/anatomical-heart_1fac0_type1.png'),
       TYPE2: require('assets/image/profile/anatomical-heart_1fac0_type2.png'),
     },
+    STAMP: require('assets/image/profile/stamp.png'),
+    SUBTRACTION: require('assets/image/profile/Subtract.png'),
   },
   QUESTION: {
     TEXT: require('assets/image/question/texting.png'),

@@ -24,16 +24,20 @@ const Profile = () => {
   const [height, setHeight] = useState<number>(0);
   const [weight, setWeight] = useState<number>(0);
   const [name, setName] = useState<string>("");
-  const [lesson, setLesson] = useState<number>(1);
-
+  const [lesson1, setLesson1] = useState<string>("")
+  const [lesson2, setLesson2] = useState<{ strength: string, weakness: string }>({ strength: "", weakness: "" })
+  const [lesson7, setLesson7] = useState<boolean>(false);
+  const [medical, setMedical] = useState<string>("")
   const fetchWeightAndHeight = async () => {
     setIsLoading(true);
     try {
       const res = await authService.getHeightWeight();
       if (res.code === 200) {
+        console.log("re", res.result)
         setHeight(res.result.height);
         setWeight(res.result.weight);
         setName(res.result.name);
+        setMedical(res.result.medicalUser.name)
         setMessageError("");
       } else {
         setMessageError("Failed to fetch questions.");
@@ -49,12 +53,60 @@ const Profile = () => {
     }
   };
 
-  const getListLesson = async () => {
+  const getLesson1 = async () => {
     setIsLoading(true);
     try {
-      const res = await lessonService.getLessonUnLocked();
+      const res = await lessonService.getLesson1();
       if (res.code === 200) {
-        setLesson(res.result.lesson);
+        setLesson1(res.result.endOfYearGoal ?? "");
+        setMessageError("");
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const getLesson2 = async () => {
+    setIsLoading(true);
+    try {
+      const res = await lessonService.getLesson2();
+      if (res.code === 200) {
+        setLesson2({
+          strength: res.result.strength ?? "",
+          weakness: res.result.weakPoint ?? ""
+        });
+        setMessageError("");
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const getLesson7 = async () => {
+    setIsLoading(true);
+    try {
+      const res = await lessonService.getLesson7();
+      if (res.code === 200) {
+        console.log("d", res.result)
+        if (res.result?.activityCommitment?.length > 0) {
+          setLesson7(true)
+        } else {
+          setLesson7(false)
+        }
         setMessageError("");
       } else {
         setMessageError("Unexpected error occurred.");
@@ -72,7 +124,9 @@ const Profile = () => {
 
   useEffect(() => {
     fetchWeightAndHeight();
-    getListLesson();
+    getLesson1();
+    getLesson2();
+    getLesson7();
   }, []);
 
   const handleClinicalSurvey = () => { };
@@ -80,8 +134,10 @@ const Profile = () => {
   const handleMakeHospitalSchedule = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.MAKE_HOSPITAL_SCHEDULE);
   };
-  const handleMyHealthMissionStatement = () => { }
-
+  const handleMyHealthMissionStatement = () => {
+    navigation.navigate(SCREENS_NAME.PROFILE.MISSION_STATEMENT, { lesson7: lesson7 })
+  }
+  console.log("140", lesson7)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -96,10 +152,10 @@ const Profile = () => {
             <Image source={IMAGE.HOME.SIDEBAR.프로필이미지} />
             <Text style={styles.textName}>{name}</Text>
           </View>
-          {lesson >= 1 && (
+          {lesson1 && (
             <View style={[flexRow, styles.lesson1]}>
               <Image source={IMAGE.ICON_LIGHT} style={styles.iconImage} />
-              <Text style={styles.textLesson}>나의 목표: 식단 조절 잘하기</Text>
+              <Text style={styles.textLesson}>나의 목표: {lesson1}</Text>
             </View>
           )}
           <Text style={styles.labelSection}>나의 생체 데이터</Text>
@@ -118,24 +174,26 @@ const Profile = () => {
             </View>
             <View style={flexCenter}>
               <Text style={styles.nameSection}>만성질환</Text>
-              <Text style={styles.valueSection}>고혈압</Text>
+              <Text style={styles.valueSection}>{medical}</Text>
             </View>
           </View>
-          {lesson >= 2 && (
-            <View>
-              <Text style={styles.labelSection}>건강전략 강/약점</Text>
-              <View style={styles.lesson2}>
-                <View style={flexRow}>
-                  <Text style={[styles.textLesson, { color: colors.orange_04 }]}>강점</Text>
-                  <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>긍정적인 마음 갖기</Text>
-                </View>
-                <View style={[flexRow, { marginTop: 5 }]}>
-                  <Text style={[styles.textLesson, { color: colors.blue_01 }]}>약점</Text>
-                  <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>신앙과 종교생활 갖기</Text>
+          {lesson2?.strength?.length > 0 &&
+            lesson2?.weakness?.length > 0 &&
+            (
+              <View>
+                <Text style={styles.labelSection}>건강전략 강/약점</Text>
+                <View style={styles.lesson2}>
+                  <View style={flexRow}>
+                    <Text style={[styles.textLesson, { color: colors.orange_04 }]}>강점</Text>
+                    <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>{lesson2.strength}</Text>
+                  </View>
+                  <View style={[flexRow, { marginTop: 5 }]}>
+                    <Text style={[styles.textLesson, { color: colors.blue_01 }]}>약점</Text>
+                    <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>{lesson2.weakness}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
+            )}
           <View style={styles.divide} />
           <View>
             <CategoryComponent

@@ -13,9 +13,10 @@ interface Step2Props {
   setIsLoading: (value: boolean) => void;
   setDisabled: (valueActivity: boolean) => void;
   onSubmit: (value: putLesson5) => void
+  showDialog: boolean
 }
 const Step2 = (props: Step2Props) => {
-  const { setDisabled, onSubmit, setIsLoading } = props
+  const { setDisabled, onSubmit, setIsLoading, showDialog } = props
   const [indexActive, setIndexActive] = useState(0);
   // Các select component tiêu cực
   const [selectNegative1, setSelectNegative1] = useState(0);
@@ -72,7 +73,9 @@ const Step2 = (props: Step2Props) => {
         setIsLoading(false)
       }
     }
-    getDataLesson5()
+    if (showDialog) {
+      getDataLesson5()
+    }
   }, [])
   useEffect(() => {
     onSubmit({

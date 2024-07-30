@@ -18,7 +18,7 @@ const Step3 = (props: Step2Props) => {
   const [messageError, setMessageError] = useState<string>("")
   useEffect(() => {
     onSubmit(text)
-    if (text.trim().length > 0) {
+    if (text?.trim().length > 0) {
       setIsDisabled(false)
     } else {
       setIsDisabled(true)
@@ -32,7 +32,7 @@ const Step3 = (props: Step2Props) => {
         if (res.code === 200) {
           setMessageError("");
           setIsLoading(false)
-          setText(res.result.diary)
+          setText(res.result.diary ?? "")
         } else {
           setMessageError("Unexpected error occurred.");
         }
@@ -63,7 +63,7 @@ const Step3 = (props: Step2Props) => {
         <InputComponent
           value={text}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText("")
             }
             setText(value)
