@@ -45,15 +45,15 @@ const Step2Filled = (props: Step2FilledProps) => {
         const res = await lessonService.getLesson7()
         if (res.code === 200) {
           setMessageError("");
-          setText1(res.result.whatIsHealth)
-          setText2(res.result.roadBlock)
-          setText3(res.result.solution)
-          setText4(res.result.commitment)
+          setText1(res.result.whatIsHealth ?? "")
+          setText2(res.result.roadBlock ?? "")
+          setText3(res.result.solution ?? "")
+          setText4(res.result.commitment ?? "")
           setMultiText({
-            text1: res.result.activityCommitment,
-            text2: res.result.dietCommitment,
-            text3: res.result.mentalCommitment,
-            text4: res.result.medicineCommitment
+            text1: res.result.activityCommitment ?? "",
+            text2: res.result.dietCommitment ?? "",
+            text3: res.result.mentalCommitment ?? "",
+            text4: res.result.medicineCommitment ?? ""
           })
           setIsLoading(false)
         } else {
@@ -85,14 +85,14 @@ const Step2Filled = (props: Step2FilledProps) => {
       diary: ""
     })
     if (
-      text1.trim().length > 0 &&
-      text2.trim().length &&
-      text3.trim().length &&
-      text4.trim().length &&
-      multiText.text1.trim().length &&
-      multiText.text2.trim().length &&
-      multiText.text3.trim().length &&
-      multiText.text4.trim().length
+      text1?.trim().length > 0 &&
+      text2?.trim().length &&
+      text3?.trim().length &&
+      text4?.trim().length &&
+      multiText.text1?.trim().length &&
+      multiText.text2?.trim().length &&
+      multiText.text3?.trim().length &&
+      multiText.text4?.trim().length
     ) {
       setIsDisabled(false);
     } else {
@@ -115,7 +115,7 @@ const Step2Filled = (props: Step2FilledProps) => {
           label="나에게 건강이란"
           value={text1}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText1("")
             }
             setText1(value)
@@ -135,7 +135,7 @@ const Step2Filled = (props: Step2FilledProps) => {
           label="내용 입력중"
           value={text2}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText2("")
             }
             setText2(value)
@@ -147,7 +147,7 @@ const Step2Filled = (props: Step2FilledProps) => {
           label="플레이스 홀더"
           value={text3}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText3("")
             }
             setText3(value)
@@ -159,7 +159,7 @@ const Step2Filled = (props: Step2FilledProps) => {
           label="플레이스 홀더"
           value={text4}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText4("")
             }
             setText4(value)

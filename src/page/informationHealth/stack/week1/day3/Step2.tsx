@@ -34,8 +34,8 @@ const Step2 = (props: Step2Props) => {
 
   const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1);
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
-  const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
-  const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
+  const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux ?? "")
+  const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux ?? "")
   const [messageError, setMessageError] = useState<string>("")
   useEffect(() => {
     const getDataLesson3 = async () => {
@@ -44,8 +44,8 @@ const Step2 = (props: Step2Props) => {
         const res = await lessonService.getLesson3()
         if (res.code === 200) {
           setMessageError("");
-          setClosePerson1(res.result.closePerson1)
-          setClosePerson2(res.result.closePerson2)
+          setClosePerson1(res.result.closePerson1 ?? "")
+          setClosePerson2(res.result.closePerson2 ?? "")
           setIsLoading(false)
         } else {
           setMessageError("Unexpected error occurred.");
@@ -65,16 +65,16 @@ const Step2 = (props: Step2Props) => {
   }, [])
 
   useEffect(() => {
-    dispatch(setClosePerson1Redux(closePerson1.trim()));
-    dispatch(setClosePerson2Redux(closePerson2.trim()));
+    dispatch(setClosePerson1Redux(closePerson1?.trim()));
+    dispatch(setClosePerson2Redux(closePerson2?.trim()));
   }, [closePerson1, closePerson2, dispatch]);
 
   useEffect(() => {
-    const isDisable = (closePerson1EvaluationRedux.trim().length === 0 ||
-      closePerson2EvaluationRedux.trim().length === 0 ||
-      closePerson1MessageRedux.trim().length === 0 ||
-      closePerson2MessageRedux.trim().length === 0 ||
-      closePerson1.trim().length === 0 || closePerson2.trim().length === 0
+    const isDisable = (closePerson1EvaluationRedux?.trim().length === 0 ||
+      closePerson2EvaluationRedux?.trim().length === 0 ||
+      closePerson1MessageRedux?.trim().length === 0 ||
+      closePerson2MessageRedux?.trim().length === 0 ||
+      closePerson1?.trim().length === 0 || closePerson2?.trim().length === 0
     )
     setIsDisabled(isDisable)
   }, [closePerson1, closePerson2, setIsDisabled])

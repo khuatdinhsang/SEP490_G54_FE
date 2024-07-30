@@ -13,9 +13,10 @@ interface Step2Props {
   setIsLoading: (value: boolean) => void;
   setDisabled: (valueActivity: boolean) => void;
   onSubmit: (value: putLesson5) => void
+  showDialog: boolean
 }
 const Step2 = (props: Step2Props) => {
-  const { setDisabled, onSubmit, setIsLoading } = props
+  const { setDisabled, onSubmit, setIsLoading, showDialog } = props
   const [indexActive, setIndexActive] = useState(0);
   // Các select component tiêu cực
   const [selectNegative1, setSelectNegative1] = useState(0);
@@ -40,7 +41,6 @@ const Step2 = (props: Step2Props) => {
       try {
         const res = await lessonService.getLesson5()
         if (res.code === 200) {
-          console.log("resss", res.result)
           setIsLoading(false)
           setIndexActive(res.result.currentEmotion === true ? 2 : 1)
           if (res.result.whyIfNotBetterForLife.length > 0 || res.result.whyIfRealistic.length > 0) {
@@ -73,13 +73,16 @@ const Step2 = (props: Step2Props) => {
         setIsLoading(false)
       }
     }
-    getDataLesson5()
+    if (showDialog) {
+      getDataLesson5()
+    }
   }, [])
   useEffect(() => {
     onSubmit({
       currentEmotion: indexActive === 1 ? false : true,
       whyIfRealistic: textNegative1,
-      whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
+      // whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
+      whyIfNotBetterForLife: textNegative2,
     })
     if (indexActive) {
       setDisabled(false)

@@ -84,6 +84,9 @@ const wrapLabel = (text: string) => {
 };
 
 const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data }) => {
+    const filteredDataY1 = data.filter((d) => d.y1 !== 0);
+    const filteredDataY2 = data.filter((d) => d.y2 !== 0);
+
     return (
         <VictoryChart
             height={250}
@@ -139,7 +142,7 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data })
             />
             <VictoryGroup offset={10}>
                 <VictoryBar
-                    data={data}
+                    data={filteredDataY1}
                     x="x"
                     y="y1"
                     style={{ data: { fill: colors.gray_G03 } }}
@@ -147,7 +150,7 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data })
                     barWidth={10}
                 />
                 <VictoryBar
-                    data={data}
+                    data={filteredDataY2}
                     x="x"
                     y="y2"
                     style={{

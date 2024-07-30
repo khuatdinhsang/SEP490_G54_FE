@@ -215,35 +215,70 @@ const Home = () => {
               <Image source={IMAGE.HOME.SIDEBAR.ICON_PLAN} />
               <Text style={sidebarStyles.textIcon}>실천관리 계획</Text>
             </Pressable>
-            <Text style={sidebarStyles.textContent}>실천 계획 관리</Text>
+            <Pressable
+              onPress={() => navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.MAIN)}
+            >
+              <Text style={sidebarStyles.textContent}>실천 계획 관리</Text>
+            </Pressable>
             <Pressable
               onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN)}
               style={[flexRow, { marginTop: 22 }]}>
               <Image source={IMAGE.HOME.SIDEBAR.ICON_RECORD} />
               <Text style={sidebarStyles.textIcon}>기록하기</Text>
             </Pressable>
-            <Text style={sidebarStyles.textContent}>
-              당화혈색소/콜레스테롤/혈당
-            </Text>
-            <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                혈압
+            <Pressable
+              onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD)}
+            >
+              <Text style={sidebarStyles.textContent}>
+                당화혈색소/콜레스테롤/혈당
               </Text>
-              <Text style={sidebarStyles.textContent}>체중</Text>
+            </Pressable>
+            <View style={flexRow}>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_BLOOD_PRESSURE)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  혈압
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WEIGHT)}
+              >
+                <Text style={sidebarStyles.textContent}>체중</Text>
+              </Pressable>
             </View>
             <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                긍정적인 마음
-              </Text>
-              <Text style={sidebarStyles.textContent}>운동</Text>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_POSITIVE_MIND)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  긍정적인 마음
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_WORK_OUT)}
+              >
+                <Text style={sidebarStyles.textContent}>운동</Text>
+              </Pressable>
             </View>
             <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                식이
-              </Text>
-              <Text style={sidebarStyles.textContent}>약물 복용</Text>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_FOOD_INTAKE)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  식이
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN_MEDICATION)}
+              >
+                <Text style={sidebarStyles.textContent}>약물 복용</Text>
+              </Pressable>
             </View>
-            <Text style={sidebarStyles.textContent}>걸음 수</Text>
+            <Pressable
+              onPress={() => navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.NUMBER_STEPS_CHART)}>
+              <Text style={sidebarStyles.textContent}>걸음 수</Text>
+            </Pressable>
             <Pressable
               onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.WEEKLY)}
               style={[flexRow, { marginTop: 22 }]}>
@@ -251,21 +286,34 @@ const Home = () => {
               <Text style={sidebarStyles.textIcon}>평가 및 결과보기</Text>
             </Pressable>
             <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                주간 실천 평가
-              </Text>
-              <Text style={sidebarStyles.textContent}>월간 실천 평가</Text>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.WEEKLY)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  주간 실천 평가
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.MONTHLY)}
+              >
+                <Text style={sidebarStyles.textContent}>월간 실천 평가</Text>
+              </Pressable>
             </View>
             <Pressable
-              style={[flexRow, { marginTop: 22 }]}>
+              style={[flexRow, { marginTop: 22 }]}
+              onPress={() => navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.MAIN)}
+            >
               <Image source={IMAGE.HOME.SIDEBAR.ICON_STUDY} />
               <Text style={sidebarStyles.textIcon}>건강 정보 학습</Text>
             </Pressable>
-            <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                학습하기
-              </Text>
-              <Text style={sidebarStyles.textContent}>학습 동영상</Text>
+            <View >
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.MAIN)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  학습하기
+                </Text>
+              </Pressable>
             </View>
             <Pressable
               onPress={() => navigation.navigate(SCREENS_NAME.QUESTION.MAIN)}
@@ -274,10 +322,19 @@ const Home = () => {
               <Text style={sidebarStyles.textIcon}>문의하기</Text>
             </Pressable>
             <View style={flexRow}>
-              <Text style={[sidebarStyles.textContent, { width: 170 }]}>
-                학습하기
-              </Text>
-              <Text style={sidebarStyles.textContent}>문의하기</Text>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.QUESTION.ADD)}
+              >
+                <Text style={[sidebarStyles.textContent, { width: 170 }]}>
+                  학습하기
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(SCREENS_NAME.QUESTION.MAIN)}
+              >
+                <Text style={sidebarStyles.textContent}>문의하기</Text>
+              </Pressable>
+
             </View>
             <Pressable
               onPress={() => navigation.navigate(SCREENS_NAME.SETTING.MAIN)}

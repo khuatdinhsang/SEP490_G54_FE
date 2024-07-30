@@ -19,19 +19,26 @@ import WeekComponent from './components/WeekComponent';
 import { useCallback, useEffect, useState } from 'react';
 import LoadingScreen from '../../component/loading';
 import { lessonService } from '../../services/lesson';
+import ModalDoneLesson from './components/ModalDoneLesson';
 
 const InformationHealth = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const [curDay, setCurDay] = useState(1);
     const [messageError, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+    const toggleModal = () => {
+        setShowDialog(!showDialog);
+    };
+
     const getListLesson = async () => {
         setIsLoading(true)
         try {
             const res = await lessonService.getLessonUnLocked()
             if (res.code === 200) {
-                console.log("sa", res.result)
-                setCurDay(res.result)
+                console.log("d", res)
+                setCurDay(res.result.lesson)
+                setShowDialog(res.result.statusCheck)
                 setErrorMessage("");
                 setIsLoading(false)
             } else {
@@ -241,7 +248,9 @@ const InformationHealth = () => {
                     </Text>
                 </Pressable>
             </View>
+            {showDialog && <ModalDoneLesson visible={showDialog} toggleModal={toggleModal} />}
             {isLoading && <LoadingScreen />}
+            {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
         </SafeAreaView>
     );
 };
@@ -270,6 +279,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 24,
     },
+    textError: {
+        fontWeight: "500",
+        color: colors.red,
+        fontSize: 14
+    }
 });
 
 export default InformationHealth;

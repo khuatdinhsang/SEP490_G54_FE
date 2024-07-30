@@ -86,6 +86,7 @@ const InputChart = (props: InputChartProps) => {
         <View>
           <TextInput
             value={data[3].y.toString()}
+            keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
             onFocus={() => setIsForced(true)}
@@ -101,6 +102,7 @@ const InputChart = (props: InputChartProps) => {
         <View>
           <TextInput
             value={data[4].y.toString()}
+            keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
             onFocus={() => setIsForced(true)}

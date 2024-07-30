@@ -31,7 +31,11 @@ export interface VerifyEmailResponse {
 export interface heightWeightResponse {
     name: string,
     height: number,
-    weight: number
+    weight: number,
+    medicalUser: {
+        id: number,
+        name: string
+    }
 }
 
 export interface LoginResponse {

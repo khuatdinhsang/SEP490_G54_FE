@@ -33,8 +33,8 @@ const Week1Day1 = () => {
         const res = await lessonService.getLesson1()
         if (res.code === 200) {
           setMessageError("");
-          setMidTermGoal(res.result.intermediateGoal)
-          setOneYearGoal(res.result.endOfYearGoal)
+          setMidTermGoal(res.result.intermediateGoal ?? "")
+          setOneYearGoal(res.result.endOfYearGoal ?? "")
           setIsLoading(false)
         } else {
           setMessageError("Unexpected error occurred.");
@@ -68,15 +68,15 @@ const Week1Day1 = () => {
   };
   const handleClickButtonConfirmStep2 = async (): Promise<void> => {
     setIsLoading(true)
+    setIsDialog(false);
     try {
       const data = {
-        endOfYearGoal: oneYearGoal.trim(),
-        intermediateGoal: midTermGoal.trim()
+        endOfYearGoal: oneYearGoal?.trim(),
+        intermediateGoal: midTermGoal?.trim()
       }
       const res = await lessonService.putLesson1(data)
       if (res.code === 201) {
         setIsLoading(false)
-        setIsDialog(false);
         setStep(0);
       }
     } catch (error: any) {
@@ -122,7 +122,7 @@ const Week1Day1 = () => {
           marginBottom: 20,
         }}>
         <ButtonComponent
-          isDisable={((midTermGoal && oneYearGoal) || step !== 2) ? false : true}
+          isDisable={((midTermGoal?.trim().length > 0 && oneYearGoal?.trim().length > 0) || step !== 2) ? false : true}
           text={step ? '다음' : '홈으로 돌아가기'}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
