@@ -119,7 +119,7 @@ const SAT_SF_C = ({ route }: any) => {
                     <View style={styles.introduce}>
                         <Text style={[styles.text, { color: colors.orange_04 }]}>{type}</Text>
                         <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>
-                            다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 사용할 수 있는 핵심 역량과 관련된 평가입니다. 각 문항들을 읽고, 귀하가 지난 한 달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.
+                            {t("evaluate.sfc")}
                         </Text>
                     </View>
                     {!reviewMode && listQuestions.map((item) => (

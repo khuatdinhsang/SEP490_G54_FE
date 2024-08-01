@@ -8,6 +8,7 @@ import InputChart from './components/InputChart';
 import LineChart from './components/LineChart';
 import { lessonService } from '../../../../../services/lesson';
 import LoadingScreen from '../../../../../component/loading';
+import { useTranslation } from 'react-i18next';
 export interface TypeErrorDay4 {
   err1?: string,
   err2?: string,
@@ -22,6 +23,7 @@ interface Step2Props {
   setIsLoading: (value: boolean) => void,
 }
 const Step2 = (props: Step2Props) => {
+  const { t } = useTranslation()
   const { step, setIsDisabled, onSubmit, setIsLoading } = props
   const [error, setError] = useState<TypeErrorDay4>({})
   const [messageError, setMessageError] = useState<string>("")
@@ -82,11 +84,11 @@ const Step2 = (props: Step2Props) => {
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="인생 곡선 그리기" />
+        <StepComponent textLeft="Step2" text={t("lesson.drawingCurve")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="아래의 그래프에 각 연령대 별 점수를 설정해 보도록 합시다."
+          content={t("lesson.letSetScores")}
         />
         <LineChart domainY={[0, 100]} data={data} />
         <InputChart

@@ -55,7 +55,12 @@ const WeightChart = ({ route }: any) => {
         };
         getDataChart();
     }, []);
+    const maxValue = Math.max(...dataChart.map(item => item.value));
+    const tickValues = [0, 20, 40, 60, 80, 100];
 
+    if (maxValue > 100) {
+        tickValues.push(maxValue);
+    }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -93,7 +98,7 @@ const WeightChart = ({ route }: any) => {
                                 valueToday={dataToday.toString()}
                                 textTitle={t("evaluate.chartWeight")}
                                 data={transformDataToChartWeight(dataChart, "kg")}
-                                tickValues={[0, 20, 40, 60, 80, 100]}
+                                tickValues={tickValues}
                                 textInfo={t("evaluate.normalWeightRange")}
                                 // chua xets theo figma
                                 backgroundProps={{

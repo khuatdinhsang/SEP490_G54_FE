@@ -1,15 +1,17 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {flexRowCenter} from '../../../styles/flex';
-import {IMAGE} from '../../../constant/image';
+import { flexRowCenter } from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { useTranslation } from 'react-i18next';
 
 const WeekComponent = () => {
+  const { t } = useTranslation()
   return (
     <View style={[styles.container, flexRowCenter]}>
       <Pressable>
         <Image source={IMAGE.ICON_ARROW_LEFT_BLACK} />
       </Pressable>
-      <Text style={styles.text}>1주차</Text>
+      <Text style={styles.text}>{t("lesson.week1")}</Text>
       <Pressable>
         <Image source={IMAGE.ICON_ARROW_RIGHT_GRAY} />
       </Pressable>

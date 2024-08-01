@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SCREENS_NAME } from "../../navigator/const";
@@ -10,6 +10,10 @@ import { Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, View }
 import colors from "../../constant/color";
 import { WidthDevice } from "../../util/Dimenssion";
 import { paddingHorizontalScreen } from "../../styles/padding";
+import LoadingScreen from "../../component/loading";
+import { lessonService } from "../../services/lesson";
+import { putLesson7 } from "../../constant/type/lesson";
+import { flexRow } from "../../styles/flex";
 
 type MissionStatementRouteParams = {
   lesson7?: boolean;
@@ -18,9 +22,12 @@ type MissionStatementRouteParams = {
 const MissionStatement = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { t, i18n } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messageError, setMessageError] = useState<string>("");
   const route = useRoute<RouteProp<{ params: MissionStatementRouteParams }, 'params'>>();
   const lesson7 = route.params?.lesson7 ?? false;
-
+  const [lesson1, setLesson1] = useState<string>("")
+  const [dataLesson7, setDataLesson7] = useState<putLesson7>()
   const goBackPreviousPage = () => {
     navigation.goBack();
   };
@@ -28,7 +35,51 @@ const MissionStatement = () => {
   const backToMain = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.MAIN);
   };
+  const getLesson1 = async () => {
+    setIsLoading(true);
+    try {
+      const res = await lessonService.getLesson1();
+      if (res.code === 200) {
+        setLesson1(res.result.endOfYearGoal ?? "");
+        setMessageError("");
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const getLesson7 = async () => {
+    setIsLoading(true);
+    try {
+      const res = await lessonService.getLesson7();
+      if (res.code === 200) {
+        setDataLesson7(res.result)
+        setMessageError("");
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    getLesson1();
+    getLesson7();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       {lesson7 && (
@@ -37,7 +88,7 @@ const MissionStatement = () => {
       <View style={styles.header}>
         <HeaderNavigatorComponent
           isIconLeft={true}
-          text={"나의 건강사명서"}
+          text={t("hospital.myHeartMission")}
           handleClickArrowLeft={goBackPreviousPage}
         />
       </View>
@@ -47,45 +98,48 @@ const MissionStatement = () => {
           <ImageBackground
             source={IMAGE.INFORMATION_HEALTH.SUBTRACT}
             style={styles.backgroundImage}
-            resizeMode="cover"
+            resizeMode="contain"
           >
             <View style={styles.imagePadding} />
-            <Text style={styles.mailTitle}>“건강 사명서”</Text>
+            <Text style={styles.mailTitle}>{t("lesson.healthMission")}</Text>
             <View style={styles.titlePadding} />
             <Text style={styles.mailContent}>
-              나의 인생 목표는
-              <Text style={styles.mailContentBold}>질병 극복</Text>입니다. 현재
-              나의 삶의 위기는
-              <Text style={styles.mailContentBold}>정서적 어려움</Text> 입니다.
-              나에게 건강은 행복한
-              <Text style={styles.mailContentBold}>삶을 위한 준비물</Text>입니다.
+              {t("lesson.myLifeGoal")}
+              <Text style={styles.mailContentBold}>{lesson1}</Text>{t("lesson.noSee")}. {t("lesson.crisisMyLife")}
+              <Text style={styles.mailContentBold}>{dataLesson7?.whatIsHealth}</Text> {t("lesson.noSee")}.
+              {t("lesson.healthHappiness")}
+              <Text style={styles.mailContentBold}>{dataLesson7?.activityCommitment}</Text>{t("lesson.noSee")}.
             </Text>
             <View style={styles.contentPadding} />
-            <Text style={[styles.mailContent, { paddingHorizontal: 60 }]}>
-              건강 실천을 위한 다짐으로
-              <Text style={styles.mailContentBold}>일주일에 세번 걷기</Text>, 균
-              <Text style={styles.mailContentBold}>형잡힌 식사를 하기</Text>,
-              하루에 10분씩 명상하기, 시간에 맞추어 약물 복용하기 입니다.
-            </Text>
+            <Text style={styles.mailContent}>{t("lesson.pledgePractice")}</Text>
+            <Text style={styles.mailContentBold}>{dataLesson7?.dietCommitment},</Text>
+            <Text style={styles.mailContentBold}>{dataLesson7?.mentalCommitment},</Text>
+            <Text style={styles.mailContentBold}>{dataLesson7?.medicineCommitment},</Text>
+            <View style={flexRow}>
+              <Text style={styles.mailContentBold}>{dataLesson7?.roadBlock}</Text>
+              <Text style={[styles.mailContent, { paddingHorizontal: 0 }]}>{t("lesson.noSee")}.</Text>
+            </View>
             <View style={styles.contentPadding} />
             <Text style={styles.mailContent}>
-              실천을 어렵게 하는 요인으로는 의지 및 끈기 부족이 있지만 극복
-              방법으로
-              <Text style={styles.mailContentBold}>가족에게 도움 구하기</Text>를
-              할 것입니다.
+              {t("lesson.factorsMakePractice")}
+              <Text style={styles.mailContentBold}>{dataLesson7?.solution}</Text>
+              {t("lesson.overCome")}
+              <Text style={styles.mailContentBold}>{dataLesson7?.commitment}</Text>를
+              {t("lesson.willDo")}
             </Text>
           </ImageBackground>
           <Pressable onPress={backToMain} style={styles.button}>
-            <Text style={styles.textButton}>홈페이지</Text>
+            <Text style={styles.textButton}>{t("hospital.homePage")}</Text>
           </Pressable>
         </ScrollView>
       ) : (
         <View style={[styles.centeredView, { marginTop: -100 }]}>
           <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-          <Text style={styles.textTitle}>건강사명서를 작성하지 않았어요</Text>
-          <Text style={styles.textDesc}>건강학습에서 진행될 예정이에요</Text>
+          <Text style={styles.textTitle}>{t("hospital.didntFillOut")}</Text>
+          <Text style={styles.textDesc}>{t("hospital.healthLearning")}</Text>
         </View>
       )}
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };
@@ -104,6 +158,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.white,
+    paddingHorizontal: 20
   },
   scrollView: {
     flex: 1,
@@ -113,10 +168,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   imagePadding: {
-    paddingTop: 35,
+    paddingTop: 10,
   },
   titlePadding: {
-    paddingTop: 28,
+    paddingTop: 20,
   },
   contentPadding: {
     paddingTop: 25,
@@ -140,7 +195,12 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: WidthDevice - paddingHorizontalScreen * 4,
-    height: ((WidthDevice - paddingHorizontalScreen * 4) * 599) / 366,
+    // height: ((WidthDevice - paddingHorizontalScreen * 4) * 599) / 366,
+    alignItems: 'center',
+    aspectRatio: 366 / 599,
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   mailTitle: {
     fontWeight: '700',

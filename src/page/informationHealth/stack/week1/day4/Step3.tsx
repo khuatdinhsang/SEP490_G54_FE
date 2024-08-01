@@ -75,10 +75,10 @@ const Step3 = ({
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent text="가치관 점검하기" textLeft="Step3" />
+        <StepComponent text="가치관 점검하기 512" textLeft="Step3" />
         <View style={{ marginTop: 24 }} />
         <DoctorComponent
-          content="인생곡선을 그리며 살아온 인생을 돌아봤나요? 사람은 누구나 삶의 의미와 가치를 중요하게 생각하고 그것을 찾기 위해 노력합니다. 인생을 돌아보며 발견한 여러분의 가치관은 무엇인가요? 삶의 가치관을 점검해보는 시간을 가져봅시다."
+          content={`${t("lesson.lookedBackYourLife")} ${t("lesson.valuesTheMeaning")} ${t("lesson.asYouBack")} ${t("lesson.takeSomeTime")}`}
           height={225}
         />
         <View style={{ marginTop: 24 }}>
@@ -92,8 +92,8 @@ const Step3 = ({
               }
               setRecentValues(text)
             }}
-            placeholder="예시) 사회적 성공을 중요하게 생각"
-            label="지금까지 나의 가치관"
+            placeholder={t("lesson.example7")}
+            label={t("lesson.myValuesSoFar")}
             heightLine={120}
             multiline={true}
           />
@@ -109,8 +109,8 @@ const Step3 = ({
               }
               setInfluenceOnLife(text)
             }}
-            placeholder="예시) 식사 규칙적으로 하기"
-            label="가치관이 건강에 미친 영향"
+            placeholder={t("lesson.example8")}
+            label={t("lesson.impactOfValues")}
             heightLine={120}
             multiline={true}
           />
@@ -126,8 +126,8 @@ const Step3 = ({
               }
               setNewValues(text)
             }}
-            placeholder="예시) 건강을 중요하게 생각"
-            label="변화하고자 하는 가치관"
+            placeholder={t("lesson.example9")}
+            label={t("lesson.valueWantToChange")}
             heightLine={120}
             multiline={true}
           />
@@ -143,8 +143,8 @@ const Step3 = ({
               }
               setReasonForChanging(text)
             }}
-            placeholder="예시) 지인들과 행복하게 오래 함께 하고 싶음"
-            label="변화하고자 하는 이유"
+            placeholder={t("lesson.example10")}
+            label={t("lesson.reasonWantToChange")}
             heightLine={120}
             multiline={true}
           />

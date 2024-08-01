@@ -63,10 +63,10 @@ const WorkOutRecord = ({ route }: any) => {
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART)
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART)
     }
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
@@ -83,7 +83,7 @@ const WorkOutRecord = ({ route }: any) => {
                 setMessageError("");
                 setIsLoading(false)
                 setIsEdit(false)
-                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
+                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
@@ -182,7 +182,7 @@ const WorkOutRecord = ({ route }: any) => {
                         <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
                         <Pressable
                             onPress={() => {
-                                navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
+                                navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
                             }}
                             style={styles.buttonChart}>
                             <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>

@@ -1,13 +1,15 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {flexRowCenter} from '../../../styles/flex';
-import {IMAGE} from '../../../constant/image';
+import { flexRowCenter } from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { useTranslation } from 'react-i18next';
 
 const GreenComponent = () => {
+  const { t } = useTranslation()
   return (
-    <View style={[flexRowCenter, {paddingBottom: 20}]}>
+    <View style={[flexRowCenter, { paddingBottom: 20 }]}>
       <View style={[styles.wrap, flexRowCenter]}>
-        <Text style={styles.text}>우편 내용 공유하기</Text>
+        <Text style={styles.text}>{t("lesson.shareMailContent")}</Text>
         <Image
           source={IMAGE.INFORMATION_HEALTH.POLYGON3}
           style={styles.image}

@@ -1,21 +1,23 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Overlay from '../../../component/overlay';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexCenter, flexRow, flexRowCenter} from '../../../styles/flex';
-import {paddingHorizontalScreen} from '../../../styles/padding';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {SCREENS_NAME} from '../../../navigator/const';
+import { IMAGE } from '../../../constant/image';
+import { flexCenter, flexRow, flexRowCenter } from '../../../styles/flex';
+import { paddingHorizontalScreen } from '../../../styles/padding';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { SCREENS_NAME } from '../../../navigator/const';
+import { useTranslation } from 'react-i18next';
 
 interface HomeHeaderProps {
   guide: boolean;
   visible: boolean;
   handleShowSidebar: () => void;
+  name: string
 }
 
-const HomeHeader = ({guide, visible, handleShowSidebar}: HomeHeaderProps) => {
+const HomeHeader = ({ guide, visible, handleShowSidebar, name }: HomeHeaderProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handlePressSetting = () => {
@@ -25,15 +27,15 @@ const HomeHeader = ({guide, visible, handleShowSidebar}: HomeHeaderProps) => {
   const handlePressProfile = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.MAIN);
   };
-
+  const { t } = useTranslation()
   return (
     <View>
       <View style={[styles.header]}>
-        <View style={{paddingTop: 30}} />
+        <View style={{ paddingTop: 30 }} />
         <Overlay visible={visible} />
         <View style={flexRowCenter}>
           <Pressable
-            style={[styles.buttonIconSidebar, {zIndex: guide ? 10 : 1}]}
+            style={[styles.buttonIconSidebar, { zIndex: guide ? 10 : 1 }]}
             onPress={handleShowSidebar}>
             <Image source={IMAGE.ICON_SIDEBAR} style={styles.iconSidebar} />
           </Pressable>
@@ -41,21 +43,21 @@ const HomeHeader = ({guide, visible, handleShowSidebar}: HomeHeaderProps) => {
           <View style={[flexRow, styles.iconsRight]}>
             <Pressable style={flexCenter} onPress={handlePressProfile}>
               <Image source={IMAGE.ICON_INFOR} style={styles.iconInfor} />
-              <Text style={styles.headerTextIcon}>내 정보</Text>
+              <Text style={styles.headerTextIcon}>{t("home.myInfo")}</Text>
             </Pressable>
-            <View style={{marginHorizontal: 5}} />
+            <View style={{ marginHorizontal: 5 }} />
             <Pressable style={flexCenter} onPress={handlePressSetting}>
               <Image source={IMAGE.ICON_SETTING} style={styles.iconSetting} />
-              <Text style={styles.headerTextIcon}>설정</Text>
+              <Text style={styles.headerTextIcon}>{t("home.setting")}</Text>
             </Pressable>
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTextTop}>오늘의 응원 한마디</Text>
+          <Text style={styles.sectionTextTop}>{t("home.wordsEncouragement")}</Text>
           <Text style={styles.sectionTextBottom}>
-            김세현님, 안녕하세요{'\n'}오늘도{' '}
-            <Text style={{color: colors.primary}}>건강관리에</Text>
-            힘써봐요 💪
+            {t("home.mr")}, {name}{'\n'}{t("home.today")}{' '}
+            <Text style={{ color: colors.primary }}>{t("home.forHealthCare")}</Text>
+            {t("home.tryYourBest")} 💪
           </Text>
         </View>
       </View>
@@ -90,9 +92,9 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    transform: [{translateY: 40}],
+    transform: [{ translateY: 40 }],
     shadowColor: '#16182B',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 5,

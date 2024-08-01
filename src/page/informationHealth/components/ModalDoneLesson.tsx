@@ -29,14 +29,14 @@ const ModalDoneLesson = ({ visible, toggleModal }: propsType) => {
                         <Image source={IMAGE.REGISTER.ICON_X} />
                     </Pressable>
                     <View style={{ marginTop: 50 }}>
-                        <Text style={styles.textTitle}>오늘의 학습분량은 끝났어요</Text>
-                        <Text style={[styles.textTitle, { marginBottom: 10 }]}>다음날 다시 눌러주세요</Text>
+                        <Text style={styles.textTitle}>{t("lesson.todayLearning")}</Text>
+                        <Text style={[styles.textTitle, { marginBottom: 10 }]}>{t("lesson.pressAgain")}</Text>
                         <Image source={IMAGE.ICON_LESSON} />
                     </View>
                     <Pressable
                         onPress={toggleModal}
                         style={styles.button}>
-                        <Text style={styles.textButton}>홈으로 돌아가기</Text>
+                        <Text style={styles.textButton}>{t("lesson.backToHome")}</Text>
                     </Pressable>
                 </View>
             </View>

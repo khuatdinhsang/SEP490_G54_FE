@@ -82,22 +82,22 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.hba1cPoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
-                                <Text style={styles.textDesc}>이번주 {data?.hba1cTotalRecord}번의 당화혈색소 기록 중</Text>
-                                <Text style={styles.textDesc}>{data?.hba1cSafeRecord}번이 조절 범위내에 있었어요</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.hba1cTotalRecord} {t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{data?.hba1cSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.cholesterolPoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
-                                <Text style={styles.textDesc}>이번주 {data?.cholesterolTotalRecord}번의 당화혈색소 기록 중</Text>
-                                <Text style={styles.textDesc}>{data?.cholesterolSafeRecord}번이 조절 범위내에 있었어요</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.cholesterolTotalRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{data?.cholesterolSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodSugarPoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
-                                <Text style={styles.textDesc}>이번주 {data?.bloodSugarTotalRecord}번의 당화혈색소 기록 중</Text>
-                                <Text style={styles.textDesc}>{data?.bloodSugarSafeRecord}번이 조절 범위내에 있었어요</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.bloodSugarTotalRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{data?.bloodSugarSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                     </View>
@@ -106,8 +106,8 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodPressurePoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
-                                <Text style={styles.textDesc}>이번주 {data?.totalBloodPressureRecord}번의 당화혈색소 기록 중</Text>
-                                <Text style={styles.textDesc}>{data?.safeBloodPressureRecord}번이 조절 범위내에 있었어요</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.totalBloodPressureRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{data?.safeBloodPressureRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                     </View>
@@ -124,19 +124,19 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t('planManagement.text.positiveMind')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.mentalPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>하루 평균 긍정적 마음 {data?.averageMentalRecordPerWeek}개를수행하였습니다</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.aveDailyPositive")} {data?.averageMentalRecordPerWeek} {t("evaluate.carriedOut")}</Text>
                         </View>
                     </View>
                     <View style={[styles.shadowBox, styles.summary, { paddingRight: 20 }]}>
                         <Text style={styles.text}>{t('planManagement.text.workout')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.activityPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>고강도 운동 {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0)} / 중강도 운동 {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0)}/ 저강도 운동 {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0)}</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.highIntensity")} {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0)} / {t("planManagement.text.mediumIntensity")} {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0)}/ {t("planManagement.text.lowIntensity")} {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0)}</Text>
                         </View>
                         {data?.heavyActivity === 0 && data?.mediumActivity === 0 &&
                             <View>
                                 <View style={{ marginTop: 20 }}>
-                                    <Text style={styles.textWarning}>저강도 운동만 한다면 운동의 효과가 떨어져요. 다음주 부터는 중강도, 고강도 운동을 함께해봐요!</Text>
+                                    <Text style={styles.textWarning}>{t("evaluate.weeklyDetail")}</Text>
                                     <View style={[flexRow, styles.bridge]}>
                                         <View style={styles.diamond} />
                                     </View>
@@ -151,21 +151,21 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t('planManagement.text.foodIntake')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.dietPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>하루 평균 {data?.averageDietRecordPerWeek}접시를 섭취하였습니다</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.dailyAverage")} {data?.averageDietRecordPerWeek} {t("evaluate.atePlate")}</Text>
                         </View>
                     </View>
                     <View style={[styles.shadowBox, styles.summary, { paddingRight: 20 }]}>
                         <Text style={styles.text}>{t('planManagement.text.takingMedication')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.medicinePoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>약을 먹는 날 {data?.medicineDateTotal}일 중 {data?.medicineDateDone}일 동안 약을 모두 섭취하였습니다.</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.dayTakeMedicine")} {data?.medicineDateTotal} {t("evaluate.duringWork")} {data?.medicineDateDone} {t("evaluate.tookAllMedicine")}</Text>
                         </View>
                     </View>
                     <View style={[styles.shadowBox, styles.summary, { paddingRight: 20 }]}>
                         <Text style={styles.text}>{t('planManagement.text.numberSteps')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.stepPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>하루 평균 {data?.averageStepRecordPerWeek}보를 걸었습니다</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.dailyAverage")} {data?.averageStepRecordPerWeek} {t("evaluate.walked")}</Text>
                         </View>
                     </View>
                 </View>

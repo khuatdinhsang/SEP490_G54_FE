@@ -27,11 +27,11 @@ const FoodIntakeRecord = ({ route }: any) => {
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const [errorBoldOfRice, setErrorBoldOfRice] = useState<string>("")
     const handleViewChart = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART, { isEditable: isEdit });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART, { isEditable: isEdit });
     };
 
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     };
     useEffect(() => {
         const getBoldOfRice = async () => {

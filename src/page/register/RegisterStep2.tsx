@@ -156,8 +156,8 @@ const RegisterStep2 = ({ route }: any) => {
             setWeight('');
             return;
         }
-        const numericRegex = /^\d{1,3}$/;
-        if (!numericRegex.test(value) || value.length > 4 || value > 100) {
+        const numericRegex = /^(\d*\.?\d*)$/;
+        if (!numericRegex.test(value) || value.length > 4 || value > 200) {
             setErrorWeight(t('placeholder.err.invalidInput'));
             setWeight('');
             return;

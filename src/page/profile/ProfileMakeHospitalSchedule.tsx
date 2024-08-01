@@ -11,12 +11,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { medicalAppointmentService } from '../../services/medicalAppointment';
 import { appointment } from '../../constant/type/medical';
 import LoadingScreen from '../../component/loading';
+import { useTranslation } from 'react-i18next';
 
 const ProfileMakeHospitalSchedule = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [listAppointments, setListAppointments] = useState<appointment[]>([]);
   const [messageError, setMessageError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation()
   const handleCreateSchedule = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.NEW_HOSPITAL_SCHEDULE);
   };
@@ -56,7 +58,7 @@ const ProfileMakeHospitalSchedule = () => {
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
           <HeaderNavigatorComponent
-            text="병원 일정 설정"
+            text={t("hospital.setYourHospital")}
             isIconLeft={true}
             handleClickArrowLeft={() => {
               navigation.goBack();

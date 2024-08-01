@@ -20,6 +20,7 @@ import { useCallback, useEffect, useState } from 'react';
 import LoadingScreen from '../../component/loading';
 import { lessonService } from '../../services/lesson';
 import ModalDoneLesson from './components/ModalDoneLesson';
+import { useTranslation } from 'react-i18next';
 
 const InformationHealth = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -27,6 +28,7 @@ const InformationHealth = () => {
     const [messageError, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
+    const { t } = useTranslation()
     const toggleModal = () => {
         setShowDialog(!showDialog);
     };
@@ -68,7 +70,7 @@ const InformationHealth = () => {
             <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
                 <HeaderNavigatorComponent
                     isIconLeft={true}
-                    text="학습하기"
+                    text={t("lesson.learn")}
                     handleClickArrowLeft={() => {
                         navigation.goBack();
                     }}
@@ -77,7 +79,7 @@ const InformationHealth = () => {
             <WeekComponent />
             <View style={{ marginTop: 28 }} />
             <View style={[flexRowCenter]}>
-                <Text style={styles.title}>건강경영전략에 대해 학습해봅시다</Text>
+                <Text style={styles.title}>{t("lesson.healthManagementStrategies")}</Text>
             </View>
             <View style={{ marginTop: 24 }} />
             <View style={[flexRowSpaceEvenly]}>
@@ -101,7 +103,7 @@ const InformationHealth = () => {
                                 color: curDay >= 1 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        1일차
+                        {t("lesson.day1")}
                     </Text>
                 </Pressable>
                 <Pressable
@@ -124,7 +126,7 @@ const InformationHealth = () => {
                                 color: curDay >= 2 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        2일차
+                        {t("lesson.day2")}
                     </Text>
                 </Pressable>
                 <Pressable
@@ -147,7 +149,7 @@ const InformationHealth = () => {
                                 color: curDay >= 3 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        3일차
+                        {t("lesson.day3")}
                     </Text>
                 </Pressable>
             </View>
@@ -173,14 +175,14 @@ const InformationHealth = () => {
                                 color: curDay >= 4 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        4일차
+                        {t("lesson.day4")}
                     </Text>
                 </Pressable>
                 <Pressable
                     style={[flexCenter, styles.imageWrap]}
                     disabled={curDay < 5}
                     onPress={() => {
-                        navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY5);
+                        navigation.navigate(SCREENS_NAME.INFORMATION_HEALTH.WEEK1DAY5, { showDialog });
                     }}>
                     <Image
                         source={
@@ -196,7 +198,7 @@ const InformationHealth = () => {
                                 color: curDay >= 5 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        5일차
+                        {t("lesson.day5")}
                     </Text>
                 </Pressable>
                 <Pressable style={[flexCenter, styles.imageWrap]}
@@ -219,7 +221,7 @@ const InformationHealth = () => {
                                 color: curDay >= 6 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        6일차
+                        {t("lesson.day6")}
                     </Text>
                 </Pressable>
             </View>
@@ -244,7 +246,7 @@ const InformationHealth = () => {
                                 color: curDay >= 7 ? colors.black : colors.gray_G04,
                             },
                         ]}>
-                        7일차
+                        {t("lesson.day7")}
                     </Text>
                 </Pressable>
             </View>

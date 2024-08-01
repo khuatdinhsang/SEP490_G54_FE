@@ -1,4 +1,4 @@
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { CommonActions, ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
@@ -25,7 +25,12 @@ const SettingLogout = () => {
       if (res.code === 200) {
         setIsLoading(false)
         await removeAsyncStorageWhenLogout()
-        navigation.navigate(SCREENS_NAME.LOGIN.MAIN)
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: SCREENS_NAME.LOGIN.MAIN }],
+          }),
+        );
       }
     } catch (error: any) {
       if (error?.response?.status === 400) {
@@ -47,18 +52,18 @@ const SettingLogout = () => {
   return (
     <View style={styles.container}>
       <HeaderNavigatorComponent
-        text="로그아웃"
+        text={t("setting.logout")}
         isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
         }}
       />
       <View style={{ marginTop: 38 }} />
-      <Text style={styles.title}>로그아웃을 하시겠습니까?</Text>
-      <ButtonComponent text="예" handleClick={handlePressYesLogout} />
+      <Text style={styles.title}>{t("setting.wouldYouLogout")}</Text>
+      <ButtonComponent text={t("common.text.yes")} handleClick={handlePressYesLogout} />
       <View style={{ marginTop: 10 }} />
       <ButtonComponent
-        text="아니오"
+        text={t("common.text.no")}
         handleClick={handlePressNoLogout}
         backgroundColor={colors.black}
       />

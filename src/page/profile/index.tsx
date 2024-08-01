@@ -16,8 +16,10 @@ import { SCREENS_NAME } from '../../navigator/const';
 import { authService } from '../../services/auth';
 import LoadingScreen from '../../component/loading';
 import { lessonService } from '../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
+  const { t } = useTranslation()
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messageError, setMessageError] = useState<string>("");
@@ -137,13 +139,12 @@ const Profile = () => {
   const handleMyHealthMissionStatement = () => {
     navigation.navigate(SCREENS_NAME.PROFILE.MISSION_STATEMENT, { lesson7: lesson7 })
   }
-  console.log("140", lesson7)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <HeaderNavigatorComponent
-            text="내정보"
+            text={t("hospital.myInfo")}
             isIconLeft={true}
             handleClickArrowLeft={() => navigation.goBack()}
           />
@@ -155,25 +156,25 @@ const Profile = () => {
           {lesson1 && (
             <View style={[flexRow, styles.lesson1]}>
               <Image source={IMAGE.ICON_LIGHT} style={styles.iconImage} />
-              <Text style={styles.textLesson}>나의 목표: {lesson1}</Text>
+              <Text style={styles.textLesson}>{t("hospital.myGoal")}: {lesson1}</Text>
             </View>
           )}
-          <Text style={styles.labelSection}>나의 생체 데이터</Text>
+          <Text style={styles.labelSection}>{t("hospital.myBiometricData")}</Text>
           <View style={[styles.sectionContainer, flexRowSpaceBetween]}>
             <View style={flexCenter}>
-              <Text style={styles.nameSection}>키</Text>
+              <Text style={styles.nameSection}>{t("hospital.high")}</Text>
               <Text style={styles.valueSection}>{height}cm</Text>
             </View>
             <View style={flexCenter}>
-              <Text style={styles.nameSection}>몸무게</Text>
+              <Text style={styles.nameSection}>{t("hospital.weight")}</Text>
               <Text style={styles.valueSection}>{weight}kg</Text>
             </View>
             <View style={flexCenter}>
-              <Text style={styles.nameSection}>암종</Text>
-              <Text style={styles.valueSection}>대장암</Text>
+              <Text style={styles.nameSection}>{t("hospital.carcinoma")}</Text>
+              <Text style={styles.valueSection}>{t("hospital.colonCancer")}</Text>
             </View>
             <View style={flexCenter}>
-              <Text style={styles.nameSection}>만성질환</Text>
+              <Text style={styles.nameSection}>{t("hospital.chronicDisease")}</Text>
               <Text style={styles.valueSection}>{medical}</Text>
             </View>
           </View>
@@ -181,14 +182,14 @@ const Profile = () => {
             lesson2?.weakness?.length > 0 &&
             (
               <View>
-                <Text style={styles.labelSection}>건강전략 강/약점</Text>
+                <Text style={styles.labelSection}>{t("hospital.healthStrategy")}/{t("hospital.weakness")}</Text>
                 <View style={styles.lesson2}>
                   <View style={flexRow}>
-                    <Text style={[styles.textLesson, { color: colors.orange_04 }]}>강점</Text>
+                    <Text style={[styles.textLesson, { color: colors.orange_04 }]}>{t("hospital.strength")}</Text>
                     <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>{lesson2.strength}</Text>
                   </View>
                   <View style={[flexRow, { marginTop: 5 }]}>
-                    <Text style={[styles.textLesson, { color: colors.blue_01 }]}>약점</Text>
+                    <Text style={[styles.textLesson, { color: colors.blue_01 }]}>{t("hospital.weakness")}</Text>
                     <Text style={[styles.textLesson, { marginLeft: 10, color: colors.gray_G08 }]}>{lesson2.weakness}</Text>
                   </View>
                 </View>
@@ -197,15 +198,15 @@ const Profile = () => {
           <View style={styles.divide} />
           <View>
             <CategoryComponent
-              text="나의 건강사명서"
+              text={t("hospital.myHeartMission")}
               handleOnPress={handleMyHealthMissionStatement}
             />
             <CategoryComponent
-              text="임상설문"
+              text={t("hospital.clinicalSurvey")}
               handleOnPress={handleClinicalSurvey}
             />
             <CategoryComponent
-              text="병원일정정하기"
+              text={t("hospital.makeAHospital")}
               handleOnPress={handleMakeHospitalSchedule}
             />
           </View>

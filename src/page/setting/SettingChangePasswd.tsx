@@ -81,7 +81,7 @@ const SettingChangePassword = () => {
   return (
     <SafeAreaView style={styles.container}>
       <HeaderNavigatorComponent
-        text="비밀번호 변경"
+        text={t("setting.changePass")}
         isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
@@ -149,10 +149,10 @@ const SettingChangePassword = () => {
         isOverlay={true}
         isActive={isShowDialog}
         handleClickButton={handleClickDialog}
-        title="비밀번호를 변경했습니다."
-        content="변경된 비밀번호를 사용해주세요"
+        title={t("common.text.passwordChanged")}
+        content={t("common.text.useChangedPassword")}
         imageSource={IMAGE.ICON_CHECK_COLOR}
-        buttonText="확인"
+        buttonText={t("common.text.confirm")}
       />
       {isLoading && <LoadingScreen />}
     </SafeAreaView>

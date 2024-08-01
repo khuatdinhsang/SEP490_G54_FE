@@ -116,8 +116,8 @@ const SF_MENTAL = ({ route }: any) => {
                 <View style={styles.content}>
                     <View style={styles.introduce}>
                         <Text style={[styles.text, { color: colors.orange_04 }]}>{type}</Text>
-                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>‘효과적인 건강 행동 패턴(Highly Effective Health Behavior Pattern)’이란 건강 습관을 만들기 위해서 6개월 이상 반복해야 하는 건강 행동을 말합니다.</Text>
-                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>다음은 ‘긍정적 마음 가지기'에 해당하는 건강 행동 패턴 문항입니다.  다음 문항들을 읽고 지난 한달간의 본인의 행동에 가장 알맞는 항목에  O 표시하세요.</Text>
+                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>{t("evaluate.sfActivity1")}</Text>
+                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>{t("evaluate.sfActivity2")}</Text>
                     </View>
                     {listQuestions && listQuestions.map((item) => {
                         return (

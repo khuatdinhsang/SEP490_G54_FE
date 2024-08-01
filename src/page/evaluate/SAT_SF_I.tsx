@@ -115,7 +115,7 @@ const SAT_SF_I = ({ route }: any) => {
                 <View style={styles.content}>
                     <View style={styles.introduce}>
                         <Text style={[styles.text, { color: colors.orange_04 }]}>{type}</Text>
-                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 , 삶의 목표와 구체적인 계획을 세울 때 사용할 수 있는 실행전략과 관련된 평가 입니다. 각 문항들을 읽고, 귀하가 지난 한달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.</Text>
+                        <Text style={[styles.text, { color: colors.gray_G08, marginTop: 5 }]}>{t("evaluate.sfi")}</Text>
                     </View>
                     {listQuestions && listQuestions.map((item) => {
                         return (
