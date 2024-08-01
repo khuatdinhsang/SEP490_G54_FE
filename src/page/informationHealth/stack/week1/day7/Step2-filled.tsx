@@ -17,6 +17,7 @@ import { WidthDevice } from '../../../../../util/Dimenssion';
 import { putLesson7 } from '../../../../../constant/type/lesson';
 import LoadingScreen from '../../../../../component/loading';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2FilledProps {
   isDisabled: boolean;
@@ -26,6 +27,7 @@ interface Step2FilledProps {
 }
 const Step2Filled = (props: Step2FilledProps) => {
   const { isDisabled, setIsDisabled, onSubmit, setIsLoading } = props;
+  const { t } = useTranslation()
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [text3, setText3] = useState('');
@@ -103,16 +105,16 @@ const Step2Filled = (props: Step2FilledProps) => {
   return (
     <View style={[styles.container]}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="건강 서명서 작성하기" />
+        <StepComponent textLeft="Step2" text={t("lesson.writeHealthMission")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="학습을 시작하기 전, 건강사명서를 작성해봅시다."
+          content={t("lesson.beforeLearning")}
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="플레이스 홀더"
-          label="나에게 건강이란"
+          placeholder={t("lesson.example15")}
+          label={t("lesson.healthMeansToMe")}
           value={text1}
           onChangeText={(value) => {
             if (value?.trim().length === 0) {
@@ -123,7 +125,7 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <Text style={[styles.text, { marginBottom: 8 }]}>
-          건강 실천을 위한 다짐
+          {t("lesson.commitmentToHealth")}
         </Text>
         <MultiTextInputComponent
           multiText={multiText}
@@ -131,8 +133,8 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="실천을어렵게하는장애요인"
-          label="내용 입력중"
+          placeholder={t("lesson.example16")}
+          label={t("lesson.makeImplementation")}
           value={text2}
           onChangeText={(value) => {
             if (value?.trim().length === 0) {
@@ -143,8 +145,8 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="극복방법"
-          label="플레이스 홀더"
+          placeholder={t("lesson.example17")}
+          label={t("lesson.howToOverCome")}
           value={text3}
           onChangeText={(value) => {
             if (value?.trim().length === 0) {
@@ -155,8 +157,8 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="나의다짐한마디"
-          label="플레이스 홀더"
+          placeholder={t("lesson.example18")}
+          label={t("lesson.wordOfPledge")}
           value={text4}
           onChangeText={(value) => {
             if (value?.trim().length === 0) {

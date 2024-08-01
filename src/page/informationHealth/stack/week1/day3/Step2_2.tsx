@@ -73,11 +73,10 @@ const Step2_2 = (props: Step2_2Props) => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{ marginTop: 10 }} />
                     <Text style={styles.text}>
-                        현재 만성질환을 열심히 관리하고 있는 지인에게
-                        긍정적인 메시지 한마디와 지인에 대한 평가 한마디를 남겨주세요!
+                        {t("lesson.positiveMessage")}
                     </Text>
                     <View style={{ marginTop: 24 }}>
-                        <Text style={styles.label}>나에 대한 평가 한마디</Text>
+                        <Text style={styles.label}>{t("lesson.wordAboutMe")}</Text>
                         <TextInput
                             value={comment}
                             style={[styles.input, { height: 120 }]}
@@ -93,13 +92,13 @@ const Step2_2 = (props: Step2_2Props) => {
                                 setClosePersonEvaluation(text)
                             }}
                             textAlignVertical='top'
-                            placeholder="예시) 멋있는 사람"
+                            placeholder={t("lesson.example3")}
                             multiline={true}
                             maxLength={200}
                         />
                         {errComment && <Text style={styles.textError}>{errComment}</Text>}
                         <View style={{ marginTop: 20 }} />
-                        <Text style={styles.label}>긍정 메시지 한마디</Text>
+                        <Text style={styles.label}>{t("lesson.wordOfPositive")}</Text>
                         <TextInput
                             style={[styles.input, { height: 120 }]}
                             value={messagePositive}
@@ -116,7 +115,7 @@ const Step2_2 = (props: Step2_2Props) => {
                                 setClosePersonMessage(text)
                                 user === 1 ? dispatch(setClosePerson1MessageRedux(text)) : dispatch(setClosePerson2MessageRedux(text))
                             }}
-                            placeholder="예시) 화이팅 할 수 있어"
+                            placeholder={t("lesson.example4")}
                             multiline={true}
                             maxLength={200}
                         />

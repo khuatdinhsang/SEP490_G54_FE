@@ -50,7 +50,7 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
       </View>
       <View style={{ flex: 1 }}>
         <View style={[styles.statusQuestion, styles.centered, { marginBottom: 5, backgroundColor: labelColorWrapper }]}>
-          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelColor }]}>{appointment.typeMedicalAppointment}</Text>
+          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelColor }]}>{appointment.typeMedicalAppointment?.split("_")[1]}</Text>
         </View>
         <View style={[styles.statusQuestion, styles.centered, { backgroundColor: labelStatusAppointWrapper }]}>
           <Text style={[styles.textQuestion, { textAlign: 'center', color: labelStatusAppoint }]}>{appointment.statusMedicalAppointment}</Text>

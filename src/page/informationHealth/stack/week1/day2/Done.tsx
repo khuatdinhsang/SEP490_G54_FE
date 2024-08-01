@@ -1,20 +1,22 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../../../constant/color';
-import {IMAGE} from '../../../../../constant/image';
-import {flexCenter, flexRowCenter} from '../../../../../styles/flex';
-import {paddingHorizontalScreen} from '../../../../../styles/padding';
+import { IMAGE } from '../../../../../constant/image';
+import { flexCenter, flexRowCenter } from '../../../../../styles/flex';
+import { paddingHorizontalScreen } from '../../../../../styles/padding';
+import { useTranslation } from 'react-i18next';
 
 const Done = () => {
+  const { t } = useTranslation()
   return (
     <View style={[flexRowCenter, styles.container]}>
       <View style={flexCenter}>
         <Image source={IMAGE.INFORMATION_HEALTH.CATEGORY} />
         <Text style={styles.textFirst}>
-          <Text style={{color: colors.primary}}>1주차 2일차</Text>를
-          학습했습니다!
+          <Text style={{ color: colors.primary }}>{t("lesson.week1")} {t("lesson.day2")}</Text>
+          {t("lesson.learned")}
         </Text>
         <Text style={styles.text}>
-          {'건강정보를 학습하시느라 수고하셨어요:)'}
+          {t("lesson.thankyou")}
         </Text>
       </View>
     </View>

@@ -3,40 +3,41 @@ import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
+import { useTranslation } from 'react-i18next';
 
 const Step1 = () => {
+  const { t } = useTranslation()
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent text="인생목표 설정하기" textLeft="Step1" />
+        <StepComponent text={t("lesson.settingLifeGoal")} textLeft="Step1" />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="여러분의 인생의 목표는 무엇인가요?"
+          content={t("lesson.goalsInLife")}
         />
         <View style={{ marginTop: 20 }} />
-        <Text
-          style={
-            styles.text
-          }>{`인생목표를 갖고 계신가요? 아직 갖고 있지 않다면, 여러분 자신만의 고유하고 매력적인 인생목표를 설정해보세요. 어떻게 설정해야 할 지 막막하시다면, 다음과 같은 질문에 대답을 생각해보세요.`}</Text>
+        <Text style={styles.text}>
+          {t("lesson.haveLifeGoal")} {t("lesson.compellingLifeGoals")} {t("lesson.considerAnswering")}
+        </Text>
         <View style={{ marginTop: 32 }} />
         <View style={styles.noteWrap}>
           <Text
             style={
               styles.note
-            }>{`1) 가족, 친구들에게 나는 어떤 사람으로 기억되고 싶은가요? `}</Text>
+            }>{`1) ${t("lesson.rememberMe")}`}</Text>
           <Text
             style={
               styles.note
-            }>{`2) 치료를 시작한 지 5년 후 어떤 목표를 이루고 싶으신가요?`}</Text>
+            }>{`2) ${t("lesson.achieveFiveYear")}`}</Text>
           <Text
             style={
               styles.note
-            }>{`3) 1년 뒤에 달성하고자 하는 건강목표는 무엇인가요?`}</Text>
+            }>{`3) ${t("lesson.achieveOneYear")}`}</Text>
           <Text
             style={
               styles.note
-            }>{`4) 목표를 달성하기 위해 활용할 수 있는 나의 강점은 무엇인가요?`}</Text>
+            }>{`4) ${t("lesson.leverageToAchieve")}`}</Text>
         </View>
         <View style={{ paddingBottom: 20 }} />
       </ScrollView>

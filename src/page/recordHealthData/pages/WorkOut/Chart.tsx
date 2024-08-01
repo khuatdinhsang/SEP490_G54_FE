@@ -24,11 +24,11 @@ const WorkOutChart = ({ route }: any) => {
     const [dataToday, setDataToday] = useState<number>(0)
     const isEditable = route?.params?.isEditable;
     const goBackPreviousPage = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
     const [typeToday, setTypeToday] = useState<string>("")
     const navigateNumericalRecord = () => {
-        navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD, { isEditable: isEditable });
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORK_OUT_RECORD, { isEditable: isEditable });
     }
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
@@ -55,6 +55,7 @@ const WorkOutChart = ({ route }: any) => {
         };
         getDataChart();
     }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -90,7 +91,7 @@ const WorkOutChart = ({ route }: any) => {
                                 labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
                                 data={transformDataToChartActivity(dataChart)}
-                                tickValues={[0, 0.5, 1, 1.5, 2]}
+                                tickValues={[0, 1, 2, 3, 4]}
                             />
                         </View>
                         :

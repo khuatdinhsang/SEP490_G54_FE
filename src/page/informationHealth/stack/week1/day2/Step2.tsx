@@ -29,14 +29,13 @@ const Step2 = ({
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent text="나의 건강 경영 강/약점 발견" textLeft="Step2" />
+        <StepComponent text={`${t("lesson.courseManagement")}/${t("lesson.weakness")}`} textLeft="Step2" />
         <View style={{ marginTop: 24 }} />
         <Text style={styles.text}>
-          이전에 실시하였던 설문을 바탕으로 발견한 나의 건강 경영 강점과
-          약점입니다.
+          {t("lesson.strengthsAndWeakness")}
         </Text>
         <View style={{ marginTop: 24 }}>
-          <Text style={styles.label}>중간목표</Text>
+          <Text style={styles.label}>{t("lesson.intermediateGoal")}</Text>
           <TextInput
             value={advantage}
             style={[styles.input, { height: 120 }]}
@@ -49,13 +48,13 @@ const Step2 = ({
               setAdvantage(text);
             }}
             textAlignVertical='top'
-            placeholder="예시) 식사 규칙적으로 하기"
+            placeholder={t("lesson.example1")}
             multiline={true}
             maxLength={200}
           />
           {errAdvantage && <Text style={styles.textError}>{errAdvantage}</Text>}
           <View style={{ marginTop: 20 }} />
-          <Text style={styles.label}>1년후 목표</Text>
+          <Text style={styles.label}>{t("lesson.oneYearLater")}</Text>
           <TextInput
             style={[styles.input, { height: 120 }]}
             value={defect}
@@ -68,7 +67,7 @@ const Step2 = ({
               }
               setDefect(text);
             }}
-            placeholder="예시) 식사 규칙적으로 하기"
+            placeholder={t("lesson.example2")}
             multiline={true}
             maxLength={200}
           />
@@ -91,6 +90,7 @@ const styles = StyleSheet.create({
     color: colors.gray_G07,
     lineHeight: 28,
     paddingHorizontal: 25,
+    textAlign: 'center'
   },
   input: {
     paddingVertical: 14,

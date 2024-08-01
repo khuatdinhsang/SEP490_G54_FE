@@ -14,15 +14,15 @@ const axiosClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
-const isTokenExpired = (token: string): boolean => {
-  try {
-    const decoded: { exp: number } = jwtDecode(token);
-    const currentTime = Date.now() / 1000;
-    return decoded.exp < currentTime;
-  } catch (error) {
-    return true;
-  }
-};
+// const isTokenExpired = (token: string): boolean => {
+//   try {
+//     const decoded: { exp: number } = jwtDecode(token);
+//     const currentTime = Date.now() / 1000;
+//     return decoded.exp < currentTime;
+//   } catch (error) {
+//     return true;
+//   }
+// };
 axiosClient.interceptors.request.use(
   async (config: any) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -45,13 +45,6 @@ axiosClient.interceptors.response.use(
     const handleLogout = async () => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
-      console.log("vao day1")
-
-      if (navigationRef.current) {
-        console.log("vao day2")
-        navigate(SCREENS_NAME.LOGIN.MAIN);
-      }
-
     };
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;

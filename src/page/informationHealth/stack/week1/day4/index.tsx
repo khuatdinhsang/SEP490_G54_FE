@@ -13,9 +13,11 @@ import Step2 from './Step2';
 import Step3, { valuesStep3 } from './Step3';
 import LoadingScreen from '../../../../../component/loading';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 const Week1Day4 = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const { t } = useTranslation()
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false)
   const [isDisabled, setIsDisabled] = useState<boolean>(false)
@@ -74,13 +76,13 @@ const Week1Day4 = () => {
       <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
         <HeaderNavigatorComponent
           isIconLeft={true}
-          text="학습하기"
+          text={t("lesson.learn")}
           handleClickArrowLeft={() => {
             navigation.goBack();
           }}
         />
       </View>
-      <GreetingComponent text="인사말" />
+      <GreetingComponent text={t("lesson.greetings")} />
       <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
         {step === 2 && <Step2
@@ -104,7 +106,7 @@ const Week1Day4 = () => {
         }}>
         <ButtonComponent
           isDisable={isDisabled}
-          text={step ? '다음' : '홈으로 돌아가기'}
+          text={step ? t("common.text.next") : t("planManagement.text.gotoHome")}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
         />

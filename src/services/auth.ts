@@ -45,5 +45,8 @@ export const authService = {
             },
         });
     },
+    checkExpiredRefreshToken(refreshToken: string): Promise<ResponseForm<boolean>> {
+        return axiosClient.get(`${baseURL}${endpoint}/check-refresh-token/${refreshToken}`)
+    },
 
 };

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import colors from '../../../../../../constant/color';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface MultiTextInputProps {
   text1: string;
@@ -20,13 +21,13 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
   const handleChangeText = (text: string, key: string) => {
     props.setMultiText(prev => ({ ...prev, [key]: text }));
   };
-
+  const { t } = useTranslation()
   return (
     <View style={[styles.container, { borderColor }]}>
       <View style={styles.textWrap}>
-        <Text style={styles.text}>운동</Text>
+        <Text style={styles.text}>{t("planManagement.text.workout")}</Text>
         <TextInput
-          placeholder="예) 일주일에 세번 걷기"
+          placeholder={t("lesson.example11")}
           style={styles.textInput}
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
@@ -41,9 +42,9 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
         />
       </View>
       <View style={styles.textWrap}>
-        <Text style={styles.text}>식이 및 체중</Text>
+        <Text style={styles.text}>{t("lesson.dietAndWeight")}</Text>
         <TextInput
-          placeholder="예) 균형 잡힌 식사하기"
+          placeholder={t("lesson.example12")}
           style={styles.textInput}
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
@@ -58,9 +59,9 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
         />
       </View>
       <View style={styles.textWrap}>
-        <Text style={styles.text}>마음, 스트레스 관리</Text>
+        <Text style={styles.text}>{t("lesson.mindAndStress")}</Text>
         <TextInput
-          placeholder="예) 하루에 10분씩 명상하기"
+          placeholder={t("lesson.example13")}
           style={styles.textInput}
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
@@ -75,9 +76,9 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
         />
       </View>
       <View style={styles.textWrap}>
-        <Text style={styles.text}>약물 복용</Text>
+        <Text style={styles.text}>{t("planManagement.text.takingMedication")}</Text>
         <TextInput
-          placeholder="예) 시간에 맞추어 약물 복용하기"
+          placeholder={t("lesson.example14")}
           style={styles.textInput}
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}

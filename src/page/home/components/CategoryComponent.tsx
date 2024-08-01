@@ -1,30 +1,32 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexRow, flexRowSpaceAround} from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { flexRow, flexRowSpaceAround } from '../../../styles/flex';
 import Guide from './GuideDown';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {SCREENS_NAME} from '../../../navigator/const';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SCREENS_NAME } from '../../../navigator/const';
+import { useTranslation } from 'react-i18next';
 
 interface CategoryProps {
   guide: boolean;
 }
 
-const CategoryComponent = ({guide}: CategoryProps) => {
+const CategoryComponent = ({ guide }: CategoryProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const { t } = useTranslation()
   return (
     <View style={styles.container}>
       <View style={flexRow}>
         <Image source={IMAGE.HOME.CATEGORY} style={styles.unitIcon} />
-        <Text style={styles.unitTitle}>카테고리</Text>
+        <Text style={styles.unitTitle}>{t("home.category")}</Text>
       </View>
       <View style={[guide ? styles.specialCategory : {}]}>
         {guide && (
           <Guide
-            title={'카테고리'}
-            description={'사용자님이 주로 사용하실 메뉴를 보여줍니다.'}
+            title={t("home.category")}
+            description={t("home.showMenu")}
           />
         )}
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>
@@ -36,7 +38,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
               source={IMAGE.HOME.INFORMATION_HEALTH}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>실천계획 관리</Text>
+            <Text style={styles.categoryItemText}>{t("home.actionPlanManagement")}</Text>
           </Pressable>
           <Pressable
             onPress={() =>
@@ -46,7 +48,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
               source={IMAGE.HOME.CATEGORY2}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>건강수치 기록</Text>
+            <Text style={styles.categoryItemText}>{t("home.healthNumberRecord")}</Text>
           </Pressable>
           <Pressable
             onPress={() => navigation.navigate(SCREENS_NAME.EVALUATE.WEEKLY)}>
@@ -54,7 +56,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
               source={IMAGE.HOME.CATEGORY3}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>평가/결과 보기</Text>
+            <Text style={styles.categoryItemText}>{t("home.evaluation")}/{t("home.viewResult")}</Text>
           </Pressable>
         </View>
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>
@@ -66,7 +68,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
               source={IMAGE.HOME.CATEGORY4}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>건강정보 학습</Text>
+            <Text style={styles.categoryItemText}>{t("home.healthLearning")}</Text>
           </Pressable>
           <View>
             <Pressable
@@ -76,7 +78,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
                 style={styles.categoryItemIcon}
               />
             </Pressable>
-            <Text style={styles.categoryItemText}>문의작성</Text>
+            <Text style={styles.categoryItemText}>{t("home.writeInquiry")}</Text>
           </View>
           <Pressable
             onPress={() => {
@@ -86,7 +88,7 @@ const CategoryComponent = ({guide}: CategoryProps) => {
               source={IMAGE.HOME.CATEGORY6}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>병원일정 설정</Text>
+            <Text style={styles.categoryItemText}>{t("home.setHosSchedule")}</Text>
           </Pressable>
         </View>
       </View>

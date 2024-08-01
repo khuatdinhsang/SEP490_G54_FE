@@ -80,8 +80,8 @@ const SF_Evaluate = ({ route }: any) => {
             <ScrollView contentContainerStyle={{ paddingBottom: 100 }} style={styles.scrollView}>
                 <View style={[styles.content, styles.shadowBox]}>
                     <View>
-                        <Text style={styles.textTitle}>건강 경영 전략</Text>
-                        <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>종합</Text>
+                        <Text style={styles.textTitle}>{t("evaluate.managementStrategy")}</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.synthesis")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartOne}
@@ -89,8 +89,8 @@ const SF_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10 }]}>긍정적인 마음</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>질병 진행에 대한 두려움, 대인관계에 대한 걱정스러운 마음 등의 감정들을 극복하고 더 건강한 삶을살아가기 위해 긍정적인 마음 가지기를 얼마나 실천하고 있는지 평가한 결과입니다.</Text>
+                        <Text style={[styles.textAva, { marginTop: 10 }]}>{t("planManagement.text.positiveMind")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate1")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartTwo}
@@ -98,8 +98,8 @@ const SF_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10, }]}>운동</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>더 건강한 삶을 살아가기 위해 규칙적인 운동하기를얼마나 실천하고 있는지 평가한 결과입니다.</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.workout")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate2")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartThree}
@@ -107,8 +107,8 @@ const SF_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10, }]}>식이</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>건강을 유지하기 위해 건강한 음식을 바르게 먹고있는지 평가한 결과입니다.</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.diet")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate3")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartFour}
@@ -116,8 +116,8 @@ const SF_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10, }]}>약물</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>바르게 약물을 복용하고 있는지, 약물 복용을 꾸준히 실천하고 있는지 평가한 결과입니다.</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.drug")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate4")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartFive}

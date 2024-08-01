@@ -33,10 +33,10 @@ const InputChart = (props: InputChartProps) => {
   return (
     <View style={[styles.container, { borderWidth }]}>
       <View style={flexRow}>
-        <Text style={styles.text}>10대 점수</Text>
+        <Text style={styles.text}>10{t("lesson.point")}</Text>
         <View>
           <TextInput
-            value={data[0].y.toString()}
+            value={data[0].y?.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -46,13 +46,13 @@ const InputChart = (props: InputChartProps) => {
           />
           <Text style={styles.textError}>{error?.err1}</Text>
         </View>
-        <Text style={styles.text}>점</Text>
+        <Text style={styles.text}>{t("lesson.score")}</Text>
       </View>
       <View style={flexRow}>
-        <Text style={styles.text}>20대 점수</Text>
+        <Text style={styles.text}>20{t("lesson.point")}</Text>
         <View>
           <TextInput
-            value={data[1].y.toString()}
+            value={data[1].y?.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -63,13 +63,13 @@ const InputChart = (props: InputChartProps) => {
           <Text style={styles.textError}>{error?.err2}</Text>
         </View>
 
-        <Text style={styles.text}>점</Text>
+        <Text style={styles.text}>{t("lesson.score")}</Text>
       </View>
       <View style={flexRow}>
-        <Text style={styles.text}>30대 점수</Text>
+        <Text style={styles.text}>30{t("lesson.point")}</Text>
         <View>
           <TextInput
-            value={data[2].y.toString()}
+            value={data[2].y?.toString()}
             placeholder="0"
             keyboardType='numeric'
             style={[styles.input, styles.text]}
@@ -79,13 +79,13 @@ const InputChart = (props: InputChartProps) => {
           />
           <Text style={styles.textError}>{error?.err3}</Text>
         </View>
-        <Text style={styles.text}>점</Text>
+        <Text style={styles.text}>{t("lesson.score")}</Text>
       </View>
       <View style={flexRow}>
-        <Text style={styles.text}>40대 점수</Text>
+        <Text style={styles.text}>40{t("lesson.point")}</Text>
         <View>
           <TextInput
-            value={data[3].y.toString()}
+            value={data[3].y?.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -95,13 +95,13 @@ const InputChart = (props: InputChartProps) => {
           />
           <Text style={styles.textError}>{error?.err4}</Text>
         </View>
-        <Text style={styles.text}>점</Text>
+        <Text style={styles.text}>{t("lesson.score")}</Text>
       </View>
       <View style={flexRow}>
-        <Text style={styles.text}>50대 점수</Text>
+        <Text style={styles.text}>50{t("lesson.point")}</Text>
         <View>
           <TextInput
-            value={data[4].y.toString()}
+            value={data[4].y?.toString()}
             keyboardType='numeric'
             placeholder="0"
             style={[styles.input, styles.text]}
@@ -111,7 +111,7 @@ const InputChart = (props: InputChartProps) => {
           />
           <Text style={styles.textError}>{error?.err5}</Text>
         </View>
-        <Text style={styles.text}>점</Text>
+        <Text style={styles.text}>{t("lesson.score")}</Text>
       </View>
     </View>
   );

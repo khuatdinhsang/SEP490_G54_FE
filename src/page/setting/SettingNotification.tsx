@@ -181,7 +181,7 @@ const SettingNotification = () => {
   return (
     <View style={styles.container}>
       <HeaderNavigatorComponent
-        text="푸시알림"
+        text={t("setting.putAlarm")}
         isIconLeft={true}
         handleClickArrowLeft={() => {
           navigation.goBack();
@@ -190,57 +190,57 @@ const SettingNotification = () => {
       <View style={{ marginTop: 30 }} />
       <View style={{ flex: 1 }}>
         <SwitchComponent
-          text="전체 알림 설정"
+          text={t("setting.puNotification")}
           value={notificationAllowed}
           onChangeValue={toggleMainSwitch}
           style={styles.switch}
         />
         <SwitchComponent
-          text="주기적 앱 사용 알림"
+          text={t("setting.usageNotification")}
           value={notificationUseApp}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationUseApp, value)}
           style={styles.switch}
         />
         <SwitchComponent
-          text="건강검진 및 진료 알림"
+          text={t("setting.healthCheckUp")}
           value={notificationScheduleHealthCheck}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationScheduleHealthCheck, value)}
           style={styles.switch}
         />
         <SwitchComponent
-          text="실천계획 관리 작성 알림"
+          text={t("setting.actionPlan")}
           value={notificationPlanManagement}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationPlanManagement, value)}
           style={styles.switch}
         />
         <SwitchComponent
-          text="월간평가 알림"
+          text={t("setting.monthLyEvaluation")}
           value={notificationReviewMonthly}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewMonthly, value)}
           style={styles.switch}
         />
         <SwitchComponent
-          text="주간평가 알림"
+          text={t("setting.weeklyEvaluation")}
           value={notificationReviewWeekly}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewWeekly, value)}
           style={styles.switch}
         />
         <SwitchComponent
-          text="문의하기 알림"
+          text={t("setting.contactUs")}
           value={notificationQA}
           onChangeValue={(value) => toggleIndividualSwitch(setNotificationQA, value)}
           style={styles.switch}
         />
       </View>
-      <ButtonComponent text="저장" handleClick={handleOnPressButton} />
+      <ButtonComponent text={t("common.text.confirm")} handleClick={handleOnPressButton} />
       <DialogSingleComponent
         isOverlay={true}
         isActive={isShowDialog}
         handleClickButton={handleClickDialog}
-        title="저장이 완료됐습니다."
-        content="설정한 알림을 받아볼 수 있습니다."
+        title={t("common.text.passwordChanged")}
+        content={t("common.text.useChangedPassword")}
         imageSource={IMAGE.ICON_CHECK_COLOR}
-        buttonText="확인"
+        buttonText={t("common.text.confirm")}
       />
       {isLoading && <LoadingScreen />}
     </View>

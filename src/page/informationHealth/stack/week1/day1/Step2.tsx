@@ -26,14 +26,14 @@ const Step2 = ({ errOneYearGoal,
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="1년후 목표 및 중간 목표 세우기" />
+        <StepComponent textLeft="Step2" text={t("lesson.goalsOneYear")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="미래의 모습을 위해 계획을 세워봅시다."
+          content={t("lesson.makePlans")}
         />
         <View style={{ marginTop: 20 }} />
-        <Text style={styles.label}>중간목표</Text>
+        <Text style={styles.label}>{t("lesson.intermediateGoal")}</Text>
         <TextInput
           style={[styles.input, { height: 120 }]}
           value={midTermGoal}
@@ -46,13 +46,13 @@ const Step2 = ({ errOneYearGoal,
             }
             setMidTermGoal(text);
           }}
-          placeholder="예시) 식사 규칙적으로 하기"
+          placeholder={t("lesson.example1")}
           multiline={true}
           maxLength={200}
         />
         {errMidTermGoal && <Text style={styles.textError}>{errMidTermGoal}</Text>}
         <View style={{ marginTop: 20 }} />
-        <Text style={styles.label}>1년후 목표</Text>
+        <Text style={styles.label}>{t("lesson.oneYearLater")}</Text>
         <TextInput
           style={[styles.input, { height: 120 }]}
           value={oneYearGoal}
@@ -65,7 +65,7 @@ const Step2 = ({ errOneYearGoal,
             }
             setOneYearGoal(text);
           }}
-          placeholder="예시) 식사 규칙적으로 하기"
+          placeholder={t("lesson.example2")}
           multiline={true}
           maxLength={200}
         />

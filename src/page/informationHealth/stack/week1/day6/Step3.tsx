@@ -7,6 +7,7 @@ import StepComponent from '../../../../informationHealth/components/StepComponen
 import DoctorComponent from '../../../components/DoctorComponent';
 import TickComponent from './component/TickComponent';
 import GreenComponent from '../../../components/GreenComponent';
+import { useTranslation } from 'react-i18next';
 
 interface Step2Props {
   isDisabled: boolean;
@@ -14,7 +15,7 @@ interface Step2Props {
 }
 const Step3 = (props: Step2Props) => {
   const { isDisabled, setIsDisabled } = props;
-
+  const { t } = useTranslation()
   useEffect(() => {
     setIsDisabled(false);
   }, []);
@@ -23,32 +24,31 @@ const Step3 = (props: Step2Props) => {
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flex: 1 }}>
-          <StepComponent textLeft="Step3" text="희망의 우편엽서" />
+          <StepComponent textLeft="Step3" text={t("lesson.postCardOfHope")} />
           <View style={{ marginTop: 32 }} />
           <DoctorComponent
             height={85}
-            content="자신의 인생목표가 담긴 우편엽서를 지인들에게 공유해보아요."
+            content={t("lesson.shareAPostcard")}
           />
           <View style={{ marginTop: 20 }} />
           <Text style={styles.text}>
-            처음에 실시했던 설문조사 결과 내용을 바탕으로 작성된 인생목표가 담긴
-            우편엽서를 읽어보고 지인들에게 공유해보세요
+            {t("lesson.readPostCard")}
           </Text>
           <View style={{ marginTop: 20 }} />
           <GreenComponent />
-          <Text style={styles.mailTitle}>“우편엽서”</Text>
+          <Text style={styles.mailTitle}>{t("lesson.postCard")}</Text>
           <Text style={styles.mailContent}>
-            나는
+            {t("lesson.iAm")}
             <Text
               style={styles.mailContentBold}
               onPress={() => {
                 console.log('Click Text');
               }}>
-              질병 극복을
+              {t("lesson.overComingDisease")}
             </Text>
-            위해 꼭 해야{' '}
-            <Text style={styles.mailContentBold}>하는 일을 미루지 않으며</Text>{' '}
-            의지를 키워나갈 것입니다.
+            {t("lesson.mustDoFor")}
+            <Text style={styles.mailContentBold}>{t("lesson.dontPutOff")}</Text>{' '}
+            {t("lesson.developMyWill")}
           </Text>
           <View style={{ paddingBottom: 20 }} />
         </View>

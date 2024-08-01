@@ -34,9 +34,10 @@ const Step3_2 = (props: Step3Props) => {
       try {
         const res = await lessonService.getLesson3()
         if (res.code === 200) {
+          console.log("a", res.result)
           setMessageError("");
           setAddress(res.result.notPreferredLocation)
-          setTime(res.result.notPreferredLocation)
+          setTime(res.result.notPreferredTime)
           setIsLoading(false)
         } else {
           setMessageError("Unexpected error occurred.");
@@ -59,18 +60,20 @@ const Step3_2 = (props: Step3Props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent
           textLeft="Step3"
-          text="최상의 환경, 방해 환경 작성하기"
+          text={t("lesson.createEnvironment")}
         />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={115}
-          content="나의 건강에 도움이 되는 최상의 환경과 나의 건강에 방해가 되는 방해 환경을 적어봅시다."
+          content={t("lesson.writeEnvironment")}
         />
         <View style={{ marginTop: 30 }} />
         <Text style={styles.text}>
-          <Text style={{ fontWeight: '700' }}>{'방해 환경\n'}</Text>나의 건강경영을 방해하 장소, 시간, 사람을
-          작성해보세요
+          <Text style={{ fontWeight: '700' }}>{t("lesson.disturbingEnvironment")}</Text>
+          {'\n'}
+          {t("lesson.focusAndPractice")}
         </Text>
+
         <View style={{ marginTop: 32 }} />
         <InputComponent
           value={address}
@@ -82,8 +85,8 @@ const Step3_2 = (props: Step3Props) => {
             }
             setAddress(value)
           }}
-          placeholder="예시) 사무실, 학교 등"
-          label="장소"
+          placeholder={t("lesson.example5")}
+          label={t("lesson.location")}
           heightLine={50}
           textError={errAddress}
         />
@@ -98,8 +101,8 @@ const Step3_2 = (props: Step3Props) => {
             }
             setTime(value)
           }}
-          placeholder="예시) 점심 이후 등"
-          label="시간"
+          placeholder={t("lesson.example6")}
+          label={t("common.text.hours")}
           heightLine={50}
           textError={errTime}
         />

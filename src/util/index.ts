@@ -184,10 +184,29 @@ export const transformDataToChartActivity = (
     return {
       x: `${month}/${day}`,
       y: convertMinutesToHours(input.duration),
-      label: input.type,
+      label: getType(input.type),
     };
   });
 };
+export const getType = (inputType: string) => {
+  let type: string = ""
+  switch (inputType) {
+    case 'HEAVY':
+      type = '고'
+      break;
+    case 'MEDIUM':
+      type = '중'
+      break;
+    case 'LIGHT':
+      type = '저'
+      break;
+    default:
+      type = "";
+      break;
+  }
+  return type
+
+}
 
 export const transformDataToChartMental = (
   inputArray: valueMental[],
@@ -319,11 +338,47 @@ interface Medicine {
   weekTime: string[];
   weekday: string[];
 }
+// export const getWeekTimeForCurrentWeek = (
+//   medicines: Medicine[],
+// ): medicinePost[] => {
+//   const weekdaysMap: { [key: string]: number } = {
+//     Sunday: 0,
+//     Monday: 1,
+//     Tuesday: 2,
+//     Wednesday: 3,
+//     Thursday: 4,
+//     Friday: 5,
+//     Saturday: 6,
+//   };
+
+//   const today = new Date();
+//   const currentDay = today.getDay();
+//   const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+
+//   return medicines.map(medicine => {
+//     const { time, weekday, medicineTypeId, indexDay } = medicine;
+//     console.log("time", time)
+//     console.log("weekday", weekday)
+//     console.log("indexDay", indexDay)
+//     const weekTimes = weekday.map(day => {
+//       const targetDay = weekdaysMap[day];
+//       const date = new Date(startOfWeek);
+//       date.setDate(startOfWeek.getDate() + targetDay);
+//       return `${date.toISOString().split('T')[0]}T${time}`;
+//     });
+//     return {
+//       weekStart: getMondayOfCurrentWeek().split('T')[0],
+//       schedule: weekTimes,
+//       medicineTypeId: medicineTypeId,
+//     };
+//   });
+// };
+
 export const getWeekTimeForCurrentWeek = (
   medicines: Medicine[],
 ): medicinePost[] => {
   const weekdaysMap: { [key: string]: number } = {
-    Sunday: 0,
+    Sunday: 7,
     Monday: 1,
     Tuesday: 2,
     Wednesday: 3,
@@ -334,23 +389,26 @@ export const getWeekTimeForCurrentWeek = (
 
   const today = new Date();
   const currentDay = today.getDay();
-  const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+  const startOfWeek = new Date(today.setDate(today.getDate() - currentDay + (currentDay === 0 ? -6 : 1)));
 
   return medicines.map(medicine => {
     const { time, weekday, medicineTypeId, indexDay } = medicine;
+
     const weekTimes = weekday.map(day => {
       const targetDay = weekdaysMap[day];
       const date = new Date(startOfWeek);
-      date.setDate(startOfWeek.getDate() + targetDay);
-      return `${date.toISOString().split('T')[0]}T${time}.000+00:00`;
+      date.setDate(startOfWeek.getDate() + targetDay - 1);
+      return `${date.toISOString().split('T')[0]}T${time}`;
     });
+
     return {
-      weekStart: getMondayOfCurrentWeek().split('T')[0],
+      weekStart: startOfWeek.toISOString().split('T')[0],
       schedule: weekTimes,
       medicineTypeId: medicineTypeId,
     };
   });
 };
+
 
 export const padNumber = (num: number): string => {
   return num < 10 ? `0${num}` : num.toString();
@@ -658,4 +716,21 @@ export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
     },
   ];
   return result;
+};
+export const listDay = ["월", "화", "수", "목", "금", "토", "일"]
+export const convertDay = (day: string): string => {
+  if (listDay.includes(day)) {
+    return day;
+  }
+  const dayMapping: { [key: string]: string } = {
+    Monday: "월",
+    Tuesday: "화",
+    Wednesday: "수",
+    Thursday: "목",
+    Friday: "금",
+    Saturday: "토",
+    Sunday: "일"
+  };
+
+  return dayMapping[day] || "";
 };

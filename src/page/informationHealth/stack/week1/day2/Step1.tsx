@@ -3,33 +3,35 @@ import colors from '../../../../../constant/color';
 import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import DoctorComponent from '../../../components/DoctorComponent';
 import StepComponent from '../../../components/StepComponent';
+import { useTranslation } from 'react-i18next';
 
 const Step1 = () => {
+  const { t } = useTranslation()
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent text="건강경영과 효과적인 전략" textLeft="Step1" />
+        <StepComponent text={t("lesson.healthManagement")} textLeft="Step1" />
         <View style={{ marginTop: 24 }} />
         <DoctorComponent
           height={85}
-          content="앞으로 우리가 함께 공부할 건강습관 12대 수칙에 대해 알아봅시다."
+          content={t("lesson.healthyHabits")}
         />
         <View style={{ marginTop: 20 }}>
-          <Text style={styles.text}>{'1) 긍정적인 마음 갖기'}</Text>
-          <Text style={styles.text}>{'2) 규칙적인 운동 실천하기'}</Text>
-          <Text style={styles.text}>{'3) 건강한 음식 바르게 먹기'}</Text>
-          <Text style={styles.text}>{'4) 약물 복용하기'}</Text>
-          <Text style={styles.text}>{'5) 적극적인 삶 살기'}</Text>
-          <Text style={styles.text}>{'6) 정기적으로 건강검진 받기'}</Text>
-          <Text style={styles.text}>{'7) 남을 도울 수 있는 시간 가지기'}</Text>
-          <Text style={styles.text}>{'8) 신앙과 종교생활하기'}</Text>
-          <Text style={styles.text}>{'9) 금연하기'}</Text>
-          <Text style={styles.text}>{'10) 절주하기'}</Text>
+          <Text style={styles.text}>{`1) ${t("lesson.havePositiveMind")}`}</Text>
+          <Text style={styles.text}>{`2) ${t("lesson.practiceRegular")}`}</Text>
+          <Text style={styles.text}>{`3) ${t("lesson.eatHealthFood")}`}</Text>
+          <Text style={styles.text}>{`4) ${t("lesson.takingMedication")}`}</Text>
+          <Text style={styles.text}>{`5) ${t("lesson.activeLife")}`}</Text>
+          <Text style={styles.text}>{`6) ${t("lesson.regularHealth")}`}</Text>
+          <Text style={styles.text}>{`7) ${t("lesson.makeTimeHelpOther")}`}</Text>
+          <Text style={styles.text}>{`8) ${t("lesson.lifeFaithAndReligion")}`}</Text>
+          <Text style={styles.text}>{`9) ${t("lesson.quitSmoking")}`}</Text>
+          <Text style={styles.text}>{`10) ${t("lesson.abstainDrinking")}`}</Text>
           <Text style={styles.text}>
-            {'11) 과로는 금물, 일과 삶의 균형 지키기'}
+            {`11) ${t("lesson.workLifeBalance")}`}
           </Text>
           <Text style={styles.text}>
-            {'12) 사랑하는 사람과 함께하는 삶 생각하기'}
+            {`12) ${t("lesson.lovedOnes")}`}
           </Text>
         </View>
         <View style={{ paddingBottom: 30 }} />

@@ -1,7 +1,8 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {IMAGE} from '../../../constant/image';
-import {flexRowCenter} from '../../../styles/flex';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { IMAGE } from '../../../constant/image';
+import { flexRowCenter } from '../../../styles/flex';
 import colors from '../../../constant/color';
+import { useTranslation } from 'react-i18next';
 
 interface HospitalScheduleButtonComponentProps {
   handleOnPress: () => void;
@@ -10,13 +11,14 @@ interface HospitalScheduleButtonComponentProps {
 const HospitalScheduleButtonComponent = ({
   handleOnPress,
 }: HospitalScheduleButtonComponentProps) => {
+  const { t } = useTranslation()
   return (
     <Pressable
       style={[flexRowCenter, styles.container, styles.shadowBox]}
       onPress={handleOnPress}>
       <Image source={IMAGE.ICON_PLUS_ORANGE} />
-      <View style={{marginLeft: 10}} />
-      <Text style={styles.text}>병원 일정 등록하기</Text>
+      <View style={{ marginLeft: 10 }} />
+      <Text style={styles.text}>{t("hospital.registerHospital")}</Text>
     </Pressable>
   );
 };

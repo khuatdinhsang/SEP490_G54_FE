@@ -1,4 +1,5 @@
 import {
+  Image,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -11,52 +12,92 @@ import { paddingHorizontalScreen } from '../../../../../styles/padding';
 import { WidthDevice } from '../../../../../util/Dimenssion';
 import StepComponent from '../../../../informationHealth/components/StepComponent';
 import DoctorComponent from '../../../components/DoctorComponent';
+import { flexRow, flexRowCenter } from '../../../../../styles/flex';
+import { putLesson7 } from '../../../../../constant/type/lesson';
+import { useEffect, useState } from 'react';
+import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
-interface Step2Props { }
+interface Step2Props {
+  valuesSubmit: putLesson7
+  setIsLoading: (value: boolean) => void
+}
 const Step2 = (props: Step2Props) => {
+  const { t } = useTranslation()
+  const { setIsLoading } = props
+  const [messageError, setMessageError] = useState<string>("");
+  const [lesson1, setLesson1] = useState<string>("")
+  const getLesson1 = async () => {
+    setIsLoading(true);
+    try {
+      const res = await lessonService.getLesson1();
+      if (res.code === 200) {
+        setLesson1(res.result.endOfYearGoal ?? "");
+        setMessageError("");
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+        setMessageError(error.response.data.message);
+      } else {
+        setMessageError("Unexpected error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    getLesson1()
+  }, [])
   return (
     <View style={[styles.container]}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="건강 서명서 작성하기" />
+        <Image style={styles.stamp} source={IMAGE.PROFILE.STAMP} />
+        <StepComponent textLeft="Step2" text={t("lesson.writeHealthMission")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="학습을 시작하기 전, 건강사명서를 작성해봅시다."
+          content={t("lesson.beforeLearning")}
         />
         <View style={{ marginTop: 20 }} />
         <ImageBackground
           source={IMAGE.INFORMATION_HEALTH.SUBTRACT}
           style={styles.backgroundImage}
-          resizeMode="cover">
-          <View style={{ paddingTop: 35 }} />
-          <Text style={styles.mailTitle}>“건강 사명서”</Text>
-          <View style={{ paddingTop: 28 }} />
+          resizeMode="contain">
+          <Text style={styles.mailTitle}>{t("lesson.healthMission")}</Text>
+          <View style={{ paddingTop: 20 }} />
           <Text style={styles.mailContent}>
-            나의 인생 목표는
-            <Text style={styles.mailContentBold}>질병 극복</Text>입니다. 현재
-            나의 삶의 위기는
-            <Text style={styles.mailContentBold}>정서적 어려움</Text> 입니다.
-            나에게 건강은 행복한
-            <Text style={styles.mailContentBold}>삶을 위한 준비물</Text>입니다.
+            {t("lesson.myLifeGoal")}
+            <Text style={styles.mailContentBold}>{lesson1}</Text>{t("lesson.noSee")}. {t("lesson.crisisMyLife")}
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.whatIsHealth}</Text>{t("lesson.noSee")}.
+            {t("lesson.healthHappiness")}
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.activityCommitment}</Text>{t("lesson.noSee")}.
           </Text>
-
-          <View style={{ paddingTop: 25 }} />
-          <Text style={[styles.mailContent, { paddingHorizontal: 60 }]}>
-            건강 실천을 위한 다짐으로
-            <Text style={styles.mailContentBold}>일주일에 세번 걷기</Text>, 균
-            <Text style={styles.mailContentBold}>형잡힌 식사를 하기</Text>,
-            하루에 10분씩 명상하기, 시간에 맞추어 약물 복용하기 입니다.
+          <View style={[flexRow, { paddingTop: 25 }]} />
+          <Text style={[styles.mailContent]}>
+            {t("lesson.pledgePractice")}
           </Text>
-
+          <Text style={styles.mailContent}>
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.dietCommitment},</Text>
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.mentalCommitment},</Text>
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.medicineCommitment},</Text>
+            <View style={flexRow}>
+              <Text style={styles.mailContentBold}>{props.valuesSubmit.roadBlock}</Text>
+              <Text style={[styles.mailContent, { paddingHorizontal: 0 }]}>{t("lesson.noSee")}.</Text>
+            </View>
+          </Text>
           <View style={{ paddingTop: 25 }} />
           <Text style={styles.mailContent}>
-            실천을 어렵게 하는 요인으로는 의지 및 끈기 부족이 있지만 극복
-            방법으로
-            <Text style={styles.mailContentBold}>가족에게 도움 구하기</Text>를
-            할 것입니다.
+            {t("lesson.factorsMakePractice")}
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.solution}</Text>
+            {t("lesson.overCome")}
+            <Text style={styles.mailContentBold}>{props.valuesSubmit.commitment}</Text>
+            {t("lesson.willDo")}
           </Text>
         </ImageBackground>
       </ScrollView>
+      {messageError && <Text style={[styles.textLesson, { color: colors.red }]}>{messageError}</Text>}
     </View>
   );
 };
@@ -75,7 +116,12 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: WidthDevice - paddingHorizontalScreen * 4,
-    height: ((WidthDevice - paddingHorizontalScreen * 4) * 599) / 366,
+    // height: ((WidthDevice - paddingHorizontalScreen * 4) * 599) / 366,
+    alignItems: 'center',
+    aspectRatio: 366 / 599,
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
   },
   mailTitle: {
     fontWeight: '700',
@@ -90,12 +136,24 @@ const styles = StyleSheet.create({
     color: colors.gray_G07,
     lineHeight: 28,
     textAlign: 'center',
-    paddingHorizontal: 50,
+    paddingHorizontal: 30,
   },
   mailContentBold: {
     fontWeight: '700',
     color: colors.primary,
     textDecorationLine: 'underline',
+    fontSize: 18
+  },
+  stamp: {
+    position: 'absolute',
+    bottom: 90,
+    right: 20,
+    zIndex: 20,
+  },
+  textLesson: {
+    color: colors.white,
+    fontWeight: "500",
+    fontSize: 14,
   },
 });
 export default Step2;

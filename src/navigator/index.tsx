@@ -5,6 +5,7 @@ import LoadingScreen from '../component/loading';
 import { SCREENS_NAME, SCREENS_STACK } from './const';
 import { NavigationContainer } from '@react-navigation/native';
 import { jwtDecode } from 'jwt-decode';
+import { authService } from '../services/auth';
 
 const Stack = createStackNavigator();
 
@@ -21,16 +22,28 @@ const Navigator: React.FC = () => {
       return true;
     }
   };
-
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('accessToken');
-      const refreshToken = await AsyncStorage.getItem('refreshToken');
-
-      if (token && !isTokenExpired(token)) {
-        setInitialRoute(SCREENS_NAME.HOME.MAIN);
-      } else if (refreshToken && !isTokenExpired(refreshToken)) {
-        setInitialRoute(SCREENS_NAME.LOGIN.MAIN);
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      const refreshToken = await AsyncStorage.getItem('refreshToken') ?? "";
+      if (accessToken) {
+        if (isTokenExpired(accessToken)) {
+          try {
+            const response = await authService.refreshToken(refreshToken, accessToken);
+            if (response.data.code === 200) {
+              const newAccessToken = response.data.result.accessToken;
+              const newRefreshToken = response.data.result.refreshToken
+              await AsyncStorage.setItem('accessToken', newAccessToken);
+              await AsyncStorage.setItem('refreshToken', newRefreshToken);
+              setInitialRoute(SCREENS_NAME.HOME.MAIN);
+            }
+          }
+          catch (err) {
+            setInitialRoute(SCREENS_NAME.LOGIN.MAIN);
+          }
+        } else {
+          setInitialRoute(SCREENS_NAME.HOME.MAIN);
+        }
       } else {
         setInitialRoute(SCREENS_NAME.LOGIN.MAIN);
       }

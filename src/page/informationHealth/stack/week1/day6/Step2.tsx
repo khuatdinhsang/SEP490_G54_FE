@@ -9,6 +9,7 @@ import TickComponent from './component/TickComponent';
 import LoadingScreen from '../../../../../component/loading';
 import { putLesson6 } from '../../../../../constant/type/lesson';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2Props {
   isDisabled: boolean;
@@ -22,6 +23,7 @@ const Step2 = (props: Step2Props) => {
   const [isTick2, setIsTick2] = useState(false);
   const [isTick3, setIsTick3] = useState(false);
   const [isTick4, setIsTick4] = useState(false);
+  const { t } = useTranslation()
   const [messageError, setMessageError] = useState<string>("")
   useEffect(() => {
     setIsDisabled(true);
@@ -72,35 +74,36 @@ const Step2 = (props: Step2Props) => {
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="변화 의지 기르기" />
+        <StepComponent textLeft="Step2" text={t("lesson.developToChange")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={310}
-          content="의지라는 것은 삶에서 정말 중요한 부분입니다. 무언가 바꿀때, 노력하겠다는 확고한 의지를 갖는 것이 가장 어렵습니다. <의지력의 재발견> 이라는 책에서 저자 바이마우스터 교수는 근육을 발달시키는 것처럼 의지도 훈련을 통해 키울 수 있다고 주장합니다. 다음의 내용 중 실천할 수 있는 것 하나를 골라보세요"
+          content={`${t("lesson.importantPartOfLive")} ${t("lesson.comeToChange")} ${t("lesson.hisBook")} ${t("lesson.putIntoPractice")}`}
         />
+
         <View style={{ marginTop: 20 }} />
         <TickComponent
           isTick={isTick1}
           setIsTick={setIsTick1}
-          content="동시에 한번에 일을 처리하지 않습니다."
+          content={t("lesson.thingSameTime")}
         />
         <View style={{ marginVertical: 7 }} />
         <TickComponent
           isTick={isTick2}
           setIsTick={setIsTick2}
-          content="동시에 한번에 일을 처리하지 않습니다."
+          content={t("lesson.listOfTodo")}
         />
         <View style={{ marginVertical: 7 }} />
         <TickComponent
           isTick={isTick3}
           setIsTick={setIsTick3}
-          content="동시에 한번에 일을 처리하지 않습니다."
+          content={t("lesson.putOff")}
         />
         <View style={{ marginVertical: 7 }} />
         <TickComponent
           isTick={isTick4}
           setIsTick={setIsTick4}
-          content="동시에 한번에 일을 처리하지 않습니다."
+          content={t("lesson.trainYourBody")}
         />
         <View style={{ marginVertical: 7 }} />
       </ScrollView>

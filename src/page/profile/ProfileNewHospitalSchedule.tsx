@@ -100,7 +100,7 @@ const ProfileNewHospitalSchedule = () => {
   const handleCreateSchedule = async (): Promise<any> => {
     setIsLoading(true)
     if (checkDate.getTime() < Date.now()) {
-      setIsValidTime("Invalid time")
+      setIsValidTime(t("placeholder.err.inValidTime"))
       setIsLoading(false)
       return
     }
@@ -142,7 +142,7 @@ const ProfileNewHospitalSchedule = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.header}>
         <HeaderNavigatorComponent
-          text="병원 일정 등록"
+          text={t("hospital.registerHospital")}
           isIconLeft={true}
           handleClickArrowLeft={() => {
             navigation.goBack();
@@ -153,7 +153,7 @@ const ProfileNewHospitalSchedule = () => {
         <View style={styles.container}>
           <View style={{ marginTop: 10 }} />
           <View style={styles.component}>
-            <Text style={styles.label}>병원방문 목적</Text>
+            <Text style={styles.label}>{t("hospital.purposeHospital")}</Text>
             <View style={flexRowCenter}>
               <HospitalTypeComponent
                 state={typeMakeHospitalSchedule}
@@ -169,7 +169,7 @@ const ProfileNewHospitalSchedule = () => {
             </View>
           </View>
           <View style={styles.component}>
-            <Text style={styles.label}>날짜선택</Text>
+            <Text style={styles.label}>{t("hospital.selectDate")}</Text>
             <View style={[flexRowSpaceBetween, { width: '100%' }]}>
               <View style={{ width: '31%' }}>
                 <SelectDate
@@ -211,10 +211,10 @@ const ProfileNewHospitalSchedule = () => {
             {isValidTime && <Text style={styles.textError}>{isValidTime}</Text>}
           </View>
           <View style={styles.component}>
-            <Text style={styles.label}>장소</Text>
+            <Text style={styles.label}>{t("lesson.location")}</Text>
             <TextInput
               style={styles.input}
-              placeholder="예시) 서울대병원"
+              placeholder={t("hospital.example1")}
               maxLength={200}
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
@@ -229,13 +229,13 @@ const ProfileNewHospitalSchedule = () => {
           </View>
           {addressError && <Text style={styles.textError}>{addressError}</Text>}
           <View style={styles.component}>
-            <Text style={styles.label}>메모</Text>
+            <Text style={styles.label}>{t("hospital.note")}</Text>
             <TextInput
               multiline
               maxLength={200}
               textAlignVertical='top'
               style={[styles.input, { height: 120 }]}
-              placeholder="예시) 서울대병원"
+              placeholder={t("hospital.example2")}
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
                 setNoteError("")
@@ -252,7 +252,7 @@ const ProfileNewHospitalSchedule = () => {
           <View style={{ marginTop: 15 }} />
           <ButtonComponent
             handleClick={handleCreateSchedule}
-            text="저장"
+            text={t("hospital.save")}
             isDisable={isDisable}
           />
           <View style={{ paddingTop: 20 }} />

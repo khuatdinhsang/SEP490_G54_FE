@@ -8,15 +8,17 @@ import DoctorComponent from '../../../components/DoctorComponent';
 import SelectComponent from './component/SelectComponent';
 import { putLesson5 } from '../../../../../constant/type/lesson';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2Props {
   setIsLoading: (value: boolean) => void;
   setDisabled: (valueActivity: boolean) => void;
   onSubmit: (value: putLesson5) => void
-  showDialog: boolean
+  // showDialog: boolean
 }
 const Step2 = (props: Step2Props) => {
-  const { setDisabled, onSubmit, setIsLoading, showDialog } = props
+  const { t } = useTranslation()
+  const { setDisabled, onSubmit, setIsLoading } = props
   const [indexActive, setIndexActive] = useState(0);
   // Các select component tiêu cực
   const [selectNegative1, setSelectNegative1] = useState(0);
@@ -73,16 +75,14 @@ const Step2 = (props: Step2Props) => {
         setIsLoading(false)
       }
     }
-    if (showDialog) {
-      getDataLesson5()
-    }
+    getDataLesson5()
   }, [])
   useEffect(() => {
     onSubmit({
       currentEmotion: indexActive === 1 ? false : true,
       whyIfRealistic: textNegative1,
-      // whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
-      whyIfNotBetterForLife: textNegative2,
+      whyIfNotBetterForLife: selectNegative2 === 2 ? textNegative2 : "",
+      // whyIfNotBetterForLife: textNegative2,
     })
     if (indexActive) {
       setDisabled(false)
@@ -93,17 +93,17 @@ const Step2 = (props: Step2Props) => {
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="우울감 다스리기 연습" />
+        <StepComponent textLeft="Step2" text={t("lesson.practiceDepression")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="다음 질문을 통해 현재 나의 우울을 다스리는 연습을 해봅시다."
+          content={t("lesson.managementDepression")}
         />
         <View style={{ marginTop: 20 }} />
         <SelectComponent
-          label="현재 나의 감정상태"
-          textLeft="부정적"
-          textRight="긍정적"
+          label={t("lesson.emotionalState")}
+          textLeft={t("lesson.negative")}
+          textRight={t("lesson.positive")}
           handleOnPressLeft={() => setIndexActive(1)}
           handleOnPressRight={() => setIndexActive(2)}
           indexActive={indexActive}
@@ -113,9 +113,9 @@ const Step2 = (props: Step2Props) => {
           indexActive === 1 && (
             <View style={{ marginTop: 25 }}>
               <SelectComponent
-                label="나의 부정적인 생각이 사실과 일치하나요?"
-                textLeft="예"
-                textRight="아니오"
+                label={t("lesson.negativeThoughts")}
+                textLeft={t("common.text.yes")}
+                textRight={t("common.text.no")}
                 handleOnPressLeft={() => {
                   setSelectNegative1(1);
                 }}
@@ -126,8 +126,8 @@ const Step2 = (props: Step2Props) => {
               />
               <View style={{ marginTop: 25 }} />
               <InputComponent
-                label="부정적인 생각"
-                placeholder="부정적인 생각을 적어주세요"
+                label={t("lesson.thinkAboutNegative")}
+                placeholder={t("lesson.writeNegativeThoughts")}
                 multiline={true}
                 heightLine={120}
                 value={textNegative1}
@@ -142,9 +142,9 @@ const Step2 = (props: Step2Props) => {
               />
               <View style={{ marginTop: 25 }} />
               <SelectComponent
-                label="이러한 생각을 하면 기분이 좋아지나요?"
-                textLeft="예"
-                textRight="아니오"
+                label={t("lesson.makeFeelBetter")}
+                textLeft={t("common.text.yes")}
+                textRight={t("common.text.no")}
                 handleOnPressLeft={() => {
                   setSelectNegative2(1);
                 }}
@@ -155,8 +155,8 @@ const Step2 = (props: Step2Props) => {
               />
               <View style={{ marginTop: 25 }} />
               <InputComponent
-                label="아니라면 어떤 생각을 해야할까요?"
-                placeholder="내용을 입력해주세요"
+                label={t("lesson.shoutIThink")}
+                placeholder={t("lesson.enterDetail")}
                 multiline={true}
                 heightLine={120}
                 value={textNegative2}
