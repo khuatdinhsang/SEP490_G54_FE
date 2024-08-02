@@ -25,6 +25,7 @@ import DialogSingleComponent from '../../component/dialog-single';
 import { listRegisterMedicineData } from '../../constant/type/medical';
 import { planService } from '../../services/plan';
 import {
+  convertDay,
   generateRandomId,
   getMondayOfCurrentWeek,
   getPreviousMonday,
@@ -73,22 +74,24 @@ const ListRegisterMedication = ({ route }: any) => {
   }, []);
 
   const nextPage = async (): Promise<void> => {
+    console.log("2", listRegisterMedicationSubmit)
+
     setIsLoading(true);
     try {
       const res = await planService.postMedicine(listRegisterMedicationSubmit);
       if (res.code === 200) {
         // dispatch(setScreen(5));
         setIsLoading(false);
-        listRegisterMedicationInterface.forEach(registerMedication => {
-          return TimerModule.createSchedule({
-            id: generateRandomId(10),
-            title: 'bạn có lịch uống thuốc',
-            description: registerMedication.medicineTitle,
-            hour: Number(registerMedication.time.split(':')[0]),
-            minute: Number(registerMedication.time.split(':')[1]),
-            daysOfWeek: registerMedication.indexDay,
-          });
-        });
+        // listRegisterMedicationInterface.forEach(registerMedication => {
+        //   return TimerModule.createSchedule({
+        //     id: generateRandomId(10),
+        //     title: 'bạn có lịch uống thuốc',
+        //     description: registerMedication.medicineTitle,
+        //     hour: Number(registerMedication.time.split(':')[0]),
+        //     minute: Number(registerMedication.time.split(':')[1]),
+        //     daysOfWeek: registerMedication.indexDay,
+        //   });
+        // });
         navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.NUMBER_STEPS);
       } else {
         setMessageError('Unexpected error occurred.');
@@ -105,7 +108,7 @@ const ListRegisterMedication = ({ route }: any) => {
   };
 
   const handleRegisterMedication = () => {
-    navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
+    navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
     setMessageError('');
   };
 
@@ -153,36 +156,41 @@ const ListRegisterMedication = ({ route }: any) => {
                 {t('planManagement.text.registerMedication')}
               </Text>
               {listRegisterMedicationInterface &&
-                listRegisterMedicationInterface.map((item, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      flexRow,
-                      styles.example,
-                      { backgroundColor: colors.white },
-                    ]}>
-                    <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
-                      <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
-                      <View style={styles.detailExample}>
-                        <Text
-                          style={[
-                            styles.textPlan,
-                            { fontSize: 16, color: colors.primary },
-                          ]}>
-                          {item.medicineTitle}
-                        </Text>
-                        <Text style={styles.textChooseDay}>
-                          {item.weekday.join(', ')} | {item.time}
-                        </Text>
+                listRegisterMedicationInterface.map((item, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={[
+                        flexRow,
+                        styles.example,
+                        { backgroundColor: colors.white },
+                      ]}>
+                      <View style={[flexRow, { flex: 1, marginRight: 10 }]}>
+                        <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
+                        <View style={styles.detailExample}>
+                          <Text
+                            style={[
+                              styles.textPlan,
+                              { fontSize: 16, color: colors.primary },
+                            ]}>
+                            {item.medicineTitle}
+                          </Text>
+                          <Text style={styles.textChooseDay}>
+                            {item.weekday?.map((item: any) => convertDay(item)).join(', ')} | {item.time}
+                          </Text>
+                        </View>
                       </View>
+                      <Pressable onPress={() => handleDeleteMedication(index)}>
+                        <Text style={styles.textDelete}>
+                          {t('common.text.delete')}
+                        </Text>
+                      </Pressable>
                     </View>
-                    <Pressable onPress={() => handleDeleteMedication(index)}>
-                      <Text style={styles.textDelete}>
-                        {t('common.text.delete')}
-                      </Text>
-                    </Pressable>
-                  </View>
-                ))}
+                  )
+                }
+
+
+                )}
               <View style={{ marginVertical: 20 }}>
                 <Pressable
                   onPress={handleRegisterMedication}

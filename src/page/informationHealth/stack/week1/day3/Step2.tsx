@@ -10,6 +10,7 @@ import { RootState } from '../../../../../store/store';
 import { setClosePerson1Redux, setClosePerson2Redux } from '../../../../../store/closePerson.slice';
 import LoadingScreen from '../../../../../component/loading';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2Props {
   setIsDisabled: (value: boolean) => void,
@@ -31,50 +32,50 @@ const Step2 = (props: Step2Props) => {
     closePerson2MessageRedux
   } = props
   const dispatch = useDispatch();
-
+  const { t } = useTranslation()
   const closePerson1Redux = useSelector((state: RootState) => state.closePerson.closePerson1);
   const closePerson2Redux = useSelector((state: RootState) => state.closePerson.closePerson2);
   const [closePerson1, setClosePerson1] = useState<string>(closePerson1Redux)
   const [closePerson2, setClosePerson2] = useState<string>(closePerson2Redux)
   const [messageError, setMessageError] = useState<string>("")
-  useEffect(() => {
-    const getDataLesson3 = async () => {
-      setIsLoading(true)
-      try {
-        const res = await lessonService.getLesson3()
-        if (res.code === 200) {
-          setMessageError("");
-          setClosePerson1(res.result.closePerson1)
-          setClosePerson2(res.result.closePerson2)
-          setIsLoading(false)
-        } else {
-          setMessageError("Unexpected error occurred.");
-        }
-      } catch (error: any) {
-        if (error?.response?.status === 400) {
-          setMessageError(error.response.data.message);
-        } else {
-          setMessageError("Unexpected error occurred.");
-        }
-      }
-      finally {
-        setIsLoading(false)
-      }
-    }
-    getDataLesson3()
-  }, [])
+  // useEffect(() => {
+  //   const getDataLesson3 = async () => {
+  //     setIsLoading(true)
+  //     try {
+  //       const res = await lessonService.getLesson3()
+  //       if (res.code === 200) {
+  //         setMessageError("");
+  //         setClosePerson1(res.result.closePerson1 ?? "")
+  //         setClosePerson2(res.result.closePerson2 ?? "")
+  //         setIsLoading(false)
+  //       } else {
+  //         setMessageError("Unexpected error occurred.");
+  //       }
+  //     } catch (error: any) {
+  //       if (error?.response?.status === 400) {
+  //         setMessageError(error.response.data.message);
+  //       } else {
+  //         setMessageError("Unexpected error occurred.");
+  //       }
+  //     }
+  //     finally {
+  //       setIsLoading(false)
+  //     }
+  //   }
+  //   getDataLesson3()
+  // }, [])
 
   useEffect(() => {
-    dispatch(setClosePerson1Redux(closePerson1.trim()));
-    dispatch(setClosePerson2Redux(closePerson2.trim()));
+    dispatch(setClosePerson1Redux(closePerson1?.trim()));
+    dispatch(setClosePerson2Redux(closePerson2?.trim()));
   }, [closePerson1, closePerson2, dispatch]);
 
   useEffect(() => {
-    const isDisable = (closePerson1EvaluationRedux.trim().length === 0 ||
-      closePerson2EvaluationRedux.trim().length === 0 ||
-      closePerson1MessageRedux.trim().length === 0 ||
-      closePerson2MessageRedux.trim().length === 0 ||
-      closePerson1.trim().length === 0 || closePerson2.trim().length === 0
+    const isDisable = (closePerson1EvaluationRedux?.trim().length === 0 ||
+      closePerson2EvaluationRedux?.trim().length === 0 ||
+      closePerson1MessageRedux?.trim().length === 0 ||
+      closePerson2MessageRedux?.trim().length === 0 ||
+      closePerson1?.trim().length === 0 || closePerson2?.trim().length === 0
     )
     setIsDisabled(isDisable)
   }, [closePerson1, closePerson2, setIsDisabled])
@@ -84,23 +85,21 @@ const Step2 = (props: Step2Props) => {
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="사랑하는 사람 작성해보기" />
+        <StepComponent textLeft="Step2" text={t("lesson.writeLove")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="사랑하는 사람 3명을 작성해봅시다."
+          content={t("lesson.writeDownThreeLove")}
         />
         <View style={{ marginTop: 20 }} />
         <Text style={styles.text}>
-          나에 대한 평가와 긍정적인 메시지도 받아 봅시다. 이름 작성 후
-          공유하기를 눌러 카카오톡이나 메시지로 전송해서 작성을 부탁해보세요.
-          이름을 누르면 지인의 작성 내용을 확인할 수 있습니다.
+          {t("lesson.receiveEvaluation")}{t("lesson.clickShare")}{t("lesson.canCheck")}
         </Text>
         <View style={{ marginTop: 32 }} />
         <InputShareComponent
           text="1."
-          textButton="공유하기"
-          placeholder="이름"
+          textButton={t("common.text.share")}
+          placeholder={t("common.text.name")}
           closePerson={closePerson1}
           step={step}
           setStep={setStep}
@@ -109,8 +108,8 @@ const Step2 = (props: Step2Props) => {
         />
         <InputShareComponent
           text="2."
-          textButton="공유하기"
-          placeholder="이름"
+          textButton={t("common.text.share")}
+          placeholder={t("common.text.name")}
           closePerson={closePerson2}
           step={step}
           setStep={setStep}

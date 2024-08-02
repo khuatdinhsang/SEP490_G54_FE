@@ -12,8 +12,10 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import { lessonService } from '../../../../../services/lesson';
 import LoadingScreen from '../../../../../component/loading';
+import { useTranslation } from 'react-i18next';
 
 const Week1Day2 = () => {
+  const { t } = useTranslation()
   const [step, setStep] = useState(1);
   const [advantage, setAdvantage] = useState('');
   const [errAdvantage, setErrAdvantage] = useState('');
@@ -86,13 +88,13 @@ const Week1Day2 = () => {
       <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
         <HeaderNavigatorComponent
           isIconLeft={true}
-          text="학습하기"
+          text={t("lesson.learn")}
           handleClickArrowLeft={() => {
             navigation.goBack();
           }}
         />
       </View>
-      {step ? <GreetingComponent text="인사말" /> : <View />}
+      {step ? <GreetingComponent text={t("lesson.greetings")} /> : <View />}
       <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
         {step === 2 && <Step2
@@ -114,7 +116,7 @@ const Week1Day2 = () => {
         }}>
         <ButtonComponent
           isDisable={((advantage && defect) || step !== 2) ? false : true}
-          text={step ? '다음' : '홈으로 돌아가기'}
+          text={step ? t("common.text.next") : t("planManagement.text.gotoHome")}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
         />

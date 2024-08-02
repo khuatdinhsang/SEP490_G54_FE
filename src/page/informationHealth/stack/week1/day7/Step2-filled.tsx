@@ -17,6 +17,7 @@ import { WidthDevice } from '../../../../../util/Dimenssion';
 import { putLesson7 } from '../../../../../constant/type/lesson';
 import LoadingScreen from '../../../../../component/loading';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2FilledProps {
   isDisabled: boolean;
@@ -26,6 +27,7 @@ interface Step2FilledProps {
 }
 const Step2Filled = (props: Step2FilledProps) => {
   const { isDisabled, setIsDisabled, onSubmit, setIsLoading } = props;
+  const { t } = useTranslation()
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [text3, setText3] = useState('');
@@ -45,15 +47,15 @@ const Step2Filled = (props: Step2FilledProps) => {
         const res = await lessonService.getLesson7()
         if (res.code === 200) {
           setMessageError("");
-          setText1(res.result.whatIsHealth)
-          setText2(res.result.roadBlock)
-          setText3(res.result.solution)
-          setText4(res.result.commitment)
+          setText1(res.result.whatIsHealth ?? "")
+          setText2(res.result.roadBlock ?? "")
+          setText3(res.result.solution ?? "")
+          setText4(res.result.commitment ?? "")
           setMultiText({
-            text1: res.result.activityCommitment,
-            text2: res.result.dietCommitment,
-            text3: res.result.mentalCommitment,
-            text4: res.result.medicineCommitment
+            text1: res.result.activityCommitment ?? "",
+            text2: res.result.dietCommitment ?? "",
+            text3: res.result.mentalCommitment ?? "",
+            text4: res.result.medicineCommitment ?? ""
           })
           setIsLoading(false)
         } else {
@@ -85,14 +87,14 @@ const Step2Filled = (props: Step2FilledProps) => {
       diary: ""
     })
     if (
-      text1.trim().length > 0 &&
-      text2.trim().length &&
-      text3.trim().length &&
-      text4.trim().length &&
-      multiText.text1.trim().length &&
-      multiText.text2.trim().length &&
-      multiText.text3.trim().length &&
-      multiText.text4.trim().length
+      text1?.trim().length > 0 &&
+      text2?.trim().length &&
+      text3?.trim().length &&
+      text4?.trim().length &&
+      multiText.text1?.trim().length &&
+      multiText.text2?.trim().length &&
+      multiText.text3?.trim().length &&
+      multiText.text4?.trim().length
     ) {
       setIsDisabled(false);
     } else {
@@ -103,19 +105,19 @@ const Step2Filled = (props: Step2FilledProps) => {
   return (
     <View style={[styles.container]}>
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step2" text="건강 서명서 작성하기" />
+        <StepComponent textLeft="Step2" text={t("lesson.writeHealthMission")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="학습을 시작하기 전, 건강사명서를 작성해봅시다."
+          content={t("lesson.beforeLearning")}
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="플레이스 홀더"
-          label="나에게 건강이란"
+          placeholder={t("lesson.example15")}
+          label={t("lesson.healthMeansToMe")}
           value={text1}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText1("")
             }
             setText1(value)
@@ -123,7 +125,7 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <Text style={[styles.text, { marginBottom: 8 }]}>
-          건강 실천을 위한 다짐
+          {t("lesson.commitmentToHealth")}
         </Text>
         <MultiTextInputComponent
           multiText={multiText}
@@ -131,11 +133,11 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="실천을어렵게하는장애요인"
-          label="내용 입력중"
+          placeholder={t("lesson.example16")}
+          label={t("lesson.makeImplementation")}
           value={text2}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText2("")
             }
             setText2(value)
@@ -143,11 +145,11 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="극복방법"
-          label="플레이스 홀더"
+          placeholder={t("lesson.example17")}
+          label={t("lesson.howToOverCome")}
           value={text3}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText3("")
             }
             setText3(value)
@@ -155,11 +157,11 @@ const Step2Filled = (props: Step2FilledProps) => {
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
-          placeholder="나의다짐한마디"
-          label="플레이스 홀더"
+          placeholder={t("lesson.example18")}
+          label={t("lesson.wordOfPledge")}
           value={text4}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText4("")
             }
             setText4(value)

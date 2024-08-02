@@ -1,25 +1,26 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {paddingHorizontalScreen} from '../../../styles/padding';
-import {WidthDevice} from '../../../util/Dimenssion';
+import { IMAGE } from '../../../constant/image';
+import { paddingHorizontalScreen } from '../../../styles/padding';
+import { WidthDevice } from '../../../util/Dimenssion';
+import { useTranslation } from 'react-i18next';
 
 interface GuideProps {
   title?: string;
   description?: string;
 }
 
-const GuideTop = ({title, description}: GuideProps) => {
+const GuideTop = ({ title, description }: GuideProps) => {
+  const { t } = useTranslation()
   return (
     <View style={guideStyles.container}>
       <Image source={IMAGE.HOME.GUIDE.GUIDE1} style={guideStyles.polygon} />
       <View style={[guideStyles.containerContent]}>
         <View>
-          <Text style={guideStyles.textFirst}>전체메뉴</Text>
+          <Text style={guideStyles.textFirst}>{t("home.fullMenu")}</Text>
           <Text style={guideStyles.textSecond}>
-            스마트 헬싱에 있는 전체 메뉴들을 보여줍니다.어떤 메뉴/기능이
-            어디있는지 모른다면 여기를 눌러보세요.
+            {t("home.showAllMenu")}
           </Text>
         </View>
       </View>

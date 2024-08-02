@@ -59,17 +59,18 @@ const Step3_1 = (props: Step3Props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StepComponent
           textLeft="Step3"
-          text="최상의 환경, 방해 환경 작성하기"
+          text={t("lesson.createEnvironment")}
         />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={115}
-          content="나의 건강에 도움이 되는 최상의 환경과 나의 건강에 방해가 되는 방해 환경을 적어봅시다."
+          content={t("lesson.writeEnvironment")}
         />
         <View style={{ marginTop: 30 }} />
         <Text style={styles.text}>
-          <Text style={{ fontWeight: '700' }}>{'최상의 환경\n'}</Text>머무는 동안
-          계획에 집중하고 잘 실천할 수 있는 장소, 시간, 사람을 작성해보세요
+          <Text style={{ fontWeight: '700' }}>{t("lesson.bestEnvironment")}</Text>
+          {'\n'}
+          {t("lesson.writePlacesAndTime")}
         </Text>
         <View style={{ marginTop: 32 }} />
         <InputComponent
@@ -82,8 +83,8 @@ const Step3_1 = (props: Step3Props) => {
             }
             setAddress(value)
           }}
-          placeholder="예시) 사무실, 학교 등"
-          label="장소"
+          placeholder={t("lesson.example5")}
+          label={t("lesson.location")}
           heightLine={50}
           textError={errAddress}
         />
@@ -98,8 +99,8 @@ const Step3_1 = (props: Step3Props) => {
             }
             setTime(value)
           }}
-          placeholder="예시) 점심 이후 등"
-          label="시간"
+          placeholder={t("lesson.example6")}
+          label={t("common.text.hours")}
           heightLine={50}
           textError={errTime}
         />

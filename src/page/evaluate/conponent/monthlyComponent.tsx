@@ -34,7 +34,7 @@ const MonthComponent = (props: MonthLyComponentProps) => {
         >
             <View style={flexRow}>
                 <Image source={IMAGE.EVALUATE.NOTE} width={36} height={36} />
-                <Text style={styles.textTime}>{data.monthNumber}월 실천평가</Text>
+                <Text style={styles.textTime}>{data.monthNumber}{t("evaluate.monthlyEvaluate")}</Text>
             </View>
             <View style={flexRow}>
                 <Pressable

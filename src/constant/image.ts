@@ -34,6 +34,7 @@ export const IMAGE = {
     EMAIL_POLYGON: require('assets/image/register/Polygon.png'),
     EMAIL_RECTANGLE: require('assets/image/register/Rectangle.png'),
     EMAIL_UNION: require('assets/image/register/Union.png'),
+    ICON_X: require('assets/image/register/icon_X.png'),
   },
   ICON_CHECK: require('assets/icon/icon-check.png'),
   ICON_CHECK_COLOR: require('assets/icon/icon_check-color.png'),
@@ -48,6 +49,8 @@ export const IMAGE = {
   ICON_ARROW_RIGHT_GRAY: require('assets/icon/icon-arrow_right_gray.png'),
   ICON_PLUS_ORANGE: require('assets/icon/icon_plus_orange.png'),
   POLYGON3: require('assets/icon/polygon-3.png'),
+  ICON_LESSON: require('assets/icon/lesson.png'),
+  ICON_LIGHT: require('assets/icon/light.png'),
   PLAN_MANAGEMENT: {
     ARROW_LEFT: require('assets/image/planmanagement/arrow-left.png'),
     HUMAN: require('assets/image/planmanagement/person-running.png'),
@@ -67,6 +70,8 @@ export const IMAGE = {
       TYPE1: require('assets/image/profile/anatomical-heart_1fac0_type1.png'),
       TYPE2: require('assets/image/profile/anatomical-heart_1fac0_type2.png'),
     },
+    STAMP: require('assets/image/profile/stamp.png'),
+    SUBTRACTION: require('assets/image/profile/Subtract.png'),
   },
   QUESTION: {
     TEXT: require('assets/image/question/texting.png'),

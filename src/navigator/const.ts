@@ -78,6 +78,7 @@ import FoodIntakeRecord from '../page/recordHealthData/pages/FoodIntake';
 import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 import Week1Day6 from '../page/informationHealth/stack/week1/day6';
 import Week1Day7 from '../page/informationHealth/stack/week1/day7';
+import MissionStatement from '../page/profile/MissionStatement';
 export const SCREENS_NAME = {
   LOGIN: {
     MAIN: 'Main Login',
@@ -103,6 +104,7 @@ export const SCREENS_NAME = {
     MAIN: 'Main Profile',
     MAKE_HOSPITAL_SCHEDULE: 'Make Hospital Schedule',
     NEW_HOSPITAL_SCHEDULE: 'New Hospital Schedule',
+    MISSION_STATEMENT: 'Mission Statement',
   },
   FORGOT_PASSWORD: {
     VERIFY_EMAIL: 'Verify ForgotPassword',
@@ -308,6 +310,11 @@ const SCREENS_STACK_PROFILE = [
     name: SCREENS_NAME.PROFILE.NEW_HOSPITAL_SCHEDULE,
     component: ProfileNewHospitalSchedule,
   },
+  {
+    name: SCREENS_NAME.PROFILE.MISSION_STATEMENT,
+    component: MissionStatement,
+  },
+
 ];
 const SCREENS_STACK_QUESTION = [
   {
@@ -526,15 +533,20 @@ const SCREEN_STACK_INFORMATION_HEALTH = [
 
 const SCREENS_STACK = [
   ...SCREENS_STACK_SETTING,
-  ...SCREENS_STACK_LOGIN,
   ...SCREENS_STACK_HOME,
-  ...SCREENS_STACK_REGISTER,
-  ...SCREENS_STACK_FORGOT_PASSWORD,
   ...SCREENS_STACK_PLAN_MANAGEMENT,
   ...SCREENS_STACK_PROFILE,
   ...SCREENS_STACK_QUESTION,
   ...SCREENS_STACK_RECORD_DATA,
   ...SCREENS_STACK_EVALUATE,
   ...SCREEN_STACK_INFORMATION_HEALTH,
+  ...SCREENS_STACK_LOGIN,
+  ...SCREENS_STACK_REGISTER,
+  ...SCREENS_STACK_FORGOT_PASSWORD,
 ];
+// const AUTH_STACK = [
+//   ...SCREENS_STACK_LOGIN,
+//   ...SCREENS_STACK_REGISTER,
+//   ...SCREENS_STACK_FORGOT_PASSWORD,
+// ]
 export { SCREENS_STACK };

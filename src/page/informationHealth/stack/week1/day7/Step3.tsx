@@ -6,6 +6,7 @@ import StepComponent from '../../../../informationHealth/components/StepComponen
 import DoctorComponent from '../../../components/DoctorComponent';
 import InputComponent from '../../../../../component/input';
 import { lessonService } from '../../../../../services/lesson';
+import { useTranslation } from 'react-i18next';
 
 interface Step2Props {
   onSubmit: (value: string) => void;
@@ -16,9 +17,10 @@ const Step3 = (props: Step2Props) => {
   const { onSubmit, setIsDisabled, setIsLoading } = props;
   const [text, setText] = useState('');
   const [messageError, setMessageError] = useState<string>("")
+  const { t } = useTranslation()
   useEffect(() => {
     onSubmit(text)
-    if (text.trim().length > 0) {
+    if (text?.trim().length > 0) {
       setIsDisabled(false)
     } else {
       setIsDisabled(true)
@@ -32,7 +34,7 @@ const Step3 = (props: Step2Props) => {
         if (res.code === 200) {
           setMessageError("");
           setIsLoading(false)
-          setText(res.result.diary)
+          setText(res.result.diary ?? "")
         } else {
           setMessageError("Unexpected error occurred.");
         }
@@ -53,23 +55,23 @@ const Step3 = (props: Step2Props) => {
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <StepComponent textLeft="Step3" text="감사일기 작성하기" />
+        <StepComponent textLeft="Step3" text={t("lesson.gratitudeJournal")} />
         <View style={{ marginTop: 32 }} />
         <DoctorComponent
           height={85}
-          content="이번주의 감사했던 일들을 작성해봅시다."
+          content={t("lesson.writeDownThings")}
         />
         <View style={{ marginTop: 20 }} />
         <InputComponent
           value={text}
           onChangeText={(value) => {
-            if (value.trim().length === 0) {
+            if (value?.trim().length === 0) {
               setText("")
             }
             setText(value)
           }}
-          placeholder="예시) 건강을 중요하게 생각"
-          label="변화하고자 하는 가치관"
+          placeholder={t("lesson.example19")}
+          label={t("lesson.valueWantToChange")}
           heightLine={120}
           multiline={true}
         />

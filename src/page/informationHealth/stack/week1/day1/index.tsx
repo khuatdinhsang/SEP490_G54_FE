@@ -15,9 +15,11 @@ import Done from './Done';
 import LoadingScreen from '../../../../../component/loading';
 import { lessonService } from '../../../../../services/lesson';
 import { SCREENS_NAME } from '../../../../../navigator/const';
+import { useTranslation } from 'react-i18next';
 
 const Week1Day1 = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const { t } = useTranslation()
   const [step, setStep] = useState(1);
   const [isDialog, setIsDialog] = useState(false);
   const [midTermGoal, setMidTermGoal] = useState('');
@@ -33,8 +35,8 @@ const Week1Day1 = () => {
         const res = await lessonService.getLesson1()
         if (res.code === 200) {
           setMessageError("");
-          setMidTermGoal(res.result.intermediateGoal)
-          setOneYearGoal(res.result.endOfYearGoal)
+          setMidTermGoal(res.result.intermediateGoal ?? "")
+          setOneYearGoal(res.result.endOfYearGoal ?? "")
           setIsLoading(false)
         } else {
           setMessageError("Unexpected error occurred.");
@@ -68,15 +70,15 @@ const Week1Day1 = () => {
   };
   const handleClickButtonConfirmStep2 = async (): Promise<void> => {
     setIsLoading(true)
+    setIsDialog(false);
     try {
       const data = {
-        endOfYearGoal: oneYearGoal.trim(),
-        intermediateGoal: midTermGoal.trim()
+        endOfYearGoal: oneYearGoal?.trim(),
+        intermediateGoal: midTermGoal?.trim()
       }
       const res = await lessonService.putLesson1(data)
       if (res.code === 201) {
         setIsLoading(false)
-        setIsDialog(false);
         setStep(0);
       }
     } catch (error: any) {
@@ -95,13 +97,13 @@ const Week1Day1 = () => {
       <View style={{ paddingHorizontal: paddingHorizontalScreen * 2 }}>
         <HeaderNavigatorComponent
           isIconLeft={true}
-          text="학습하기"
+          text={t("lesson.learn")}
           handleClickArrowLeft={() => {
             navigation.goBack();
           }}
         />
       </View>
-      <GreetingComponent text="인사말" />
+      <GreetingComponent text={t("lesson.greetings")} />
       <View style={{ flex: 1 }}>
         {step === 1 && <Step1 />}
         {step === 2 && <Step2
@@ -122,8 +124,8 @@ const Week1Day1 = () => {
           marginBottom: 20,
         }}>
         <ButtonComponent
-          isDisable={((midTermGoal && oneYearGoal) || step !== 2) ? false : true}
-          text={step ? '다음' : '홈으로 돌아가기'}
+          isDisable={((midTermGoal?.trim().length > 0 && oneYearGoal?.trim().length > 0) || step !== 2) ? false : true}
+          text={step ? t("common.text.next") : t("planManagement.text.gotoHome")}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}
         />
@@ -133,10 +135,10 @@ const Week1Day1 = () => {
           isOverlay={true}
           isActive={true}
           imageSource={IMAGE.INFORMATION_HEALTH.ICON_WARNING}
-          title="정말 뒤로가시겠습니까?"
-          content="입력하신 내용은 자동으로 저장됩니다."
-          textButtonCancel="취소"
-          textButtonConfirm="네"
+          title={t("lesson.goBack")}
+          content={t("lesson.savedAuto")}
+          textButtonCancel={t("common.text.cancel")}
+          textButtonConfirm={t("common.text.yes")}
           handleClickButtonCancel={handleClickButtonCancelStep2}
           handleClickButtonConfirm={handleClickButtonConfirmStep2}
           btnDelete={true}

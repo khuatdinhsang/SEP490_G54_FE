@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         position: 'absolute',
         zIndex: 1000,
-        right: 15,
+        right: 10,
         color: colors.gray_G04
     },
     textRightFocused: {

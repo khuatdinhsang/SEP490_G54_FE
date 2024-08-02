@@ -6,10 +6,11 @@ import { flexCenter, flexRow, flexRowSpaceBetween } from '../../../styles/flex'
 import { questionRes } from '../../../constant/type/question'
 
 const DescriptionColor = () => {
+    const { t } = useTranslation()
     return (
         <View style={flexRow}>
             <View style={[styles.color, { backgroundColor: colors.gray_G03 }]}></View>
-            <Text style={[styles.text, { marginRight: 10 }]}>지난달</Text>
+            <Text style={[styles.text, { marginRight: 10 }]}>{t("common.text.lastMonth")}</Text>
             <View style={[styles.color, { backgroundColor: colors.orange_04 }]}></View>
             <View style={[styles.color, { backgroundColor: colors.green }]}></View>
             <View style={[styles.color, { backgroundColor: colors.blue_01 }]}></View>

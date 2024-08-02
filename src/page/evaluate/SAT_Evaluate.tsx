@@ -78,8 +78,8 @@ const SAT_Evaluate = ({ route }: any) => {
             <ScrollView contentContainerStyle={{ paddingBottom: 100 }} style={styles.scrollView}>
                 <View style={[styles.content, styles.shadowBox]}>
                     <View>
-                        <Text style={styles.textTitle}>건강 경영 전략</Text>
-                        <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>종합</Text>
+                        <Text style={styles.textTitle}>{t("evaluate.managementStrategy")}</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.synthesis")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartOne}
@@ -87,8 +87,8 @@ const SAT_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10 }]}>핵심역량</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>주도적으로 위기를 극복하고 긍정적으로 성장하기 위해 필요한 핵심 전략에 대한 평가입니다</Text>
+                        <Text style={[styles.textAva, { marginTop: 10 }]}>{t("evaluate.coreCompetencies")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.coreStrategies")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartTwo}
@@ -96,8 +96,8 @@ const SAT_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10, }]}>핵심역량</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>주도적으로 위기를 극복하고 긍정적으로 성장하기위해 필요한 핵심 전략에 대한 평가입니다</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, }]}>{t("evaluate.coreCompetencies")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.proactivelyOvercome")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartThree}
@@ -105,8 +105,8 @@ const SAT_Evaluate = ({ route }: any) => {
                         />
                     </View>
                     <View>
-                        <Text style={[styles.textAva, { marginTop: 10, }]}>실행전략</Text>
-                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>계획한 것을 실행으로 옮기고 건강 행동을 지속적으로 유지하기 위해 필요한 전략에 대한 평가입니다.</Text>
+                        <Text style={[styles.textAva, { marginTop: 10, }]}>{t("evaluate.executionStrategy")}</Text>
+                        <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.plansAction")}</Text>
                         <DescriptionColor />
                         <MonthlyChartEvaluate
                             data={chartFour}

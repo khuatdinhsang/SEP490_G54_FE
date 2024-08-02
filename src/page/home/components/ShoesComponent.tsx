@@ -10,6 +10,7 @@ import Guide from './GuideDown';
 import CounterStepModule from '../../../native-module/counter-step.module';
 import { counterStepService } from '../../../services/counterstep';
 import { dateNow } from '../../../util';
+import { useTranslation } from 'react-i18next';
 
 interface ShoesProps {
   progressBar: number;
@@ -28,17 +29,18 @@ const ShoesComponent = ({ progressBar, guide, counterStep, planCounterStep }: Sh
     }, 60 * 1000)
     return () => clearInterval(interval)
   }, [])
+  const { t } = useTranslation()
   return (
     <View style={[guide ? styles.guideSpecial : {}, styles.container]}>
       {guide && (
         <Guide
-          title={'오늘의 기록'}
-          description={'오늘의 걸음수와 칼로리 소모 내역을 보여줍니다.'}
+          title={t("home.todayRecord")}
+          description={t("home.todaySteps")}
         />
       )}
       <View style={flexRow}>
         <Image source={IMAGE.HOME.SHOE} style={styles.unitIcon} />
-        <Text style={styles.unitTitle}>오늘의 기록</Text>
+        <Text style={styles.unitTitle}>{t("home.todayRecord")}</Text>
       </View>
       <View style={[styles.shoeUnit]}>
         <View style={flexRowSpaceBetween}>
@@ -46,9 +48,9 @@ const ShoesComponent = ({ progressBar, guide, counterStep, planCounterStep }: Sh
             <Text style={{ color: colors.black, fontWeight: '700', fontSize: 18 }}>
               {counterStep}
             </Text>
-            <Text style={{ fontSize: 18 }}>/{planCounterStep} 걸음</Text>
+            <Text style={{ fontSize: 18 }}>/{planCounterStep} {t("home.step")}</Text>
           </Text>
-          <Text style={styles.shoeTextRight}>{dateTime} 기준</Text>
+          <Text style={styles.shoeTextRight}>{dateTime} {t("home.standard")}</Text>
         </View>
         {/* <View style={[flexRow, styles.shoeContainerKcal]}>
           <Text style={styles.shoeTextKcal}>

@@ -1,15 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
-import {IMAGE} from '../../../constant/image';
-import {flexRow} from '../../../styles/flex';
+import { IMAGE } from '../../../constant/image';
+import { flexRow } from '../../../styles/flex';
 import Guide from './GuideDown';
+import { useTranslation } from 'react-i18next';
 
 interface ClockProps {
   guide: boolean;
 }
 
-const ClockComponent = ({guide}: ClockProps) => {
+const ClockComponent = ({ guide }: ClockProps) => {
+  const { t } = useTranslation("")
   return (
     <View style={[guide ? styles.guideSpecial : {}, styles.container]}>
       {guide && (
@@ -22,7 +24,7 @@ const ClockComponent = ({guide}: ClockProps) => {
       )}
       <View style={[flexRow, styles.clockUnit]}>
         <Image source={IMAGE.HOME.CLOCK} style={styles.unitIcon} />
-        <Text style={styles.unitTitle}>오늘의 해야 할 일 </Text>
+        <Text style={styles.unitTitle}>{t("home.thingsTodo")}</Text>
       </View>
       <View style={[flexRow, styles.clockItemRow]}>
         <Image source={IMAGE.ICON_CHECK} style={styles.iconCheck} />

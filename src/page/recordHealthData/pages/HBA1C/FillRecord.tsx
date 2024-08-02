@@ -172,6 +172,7 @@ const FillRecord = ({ route }: any) => {
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetGlycemic}
                                         error={glycemicError}
+                                        styleInput={{ marginLeft: 10 }}
                                     />
                                 </View>
                             </View>
@@ -198,6 +199,7 @@ const FillRecord = ({ route }: any) => {
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetChoresterol}
                                         error={choresterolError}
+                                        styleInput={{ marginLeft: -10 }}
                                     />
                                 </View>
                             </View>
@@ -225,6 +227,7 @@ const FillRecord = ({ route }: any) => {
                                             keyboardType={"numeric"}
                                             handleSetValue={handleSetGlucozer}
                                             error={glucozerError}
+                                            styleInput={{ marginLeft: -10 }}
                                         />
                                     </View>
 

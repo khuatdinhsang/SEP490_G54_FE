@@ -23,6 +23,7 @@ interface MonthlyChartProps {
         y4?: number;
     }>;
 }
+
 const CustomLabelComponent = (props: any) => (
     <Svg>
         <Defs>
@@ -48,14 +49,13 @@ const CustomLabelComponent = (props: any) => (
                 fontSize: 14,
                 fontWeight: '400',
                 lineHeight: 20,
-
-
             }}
             dy={-15}
             renderInPortal={false}
         />
     </Svg>
 );
+
 const wrapLabel = (text: string) => {
     if (typeof text !== 'string') {
         return text;
@@ -80,9 +80,14 @@ const wrapLabel = (text: string) => {
 };
 
 const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data }) => {
-    const hasY4 = data?.some(item => item.y4 !== undefined);
-    const hasY3 = data?.some(item => item.y3 !== undefined);
-    const hasY2 = data?.some(item => item.y2 !== undefined);
+    const filteredDataY1 = data.filter((d) => d.y1 !== 0);
+    const filteredDataY2 = data.filter((d) => d.y2 !== 0);
+    const filteredDataY3 = data.filter((d) => d.y3 !== 0);
+    const filteredDataY4 = data.filter((d) => d.y4 !== 0);
+
+    const hasY4 = filteredDataY4.length > 0;
+    const hasY3 = filteredDataY3.length > 0;
+    const hasY2 = filteredDataY2.length > 0;
 
     return (
         <View style={[styles.container, styles.shadowBox]}>
@@ -136,7 +141,7 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                 />
                 <VictoryGroup offset={10}>
                     <VictoryBar
-                        data={data}
+                        data={filteredDataY1}
                         x="x"
                         y="y1"
                         style={{ data: { fill: colors.gray_G03 } }}
@@ -145,7 +150,7 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                     />
                     {hasY2 &&
                         <VictoryBar
-                            data={data}
+                            data={filteredDataY2}
                             x="x"
                             y="y2"
                             style={{ data: { fill: colors.orange_04 } }}
@@ -155,7 +160,7 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                     }
                     {hasY3 &&
                         <VictoryBar
-                            data={data}
+                            data={filteredDataY3}
                             x="x"
                             y="y3"
                             style={{ data: { fill: colors.green } }}
@@ -165,7 +170,7 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                     }
                     {hasY4 &&
                         <VictoryBar
-                            data={data}
+                            data={filteredDataY4}
                             x="x"
                             y="y4"
                             style={{ data: { fill: colors.blue_01 } }}

@@ -43,14 +43,14 @@ const HospitalScheduleComponent = (props: HospitalScheduleComponentProps) => {
       labelStatusAppointWrapper = colors.blue_background
   }
   return (
-    <View style={[flexRowSpaceBetween, styles.question, styles.shadowBox]}>
+    <View style={[flexRowSpaceBetween, styles.question, styles.shadowBox, { opacity: appointment.statusMedicalAppointment === TypeStatusMedicalAppointment.PENDING ? 0.5 : 1 }]}>
       <View style={{ width: '60%' }}>
         <Text style={styles.textQuestion}>{appointment.date?.split("T")[0]}</Text>
         <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{appointment.hospital}</Text>
       </View>
       <View style={{ flex: 1 }}>
         <View style={[styles.statusQuestion, styles.centered, { marginBottom: 5, backgroundColor: labelColorWrapper }]}>
-          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelColor }]}>{appointment.typeMedicalAppointment}</Text>
+          <Text style={[styles.textQuestion, { textAlign: 'center', color: labelColor }]}>{appointment.typeMedicalAppointment?.split("_")[1]}</Text>
         </View>
         <View style={[styles.statusQuestion, styles.centered, { backgroundColor: labelStatusAppointWrapper }]}>
           <Text style={[styles.textQuestion, { textAlign: 'center', color: labelStatusAppoint }]}>{appointment.statusMedicalAppointment}</Text>

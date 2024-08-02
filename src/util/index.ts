@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {HistoryMedicalResponse, medicinePost} from '../constant/type/medical';
-import {DateTime} from 'luxon';
+import { HistoryMedicalResponse, medicinePost } from '../constant/type/medical';
+import { DateTime } from 'luxon';
 import {
   monthlyQuestionRes,
   SatResponseDTO,
@@ -12,11 +12,11 @@ import {
   valueWeight,
   WeekData,
 } from '../constant/type/chart';
-import {IMAGE} from '../constant/image';
-import {ImageProps} from 'react-native';
-import {satEvaluateRes, sfEvaluateRes} from '../constant/type/question';
+import { IMAGE } from '../constant/image';
+import { ImageProps } from 'react-native';
+import { satEvaluateRes, sfEvaluateRes } from '../constant/type/question';
 import colors from '../constant/color';
-import {offsetTime} from '../constant';
+import { offsetTime } from '../constant';
 import CounterStepModule from '../native-module/counter-step.module';
 interface OutputData {
   id: number;
@@ -33,11 +33,11 @@ export const transformData = (
   return data.reduce<TransformedItem[]>((acc, item) => {
     const typeObject = acc.find(obj => obj.type === item.type);
     if (typeObject) {
-      typeObject.data.push({id: item.id, name: item.name});
+      typeObject.data.push({ id: item.id, name: item.name });
     } else {
       acc.push({
         type: item.type,
-        data: [{id: item.id, name: item.name}],
+        data: [{ id: item.id, name: item.name }],
       });
     }
 
@@ -55,11 +55,11 @@ export const getISO8601ForSelectedDays = (
   const selectedMinutes = Number(minutes);
   return days.map(day => {
     let dt: any = DateTime.local();
-    dt = dt.set({hour: selectedHours, minute: selectedMinutes, second: 0});
+    dt = dt.set({ hour: selectedHours, minute: selectedMinutes, second: 0 });
     dt = dt
-      .plus({days: day - dt.weekday})
-      .setZone('UTC-7', {keepLocalTime: true});
-    return dt.toISO({suppressMilliseconds: true}).split('.')[0];
+      .plus({ days: day - dt.weekday })
+      .setZone('UTC-7', { keepLocalTime: true });
+    return dt.toISO({ suppressMilliseconds: true }).split('.')[0];
   });
 };
 export const removeAsyncStorageWhenLogout = async () => {
@@ -78,9 +78,9 @@ export const getMondayOfCurrentWeek = (): string => {
   const dayOfWeek = today.weekday;
   const daysToLastMonday = dayOfWeek === 1 ? 0 : dayOfWeek - 1;
   const lastMonday = today
-    .minus({days: daysToLastMonday})
-    .set({hour: 0, minute: 0, second: 0, millisecond: 0});
-  const lastMondayUtc = lastMonday.setZone('UTC+7', {keepLocalTime: true});
+    .minus({ days: daysToLastMonday })
+    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true });
   return lastMondayUtc.toISO() || '';
 };
 // export const convertToUTC = (time: string, offset: number) => {
@@ -115,8 +115,8 @@ export const getPreviousMonday = (): string => {
   const today = DateTime.local();
   // Calculate how many days to subtract to get to the previous Monday
   const daysToLastMonday = ((today.weekday + 6) % 7) + 7; // Days from today to last Monday
-  const lastMonday = today.minus({days: daysToLastMonday});
-  const lastMondayUtc = lastMonday.setZone('UTC+7', {keepLocalTime: true});
+  const lastMonday = today.minus({ days: daysToLastMonday });
+  const lastMondayUtc = lastMonday.setZone('UTC+7', { keepLocalTime: true });
   return lastMondayUtc.toISO() || ''; // Return ISO 8601 string representing the previous Monday in UTC+7 timezone
 };
 
@@ -167,9 +167,8 @@ export const transformDataToChartStep = (
       x: `${month}/${day}`,
       y: input.valuePercent > 100 ? 100 : input.valuePercent,
       ...(index === inputArray.length - 1 && {
-        label: `${
-          input.valuePercent > 100 ? 100 : input.valuePercent
-        } ${unitLabel}`,
+        label: `${input.valuePercent > 100 ? 100 : input.valuePercent
+          } ${unitLabel}`,
       }),
     };
   });
@@ -185,10 +184,29 @@ export const transformDataToChartActivity = (
     return {
       x: `${month}/${day}`,
       y: convertMinutesToHours(input.duration),
-      label: input.type,
+      label: getType(input.type),
     };
   });
 };
+export const getType = (inputType: string) => {
+  let type: string = ""
+  switch (inputType) {
+    case 'HEAVY':
+      type = '고'
+      break;
+    case 'MEDIUM':
+      type = '중'
+      break;
+    case 'LIGHT':
+      type = '저'
+      break;
+    default:
+      type = "";
+      break;
+  }
+  return type
+
+}
 
 export const transformDataToChartMental = (
   inputArray: valueMental[],
@@ -293,7 +311,7 @@ interface DataPoint {
   label?: string;
 }
 export const transformDataToChartNoX = (values: number[]): DataPoint[] => {
-  const transformedData: DataPoint[] = values.map(value => ({y: value}));
+  const transformedData: DataPoint[] = values.map(value => ({ y: value }));
   if (transformedData.length > 0) {
     const lastValue = transformedData[transformedData.length - 1].y;
     transformedData[transformedData.length - 1] = {
@@ -320,11 +338,47 @@ interface Medicine {
   weekTime: string[];
   weekday: string[];
 }
+// export const getWeekTimeForCurrentWeek = (
+//   medicines: Medicine[],
+// ): medicinePost[] => {
+//   const weekdaysMap: { [key: string]: number } = {
+//     Sunday: 0,
+//     Monday: 1,
+//     Tuesday: 2,
+//     Wednesday: 3,
+//     Thursday: 4,
+//     Friday: 5,
+//     Saturday: 6,
+//   };
+
+//   const today = new Date();
+//   const currentDay = today.getDay();
+//   const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+
+//   return medicines.map(medicine => {
+//     const { time, weekday, medicineTypeId, indexDay } = medicine;
+//     console.log("time", time)
+//     console.log("weekday", weekday)
+//     console.log("indexDay", indexDay)
+//     const weekTimes = weekday.map(day => {
+//       const targetDay = weekdaysMap[day];
+//       const date = new Date(startOfWeek);
+//       date.setDate(startOfWeek.getDate() + targetDay);
+//       return `${date.toISOString().split('T')[0]}T${time}`;
+//     });
+//     return {
+//       weekStart: getMondayOfCurrentWeek().split('T')[0],
+//       schedule: weekTimes,
+//       medicineTypeId: medicineTypeId,
+//     };
+//   });
+// };
+
 export const getWeekTimeForCurrentWeek = (
   medicines: Medicine[],
 ): medicinePost[] => {
-  const weekdaysMap: {[key: string]: number} = {
-    Sunday: 0,
+  const weekdaysMap: { [key: string]: number } = {
+    Sunday: 7,
     Monday: 1,
     Tuesday: 2,
     Wednesday: 3,
@@ -335,23 +389,26 @@ export const getWeekTimeForCurrentWeek = (
 
   const today = new Date();
   const currentDay = today.getDay();
-  const startOfWeek = new Date(today.setDate(today.getDate() - currentDay));
+  const startOfWeek = new Date(today.setDate(today.getDate() - currentDay + (currentDay === 0 ? -6 : 1)));
 
   return medicines.map(medicine => {
-    const {time, weekday, medicineTypeId, indexDay} = medicine;
+    const { time, weekday, medicineTypeId, indexDay } = medicine;
+
     const weekTimes = weekday.map(day => {
       const targetDay = weekdaysMap[day];
       const date = new Date(startOfWeek);
-      date.setDate(startOfWeek.getDate() + targetDay);
-      return `${date.toISOString().split('T')[0]}T${time}.000+00:00`;
+      date.setDate(startOfWeek.getDate() + targetDay - 1);
+      return `${date.toISOString().split('T')[0]}T${time}`;
     });
+
     return {
-      weekStart: getMondayOfCurrentWeek().split('T')[0],
+      weekStart: startOfWeek.toISOString().split('T')[0],
       schedule: weekTimes,
       medicineTypeId: medicineTypeId,
     };
   });
 };
+
 
 export const padNumber = (num: number): string => {
   return num < 10 ? `0${num}` : num.toString();
@@ -659,4 +716,21 @@ export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
     },
   ];
   return result;
+};
+export const listDay = ["월", "화", "수", "목", "금", "토", "일"]
+export const convertDay = (day: string): string => {
+  if (listDay.includes(day)) {
+    return day;
+  }
+  const dayMapping: { [key: string]: string } = {
+    Monday: "월",
+    Tuesday: "화",
+    Wednesday: "수",
+    Thursday: "목",
+    Friday: "금",
+    Saturday: "토",
+    Sunday: "일"
+  };
+
+  return dayMapping[day] || "";
 };

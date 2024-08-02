@@ -120,7 +120,7 @@ const AddMedication = ({ route }: any) => {
             medicineTitle: selectedMedicineTitle.toString(),
             indexDay: dayChoose.map((item) => item.dayWeek),
         };
-
+        console.log("123", dataInterface.weekday)
         const isDuplicate = listRegisterMedicationInterface.some(item => {
             const hasSameDay = item.indexDay.some((day: any) => dataInterface.indexDay.includes(day));
             return item.medicineTypeId === dataInterface.medicineTypeId &&
@@ -131,7 +131,7 @@ const AddMedication = ({ route }: any) => {
         if (!isDuplicate) {
             dispatch(addRegisterMedication(dataSubmit));
             dispatch(addRegisterMedicationInterface(dataInterface));
-            navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
+            navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, {
                 listRegisterMedicationSubmit: [...listRegisterMedication, dataSubmit],
                 listRegisterMedicationInterface: [...listRegisterMedicationInterface, dataInterface]
             });

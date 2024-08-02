@@ -12,7 +12,7 @@ import { WidthDevice } from '../../util/Dimenssion';
 import { IMAGE } from '../../constant/image';
 import LoadingScreen from '../../component/loading';
 import { planService } from '../../services/plan';
-import { getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
+import { convertDay, getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
@@ -24,7 +24,7 @@ const RegisterMedication = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.FOOD_INTAKE);
     };
     const nextPage = () => {
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
+        navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.ADD_MEDICATION);
     };
 
     const closeModal = () => {
@@ -32,7 +32,7 @@ const RegisterMedication = () => {
     };
     const handleRetrieveHistory = () => {
         setIsShowModal(false)
-        navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, { listRegisterMedication })
+        navigation.replace(SCREENS_NAME.PLAN_MANAGEMENT.LIST_REGISTER_MEDICATION, { listRegisterMedication })
     }
     const [listRegisterMedication, setListRegisterMedication] = useState<any[]>([])
     useEffect(() => {
@@ -110,16 +110,17 @@ const RegisterMedication = () => {
                         <Text style={[styles.text, { marginBottom: 10 }]}>{t("planManagement.text.retrieveHistoryLastWeek")}</Text>
                         <Text style={[styles.textChooseDay, { marginBottom: 10 }]}>{t("planManagement.text.drugHistoryLastWeek")}</Text>
                         <ScrollView style={styles.scrollView}>
-                            {listRegisterMedication && listRegisterMedication?.map((item) => {
+                            {listRegisterMedication && listRegisterMedication?.map((item, index) => {
+                                console.log(item.weekday)
                                 return <View
-                                    key={item.medicineTypeId}
+                                    key={index}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
                                     <View style={[flexRow, { flex: 1 }]}>
                                         <Image source={IMAGE.PLAN_MANAGEMENT.MEDICATION} />
                                         <View style={styles.detailExample}>
                                             <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
                                             <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => item).join(', ')} | </Text>
+                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => convertDay(item)).join(', ')} | </Text>
                                                 <Text style={styles.textChooseDay}>{item.time}</Text>
                                             </View>
                                         </View>
