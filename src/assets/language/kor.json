@@ -203,7 +203,6 @@
       "cannedFruit": "과일 통조림",
       "grape/bananaDried": "건포도, 건조 바나나",
       "fruit": "과일",
-      Bảng đang thiếu 1 dòng kìa 
       // page 5  đăng kí dùng thuốc
       "registerMedication": "매일 섭취하는 약물 복용 스캐줄을 등록해주세요",
       "addSchedule": "약물복용 스케줄 추가하기",
@@ -248,8 +247,8 @@
     "answerResponse": "문의 답변",
     "answer": "답변",
     "typeQuestion": "질문의 종류",
-    "admin": "관리자",
-    "medicalSpecialist": "의료 전문가",
+    "admin": "앱 사용",
+    "medicalSpecialist": "건강 관련",
     "placeholder": {
       "title": "제목을 입력해주세요",
       "content": "문의내용을 작성해주세요"
@@ -413,14 +412,14 @@
     "check": "확인",
     "start": "그럼 스마트 헬싱을 시작해볼까요?",
     "fullMenu": "전체메뉴",
-    "showAllMenu": " 스마트 헬싱에 있는 전체 메뉴들을 보여줍니다.어떤 메뉴/기능이 어디있는지 모른다면 여기를 눌러보세요.",
+    "showAllMenu": "스마트 헬싱에 있는 전체 메뉴들을 보여줍니다. 어떤 메뉴/기능이 어디있는지 모른다면 여기를눌러보세요.",
     "myInfo": "내 정보",
     "setting": "설정",
     "wordsEncouragement": "오늘의 응원 한마디",
     "mr": "김세현님",
     "today": "오늘도",
-    "forHealthCare": "건강관리에",
-    "tryYourBest": "힘써봐요",
+    "forHealthCare": "건강관리",
+    "tryYourBest": "에힘써봐요",
     "todayRecord": "오늘의 기록",
     "todaySteps": "오늘의 걸음수와 칼로리 소모 내역을 보여줍니다.",
     "step": "걸음",
