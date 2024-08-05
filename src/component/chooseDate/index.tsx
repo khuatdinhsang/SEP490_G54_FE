@@ -13,7 +13,7 @@ const DaySelection: React.FC<DaySelectionProps> = ({ data, selectedDays, handleS
     return (
         <View style={styles.container}>
             {data && data.map((item) => {
-                const isSelected = selectedDays.includes(item.id);
+                const isSelected = selectedDays?.includes(item.id);
                 return (
                     <Pressable
                         key={item.id}

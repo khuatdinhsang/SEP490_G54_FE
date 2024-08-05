@@ -18,7 +18,7 @@ const MainPositiveMind = () => {
         const checkIsExistDataToday = async () => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistMental(getMondayOfCurrentWeek().split("T")[0]);
+                const res = await chartService.checkIsExistMental(getMondayOfCurrentWeek()?.split("T")[0]);
                 if (res.result === true) {
                     setIsLoading(false);
                     setMessageError("");

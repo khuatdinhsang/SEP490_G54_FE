@@ -71,11 +71,11 @@ const Step2 = (props: Step2Props) => {
   }, [closePerson1, closePerson2, dispatch]);
 
   useEffect(() => {
-    const isDisable = (closePerson1EvaluationRedux?.trim().length === 0 ||
-      closePerson2EvaluationRedux?.trim().length === 0 ||
-      closePerson1MessageRedux?.trim().length === 0 ||
-      closePerson2MessageRedux?.trim().length === 0 ||
-      closePerson1?.trim().length === 0 || closePerson2?.trim().length === 0
+    const isDisable = (closePerson1EvaluationRedux?.trim()?.length === 0 ||
+      closePerson2EvaluationRedux?.trim()?.length === 0 ||
+      closePerson1MessageRedux?.trim()?.length === 0 ||
+      closePerson2MessageRedux?.trim()?.length === 0 ||
+      closePerson1?.trim()?.length === 0 || closePerson2?.trim()?.length === 0
     )
     setIsDisabled(isDisable)
   }, [closePerson1, closePerson2, setIsDisabled])

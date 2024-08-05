@@ -45,7 +45,7 @@ export const transformData = (
   }, []);
 };
 
-export const twoDigit = (num: number) => num.toString().padStart(2, '0');
+export const twoDigit = (num: number) => num?.toString()?.padStart(2, '0');
 export const getISO8601ForSelectedDays = (
   hours: string,
   minutes: string,
@@ -59,7 +59,7 @@ export const getISO8601ForSelectedDays = (
     dt = dt
       .plus({ days: day - dt.weekday })
       .setZone('UTC-7', { keepLocalTime: true });
-    return dt.toISO({ suppressMilliseconds: true }).split('.')[0];
+    return dt.toISO({ suppressMilliseconds: true })?.split('.')[0];
   });
 };
 export const removeAsyncStorageWhenLogout = async () => {
@@ -139,12 +139,12 @@ export const transformDataToChartWeight = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueWeight, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.value,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.value} ${unitLabel}`,
       }),
     };
@@ -161,12 +161,12 @@ export const transformDataToChartStep = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueSteps, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.valuePercent > 100 ? 100 : input.valuePercent,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.valuePercent > 100 ? 100 : input.valuePercent
           } ${unitLabel}`,
       }),
@@ -179,8 +179,8 @@ export const transformDataToChartActivity = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueActivity) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: convertMinutesToHours(input.duration),
@@ -214,12 +214,12 @@ export const transformDataToChartMental = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueMental, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.point,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.point} ${unitLabel}`,
       }),
     };
@@ -231,12 +231,12 @@ export const transformDataToChartHBA1C = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueCardinal, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.data,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.data} ${unitLabel}`,
       }),
     };
@@ -312,9 +312,9 @@ interface DataPoint {
 }
 export const transformDataToChartNoX = (values: number[]): DataPoint[] => {
   const transformedData: DataPoint[] = values.map(value => ({ y: value }));
-  if (transformedData.length > 0) {
-    const lastValue = transformedData[transformedData.length - 1].y;
-    transformedData[transformedData.length - 1] = {
+  if (transformedData?.length > 0) {
+    const lastValue = transformedData[transformedData?.length - 1].y;
+    transformedData[transformedData?.length - 1] = {
       y: lastValue,
       label: `${lastValue}%`,
     };
@@ -326,7 +326,7 @@ export const generateRandomId = (length: number): string => {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
+    result += characters.charAt(Math.floor(Math.random() * characters?.length));
   }
   return result;
 };
@@ -398,11 +398,11 @@ export const getWeekTimeForCurrentWeek = (
       const targetDay = weekdaysMap[day];
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + targetDay - 1);
-      return `${date.toISOString().split('T')[0]}T${time}`;
+      return `${date.toISOString()?.split('T')[0]}T${time}`;
     });
 
     return {
-      weekStart: startOfWeek.toISOString().split('T')[0],
+      weekStart: startOfWeek.toISOString()?.split('T')[0],
       schedule: weekTimes,
       medicineTypeId: medicineTypeId,
     };
@@ -411,7 +411,7 @@ export const getWeekTimeForCurrentWeek = (
 
 
 export const padNumber = (num: number): string => {
-  return num < 10 ? `0${num}` : num.toString();
+  return num < 10 ? `0${num}` : num?.toString();
 };
 
 export interface TransformedData {
@@ -500,10 +500,10 @@ export const dateNow = (date: Date) => {
   // Cộng thêm 7 giờ (7 * 60 * 60 * 1000 milliseconds) để chuyển sang UTC+7
   const vietnamTime = new Date(utcTime + offsetTime * 60 * 60 * 1000);
   const year = vietnamTime.getUTCFullYear();
-  const month = String(vietnamTime.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(vietnamTime.getUTCDate()).padStart(2, '0');
-  const hours = String(vietnamTime.getUTCHours()).padStart(2, '0');
-  const minutes = String(vietnamTime.getUTCMinutes()).padStart(2, '0');
+  const month = String(vietnamTime.getUTCMonth() + 1)?.padStart(2, '0');
+  const day = String(vietnamTime.getUTCDate())?.padStart(2, '0');
+  const hours = String(vietnamTime.getUTCHours())?.padStart(2, '0');
+  const minutes = String(vietnamTime.getUTCMinutes())?.padStart(2, '0');
 
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
@@ -719,7 +719,7 @@ export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
 };
 export const listDay = ["월", "화", "수", "목", "금", "토", "일"]
 export const convertDay = (day: string): string => {
-  if (listDay.includes(day)) {
+  if (listDay?.includes(day)) {
     return day;
   }
   const dayMapping: { [key: string]: string } = {

@@ -41,7 +41,7 @@ const PositiveMindRecord = ({ route }: any) => {
         const fetchDataMentalRecord = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await planService.getListMentalRecords(getMondayOfCurrentWeek().split("T")[0]);
+                const res = await planService.getListMentalRecords(getMondayOfCurrentWeek()?.split("T")[0]);
                 if (res.code === 200) {
                     setIsLoading(false);
                     setMessageError("");
@@ -95,7 +95,7 @@ const PositiveMindRecord = ({ route }: any) => {
     }
     const handleSelectItem = (itemId: number) => {
         setSelectedItems((prevSelectedItems) => {
-            if (prevSelectedItems.includes(itemId)) {
+            if (prevSelectedItems?.includes(itemId)) {
                 return prevSelectedItems.filter(item => item !== itemId);
             } else {
                 return [...prevSelectedItems, itemId];
@@ -135,7 +135,7 @@ const PositiveMindRecord = ({ route }: any) => {
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                         <Text style={styles.title}> {t('recordHealthData.selectEveryThing')}</Text>
                         {data.map((item: mentalData) => {
-                            const isSelected = selectedItems.includes(item.id);
+                            const isSelected = selectedItems?.includes(item.id);
                             return (
                                 <Advice key={item.id} item={item} handleSelectItem={handleSelectItem} isSelected={isSelected} />
                             );
@@ -159,10 +159,10 @@ const PositiveMindRecord = ({ route }: any) => {
             }
             {isEdit && <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={selectedItems.length > 0 ? false : true}
+                    disabled={selectedItems?.length > 0 ? false : true}
                     onPress={nextPage}
-                    style={[flexCenter, styles.button, { backgroundColor: selectedItems.length > 0 ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: selectedItems.length > 0 ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
+                    style={[flexCenter, styles.button, { backgroundColor: selectedItems?.length > 0 ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: selectedItems?.length > 0 ? colors.white : colors.gray_G04 }]}> {t('recordHealthData.goToViewChart')}</Text>
                 </Pressable>
             </View>
             }

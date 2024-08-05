@@ -85,7 +85,7 @@ const RegisterStep2 = ({ route }: any) => {
             return 29; // Leap year February
         } else if (month === 2) {
             return 28; // Regular February
-        } else if ([4, 6, 9, 11].includes(month)) {
+        } else if ([4, 6, 9, 11]?.includes(month)) {
             return 30; // Months with 30 days
         } else {
             return 31; // Months with 31 days
@@ -108,7 +108,7 @@ const RegisterStep2 = ({ route }: any) => {
         setGender(value);
     };
     const handleSubmit = (values: RegisterValues): void => {
-        const data = { weight: Number(weight), gender: gender, height: Number(height), dob: dob.toISOString().split('T')[0], email: values.email }
+        const data = { weight: Number(weight), gender: gender, height: Number(height), dob: dob.toISOString()?.split('T')[0], email: values.email }
         navigation.navigate(SCREENS_NAME.REGISTER.STEP3, { valuesStep2: { ...data, ...valuesStep1 } });
     };
 
@@ -157,7 +157,7 @@ const RegisterStep2 = ({ route }: any) => {
             return;
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (!numericRegex.test(value) || value.length > 4 || value > 200) {
+        if (!numericRegex.test(value) || value?.length > 4 || value > 200) {
             setErrorWeight(t('placeholder.err.invalidInput'));
             setWeight('');
             return;
@@ -172,7 +172,7 @@ const RegisterStep2 = ({ route }: any) => {
             return;
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (!numericRegex.test(value) || value.length > 5 || value > 300) {
+        if (!numericRegex.test(value) || value?.length > 5 || value > 300) {
             setErrorHeight(t('placeholder.err.invalidInput'));
             setHeight('');
             return;

@@ -66,13 +66,13 @@ const PositiveMind: React.FC = () => {
 
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
-        if (selectedItems.length === 3) {
+        if (selectedItems?.length === 3) {
             const mentalRuleId = selectedItems.map(item => item.id)
             const data = {
                 mentalRuleId,
                 status: true,
-                weekStart: getMondayOfCurrentWeek().split("T")[0],
-                date: DateTime.local().toString().split("T")[0]
+                weekStart: getMondayOfCurrentWeek()?.split("T")[0],
+                date: DateTime.local()?.toString()?.split("T")[0]
             }
             try {
                 const res = await planService.postListMental(data)
@@ -102,7 +102,7 @@ const PositiveMind: React.FC = () => {
             setData(prevItems => {
                 const item = prevItems.find(item => item.id === itemId);
                 if (item) {
-                    if (selectedItems.length >= 3) {
+                    if (selectedItems?.length >= 3) {
                         setWarning(true);
                         return prevItems;
                     }
@@ -139,16 +139,16 @@ const PositiveMind: React.FC = () => {
                     <HeaderNavigatorComponent
                         isIconLeft={true}
                         isTextRight={true}
-                        textRightStyle={{ color: selectedItems.length === 3 ? colors.primary : colors.gray_G04 }}
+                        textRightStyle={{ color: selectedItems?.length === 3 ? colors.primary : colors.gray_G04 }}
                         textRight={t("common.text.next")}
                         text={t("planManagement.text.positiveMind")}
                         handleClickArrowLeft={goBackPreviousPage}
                         handleClickIconRight={() => {
-                            if (selectedItems.length === 3) {
+                            if (selectedItems?.length === 3) {
                                 nextPage();
                             }
                         }}
-                        disabledRight={selectedItems.length !== 3}
+                        disabledRight={selectedItems?.length !== 3}
                     />
                 </View>
                 <ProgressHeader index={[0]} length={5} />
@@ -170,7 +170,7 @@ const PositiveMind: React.FC = () => {
                             <View style={styles.bridge}>
                                 <View style={styles.diamond}></View>
                             </View>
-                            {selectedItems.length > 0 && (
+                            {selectedItems?.length > 0 && (
                                 <View style={styles.selectedItem}>
                                     {selectedItems.map((item: mentalData) => (
                                         <ItemAdviceSelect key={item.id} item={item} handleSelectItem={handleSelectItem} />
@@ -190,10 +190,10 @@ const PositiveMind: React.FC = () => {
                 </ScrollView>
                 <View style={styles.buttonContainer}>
                     <Pressable
-                        disabled={selectedItems.length !== 3}
+                        disabled={selectedItems?.length !== 3}
                         onPress={nextPage}
-                        style={[styles.button, { backgroundColor: selectedItems.length === 3 ? colors.primary : colors.gray_G02 }]}>
-                        <Text style={[styles.text, { color: selectedItems.length === 3 ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
+                        style={[styles.button, { backgroundColor: selectedItems?.length === 3 ? colors.primary : colors.gray_G02 }]}>
+                        <Text style={[styles.text, { color: selectedItems?.length === 3 ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
                     </Pressable>
                 </View>
             </View>

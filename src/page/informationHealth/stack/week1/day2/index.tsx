@@ -58,8 +58,8 @@ const Week1Day2 = () => {
       setIsLoading(true)
       try {
         const data = {
-          strength: advantage.trim(),
-          weakPoint: defect.trim()
+          strength: advantage?.trim(),
+          weakPoint: defect?.trim()
         }
         const res = await lessonService.putLesson2(data)
         if (res.code === 201) {

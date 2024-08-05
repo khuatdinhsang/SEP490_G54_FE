@@ -33,7 +33,7 @@ const CustomLabelComponent = (props: any) => (
             </LinearGradient>
         </Defs>
         <Rect
-            x={props.x - 12 - props.text.length * 5}
+            x={props.x - 12 - props.text?.length * 5}
             y={props.y - 35}
             width={45}
             height={28}
@@ -66,7 +66,7 @@ const wrapLabel = (text: string) => {
     const lines = [];
 
     for (const word of words) {
-        if ((currentLine + word).length > maxLineLength) {
+        if ((currentLine + word)?.length > maxLineLength) {
             lines.push(currentLine);
             currentLine = word;
         } else {
@@ -85,9 +85,9 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
     const filteredDataY3 = data.filter((d) => d.y3 !== 0);
     const filteredDataY4 = data.filter((d) => d.y4 !== 0);
 
-    const hasY4 = filteredDataY4.length > 0;
-    const hasY3 = filteredDataY3.length > 0;
-    const hasY2 = filteredDataY2.length > 0;
+    const hasY4 = filteredDataY4?.length > 0;
+    const hasY3 = filteredDataY3?.length > 0;
+    const hasY2 = filteredDataY2?.length > 0;
 
     return (
         <View style={[styles.container, styles.shadowBox]}>

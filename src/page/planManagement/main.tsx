@@ -19,7 +19,7 @@ const MainIndexMedication = () => {
             setIsLoading(true);
             setMessageError("");
             try {
-                const res = await weeklyReviewService.getMadePlan(getMondayOfCurrentWeek().split("T")[0]);
+                const res = await weeklyReviewService.getMadePlan(getMondayOfCurrentWeek()?.split("T")[0]);
                 if (res.code === 200) {
                     navigateScreen(res.result);
                 } else {

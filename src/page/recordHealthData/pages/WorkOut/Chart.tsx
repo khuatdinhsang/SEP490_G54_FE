@@ -55,7 +55,13 @@ const WorkOutChart = ({ route }: any) => {
         };
         getDataChart();
     }, []);
+    const maxValue = Math.max(...dataChart.map(item => convertMinutesToHours(item.duration)));
+    console.log("59", maxValue)
+    const tickValues = [0, 1, 2, 3, 4];
 
+    if (maxValue > 5) {
+        tickValues.push(maxValue);
+    }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -81,17 +87,17 @@ const WorkOutChart = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.HUMAN}
                                 textTitleMedium={t("evaluate.resultActivityToday")}
                                 unit={t("common.text.minutes")}
-                                valueMedium={` ${typeToday}/${convertMinutesToHours(dataToday).toString()}`}
+                                valueMedium={` ${typeToday}/${convertMinutesToHours(dataToday)?.toString()}`}
                                 labelElement={t("common.text.minutes")}
                                 textTitle={t("evaluate.chartMedicine")}
                                 data={transformDataToChartActivity(dataChart)}
-                                tickValues={[0, 1, 2, 3, 4]}
+                                tickValues={tickValues}
                             />
                         </View>
                         :

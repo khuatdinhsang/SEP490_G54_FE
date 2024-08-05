@@ -6,7 +6,7 @@ const PermissionsRequest = [
 ];
 
 const PermissionRequest = async () => {
-  for (let i = 0; i < PermissionsRequest.length; i++) {
+  for (let i = 0; i < PermissionsRequest?.length; i++) {
     const isRequested = await PermissionsAndroid.check(PermissionsRequest[i]);
     if (!isRequested) {
       await PermissionsAndroid.request(PermissionsRequest[i]);

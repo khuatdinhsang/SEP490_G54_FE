@@ -89,10 +89,10 @@ const WorkOut = () => {
     };
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {
-            const newSelectedDays = prevSelectedItems.includes(itemId)
+            const newSelectedDays = prevSelectedItems?.includes(itemId)
                 ? prevSelectedItems.filter(item => item !== itemId)
                 : [...prevSelectedItems, itemId];
-            setIsChecked(newSelectedDays.length === initData.length);
+            setIsChecked(newSelectedDays?.length === initData?.length);
             return newSelectedDays;
         });
     };
@@ -108,14 +108,14 @@ const WorkOut = () => {
     };
     const nextPage = async (): Promise<void> => {
         setIsLoading(true)
-        const selectedDaysModify = data.filter(item => selectedDays.includes(item.id))
+        const selectedDaysModify = data.filter(item => selectedDays?.includes(item.id))
         const schedule = selectedDaysModify.map(item => item.value)
         const convertTime = hour * 60 + minute;
         const dataSubmit = {
             schedule,
             planType: selectedItem,
             planDuration: Number(convertTime),
-            weekStart: getMondayOfCurrentWeek().split("T")[0]
+            weekStart: getMondayOfCurrentWeek()?.split("T")[0]
         }
         try {
             const res = await planService.postActivity(dataSubmit)
@@ -141,7 +141,7 @@ const WorkOut = () => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND);
     };
-    const isNextButtonDisabled = !(hour && selectedDays.length > 0 && selectedItem);
+    const isNextButtonDisabled = !(minute && selectedDays?.length > 0 && selectedItem);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

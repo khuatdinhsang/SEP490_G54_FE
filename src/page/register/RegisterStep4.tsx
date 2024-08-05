@@ -38,7 +38,7 @@ const RegisterStep4 = ({ route }: any) => {
     const handleSelectItem = (itemId: number, isSelected: boolean) => {
         setSelectedItems((prevSelectedItems) => {
             if (isSelected) {
-                if (!prevSelectedItems.includes(itemId)) {
+                if (!prevSelectedItems?.includes(itemId)) {
                     return [...prevSelectedItems, itemId];
                 }
             } else {
@@ -69,7 +69,7 @@ const RegisterStep4 = ({ route }: any) => {
                     <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
                         {dataMedical && dataMedical.slice(0, 1).map((item: ItemType) => {
                             return item.data.map((itemChild: ItemTypeChild) => {
-                                const isSelected = selectedItems.includes(itemChild.id);
+                                const isSelected = selectedItems?.includes(itemChild.id);
                                 return (
                                     <Pressable key={itemChild.id} style={styles.box} onPress={() => handleSelectItem(itemChild.id, !isSelected)}>
                                         <View style={[flexRowCenter, styles.boxItem, { borderColor: isSelected ? colors.primary : colors.gray, flexDirection: 'column' }]}>
@@ -85,7 +85,7 @@ const RegisterStep4 = ({ route }: any) => {
                         <Text style={styles.textField}>{dataMedical[1].type}</Text>
                         {dataMedical && dataMedical.slice(1).map((item: ItemType) => {
                             return item.data.map((itemChild) => {
-                                const isSelected = selectedItems.includes(itemChild.id);
+                                const isSelected = selectedItems?.includes(itemChild.id);
                                 return (
                                     <View key={itemChild.id}>
                                         <Text style={[styles.textField, { marginBottom: 15 }]}>{itemChild.name}</Text>
@@ -97,12 +97,12 @@ const RegisterStep4 = ({ route }: any) => {
                                                     styles.buttonBox,
                                                     {
                                                         width: '47%',
-                                                        borderColor: selectedItems.includes(itemChild.id) ? colors.primary : colors.gray,
-                                                        backgroundColor: selectedItems.includes(itemChild.id) ? colors.orange_02 : colors.white
+                                                        borderColor: selectedItems?.includes(itemChild.id) ? colors.primary : colors.gray,
+                                                        backgroundColor: selectedItems?.includes(itemChild.id) ? colors.orange_02 : colors.white
                                                     }
                                                 ]}
                                             >
-                                                <Text style={{ color: selectedItems.includes(itemChild.id) ? colors.primary : colors.textGray }}>
+                                                <Text style={{ color: selectedItems?.includes(itemChild.id) ? colors.primary : colors.textGray }}>
                                                     {t("common.text.yes")}
                                                 </Text>
                                             </Pressable>
@@ -113,12 +113,12 @@ const RegisterStep4 = ({ route }: any) => {
                                                     styles.buttonBox,
                                                     {
                                                         width: '47%',
-                                                        borderColor: !selectedItems.includes(itemChild.id) ? colors.primary : colors.gray,
-                                                        backgroundColor: !selectedItems.includes(itemChild.id) ? colors.orange_02 : colors.white
+                                                        borderColor: !selectedItems?.includes(itemChild.id) ? colors.primary : colors.gray,
+                                                        backgroundColor: !selectedItems?.includes(itemChild.id) ? colors.orange_02 : colors.white
                                                     }
                                                 ]}
                                             >
-                                                <Text style={{ color: !selectedItems.includes(itemChild.id) ? colors.primary : colors.textGray }}>
+                                                <Text style={{ color: !selectedItems?.includes(itemChild.id) ? colors.primary : colors.textGray }}>
                                                     {t("common.text.no")}
                                                 </Text>
                                             </Pressable>

@@ -34,7 +34,7 @@ const NumberSteps = () => {
             try {
                 const data = {
                     plannedStepPerDay: Number(numberSteps),
-                    weekStart: getMondayOfCurrentWeek().split("T")[0],
+                    weekStart: getMondayOfCurrentWeek()?.split("T")[0],
                 }
                 const res = await planService.postStepsNumber(data)
                 if (res.code === 200) {
@@ -60,7 +60,7 @@ const NumberSteps = () => {
     };
     const handleSetNumberSteps = (value: string) => {
         const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value) && value.length <= 5) {
+        if (numericRegex.test(value) && value?.length <= 5) {
             setNumberSteps(value);
         }
     }

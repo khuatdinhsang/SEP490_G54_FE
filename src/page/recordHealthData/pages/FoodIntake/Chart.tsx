@@ -78,13 +78,13 @@ const FoodInTakeChart = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.VEGETABLE}
                                 textTitleMedium={t("evaluate.mediumDiet")}
                                 unit={t("planManagement.text.disk")}
-                                valueMedium={dataMedium.toString()}
+                                valueMedium={dataMedium?.toString()}
                                 labelElement={t("planManagement.text.disk")}
                                 textTitle={t("evaluate.chartDiet")}
                                 data={transformDataToChartWeight(dataChart, t("planManagement.text.disk"))}

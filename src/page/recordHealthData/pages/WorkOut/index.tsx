@@ -74,7 +74,7 @@ const WorkOutRecord = ({ route }: any) => {
         const dataSubmit = {
             actualType: selectedItem,
             actualDuration: Number(convertTime),
-            date: DateTime.local().toString().split("T")[0]
+            date: DateTime.local()?.toString()?.split("T")[0]
         }
         try {
             const res = await planService.putActivity(dataSubmit)
@@ -102,7 +102,7 @@ const WorkOutRecord = ({ route }: any) => {
         const activityChoose = initDataWorkOut.find((item) => item.id === itemId)
         setSelectedItem(activityChoose?.planType);
     };
-    const isDisable = hour && selectedItem ? true : false
+    const isDisable = minute && selectedItem ? true : false
 
     return (
         <SafeAreaView style={styles.container}>

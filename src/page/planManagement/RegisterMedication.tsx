@@ -38,15 +38,15 @@ const RegisterMedication = () => {
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
-            console.log("41", getPreviousMonday().split("T")[0])
+            console.log("41", getPreviousMonday()?.split("T")[0])
             try {
-                const res = await planService.getListRegisterMedicine(getPreviousMonday().split("T")[0]);
+                const res = await planService.getListRegisterMedicine(getPreviousMonday()?.split("T")[0]);
                 console.log("43", res)
                 if (res.code === 200) {
                     setIsLoading(false);
                     setMessageError("");
                     setListRegisterMedication(res.result);
-                    if (res.result.length > 0) {
+                    if (res.result?.length > 0) {
                         setIsShowModal(true)
                     }
                 } else {

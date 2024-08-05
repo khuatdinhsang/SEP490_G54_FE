@@ -84,7 +84,7 @@ const WeeklyEvaluate = () => {
                     </Text>
                 </Pressable>
             </View>
-            {times.length > 0 ? (
+            {times?.length > 0 ? (
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.content}>
                         <LineChart

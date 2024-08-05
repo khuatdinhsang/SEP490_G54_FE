@@ -92,7 +92,7 @@ const Question = () => {
                     </Pressable>
                 </View>
                 <View style={{ paddingHorizontal: 20, marginTop: 20, }}>
-                    {listQuestion.length > 0 ?
+                    {listQuestion?.length > 0 ?
                         listQuestion.map((item) => {
                             return (
                                 <QuestionComponent key={item.id} question={item} handleDetailQuestion={handleDetailQuestion} />

@@ -81,7 +81,7 @@ const RegisterStep3 = ({ route }: any) => {
     };
     const handleSelectItem = (itemId: number) => {
         setSelectedItems((prevSelectedItems) => {
-            if (prevSelectedItems.includes(itemId)) {
+            if (prevSelectedItems?.includes(itemId)) {
                 return prevSelectedItems.filter(item => item !== itemId);
             } else {
                 return [...prevSelectedItems, itemId];
@@ -89,7 +89,7 @@ const RegisterStep3 = ({ route }: any) => {
         });
     };
     const handleSubmit = () => {
-        if (selectedItems.length > 0) {
+        if (selectedItems?.length > 0) {
             navigation.navigate(SCREENS_NAME.REGISTER.STEP4, { valuesStep3: { ...valuesStep2, listMedicalHistory: selectedItems }, dataMedical: data.slice(3) });
         }
     };
@@ -131,7 +131,7 @@ const RegisterStep3 = ({ route }: any) => {
                     onPress={handleSubmit}
                     style={[
                         styles.button,
-                        { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray },
+                        { backgroundColor: selectedItems?.length !== 0 ? colors.primary : colors.gray },
                     ]}>
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>

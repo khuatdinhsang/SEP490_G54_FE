@@ -41,7 +41,7 @@ const Step2 = ({
             style={[styles.input, { height: 120 }]}
             onChangeText={(text) => {
               setErrAdvantage("");
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErrAdvantage(t("placeholder.err.invalidInput"));
                 setAdvantage("")
               }
@@ -61,7 +61,7 @@ const Step2 = ({
             textAlignVertical='top'
             onChangeText={(text) => {
               setErrDefect("");
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErrDefect(t("placeholder.err.invalidInput"));
                 setDefect("")
               }

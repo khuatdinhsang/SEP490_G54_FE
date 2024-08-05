@@ -52,7 +52,7 @@ const NumericalRecordChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.beforeEat ?? 0,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.beforeEat}mg/DL`;
                         }
                         return dataPoint;
@@ -63,7 +63,7 @@ const NumericalRecordChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.afterEat ?? 0,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.afterEat}mg/DL`;
                         }
                         return dataPoint;
@@ -116,8 +116,8 @@ const NumericalRecordChart = ({ route }: any) => {
             </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {
-                    dataChartHBA1C.length > 0 ||
-                        dataChartCholesterol.length > 0 ?
+                    dataChartHBA1C?.length > 0 ||
+                        dataChartCholesterol?.length > 0 ?
                         <View style={styles.chart}>
                             <View>
                                 <LineChart

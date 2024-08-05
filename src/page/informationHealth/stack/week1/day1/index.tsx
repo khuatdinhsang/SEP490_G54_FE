@@ -124,7 +124,7 @@ const Week1Day1 = () => {
           marginBottom: 20,
         }}>
         <ButtonComponent
-          isDisable={((midTermGoal?.trim().length > 0 && oneYearGoal?.trim().length > 0) || step !== 2) ? false : true}
+          isDisable={((midTermGoal?.trim()?.length > 0 && oneYearGoal?.trim()?.length > 0) || step !== 2) ? false : true}
           text={step ? t("common.text.next") : t("planManagement.text.gotoHome")}
           textColor={colors.white}
           handleClick={step ? handleClickNext : handleClickDone}

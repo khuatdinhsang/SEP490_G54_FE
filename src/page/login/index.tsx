@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import InputComponent from '../../component/input';
-import { flexRowCenter } from '../../styles/flex';
+import { flexRow, flexRowCenter } from '../../styles/flex';
 import { useAppDispatch } from '../../store/store';
 import { loginUser } from '../../store/user.slice';
 import { ResponseForm } from '../../constant/type';
@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
 import NotificationModule from '../../native-module/NotificationModule';
 import { getToken } from '../../config/firebase.config';
+import { LANG } from '../home/const';
+import RadioButton from '../../component/radio';
 
 interface LoginValues {
     email: string;
@@ -25,12 +27,20 @@ interface LoginValues {
 }
 const Login = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>('')
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    console.log("32", isLoggedIn)
+    const [lang, setLang] = useState<string>(LANG.KR)
+    const options = [
+        { label: 'Korean', value: LANG.KR },
+        { label: 'English', value: LANG.EN },
+    ];
+    useEffect(() => {
+        i18n.changeLanguage(lang === LANG.KR ? "ko" : "en");
+    }, [lang])
+    console.log("d", lang)
     useEffect(() => {
         const backAction = () => {
             if (isLoggedIn) {
@@ -145,7 +155,17 @@ const Login = () => {
                                         />
                                     </View>
                                 </View>
-
+                                <View style={[flexRow, { marginTop: 20 }]}>
+                                    {options.map((option) => (
+                                        <RadioButton
+                                            key={option.value}
+                                            label={option.label}
+                                            value={option.value}
+                                            selected={lang === option.value}
+                                            onPress={() => setLang(option.value)}
+                                        />
+                                    ))}
+                                </View>
                                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                                 <View style={{ marginTop: 30 }}>
                                     <Pressable onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: colors.primary }]}>

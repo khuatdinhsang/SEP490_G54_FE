@@ -44,7 +44,7 @@ const BloodPressureChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.diastole,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.diastole}`;
                         }
                         return dataPoint;
@@ -54,7 +54,7 @@ const BloodPressureChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.systole,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.systole}`;
                         }
                         return dataPoint;
@@ -111,7 +111,7 @@ const BloodPressureChart = ({ route }: any) => {
             </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {
-                    dataSystoleChart.length > 0 || dataDiastoleChart.length > 0 ?
+                    dataSystoleChart?.length > 0 || dataDiastoleChart?.length > 0 ?
                         <View style={styles.chart}>
                             {/* <TwoLineChart
                                 icon={IMAGE.RECORD_DATA.THERMOMETER}

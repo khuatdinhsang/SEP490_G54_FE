@@ -77,7 +77,7 @@ const Step3_1 = (props: Step3Props) => {
           value={address}
           onChangeText={(value) => {
             setErrAddress("")
-            if (value.trim().length === 0) {
+            if (value?.trim()?.length === 0) {
               setErrAddress(t("placeholder.err.invalidInput"))
               setAddress("")
             }
@@ -93,7 +93,7 @@ const Step3_1 = (props: Step3Props) => {
           value={time}
           onChangeText={(value) => {
             setErrTime("")
-            if (value.trim().length === 0) {
+            if (value?.trim()?.length === 0) {
               setErrTime(t("placeholder.err.invalidInput"))
               setTime("")
             }

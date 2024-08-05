@@ -101,7 +101,7 @@ const MonthEvaluate = () => {
                     </Text>
                 </Pressable>
             </View>
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
                 <ScrollView contentContainerStyle={{ paddingBottom: 100 }} style={styles.scrollView}>
                     <View style={{ paddingTop: 20 }}>
                         <MonthlyChart

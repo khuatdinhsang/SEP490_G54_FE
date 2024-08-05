@@ -58,7 +58,7 @@ const WeightChart = ({ route }: any) => {
     const maxValue = Math.max(...dataChart.map(item => item.value));
     const tickValues = [0, 20, 40, 60, 80, 100];
 
-    if (maxValue > 100) {
+    if (maxValue > 110) {
         tickValues.push(maxValue);
     }
     return (
@@ -86,16 +86,16 @@ const WeightChart = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.RECORD_DATA.CHART}
                                 textTitleMedium={t('evaluate.mediumWeight')}
-                                valueMedium={mediumData.toString()}
+                                valueMedium={mediumData?.toString()}
                                 unit='kg'
                                 labelElement="%"
                                 textTitleToday={t('evaluate.weightToday')}
-                                valueToday={dataToday.toString()}
+                                valueToday={dataToday?.toString()}
                                 textTitle={t("evaluate.chartWeight")}
                                 data={transformDataToChartWeight(dataChart, "kg")}
                                 tickValues={tickValues}

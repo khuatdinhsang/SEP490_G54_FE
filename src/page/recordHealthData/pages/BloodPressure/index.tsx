@@ -43,8 +43,8 @@ const BloodPressure = ({ route }: any) => {
         }
         setIsLoading(true)
         const dataSubmit = {
-            weekStart: getMondayOfCurrentWeek().split("T")[0],
-            date: DateTime.local().toString().split("T")[0],
+            weekStart: getMondayOfCurrentWeek()?.split("T")[0],
+            date: DateTime.local()?.toString()?.split("T")[0],
             systole: Number(maxBloodPressure),
             diastole: Number(minBloodPressure),
         }
@@ -70,13 +70,13 @@ const BloodPressure = ({ route }: any) => {
     }
     const handleSetMaxBloodPressure = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 5) {
+        if (numericRegex.test(value) && value?.length <= 5) {
             setMaxBloodPressure(value);
         }
     }
     const handleSetMinBloodPressure = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 5) {
+        if (numericRegex.test(value) && value?.length <= 5) {
             setMinBloodPressure(value);
         }
     }

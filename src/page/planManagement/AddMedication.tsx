@@ -108,21 +108,21 @@ const AddMedication = ({ route }: any) => {
         const times = getISO8601ForSelectedDays(preHours, preMinutes, selectedDays);
         const dataSubmit = {
             medicineTypeId: selectedMedication,
-            weekStart: getMondayOfCurrentWeek().split("T")[0],
+            weekStart: getMondayOfCurrentWeek()?.split("T")[0],
             schedule: times
         };
-        const dayChoose = data.filter(item => selectedDays.includes(item.id));
+        const dayChoose = data.filter(item => selectedDays?.includes(item.id));
         const selectedMedicineTitle = dataMedication.find((item) => item.id === selectedMedication)?.title || '';
         const dataInterface: listRegisterMedicineData | any = {
             medicineTypeId: selectedMedication || 0,
             weekday: dayChoose.map((item) => item.name),
             time: `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`,
-            medicineTitle: selectedMedicineTitle.toString(),
+            medicineTitle: selectedMedicineTitle?.toString(),
             indexDay: dayChoose.map((item) => item.dayWeek),
         };
         console.log("123", dataInterface.weekday)
         const isDuplicate = listRegisterMedicationInterface.some(item => {
-            const hasSameDay = item.indexDay.some((day: any) => dataInterface.indexDay.includes(day));
+            const hasSameDay = item.indexDay.some((day: any) => dataInterface.indexDay?.includes(day));
             return item.medicineTypeId === dataInterface.medicineTypeId &&
                 item.time === dataInterface.time &&
                 hasSameDay;
@@ -142,10 +142,10 @@ const AddMedication = ({ route }: any) => {
 
     const handleSelectDays = (itemId: number) => {
         setSelectedDays((prevSelectedItems) => {
-            const newSelectedDays = prevSelectedItems.includes(itemId)
+            const newSelectedDays = prevSelectedItems?.includes(itemId)
                 ? prevSelectedItems.filter(item => item !== itemId)
                 : [...prevSelectedItems, itemId];
-            setIsChecked(newSelectedDays.length === initData.length);
+            setIsChecked(newSelectedDays?.length === initData?.length);
             return newSelectedDays;
         });
     };
@@ -171,15 +171,15 @@ const AddMedication = ({ route }: any) => {
                         isIconLeft={true}
                         isTextRight={true}
                         textRight={t("common.text.next")}
-                        textRightStyle={{ color: hour && minute && selectedDays.length ? colors.primary : colors.gray_G04 }}
+                        textRightStyle={{ color: hour && minute && selectedDays?.length ? colors.primary : colors.gray_G04 }}
                         text={t("planManagement.text.takingMedication")}
                         handleClickArrowLeft={goBackPreviousPage}
                         handleClickIconRight={() => {
-                            if (hour && minute && selectedDays.length) {
+                            if (hour && minute && selectedDays?.length) {
                                 nextPage();
                             }
                         }}
-                        disabledRight={hour && minute && selectedDays.length ? false : true}
+                        disabledRight={hour && minute && selectedDays?.length ? false : true}
                     />
                 </View>
                 <ProgressHeader index={[0, 1, 2, 3]} length={5} />
@@ -266,10 +266,10 @@ const AddMedication = ({ route }: any) => {
             </View>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={hour && minute && selectedDays.length ? false : true}
+                    disabled={hour && minute && selectedDays?.length ? false : true}
                     onPress={nextPage}
-                    style={[styles.button, { backgroundColor: (hour && minute && selectedDays.length > 0 && selectedMedication) ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.text, { color: (hour && minute && selectedDays.length > 0 && selectedMedication) ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
+                    style={[styles.button, { backgroundColor: (hour && minute && selectedDays?.length > 0 && selectedMedication) ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.text, { color: (hour && minute && selectedDays?.length > 0 && selectedMedication) ? colors.white : colors.gray_G04 }]}> {t('common.text.next')}</Text>
                 </Pressable>
             </View>
             {isLoading && <LoadingScreen />}

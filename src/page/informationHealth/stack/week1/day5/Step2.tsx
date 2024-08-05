@@ -45,15 +45,15 @@ const Step2 = (props: Step2Props) => {
         if (res.code === 200) {
           setIsLoading(false)
           setIndexActive(res.result.currentEmotion === true ? 2 : 1)
-          if (res.result.whyIfNotBetterForLife.length > 0 || res.result.whyIfRealistic.length > 0) {
+          if (res.result.whyIfNotBetterForLife?.length > 0 || res.result.whyIfRealistic?.length > 0) {
             setSelectNegative1(1)
           } else {
             setSelectNegative1(2)
           }
-          if (res.result.whyIfRealistic.length > 0) {
+          if (res.result.whyIfRealistic?.length > 0) {
             setTextNegative1(res.result.whyIfRealistic)
           }
-          if (res.result.whyIfNotBetterForLife.length > 0) {
+          if (res.result.whyIfNotBetterForLife?.length > 0) {
             setTextNegative2(res.result.whyIfNotBetterForLife)
             setSelectNegative2(2)
           } else {
@@ -132,7 +132,7 @@ const Step2 = (props: Step2Props) => {
                 heightLine={120}
                 value={textNegative1}
                 onChangeText={(text) => {
-                  if (text.length === 0) {
+                  if (text?.length === 0) {
                     setTextNegative1("")
                   } else {
                     setTextNegative1(text)
@@ -161,7 +161,7 @@ const Step2 = (props: Step2Props) => {
                 heightLine={120}
                 value={textNegative2}
                 onChangeText={(text) => {
-                  if (text.length === 0) {
+                  if (text?.length === 0) {
                     setTextNegative2("")
                   } else {
                     setTextNegative2(text)

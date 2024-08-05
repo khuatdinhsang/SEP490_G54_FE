@@ -32,7 +32,7 @@ const MedicationRecord = ({ route }: any) => {
         const fetchDataListMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await planService.getListMedicationRecords(getMondayOfCurrentWeek().split("T")[0]);
+                const res = await planService.getListMedicationRecords(getMondayOfCurrentWeek()?.split("T")[0]);
                 if (res.code === 200) {
                     setDataListMedication(res.result);
                     console.log("37", res.result)
@@ -65,7 +65,7 @@ const MedicationRecord = ({ route }: any) => {
     const nextPage = async (): Promise<void> => {
         setIsLoading(true);
         const dataSubmit = {
-            date: DateTime.local().toString().split("T")[0],
+            date: DateTime.local()?.toString()?.split("T")[0],
             status: true,
             ids: convertObjectToArray(selectedItems)
         };
@@ -131,13 +131,13 @@ const MedicationRecord = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {isEdit ? (
-                    dataListMedication.length > 0 ? (
+                    dataListMedication?.length > 0 ? (
                         <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                             {dataListMedication.map((item) => (
                                 <View style={{ marginBottom: 30 }} key={item.id}>
                                     <View style={[flexRow, { flexWrap: 'wrap' }]}>
                                         <Text style={styles.text}>오늘</Text>
-                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{new Date(item.date).getHours().toString().padStart(2, '0')}:{new Date(item.date).getMinutes().toString().padStart(2, '0')}</Text>
+                                        <Text style={[styles.text, { color: colors.orange_04 }]}>{new Date(item.date).getHours()?.toString()?.padStart(2, '0')}:{new Date(item.date).getMinutes()?.toString()?.padStart(2, '0')}</Text>
                                         <Text style={styles.text}>에</Text>
                                         <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineName}</Text>
                                         <Text style={styles.text}>을 먹었나요?</Text>

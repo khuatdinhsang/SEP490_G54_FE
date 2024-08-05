@@ -25,7 +25,7 @@ const Register = () => {
     const registerSchema = yup.object().shape({
         name: yup.string().required(t("placeholder.err.blank"))
             .test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
-                return value.trim().length > 0;
+                return value?.trim()?.length > 0;
             }),
         phoneNumber: yup.string().required(t("placeholder.err.blank")).matches(
             /^0\d{8,10}$/,

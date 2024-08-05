@@ -146,10 +146,10 @@ const SAT_SF_C = ({ route }: any) => {
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={Object.keys(answers).length !== listQuestions.length}
+                    disabled={Object.keys(answers)?.length !== listQuestions?.length}
                     onPress={nextPage}
-                    style={[styles.button, { backgroundColor: Object.keys(answers).length === listQuestions.length ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: Object.keys(answers).length === listQuestions.length ? colors.white : colors.gray_G04 }]}>
+                    style={[styles.button, { backgroundColor: Object.keys(answers)?.length === listQuestions?.length ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: Object.keys(answers)?.length === listQuestions?.length ? colors.white : colors.gray_G04 }]}>
                         {t('common.text.next')}
                     </Text>
                 </Pressable>

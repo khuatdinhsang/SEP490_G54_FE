@@ -72,7 +72,7 @@ const BarChart = (props: BarChartProps) => {
             grid: { stroke: 'transparent' },
             tickLabels: {
               fill: (fill: any) => {
-                return fill.index === data.length - 1
+                return fill.index === data?.length - 1
                   ? colors.black
                   : colors.gray_G05;
               },
@@ -99,7 +99,7 @@ const BarChart = (props: BarChartProps) => {
           style={{
             data: {
               fill: fill =>
-                fill.index === data.length - 1 ? colors.primary : colors.gray_G03,
+                fill.index === data?.length - 1 ? colors.primary : colors.gray_G03,
             },
           }}
           data={data}
@@ -126,7 +126,7 @@ const CustomLabelComponent = (props: any) => (
       </LinearGradient>
     </Defs>
     <Rect
-      x={props.x - 12 - props.text.length * 5}
+      x={props.x - 12 - props.text?.length * 5}
       y={props.y - 35}
       width={45}
       height={28}

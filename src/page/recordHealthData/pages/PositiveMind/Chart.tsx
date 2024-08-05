@@ -80,13 +80,13 @@ const PositiveMindChart = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <BarChart
                                 icon={IMAGE.PLAN_MANAGEMENT.HEART}
                                 textTitleMedium={t("evaluate.mediumMental")}
                                 unit={t("evaluate.step")}
-                                valueMedium={`${mediumData.toString()}/3`}
+                                valueMedium={`${mediumData?.toString()}/3`}
                                 textTitle={t("evaluate.chartMental")}
                                 data={transformDataToChartMental(dataChart, "점")}
                             />

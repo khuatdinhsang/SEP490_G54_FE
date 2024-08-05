@@ -64,13 +64,13 @@ const NumberStepsChart = () => {
                     />
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.SHOES}
                                 textTitleMedium={t("evaluate.myStepToday")}
                                 unit={t("evaluate.step")}
-                                valueMedium={dataToday.toString()}
+                                valueMedium={dataToday?.toString()}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartStep")}
                                 data={transformDataToChartStep(dataChart, "%")}

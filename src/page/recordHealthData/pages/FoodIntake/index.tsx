@@ -37,7 +37,7 @@ const FoodIntakeRecord = ({ route }: any) => {
         const getBoldOfRice = async () => {
             setIsLoading(true)
             try {
-                const res = await planService.getDietRecord(getMondayOfCurrentWeek().split("T")[0])
+                const res = await planService.getDietRecord(getMondayOfCurrentWeek()?.split("T")[0])
                 if (res.code === 200) {
                     setMessageError("");
                     setIsLoading(false)
@@ -70,7 +70,7 @@ const FoodIntakeRecord = ({ route }: any) => {
                 setError(false);
                 setIsLoading(true)
                 const dataSubmit = {
-                    date: DateTime.local().toString().split("T")[0],
+                    date: DateTime.local()?.toString()?.split("T")[0],
                     actualValue: Number(numberBoldOfRice),
                 }
                 try {
@@ -101,7 +101,7 @@ const FoodIntakeRecord = ({ route }: any) => {
 
     const handleClickTrue = () => {
         setShowInput(true);
-        setNumberBoldOfRice(boldOfRice.toString());
+        setNumberBoldOfRice(boldOfRice?.toString());
     };
 
     const handleClickFalse = () => {
@@ -154,14 +154,14 @@ const FoodIntakeRecord = ({ route }: any) => {
                                     style={[
                                         styles.box,
                                         {
-                                            borderColor: numberBoldOfRice === boldOfRice.toString() ? colors.orange_04 : colors.gray_G03,
-                                            backgroundColor: numberBoldOfRice === boldOfRice.toString() ? colors.orange_01 : colors.white,
+                                            borderColor: numberBoldOfRice === boldOfRice?.toString() ? colors.orange_04 : colors.gray_G03,
+                                            backgroundColor: numberBoldOfRice === boldOfRice?.toString() ? colors.orange_01 : colors.white,
                                         },
                                     ]}>
                                     <Text
                                         style={[
                                             styles.textInput,
-                                            { color: numberBoldOfRice === boldOfRice.toString() ? colors.orange_04 : colors.gray_G05 },
+                                            { color: numberBoldOfRice === boldOfRice?.toString() ? colors.orange_04 : colors.gray_G05 },
                                         ]}>
                                         {t('common.text.yes')}
                                     </Text>
@@ -174,14 +174,14 @@ const FoodIntakeRecord = ({ route }: any) => {
                                     style={[
                                         styles.box,
                                         {
-                                            borderColor: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G03,
-                                            backgroundColor: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_01 : colors.white,
+                                            borderColor: numberBoldOfRice !== boldOfRice?.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G03,
+                                            backgroundColor: numberBoldOfRice !== boldOfRice?.toString() && numberBoldOfRice !== undefined ? colors.orange_01 : colors.white,
                                         },
                                     ]}>
                                     <Text
                                         style={[
                                             styles.textInput,
-                                            { color: numberBoldOfRice !== boldOfRice.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G05 },
+                                            { color: numberBoldOfRice !== boldOfRice?.toString() && numberBoldOfRice !== undefined ? colors.orange_04 : colors.gray_G05 },
                                         ]}>
                                         {t('common.text.no')}
                                     </Text>

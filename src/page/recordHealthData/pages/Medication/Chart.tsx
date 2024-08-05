@@ -85,7 +85,7 @@ const MedicationChart = ({ route }: any) => {
                     </Pressable>
                 </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}

@@ -37,7 +37,7 @@ const CustomLabelComponent = (props: any) => (
             </LinearGradient>
         </Defs>
         <Rect
-            x={props.x - 12 - props.text.length * 5}
+            x={props.x - 12 - props.text?.length * 5}
             y={props.y - 35}
             width={45}
             height={28}
@@ -70,7 +70,7 @@ const wrapLabel = (text: string) => {
     const lines = [];
 
     for (const word of words) {
-        if ((currentLine + word).length > maxLineLength) {
+        if ((currentLine + word)?.length > maxLineLength) {
             lines.push(currentLine);
             currentLine = word;
         } else {

@@ -38,7 +38,7 @@ const LineChart = (props: LineChartProps) => {
 
   const CustomScatterPoint = useCallback(
     (props: any) => {
-      const isLastPoint = props.index === data.length - 1;
+      const isLastPoint = props.index === data?.length - 1;
       const fillColor = isLastPoint ? colors.white : colors.primary;
       const strokeColor = isLastPoint ? colors.primary : colors.primary;
       return (
@@ -58,7 +58,7 @@ const LineChart = (props: LineChartProps) => {
   );
 
   const CustomLabelComponent = (props: any) => {
-    const isLastPoint = data.length > 0 && props.index === data.length - 1;
+    const isLastPoint = data?.length > 0 && props.index === data?.length - 1;
     if (!isLastPoint) return null;
 
     const label = data[props.index]?.label || '';
@@ -71,9 +71,9 @@ const LineChart = (props: LineChartProps) => {
           </LinearGradient>
         </Defs>
         <Rect
-          x={props.x - 12 - label.length * 5}
+          x={props.x - 12 - label?.length * 5}
           y={props.y - 35}
-          width={label.length * 8 + 8 * 2}
+          width={label?.length * 8 + 8 * 2}
           height={28}
           fill="url(#grad)"
           rx="8"
@@ -114,7 +114,13 @@ const LineChart = (props: LineChartProps) => {
           crossAxis
           style={{
             axis: { stroke: colors.gray_G03 },
-            grid: { stroke: 'transparent' },
+            grid: {
+              stroke: (props: any) => {
+                return props.index === data?.length - 1
+                  ? colors.primary
+                  : 'transparent';
+              },
+            },
             tickLabels: { fill: 'transparent' },
           }}
           tickValues={dataScatter.map((_, index) => index + 1)}

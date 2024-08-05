@@ -30,7 +30,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
         const getData = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const resData = await weeklyReviewService.getDetailWeeklyReviews(time.split("T")[0]);
+                const resData = await weeklyReviewService.getDetailWeeklyReviews(time?.split("T")[0]);
                 if (resData.code === 200) {
                     setIsLoading(false);
                     console.log("ré", resData.result)

@@ -36,10 +36,10 @@ const InputShareComponent = (props: InputShareComponentProps) => {
         disabled={!closePerson}
         onPress={() => { setStep(2.2); setUser() }}
         style={[styles.button, {
-          backgroundColor: closePerson.trim().length > 0 ? colors.orange_01 : colors.gray_G02,
+          backgroundColor: closePerson?.trim().length > 0 ? colors.orange_01 : colors.gray_G02,
 
         }]}>
-        <Text style={{ color: closePerson.trim().length > 0 ? colors.orange_04 : colors.gray_G04 }}>{textButton}</Text>
+        <Text style={{ color: closePerson?.trim().length > 0 ? colors.orange_04 : colors.gray_G04 }}>{textButton}</Text>
       </Pressable>
     </View>
   );

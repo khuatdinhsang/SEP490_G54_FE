@@ -38,8 +38,8 @@ const Weight = ({ route }: any) => {
         }
         setIsLoading(true);
         const dataSubmit = {
-            weekStart: getMondayOfCurrentWeek().split("T")[0],
-            date: DateTime.local().toString().split("T")[0],
+            weekStart: getMondayOfCurrentWeek()?.split("T")[0],
+            date: DateTime.local()?.toString()?.split("T")[0],
             weight: Number(weight)
         };
         try {
@@ -65,7 +65,7 @@ const Weight = ({ route }: any) => {
 
     const handleSetWeight = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 4) {
+        if (numericRegex.test(value) && value?.length <= 4) {
             setWeight(value);
         }
     };
