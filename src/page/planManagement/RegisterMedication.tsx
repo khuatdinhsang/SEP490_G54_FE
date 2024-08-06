@@ -13,6 +13,8 @@ import { IMAGE } from '../../constant/image';
 import LoadingScreen from '../../component/loading';
 import { planService } from '../../services/plan';
 import { convertDay, getMondayOfCurrentWeek, getPreviousMonday } from '../../util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 const RegisterMedication = () => {
     const { t } = useTranslation();
@@ -38,9 +40,10 @@ const RegisterMedication = () => {
     useEffect(() => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
-            console.log("41", getPreviousMonday()?.split("T")[0])
+            const langAys = await AsyncStorage.getItem("language")
+            const lang = langAys === 'en' ? LANG.EN : LANG.KR
             try {
-                const res = await planService.getListRegisterMedicine(getPreviousMonday()?.split("T")[0]);
+                const res = await planService.getListRegisterMedicine(getPreviousMonday()?.split("T")[0], lang);
                 console.log("43", res)
                 if (res.code === 200) {
                     setIsLoading(false);
@@ -111,7 +114,7 @@ const RegisterMedication = () => {
                         <Text style={[styles.textChooseDay, { marginBottom: 10 }]}>{t("planManagement.text.drugHistoryLastWeek")}</Text>
                         <ScrollView style={styles.scrollView}>
                             {listRegisterMedication && listRegisterMedication?.map((item, index) => {
-                                console.log(item.weekday)
+                                console.log("12", item.weekday)
                                 return <View
                                     key={index}
                                     style={[flexRow, styles.example, { backgroundColor: colors.white }]}>
@@ -120,7 +123,7 @@ const RegisterMedication = () => {
                                         <View style={styles.detailExample}>
                                             <Text style={[styles.textPlan, { fontSize: 16, color: colors.primary }]}>{item.medicineTitle}</Text>
                                             <View style={flexRow}>
-                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => convertDay(item)).join(', ')} | </Text>
+                                                <Text style={styles.textChooseDay}>{item.weekday?.map((item: any) => convertDay(item, t)).join(', ')} | </Text>
                                                 <Text style={styles.textChooseDay}>{item.time}</Text>
                                             </View>
                                         </View>

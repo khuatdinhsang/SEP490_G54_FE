@@ -15,6 +15,8 @@ import { getMondayOfCurrentWeek } from '../../../../util';
 import { mentalData } from '../../../../constant/type/medical';
 import LoadingScreen from '../../../../component/loading';
 import { IMAGE } from '../../../../constant/image';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../../../home/const';
 
 
 const PositiveMindRecord = ({ route }: any) => {
@@ -40,8 +42,10 @@ const PositiveMindRecord = ({ route }: any) => {
     useEffect(() => {
         const fetchDataMentalRecord = async (): Promise<void> => {
             setIsLoading(true);
+            const langAys = await AsyncStorage.getItem("language")
+            const lang = langAys === 'en' ? LANG.EN : LANG.KR
             try {
-                const res = await planService.getListMentalRecords(getMondayOfCurrentWeek()?.split("T")[0]);
+                const res = await planService.getListMentalRecords(getMondayOfCurrentWeek()?.split("T")[0], lang);
                 if (res.code === 200) {
                     setIsLoading(false);
                     setMessageError("");

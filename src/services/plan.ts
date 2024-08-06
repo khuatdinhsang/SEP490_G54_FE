@@ -3,10 +3,11 @@ import { axiosClient } from '../config/axiosClient';
 import { activityPost, activityPut, activityRecordResponse, bloodPressurePost, cardinalPost, dietPut, dietRecordResponse, foodIntakePost, listRegisterMedicineData, medicationResponse, medicinePost, medicinePut, mentalData, mentalPost, mentalPutResponse, mentalResponse, stepsNumberPost, timeMeasureDone, weightPost } from '../constant/type/medical';
 import { VerifyEmailResponse } from '../constant/type/auth';
 import { ResponseForm } from '../constant/type';
+import { LANG } from '../page/home/const';
 
 export const planService = {
-    getListMental(): Promise<ResponseForm<mentalData[]>> {
-        return axiosClient.get(`mental-rules/mobile`);
+    getListMental(lang: LANG): Promise<ResponseForm<mentalData[]>> {
+        return axiosClient.get(`mental-rules/mobile/${lang}`);
     },
     postListMental(data: mentalPost): Promise<VerifyEmailResponse> {
         return axiosClient.post(`mental-records`, data);
@@ -23,8 +24,8 @@ export const planService = {
     postMedicine(data: medicinePost[]): Promise<ResponseForm<medicationResponse>> {
         return axiosClient.post(`medicine-records`, data);
     },
-    getListRegisterMedicine(weekStart: string): Promise<ResponseForm<listRegisterMedicineData[]>> {
-        return axiosClient.get(`medicine-records/mobile/plan-medicine/${weekStart}`);
+    getListRegisterMedicine(weekStart: string, lang: LANG): Promise<ResponseForm<listRegisterMedicineData[]>> {
+        return axiosClient.get(`medicine-records/mobile/plan-medicine/${weekStart}/${lang}`);
     },
     postCardinal(data: cardinalPost): Promise<ResponseForm<cardinalPost>> {
         return axiosClient.post(`cardinal-records`, data);
@@ -41,14 +42,14 @@ export const planService = {
     putDiet(data: dietPut): Promise<ResponseForm<dietRecordResponse>> {
         return axiosClient.put(`diet-records`, data);
     },
-    getListMentalRecords(weekStart: string): Promise<ResponseForm<mentalData[]>> {
-        return axiosClient.get(`mental-records/mobile/mental-rule/${weekStart}`);
+    getListMentalRecords(weekStart: string, lang: LANG): Promise<ResponseForm<mentalData[]>> {
+        return axiosClient.get(`mental-records/mobile/mental-rule/${weekStart}/${lang}`);
     },
     putMentalRecords(data: mentalPost): Promise<ResponseForm<mentalPutResponse>> {
         return axiosClient.put(`mental-records`, data);
     },
-    getListMedicationRecords(weekStart: string): Promise<ResponseForm<listRegisterMedicineData[]>> {
-        return axiosClient.get(`medicine-records/mobile/medicine-day/${weekStart}`);
+    getListMedicationRecords(weekStart: string, lang: LANG): Promise<ResponseForm<listRegisterMedicineData[]>> {
+        return axiosClient.get(`medicine-records/mobile/medicine-day/${weekStart}/${lang}`);
     },
     getDietRecord(weekStart: string): Promise<ResponseForm<number>> {
         return axiosClient.get(`diet-records/mobile/dish-plan/${weekStart}`);

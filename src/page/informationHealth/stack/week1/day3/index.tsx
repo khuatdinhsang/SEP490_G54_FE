@@ -95,7 +95,6 @@ const Week1Day3 = () => {
     setNotPreferredLocation(value.address)
     setNotPreferredTime(value.time)
   }
-  console.log("94", isLoading)
   console.log("95", isDisabled)
   return (
     <SafeAreaView style={{ flex: 1 }}>

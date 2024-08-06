@@ -15,7 +15,7 @@ export const SCROLL_VALUE = {
   CLOCK: 600,
   READY: 0,
 };
-export const LANG = {
-  KR: 'KR',
-  EN: 'EN'
+export enum LANG {
+  KR = 'KR',
+  EN = 'EN'
 }

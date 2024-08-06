@@ -45,6 +45,8 @@ axiosClient.interceptors.response.use(
     const handleLogout = async () => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
+      await AsyncStorage.removeItem('deviceToken');
+      await AsyncStorage.removeItem('language');
     };
     if (error.response && error.response.status === 401) {
       const originalRequest = error.config;

@@ -18,6 +18,7 @@ import { chartService } from '../../services/charts';
 import { convertToChart1Monthly, convertToChart1SAT, convertToChart1SF, convertToChart2Monthly, convertToChart2SAT, convertToChart2SF, convertToChart3SAT, convertToChart3SF, convertToChart4SAT, convertToChart4SF, convertToChart5SAT, convertToChart5SF, TransformedData } from '../../util';
 import DescriptionColor from './conponent/descriptionColor';
 import MonthlyChartEvaluate from './conponent/chart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SF_Evaluate = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -30,6 +31,8 @@ const SF_Evaluate = ({ route }: any) => {
     const [chartThree, setChartThree] = useState<TransformedData[]>([])
     const [chartFour, setChartFour] = useState<TransformedData[]>([])
     const [chartFive, setChartFive] = useState<TransformedData[]>([])
+    const [lang, setLang] = useState<string>("")
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -43,11 +46,13 @@ const SF_Evaluate = ({ route }: any) => {
             if (res.code === 200) {
                 setErrorMessage("");
                 setIsLoading(false)
-                setChartOne(convertToChart1SF(res.result))
-                setChartTwo(convertToChart2SF(res.result))
-                setChartThree(convertToChart3SF(res.result))
-                setChartFour(convertToChart4SF(res.result))
-                setChartFive(convertToChart5SF(res.result))
+                setChartOne(convertToChart1SF(res.result, t))
+                setChartTwo(convertToChart2SF(res.result, t))
+                setChartThree(convertToChart3SF(res.result, t))
+                setChartFour(convertToChart4SF(res.result, t))
+                setChartFive(convertToChart5SF(res.result, t))
+                const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                setLang(langAsy)
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
@@ -65,14 +70,25 @@ const SF_Evaluate = ({ route }: any) => {
     useEffect(() => {
         getListNumber()
     }, [])
-    console.log("d1", chartFour)
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconXRight={true}
                     isIconLeft={true}
-                    text={`${time}월 결과`}
+                    text={convertTime()}
                     handleClickIconRight={() => navigation.navigate(SCREENS_NAME.EVALUATE.MONTHLY)}
                     handleClickArrowLeft={goBackPreviousPage}
                 />

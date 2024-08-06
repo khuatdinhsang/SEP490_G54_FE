@@ -84,9 +84,9 @@ const RecordHealthData = () => {
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.content}>
                     <View style={[flexRowCenter, { marginBottom: 40 }]}>
-                        <Text style={styles.textContent}>{t('recordHealthData.myToday')}</Text>
+                        <Text style={styles.textContent}>{t('recordHealthData.myToday')}{' '} </Text>
                         <Text style={[styles.textContent, { color: colors.orange_04 }]}>{t('recordHealthData.healthActives')}</Text>
-                        <Text style={styles.textContent}>{t('recordHealthData.letRecord')}</Text>
+                        <Text style={styles.textContent}>{' '}{t('recordHealthData.letRecord')}</Text>
                     </View>
                     <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
                         {listRecord && listRecord.map((item) => {

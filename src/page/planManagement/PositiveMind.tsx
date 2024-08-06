@@ -24,6 +24,8 @@ import { getMondayOfCurrentWeek } from '../../util';
 import { useDispatch } from 'react-redux';
 import { setScreen } from '../../store/screen.slice';
 import { DateTime } from 'luxon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 
 const PositiveMind: React.FC = () => {
@@ -41,8 +43,10 @@ const PositiveMind: React.FC = () => {
     useEffect(() => {
         const fetchListMental = async () => {
             setIsLoading(true)
+            const langAys = await AsyncStorage.getItem("language")
+            const lang = langAys === 'en' ? LANG.EN : LANG.KR
             try {
-                const res = await planService.getListMental()
+                const res = await planService.getListMental(lang)
                 if (res.code === 200) {
                     setIsLoading(false)
                     setMessageError("");
@@ -209,6 +213,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: colors.gray_G07,
         marginTop: 10,
+        paddingHorizontal: 20
     },
     backgroundWarning: {
         position: 'absolute',

@@ -41,6 +41,10 @@ const BloodPressure = ({ route }: any) => {
             setBloodMaxError(t('placeholder.err.invalidInput'));
             return;
         }
+        if (Number(minBloodPressure) >= Number(maxBloodPressure)) {
+            setBloodMinError(t('placeholder.err.invalidInput'));
+            return;
+        }
         setIsLoading(true)
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek()?.split("T")[0],

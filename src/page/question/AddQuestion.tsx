@@ -32,10 +32,10 @@ const AddQuestion = () => {
     }
     const addQuestionSchema = yup.object().shape({
         title: yup.string().required(t("questionManagement.error.title")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
-            return value.trim().length > 0;
+            return value?.trim()?.length > 0;
         }),
         content: yup.string().required(t("questionManagement.error.content")).test('no-only-spaces', t("placeholder.err.invalidInput"), (value) => {
-            return value.trim().length > 0;
+            return value?.trim()?.length > 0;
         }),
     });
     const clearField = (field: string, setFieldValue: (field: string, value: any) => void) => {

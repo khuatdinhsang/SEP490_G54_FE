@@ -17,11 +17,13 @@ import LoadingScreen from '../../component/loading';
 import { medicineService } from '../../services/medicine';
 import { listRegisterMedicineData, medicinePost, mentalData } from '../../constant/type/medical';
 import InputNumber from '../../component/inputNumber';
-import { generateRandomId, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
+import { convertDay, generateRandomId, getISO8601ForSelectedDays, getMondayOfCurrentWeek, twoDigit } from '../../util';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { addRegisterMedication, addRegisterMedicationInterface, setListRegisterMedication, setListRegisterMedicationInterface } from '../../store/medication.slice';
 import { offsetTime } from '../../constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 type dataType = {
     id: number,
@@ -77,7 +79,9 @@ const AddMedication = ({ route }: any) => {
         const fetchDataMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await medicineService.getListMedicineType();
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await medicineService.getListMedicineType(lang);
                 if (res.code === 200) {
                     setIsLoading(false);
                     setDataMedication(res.result);
@@ -115,7 +119,7 @@ const AddMedication = ({ route }: any) => {
         const selectedMedicineTitle = dataMedication.find((item) => item.id === selectedMedication)?.title || '';
         const dataInterface: listRegisterMedicineData | any = {
             medicineTypeId: selectedMedication || 0,
-            weekday: dayChoose.map((item) => item.name),
+            weekday: dayChoose.map((item) => item.value),
             time: `${twoDigit(Number(hour))}:${twoDigit(Number(minute))}:00`,
             medicineTitle: selectedMedicineTitle?.toString(),
             indexDay: dayChoose.map((item) => item.dayWeek),
@@ -186,7 +190,6 @@ const AddMedication = ({ route }: any) => {
                 <ScrollView contentContainerStyle={{ paddingBottom: hour || minute ? 100 : 150 }}>
                     <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
                         <Text style={styles.textPlan}>{t("planManagement.text.typesMedication")}</Text>
-                        <Text style={styles.textPlan}>{t("planManagement.text.selectDayTime")}</Text>
                         <View style={{ marginTop: 20 }}>
                             <Text style={styles.textChooseMedication}>{t("planManagement.text.pleaseChooseMedication")}</Text>
                             <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>

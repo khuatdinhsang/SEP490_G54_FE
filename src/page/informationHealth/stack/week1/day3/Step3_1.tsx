@@ -24,7 +24,7 @@ const Step3_1 = (props: Step3Props) => {
   const [messageError, setMessageError] = useState<string>("")
   useEffect(() => {
     onSubmit({ address, time })
-    const isDisabled = (address && time && !errAddress.length && !errTime.length) ? false : true
+    const isDisabled = (address && time && !errAddress?.length && !errTime?.length) ? false : true
     setIsDisabled(isDisabled)
   }, [time, address, setIsDisabled])
 

@@ -15,6 +15,8 @@ import LoadingScreen from '../../../../component/loading';
 import { offsetTime } from '../../../../constant';
 import { DateTime } from 'luxon';
 import { listRegisterMedicineData } from '../../../../constant/type/medical';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../../../home/const';
 
 const MedicationRecord = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -32,7 +34,9 @@ const MedicationRecord = ({ route }: any) => {
         const fetchDataListMedication = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const res = await planService.getListMedicationRecords(getMondayOfCurrentWeek()?.split("T")[0]);
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await planService.getListMedicationRecords(getMondayOfCurrentWeek()?.split("T")[0], lang);
                 if (res.code === 200) {
                     setDataListMedication(res.result);
                     console.log("37", res.result)
@@ -136,11 +140,11 @@ const MedicationRecord = ({ route }: any) => {
                             {dataListMedication.map((item) => (
                                 <View style={{ marginBottom: 30 }} key={item.id}>
                                     <View style={[flexRow, { flexWrap: 'wrap' }]}>
-                                        <Text style={styles.text}>오늘</Text>
+                                        <Text style={styles.text}>{t("recordHealthData.today")}</Text>
                                         <Text style={[styles.text, { color: colors.orange_04 }]}>{new Date(item.date).getHours()?.toString()?.padStart(2, '0')}:{new Date(item.date).getMinutes()?.toString()?.padStart(2, '0')}</Text>
-                                        <Text style={styles.text}>에</Text>
+                                        <Text style={styles.text}>{t("recordHealthData.didYouTake")}</Text>
                                         <Text style={[styles.text, { color: colors.orange_04 }]}>{item.medicineName}</Text>
-                                        <Text style={styles.text}>을 먹었나요?</Text>
+                                        <Text style={styles.text}>{t("recordHealthData.?")}</Text>
                                     </View>
                                     <View style={[flexRowSpaceBetween, { marginTop: 10 }]}>
                                         <Pressable

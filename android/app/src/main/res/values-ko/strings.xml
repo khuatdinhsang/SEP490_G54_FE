@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_title">앱이 백그라운드에서 실행됩니다</string>
+    <string name="notification_text">걸음 수를 세고 있습니다...</string>
+</resources>

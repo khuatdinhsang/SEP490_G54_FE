@@ -32,14 +32,19 @@ const Login = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>('')
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [lang, setLang] = useState<string>(LANG.KR)
+    const [lang, setLang] = useState<LANG>(LANG.KR)
     const options = [
         { label: 'Korean', value: LANG.KR },
         { label: 'English', value: LANG.EN },
     ];
     useEffect(() => {
-        i18n.changeLanguage(lang === LANG.KR ? "ko" : "en");
-    }, [lang])
+        const changeLanguage = async () => {
+            const langAys = lang === LANG.KR ? 'ko' : 'en'
+            i18n.changeLanguage(langAys);
+            await AsyncStorage.setItem('language', langAys);
+        };
+        changeLanguage();
+    }, [lang]);
     console.log("d", lang)
     useEffect(() => {
         const backAction = () => {
@@ -88,12 +93,12 @@ const Login = () => {
             await getToken();
             const deviceToken = await AsyncStorage.getItem('deviceToken');
             console.log("80", deviceToken);
-            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "", language: lang })).unwrap()
             if (res.code == 200) {
                 setIsLoggedIn(true)
                 setIsLoading(false);
                 resetForm()
-                navigation.navigate(SCREENS_NAME.HOME.MAIN)
+                navigation.replace(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
             if (error.code == 400) {
@@ -155,6 +160,7 @@ const Login = () => {
                                         />
                                     </View>
                                 </View>
+                                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                                 <View style={[flexRow, { marginTop: 20 }]}>
                                     {options.map((option) => (
                                         <RadioButton
@@ -166,7 +172,6 @@ const Login = () => {
                                         />
                                     ))}
                                 </View>
-                                {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
                                 <View style={{ marginTop: 30 }}>
                                     <Pressable onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: colors.primary }]}>
                                         <Text style={styles.text}>{t("authentication.login")}</Text>
@@ -197,7 +202,7 @@ const styles = StyleSheet.create({
     },
     firstStep: {
         fontWeight: '700',
-        width: 240,
+        width: "80%",
         fontSize: 28,
         lineHeight: 40,
         marginTop: 80,

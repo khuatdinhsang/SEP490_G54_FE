@@ -14,6 +14,8 @@ import { HistoryMedicalResponse } from '../../constant/type/medical';
 import { medicalService } from '../../services/medicalHistory';
 import { transformData } from '../../util';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 const RegisterStep3 = ({ route }: any) => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const { t } = useTranslation();
@@ -56,7 +58,9 @@ const RegisterStep3 = ({ route }: any) => {
         const fetchMedicalHistory = async () => {
             setIsLoading(true)
             try {
-                const res = await medicalService.getMedicalHistory();
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await medicalService.getMedicalHistory(lang);
                 if (res.code == 200 && Array.isArray(res.result)) {
                     setIsLoading(false)
                     setData(transformData(res.result))

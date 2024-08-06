@@ -11,6 +11,8 @@ import RegularQuestionComponent from './component/RegularQuestion';
 import { questionService } from '../../services/question';
 import { questionRegular } from '../../constant/type/question';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 const RegularQuestion = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
@@ -27,7 +29,9 @@ const RegularQuestion = () => {
         const getListQuestion = async (): Promise<void> => {
             setIsLoading(true);
             try {
-                const resData = await questionService.getListQuestionRegular();
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const resData = await questionService.getListQuestionRegular(lang);
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setListQuestion(resData.result)

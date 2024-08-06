@@ -31,7 +31,7 @@ const Step2_2 = (props: Step2_2Props) => {
     const [messageError, setMessageError] = useState<string>("")
     const dispatch = useDispatch()
     useEffect(() => {
-        const isDisable = (comment && messagePositive && !errComment.length && !errMessagePositive.length) ? false : true;
+        const isDisable = (comment && messagePositive && !errComment?.length && !errMessagePositive?.length) ? false : true;
         setIsDisabled(isDisable);
     }, [comment, messagePositive, setIsDisabled]);
 

@@ -10,6 +10,7 @@ import {
 } from 'victory-native';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
+import { useTranslation } from 'react-i18next';
 
 interface MonthlyChartProps {
     tickValues: number[];
@@ -80,6 +81,7 @@ const wrapLabel = (text: string) => {
 };
 
 const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data }) => {
+    const { t } = useTranslation()
     const filteredDataY1 = data.filter((d) => d.y1 !== 0);
     const filteredDataY2 = data.filter((d) => d.y2 !== 0);
     const filteredDataY3 = data.filter((d) => d.y3 !== 0);
@@ -97,19 +99,19 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
             <View style={[styles.legendContainer, { marginTop: 10 }]}>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
-                    <Text style={styles.textDes}>1주차</Text>
+                    <Text style={styles.textDes}>{t("lesson.week1")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.orange_04 }]} />
-                    <Text style={styles.textDes}>1개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month1")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.green }]} />
-                    <Text style={styles.textDes}>2개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month2")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.blue_01 }]} />
-                    <Text style={styles.textDes}>3개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month3")}</Text>
                 </View>
             </View>
             <VictoryChart

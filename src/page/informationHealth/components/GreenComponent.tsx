@@ -15,6 +15,9 @@ const GreenComponent = () => {
           style={styles.image}
         />
       </View>
+
+
+
     </View>
   );
 };

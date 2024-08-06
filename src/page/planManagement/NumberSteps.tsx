@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: colors.gray_G07,
         textAlign: 'center',
-        marginTop: 20
+        marginTop: 20,
+        paddingHorizontal: 20
     },
     button: {
         height: 60,

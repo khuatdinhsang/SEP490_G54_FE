@@ -15,6 +15,7 @@ import { chartService } from '../../../../services/charts';
 import { extractDayAndMonth, getMondayOfCurrentWeek, transformDataToChartHBA1C } from '../../../../util';
 import LoadingScreen from '../../../../component/loading';
 import { BloodSugarDetails, valueBloodSugar, valueCardinal } from '../../../../constant/type/chart';
+import { TypeTimeMeasure } from '../../contant';
 
 interface dataTypes {
     x: string,
@@ -90,6 +91,7 @@ const NumericalRecordChart = ({ route }: any) => {
     const navigateNumericalRecord = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.NUMERICAL_RECORD)
     }
+    console.log("93", detailBloodSugar)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -195,19 +197,22 @@ const NumericalRecordChart = ({ route }: any) => {
                                     }}
                                 />
                             </View>
-                            <Text style={[styles.textTitleMedium, { marginTop: 20 }]}>오늘 나의 혈당</Text>
+                            <Text style={[styles.textTitleMedium, { marginTop: 20 }]}>{t("evaluate.bloodSugarToday")}</Text>
                             {(detailBloodSugar?.MORNING?.length ?? 0) > 0 &&
                                 <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
                                     <Text style={{
                                         fontWeight: "500", fontSize: 16,
-                                        color: colors.gray_G06
-                                    }} >아침</Text>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[0]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>아침 식전</Text>
+                                        color: colors.gray_G06,
+                                        width: "20%"
+                                    }}>
+                                        {t("evaluate.morning").charAt(0).toUpperCase() + t("evaluate.morning").slice(1)}
+                                    </Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_BREAKFAST ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.afterBreakfast")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[0]?.data}mg/DL</Text>
                                     </View>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[1]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>아침 식후</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[1]?.typeTimeMeasure === TypeTimeMeasure.BEFORE_BREAKFAST ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.beforeBreakfast")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[1]?.data}mg/DL</Text>
                                     </View>
                                 </View>
@@ -216,14 +221,17 @@ const NumericalRecordChart = ({ route }: any) => {
                                 <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
                                     <Text style={{
                                         fontWeight: "500", fontSize: 16,
-                                        color: colors.gray_G06
-                                    }} >점심</Text>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[0]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>점심 식전</Text>
+                                        color: colors.gray_G06,
+                                        width: "20%"
+                                    }}>
+                                        {t("evaluate.lunch").charAt(0).toUpperCase() + t("evaluate.lunch").slice(1)}
+                                    </Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_LUNCH ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.afterLunch")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.LUNCH[0]?.data}mg/DL</Text>
                                     </View>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[1]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>점심 식사 후</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[1]?.typeTimeMeasure === TypeTimeMeasure.BEFORE_LUNCH ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.beforeLunch")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.LUNCH[1]?.data}mg/DL</Text>
                                     </View>
                                 </View>
@@ -232,28 +240,28 @@ const NumericalRecordChart = ({ route }: any) => {
                                 <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
                                     <Text style={{
                                         fontWeight: "500", fontSize: 16,
-                                        color: colors.gray_G06
-                                    }} >저녁</Text>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[0]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>저녁 식전</Text>
+                                        color: colors.gray_G06,
+                                        width: "20%"
+                                    }}>
+                                        {t("evaluate.dinner").charAt(0).toUpperCase() + t("evaluate.dinner").slice(1)}
+                                    </Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_DINNER ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.afterDinner")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.DINNER[0]?.data}mg/DL</Text>
                                     </View>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[1]?.data ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>저녁 식사 후</Text>
+                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[1]?.typeTimeMeasure === TypeTimeMeasure.BEFORE_DINNER ? 1 : 0 }]}>
+                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.beforeDinner")}</Text>
                                         <Text style={styles.textBloodDetail}>{detailBloodSugar?.DINNER[1]?.data}mg/DL</Text>
                                     </View>
                                 </View>
                             }
                         </View>
-
                         :
-                        <View style={[flexCenter, { marginTop: 100 }]}>
+                        <View style={{ height: HeightDevice, display: 'flex', alignItems: 'center', marginTop: 100 }}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
-                            <Pressable
-                                onPress={navigateNumericalRecord}
-                                style={styles.button}>
+                            <Pressable onPress={navigateNumericalRecord} style={styles.button}>
                                 <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
                             </Pressable>
                         </View>

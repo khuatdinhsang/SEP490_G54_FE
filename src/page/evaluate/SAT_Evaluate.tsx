@@ -18,6 +18,7 @@ import { chartService } from '../../services/charts';
 import { convertToChart1Monthly, convertToChart1SAT, convertToChart2Monthly, convertToChart2SAT, convertToChart3SAT, convertToChart4SAT, convertToChart5SAT, TransformedData } from '../../util';
 import DescriptionColor from './conponent/descriptionColor';
 import MonthlyChartEvaluate from './conponent/chart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SAT_Evaluate = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -30,6 +31,8 @@ const SAT_Evaluate = ({ route }: any) => {
     const [chartThree, setChartThree] = useState<TransformedData[]>([])
     const [chartFour, setChartFour] = useState<TransformedData[]>([])
     const [chartFive, setChartFive] = useState<TransformedData[]>([])
+    const [lang, setLang] = useState<string>("")
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -43,11 +46,13 @@ const SAT_Evaluate = ({ route }: any) => {
             if (res.code === 200) {
                 setErrorMessage("");
                 setIsLoading(false)
-                setChartOne(convertToChart1SAT(res.result))
-                setChartTwo(convertToChart2SAT(res.result))
-                setChartThree(convertToChart3SAT(res.result))
-                setChartFour(convertToChart4SAT(res.result))
-                setChartFive(convertToChart5SAT(res.result))
+                setChartOne(convertToChart1SAT(res.result, t))
+                setChartTwo(convertToChart2SAT(res.result, t))
+                setChartThree(convertToChart3SAT(res.result, t))
+                setChartFour(convertToChart4SAT(res.result, t))
+                setChartFive(convertToChart5SAT(res.result, t))
+                const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                setLang(langAsy)
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
@@ -65,13 +70,24 @@ const SAT_Evaluate = ({ route }: any) => {
     useEffect(() => {
         getListNumber()
     }, [])
-    console.log("d", chartFour)
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconXRight={true}
-                    text={`${time}월 결과`}
+                    text={convertTime()}
                     handleClickIconRight={goBackPreviousPage}
                 />
             </View>
@@ -173,7 +189,6 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         fontSize: 20,
         color: colors.gray_G10,
-        textAlign: 'center'
     },
     textAva: {
         fontWeight: "700",

@@ -32,7 +32,7 @@ const NoDataRecordHealthData = () => {
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>
-            <View style={[flexCenter, { marginTop: 100 }]}>
+            <View style={[flexCenter, { marginTop: 100, paddingHorizontal: 20 }]}>
                 <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                 <Text style={styles.textTitle}>{t('evaluate.noPlan')}</Text>
                 <Text style={styles.textDesc}>{t('evaluate.actionPlan')}</Text>

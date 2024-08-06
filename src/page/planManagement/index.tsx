@@ -24,7 +24,7 @@ const PlanManagement = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [messageError, setMessageError] = useState<string>("")
   const goBackPreviousPage = () => {
-    navigation.goBack();
+    navigation.navigate(SCREENS_NAME.HOME.MAIN)
   }
   return (
     <SafeAreaView>

@@ -10,6 +10,8 @@ import {
 } from 'victory-native';
 import colors from '../../constant/color';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { flexRow } from '../../styles/flex';
 
 interface LineChartProps {
   data: Array<{ y: number, label?: string }>;
@@ -21,7 +23,7 @@ interface LineChartProps {
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
   const { data, textTitle, tickValues, labelElement } = props;
-
+  const { t } = useTranslation()
   const dataScatter = data.map((item, index) => ({
     x: index + 1,
     y: item.y,
@@ -30,9 +32,6 @@ const LineChart = (props: LineChartProps) => {
 
   const yTickFormat = (y: number) => {
     if (y === 0) return '';
-    if (y === 33) return '하';
-    if (y === 67) return '중';
-    if (y === 100) return '상';
     return y;
   };
 
@@ -183,6 +182,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.gray_G08,
   },
+  note: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.gray_G03,
+    marginRight: 10
+  }
 });
 
 export default LineChart;

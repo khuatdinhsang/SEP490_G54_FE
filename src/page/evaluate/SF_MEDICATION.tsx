@@ -11,6 +11,8 @@ import { questionRes, resultQuestionRes } from '../../constant/type/question';
 import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { TypeQuestion } from '../../constant';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 interface questionType {
     id: number,
@@ -29,6 +31,8 @@ const SF_MEDICATION = ({ route }: any) => {
     const [listQuestions, setListQuestions] = useState<questionRes[]>([])
     const [answers, setAnswers] = useState<{ [key: number]: number | null }>({});
     const [type, setType] = useState<string>("")
+    const [lang, setLang] = useState<string>("")
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -36,12 +40,16 @@ const SF_MEDICATION = ({ route }: any) => {
         const getListQuestion = async () => {
             setIsLoading(true)
             try {
-                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SF_MEDICATION)
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SF_MEDICATION, lang)
                 if (res.code === 200) {
                     setErrorMessage("");
                     setIsLoading(false)
                     setListQuestions(res.result.formMonthlyQuestionDTOList)
                     setType(res.result.type)
+                    const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                    setLang(langAsy)
                 } else {
                     setErrorMessage("Unexpected error occurred.");
                 }
@@ -59,11 +67,15 @@ const SF_MEDICATION = ({ route }: any) => {
         const getListQuestionResult = async () => {
             setIsLoading(true);
             try {
-                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SF_MEDICATION);
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SF_MEDICATION, lang);
                 if (res.code === 200) {
                     setErrorMessage("");
                     setListQuestionsResult(res.result)
                     setType(res.result[0].type)
+                    const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                    setLang(langAsy)
                 } else {
                     setErrorMessage("Unexpected error occurred.");
                 }
@@ -120,12 +132,24 @@ const SF_MEDICATION = ({ route }: any) => {
             }
         }
     }
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconLeft={true}
-                    text={`${time}월 실천평가`}
+                    text={convertTime()}
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { axiosClient, baseURL } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
-import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changePassword, heightWeightResponse, refreshTokenResponse } from '../constant/type/auth';
+import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changeLanguage, changePassword, heightWeightResponse, refreshTokenResponse } from '../constant/type/auth';
 
 const endpoint = '/auth';
 
@@ -28,7 +28,6 @@ export const authService = {
         return axiosClient.get(`forget-password/email/${email}`);
     },
     verifyForgetPassword(data: VerifyForgetPassword): Promise<VerifyEmailResponse> {
-        console.log("a", data)
         return axiosClient.post(`forget-password/email/change-password`, data);
     },
     changePassword(data: changePassword): Promise<VerifyEmailResponse> {
@@ -47,6 +46,10 @@ export const authService = {
     },
     checkExpiredRefreshToken(refreshToken: string): Promise<ResponseForm<boolean>> {
         return axiosClient.get(`${baseURL}${endpoint}/check-refresh-token/${refreshToken}`)
+    },
+    changeLanguage(data: changeLanguage): Promise<ResponseForm<boolean>> {
+        console.log("dat51", data)
+        return axiosClient.put(`${baseURL}/notifications/mobile/change-language`, data)
     },
 
 };

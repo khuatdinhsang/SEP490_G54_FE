@@ -55,7 +55,7 @@ const Home = () => {
   const transformX = useSharedValue(-widthSidebar);
   const [counterStep, setCounterStep] = useState<number>(0);
   const [planCounterStep, setPlanCounterStep] = useState<number>(0)
-  const user = useAppSelector(state => state.user);
+  // const user = useAppSelector(state => state.user);
   // dispatch(initUser({id: '1', counterStep: []}));
   const { t } = useTranslation()
   const [messageError, setMessageError] = useState<string>("");

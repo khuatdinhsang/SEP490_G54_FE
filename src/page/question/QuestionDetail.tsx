@@ -105,7 +105,7 @@ const QuestionDetail = ({ route }: any) => {
                     {questionDetail?.answer &&
                         <View style={{ marginTop: 15 }}>
                             <InputComponent
-                                value={questionDetail?.answer.trim()}
+                                value={questionDetail?.answer?.trim()}
                                 label={t("questionManagement.answerResponse")}
                                 styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                                 multiline={true}

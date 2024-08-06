@@ -90,7 +90,7 @@ const WeeklyEvaluate = () => {
                         <LineChart
                             data={transformDataToChartNoX(dataChart)}
                             textTitle={t("evaluate.mediumChart")}
-                            labelElement="사용X"
+                            labelElement="%"
                             tickValues={[0, 33, 67, 100]}
                         />
                         <View style={{ marginBottom: 20, marginTop: 20 }}>

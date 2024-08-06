@@ -34,9 +34,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     day: {
-        paddingHorizontal: 12,
-        paddingVertical: 14,
-        borderRadius: 999
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        borderRadius: 999,
+        flex: 1,
+        alignItems: 'center',
+        marginHorizontal: 2
     },
     textDay: {
         fontWeight: '400',

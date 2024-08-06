@@ -10,6 +10,7 @@ import {
 } from 'victory-native';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../../constant/color';
+import { useTranslation } from 'react-i18next';
 
 interface MonthlyChartProps {
     tickValues: number[];
@@ -86,7 +87,7 @@ const wrapLabel = (text: string) => {
 const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data }) => {
     const filteredDataY1 = data.filter((d) => d.y1 !== 0);
     const filteredDataY2 = data.filter((d) => d.y2 !== 0);
-
+    const { t } = useTranslation()
     return (
         <VictoryChart
             height={250}
@@ -127,14 +128,14 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data })
                     ticks: { stroke: 'transparent' }
                 }}
                 tickLabelComponent={<VictoryLabel dx={-25} />}
-                tickFormat={(t) => {
-                    switch (t) {
+                tickFormat={(value) => {
+                    switch (value) {
                         case 25:
-                            return '우수';
+                            return t("evaluate.serious");
                         case 55:
-                            return '보통';
+                            return t("evaluate.medium");
                         case 85:
-                            return '우수';
+                            return t("evaluate.good");
                         default:
                             return '';
                     }

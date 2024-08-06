@@ -12,7 +12,8 @@ import { IMAGE } from '../../constant/image';
 import { ResponseWeeklyReview } from '../../constant/type/weekly';
 import { weeklyReviewService } from '../../services/weeklyReviews';
 import LoadingScreen from '../../component/loading';
-import { convertMinutesToHoursAndMinutes, renderIconWeeklyReview, renderTextWeeklyReview } from '../../util';
+import { convertMinutesToHoursAndMinutes, renderIconWeeklyReview, renderTextMainWeeklyReview, renderTextTitle1WeeklyReview, renderTextTitle2WeeklyReview } from '../../util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WeeklyEvaluateDetail = ({ route }: any) => {
     const time = route?.params?.time;
@@ -23,6 +24,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const [data, setData] = useState<ResponseWeeklyReview>()
+    const [lang, setLang] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.goBack()
     }
@@ -31,6 +33,8 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
             setIsLoading(true);
             try {
                 const resData = await weeklyReviewService.getDetailWeeklyReviews(time?.split("T")[0]);
+                const langAsy = await AsyncStorage.getItem("language") ?? 'en';
+                setLang(langAsy)
                 if (resData.code === 200) {
                     setIsLoading(false);
                     console.log("ré", resData.result)
@@ -64,13 +68,18 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                 <View style={styles.content}>
                     <Text style={styles.text}>{t('evaluate.general')}</Text>
                     <View style={[flexRow, styles.congratulation, styles.shadowBox]}>
-                        <View style={flexRowCenter}>
-                            <Image style={{ marginRight: 10 }} source={IMAGE.EVALUATE.LAYER} />
-                            <Text style={[styles.textEvaluate, { fontSize: 20 }]}>{t(`${renderTextWeeklyReview(data?.totalPoint ?? 0)}`)}</Text>
-                        </View>
-                        <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]}>
-                            <Text style={styles.textDesc}>{t('evaluate.congratulation')}</Text>
-                            <Text style={styles.textDesc}>{t('evaluate.successfulWeek')}</Text>
+                        {
+                            lang ?
+                                <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.totalPoint ?? 0)} />
+                                :
+                                <View style={flexRowCenter}>
+                                    <Image style={{ marginRight: 10 }} source={IMAGE.EVALUATE.LAYER} />
+                                    <Text style={[styles.textEvaluate, { fontSize: 20 }]}>{t(`${renderTextMainWeeklyReview(data?.totalPoint ?? 0)}`)}</Text>
+                                </View>
+                        }
+                        <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1, justifyContent: 'center' }]}>
+                            <Text style={styles.textDesc}>{renderTextTitle1WeeklyReview(data?.totalPoint ?? 0, t)}</Text>
+                            {data?.totalPoint !== undefined && data?.totalPoint >= 50 && <Text style={styles.textDesc}>{renderTextTitle2WeeklyReview(data?.totalPoint ?? 0, t)}</Text>}
                         </View>
                     </View>
                     <View style={[flexRowSpaceBetween, { marginTop: 30 }]}>
@@ -102,7 +111,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         </View>
                     </View>
                     <View style={[styles.shadowBox, styles.summary]}>
-                        <Text style={styles.text}>{t("common.diseases.highBlood")}</Text>
+                        <Text style={styles.text}>{t("common.diseases.highBloodEvl")}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodPressurePoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
@@ -131,7 +140,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t('planManagement.text.workout')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.activityPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.highIntensity")} {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0)} / {t("planManagement.text.mediumIntensity")} {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0)}/ {t("planManagement.text.lowIntensity")} {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0)}</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.highIntensity")} {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0, t)} / {t("planManagement.text.mediumIntensity")} {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0, t)}/ {t("planManagement.text.lowIntensity")} {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0, t)}</Text>
                         </View>
                         {data?.heavyActivity === 0 && data?.mediumActivity === 0 &&
                             <View>

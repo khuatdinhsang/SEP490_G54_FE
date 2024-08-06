@@ -26,6 +26,7 @@ const MonthEvaluate = () => {
         navigation.goBack();
     };
     const [data, setData] = useState<listMonthNumberRes[]>([])
+    console.log("29", data)
     const [chartOne, setChartOne] = useState<TransformedData[]>([])
     const [chartTwo, setChartTwo] = useState<TransformedData[]>([])
     const getListNumber = async () => {
@@ -40,8 +41,8 @@ const MonthEvaluate = () => {
                 try {
                     const resData = await chartService.monthlyQuestionChart();
                     if (resData.code === 200) {
-                        setChartOne(convertToChart1Monthly(resData.result))
-                        setChartTwo(convertToChart2Monthly(resData.result))
+                        setChartOne(convertToChart1Monthly(resData.result, t))
+                        setChartTwo(convertToChart2Monthly(resData.result, t))
                     } else {
                         setErrorMessage("Unexpected error occurred.");
                     }
@@ -105,14 +106,14 @@ const MonthEvaluate = () => {
                 <ScrollView contentContainerStyle={{ paddingBottom: 100 }} style={styles.scrollView}>
                     <View style={{ paddingTop: 20 }}>
                         <MonthlyChart
-                            textTitle={"건강 경영 전략 변화 그래프"}
+                            textTitle={t('evaluate.graphHealthManagement')}
                             data={chartOne}
                             tickValues={[0, 20, 40, 60, 80, 100]}
                         />
                     </View>
                     <View style={{ paddingTop: 20 }}>
                         <MonthlyChart
-                            textTitle={"건강 경영 전략 변화 그래프"}
+                            textTitle={t('evaluate.graphHealthManagement')}
                             data={chartTwo}
                             tickValues={[0, 20, 40, 60, 80, 100]}
                         />
