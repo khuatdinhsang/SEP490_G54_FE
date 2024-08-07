@@ -50,7 +50,7 @@ const ShoesComponent = ({ progressBar, guide, counterStep, planCounterStep }: Sh
             </Text>
             <Text style={{ fontSize: 18 }}>/{planCounterStep} {t("home.step")}</Text>
           </Text>
-          <Text style={styles.shoeTextRight}>{dateTime} {t("home.standard")}</Text>
+          <Text style={styles.shoeTextRight}>{dateTime}</Text>
         </View>
         {/* <View style={[flexRow, styles.shoeContainerKcal]}>
           <Text style={styles.shoeTextKcal}>

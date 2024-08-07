@@ -62,30 +62,31 @@ const MedicationChart = ({ route }: any) => {
     console.log("61", transformDataToChartStep(dataChart, "%"))
     return (
         <SafeAreaView style={styles.container}>
+
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    text={t('planManagement.text.takingMedication')}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
+            <View style={flexRow}>
+                <Pressable
+                    onPress={navigateNumericalRecord}
+                    style={styles.navigate}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                        {t('recordHealthData.medicationProfile')}
+                    </Text>
+                </Pressable>
+                <Pressable style={[styles.navigate, styles.active]}>
+                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                        {t('recordHealthData.viewChart')}
+                    </Text>
+                </Pressable>
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        text={t('planManagement.text.takingMedication')}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
-                <View style={flexRow}>
-                    <Pressable
-                        onPress={navigateNumericalRecord}
-                        style={styles.navigate}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                            {t('recordHealthData.medicationProfile')}
-                        </Text>
-                    </Pressable>
-                    <Pressable style={[styles.navigate, styles.active]}>
-                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                            {t('recordHealthData.viewChart')}
-                        </Text>
-                    </Pressable>
-                </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.MEDICATION1}
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        height: HeightDevice
+        flex: 1,
+        backgroundColor: colors.background
     }, navigate: {
         height: 48,
         width: '50%'

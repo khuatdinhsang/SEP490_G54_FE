@@ -1,7 +1,9 @@
+import { LANG } from './../../page/home/const/index';
 export interface LoginData {
     email: string;
     password: string;
-    deviceToken: string
+    deviceToken: string,
+    language: LANG
 }
 export interface VerifyForgetPassword {
     email: string,
@@ -22,6 +24,10 @@ export interface RegisterData {
     weight: number,
     phoneNumber: string,
     listMedicalHistory: number[]
+}
+export interface changeLanguage {
+    deviceToken: string,
+    language: LANG,
 }
 export interface VerifyEmailResponse {
     code: number;

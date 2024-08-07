@@ -86,7 +86,7 @@ const QuestionDetail = ({ route }: any) => {
                 </View>
                 <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20, }}>
                     <InputComponent
-                        value={questionDetail?.title.trim()}
+                        value={questionDetail?.title?.trim()}
                         label={t("questionManagement.title")}
                         styleInput={{ backgroundColor: colors.white }}
                         multiline={true}
@@ -95,7 +95,7 @@ const QuestionDetail = ({ route }: any) => {
                     />
                     <View style={{ marginTop: 15 }}>
                         <InputComponent
-                            value={questionDetail?.body.trim()}
+                            value={questionDetail?.body?.trim()}
                             label={t("questionManagement.content")}
                             styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                             multiline={true}
@@ -105,7 +105,7 @@ const QuestionDetail = ({ route }: any) => {
                     {questionDetail?.answer &&
                         <View style={{ marginTop: 15 }}>
                             <InputComponent
-                                value={questionDetail?.answer.trim()}
+                                value={questionDetail?.answer?.trim()}
                                 label={t("questionManagement.answerResponse")}
                                 styleInput={{ backgroundColor: colors.white, paddingBottom: 20 }}
                                 multiline={true}

@@ -18,7 +18,7 @@ const MainWorkOut = () => {
         const checkIsExistDataToday = async () => {
             setIsLoading(true);
             try {
-                const res = await chartService.checkIsExistActivity(getMondayOfCurrentWeek().split("T")[0]);
+                const res = await chartService.checkIsExistActivity(getMondayOfCurrentWeek()?.split("T")[0]);
                 if (res.result === true) {
                     setIsLoading(false);
                     setMessageError("");

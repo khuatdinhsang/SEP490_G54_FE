@@ -2,24 +2,49 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
 import { IMAGE } from '../../constant/image';
 import { flexRow } from '../../styles/flex';
-
+import { Switch } from 'react-native-switch';
 interface CategoryComponentProps {
   text: string;
   handleOnPress: () => void;
+  lang?: string | null,
+  setLang?: (value: string) => void;
 }
 
 const CategoryComponent = (props: CategoryComponentProps) => {
-  const { text, handleOnPress } = props;
+  const { text, handleOnPress, lang, setLang } = props;
   const handleOnPressInner = () => {
     handleOnPress();
   };
-
   return (
     <Pressable onPress={handleOnPressInner} style={[styles.container, flexRow]}>
       <Text style={styles.text}>{text}</Text>
-      <View style={styles.iconRight} >
-        <Image source={IMAGE.ICON_ARROW_RIGHT_GRAY} style={styles.icon} />
-      </View>
+      {lang ?
+        <View style={styles.iconRight} >
+          <Switch
+            value={lang === 'en' ? true : false}
+            onValueChange={val => {
+              if (setLang) {
+                setLang(val ? 'en' : 'ko');
+              }
+            }}
+            activeText={lang === 'en' ? 'KR' : 'EN'}
+            inActiveText={lang === 'en' ? 'KR' : 'EN'}
+            circleSize={30}
+            circleBorderWidth={0}
+            backgroundActive={colors.primary}
+            backgroundInactive={colors.primary}
+            circleActiveColor={colors.white}
+            circleInActiveColor={colors.white}
+            changeValueImmediately={true}
+            switchLeftPx={10}
+            switchRightPx={10}
+          />
+        </View>
+        :
+        <View style={styles.iconRight} >
+          <Image source={IMAGE.ICON_ARROW_RIGHT_GRAY} style={styles.icon} />
+        </View>
+      }
     </Pressable>
   );
 };

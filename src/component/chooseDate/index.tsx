@@ -13,7 +13,7 @@ const DaySelection: React.FC<DaySelectionProps> = ({ data, selectedDays, handleS
     return (
         <View style={styles.container}>
             {data && data.map((item) => {
-                const isSelected = selectedDays.includes(item.id);
+                const isSelected = selectedDays?.includes(item.id);
                 return (
                     <Pressable
                         key={item.id}
@@ -34,9 +34,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     day: {
-        paddingHorizontal: 12,
-        paddingVertical: 14,
-        borderRadius: 999
+        paddingHorizontal: 10,
+        paddingVertical: 12,
+        borderRadius: 999,
+        flex: 1,
+        alignItems: 'center',
+        marginHorizontal: 2
     },
     textDay: {
         fontWeight: '400',

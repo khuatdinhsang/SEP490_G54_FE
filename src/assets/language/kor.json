@@ -90,6 +90,7 @@
       "chronic": "만성질환",
       "cholesterol": "고지혈증",
       "highBlood": "고혈압",
+      "highBloodEvl": "고혈압",
       "diabetes": "당뇨",
       "osteoporosis": "골다고증",
       "kidney": "만성콩밭병",
@@ -299,7 +300,10 @@
     "medicationProfile": "약물복용 기록",
     "noMedicationSchedule": "오늘은 약물복용 스케줄이 없습니다",
     "foodIntakeProfile": "식이 기록",
-    "howManyPlates": "몇접시를 먹었나요?"
+    "howManyPlates": "몇접시를 먹었나요?",
+    "today": "오늘",
+    "didYouTake": "에",
+    "?": "을 먹었나요?"
   },
   "medicalSchedule": {
     "setUpSchedule": "병원 일정 설정"
@@ -311,8 +315,16 @@
     "chartSynthetic": "합산 평가 그래프",
     "weeklyEvaluationResults": "주간실천 평가 결과",
     "general": "합산 평가",
-    "congratulation": "축하합니다!",//BE gửi lên
-    "successfulWeek": "성공적인 일주일을 보냈습니다",//BE gửi lên
+    "congratulation": "축하합니다!", //BE gửi lên
+    "successfulWeek": "성공적인 일주일을 보냈습니다", //BE gửi lên
+
+    "workedHard": "당신은 열심히 일했습니다",
+    "doBetter": "다음주에 더 잘하시길 바랍니다",
+
+    "disappointWeek": "Quite a disappointing week",
+    "useAppMore": "다음주에 앱을 더 자주 사용하시길 바랍니다",
+
+    "tryHarder": "더 열심히 노력하시길 바랍니다",
     "activitySummary": "이번주 나의 건강활동 요약",
     "noReview": "아직 평가 결과가 존재하지 않습니다",
     "answerSurvey": "설문하기",
@@ -370,7 +382,7 @@
     "coreCompetencies": "핵심역량",
     "coreStrategies": "주도적으로 위기를 극복하고 긍정적으로 성장하기 위해 필요한 핵심 전략에 대한 평가입니다",
     "proactivelyOvercome": "주도적으로 위기를 극복하고 긍정적으로 성장하기위해 필요한 핵심 전략에 대한 평가입니다",
-    "executionStrategy": "실행전략",
+    "executionStrategy": "실행 전략",
     "plansAction": "계획한 것을 실행으로 옮기고 건강 행동을 지속적으로 유지하기 위해 필요한 전략에 대한 평가입니다.",
     "sfc": "다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 사용할 수 있는 핵심 역량과 관련된 평가입니다. 각 문항들을 읽고, 귀하가 지난 한 달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.",
     "sfi": "다음은 자기 주도적으로 위기를 극복하고, 긍정적으로 성장하기 위해 , 삶의 목표와 구체적인 계획을 세울 때 사용할 수 있는 실행전략과 관련된 평가 입니다. 각 문항들을 읽고, 귀하가 지난 한달간 얼마나 잘 해왔는지 가장 가깝다고 생각되는 부분에 체크해 주십시오.",
@@ -392,7 +404,41 @@
     "atePlate": "접시를 섭취하였습니다",
     "duringWork": "일 중",
     "tookAllMedicine": "일 동안 약을 모두 섭취하였습니다.",
-    "walked": "보를 걸었습니다"
+    "walked": "보를 걸었습니다",
+    "bloodSugarToday": "오늘 나의 혈당",
+    "graphHealthManagement": "건강 경영 전략 변화 그래프",
+    "monthlyPerformance": "월 실천평가",
+    "monthlyResults": "월 결과",
+    "results": "결과",
+    "good": "우수",
+    "medium": "보통",
+    "serious": "심각",
+    "thisMonth": "이번달",
+    "preparationCompetencies": "준비 역량",
+    "positiveMind": "실행 전략",
+    "medicationUse": "약물복용",
+    "selfDirectedness": "자기주도성",
+    "positiveThinking": "긍정적사고",
+    "formSupport": "지지관계형성",
+    "shareExperience": "비슷한경험공유",
+    "pursingLife": "삶의가치추구",
+    "settingGoal": "목표/행동설정",
+    "rational": "합리적의사결정",
+    "priority": "우선순위중심계획",
+    "create": "우선순위중심계획",
+    "exercise": "운동점검 및 계획",
+    "exerciseRoutine": "운동일상화",
+    "selfDirection": "자기주도",
+    "stressManagement": "스트레스대처",
+    "persistent": "끈기있는실행",
+    "eatPattern": "건강한식이패턴",
+    "choose": "야채/과일위주 선택",
+    "form": "건강한 식이습관 형성",
+    "energy": "에너지보존",
+    "selfMotivation": "자기동기부여",
+    "checkUp": "점검",
+    "compliance": "약물 순응도",
+    "drugEffect": "약물효과"
   },
   "home": {
     "category": "카테고리",
@@ -423,7 +469,6 @@
     "todayRecord": "오늘의 기록",
     "todaySteps": "오늘의 걸음수와 칼로리 소모 내역을 보여줍니다.",
     "step": "걸음",
-    "standard": "기준",
     "moveInfor": "내 정보 이동",
     "practiceManagement": "실천관리 계획",
     "record": "기록하기"
@@ -445,6 +490,9 @@
     "day5": "5일차",
     "day6": "6일차",
     "day7": "7일차",
+    "month1": "1개월차",
+    "month2": "2개월차",
+    "month3": "3개월차",
     "learned": "를학습했습니다!",
     "thankyou": "건강정보를 학습하시느라 수고하셨어요:)",
     "healthManagement": "건강경영과 효과적인 전략",
@@ -642,7 +690,7 @@
   "setting": {
     "putAlarm": "푸시알림",
     "changePass": "비밀번호 변경",
-    "appInfo": "앱정보",
+    "language": "언어",
     "logout": "로그아웃",
     "passwordChanged": "비밀번호를 변경했습니다.",
     "useChangedPassword": "변경된 비밀번호를 사용해주세요",

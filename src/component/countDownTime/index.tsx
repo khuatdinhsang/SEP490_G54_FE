@@ -39,9 +39,9 @@ const CountdownTimer = ({ setTimeUp, time, checkResetTime, isTimerRunning, setIs
     const seconds = remainingTime % 60;
 
     return (
-        <Text>{`${minutes.toString().padStart(2, "0")}:${seconds
-            .toString()
-            .padStart(2, "0")}`}</Text>
+        <Text>{`${minutes?.toString()?.padStart(2, "0")}:${seconds
+            ?.toString()
+            ?.padStart(2, "0")}`}</Text>
     );
 };
 

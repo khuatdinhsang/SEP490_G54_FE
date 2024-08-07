@@ -44,7 +44,7 @@ const BloodPressureChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.diastole,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.diastole}`;
                         }
                         return dataPoint;
@@ -54,7 +54,7 @@ const BloodPressureChart = ({ route }: any) => {
                             x: extractDayAndMonth(item.date),
                             y: item.systole,
                         };
-                        if (index === array.length - 1) {
+                        if (index === array?.length - 1) {
                             dataPoint['label'] = `${item.systole}`;
                         }
                         return dataPoint;
@@ -111,7 +111,7 @@ const BloodPressureChart = ({ route }: any) => {
             </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {
-                    dataSystoleChart.length > 0 || dataDiastoleChart.length > 0 ?
+                    dataSystoleChart?.length > 0 || dataDiastoleChart?.length > 0 ?
                         <View style={styles.chart}>
                             {/* <TwoLineChart
                                 icon={IMAGE.RECORD_DATA.THERMOMETER}
@@ -175,7 +175,7 @@ const BloodPressureChart = ({ route }: any) => {
                             </View>
                         </View>
                         :
-                        <View style={[flexCenter, { marginTop: 100 }]}>
+                        <View style={{ height: HeightDevice, display: 'flex', alignItems: 'center', marginTop: 100 }}>
                             <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                             <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
                             <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
@@ -198,7 +198,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        paddingBottom: 100
+        paddingBottom: 100,
+        backgroundColor: colors.background
     }, navigate: {
         height: 48,
         width: '50%'

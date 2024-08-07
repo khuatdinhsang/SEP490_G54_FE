@@ -32,7 +32,7 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
           onChangeText={text => {
-            if (text.length === 0) {
+            if (text?.length === 0) {
               handleChangeText("", 'text1')
             } else {
               handleChangeText(text, 'text1')
@@ -49,7 +49,7 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
           onChangeText={text => {
-            if (text.length === 0) {
+            if (text?.length === 0) {
               handleChangeText("", 'text2')
             } else {
               handleChangeText(text, 'text2')
@@ -66,7 +66,7 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
           onChangeText={text => {
-            if (text.length === 0) {
+            if (text?.length === 0) {
               handleChangeText("", 'text3')
             } else {
               handleChangeText(text, 'text3')
@@ -83,7 +83,7 @@ const MultiTextInputComponent = (props: MultiTextInputComponentProps) => {
           onFocus={() => setIsForced(true)}
           onBlur={() => setIsForced(false)}
           onChangeText={text => {
-            if (text.length === 0) {
+            if (text?.length === 0) {
               handleChangeText("", 'text4')
             } else {
               handleChangeText(text, 'text4')

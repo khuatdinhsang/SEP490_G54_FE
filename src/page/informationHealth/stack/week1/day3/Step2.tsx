@@ -71,17 +71,23 @@ const Step2 = (props: Step2Props) => {
   }, [closePerson1, closePerson2, dispatch]);
 
   useEffect(() => {
-    const isDisable = (closePerson1EvaluationRedux?.trim().length === 0 ||
-      closePerson2EvaluationRedux?.trim().length === 0 ||
-      closePerson1MessageRedux?.trim().length === 0 ||
-      closePerson2MessageRedux?.trim().length === 0 ||
-      closePerson1?.trim().length === 0 || closePerson2?.trim().length === 0
-    )
+    const isDisable = !(
+      closePerson1EvaluationRedux?.trim()?.length > 0 &&
+      closePerson2EvaluationRedux?.trim()?.length > 0 &&
+      closePerson1MessageRedux?.trim()?.length > 0 &&
+      closePerson2MessageRedux?.trim()?.length > 0 &&
+      closePerson1?.trim()?.length > 0 &&
+      closePerson2?.trim()?.length > 0
+    );
+    console.log("80", isDisable)
     setIsDisabled(isDisable)
   }, [closePerson1, closePerson2, setIsDisabled])
-
-
-
+  console.log("82", closePerson1)
+  console.log("83", closePerson2)
+  console.log("84", closePerson1EvaluationRedux)
+  console.log("85", closePerson2EvaluationRedux)
+  console.log("86", closePerson1MessageRedux)
+  console.log("87", closePerson2MessageRedux)
   return (
     <View style={[styles.container]}>
       <ScrollView showsVerticalScrollIndicator={false}>

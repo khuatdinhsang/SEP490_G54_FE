@@ -15,9 +15,9 @@ const QuestionComponent: React.FC<itemQuestion> = ({ question, handleDetailQuest
         <Pressable
             onPress={() => { handleDetailQuestion(question.id) }}
             style={[flexRowSpaceBetween, styles.question]}>
-            <View style={{ width: '70%' }}>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.textQuestion}>{question.questionDate?.split("T")[0]}</Text>
-                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.title.trim()}</Text>
+                <Text numberOfLines={2} ellipsizeMode='tail' style={[styles.textQuestion, { color: colors.gray_G08 }]}>{question.title?.trim()}</Text>
             </View>
             <View style={[styles.statusQuestion, { backgroundColor: question.answer ? colors.blue_background : colors.orange_01 }]}>
                 <Text style={[styles.textQuestion, { color: question.answer ? colors.blue_01 : colors.orange_04 }]}>{question.answer ? t('questionManagement.answered') : t('questionManagement.waitForReply')}</Text>
@@ -43,7 +43,8 @@ const styles = StyleSheet.create({
     statusQuestion: {
         paddingHorizontal: 18,
         paddingVertical: 7,
-        borderRadius: 50
+        borderRadius: 50,
+        marginLeft: 10
     },
 })
 

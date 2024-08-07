@@ -14,7 +14,7 @@ const DescriptionColor = () => {
             <View style={[styles.color, { backgroundColor: colors.orange_04 }]}></View>
             <View style={[styles.color, { backgroundColor: colors.green }]}></View>
             <View style={[styles.color, { backgroundColor: colors.blue_01 }]}></View>
-            <Text style={styles.text}>이번달</Text>
+            <Text style={styles.text}>{t("evaluate.thisMonth")}</Text>
         </View>
     )
 }

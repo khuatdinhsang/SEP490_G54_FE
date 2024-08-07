@@ -31,7 +31,7 @@ const Step2_2 = (props: Step2_2Props) => {
     const [messageError, setMessageError] = useState<string>("")
     const dispatch = useDispatch()
     useEffect(() => {
-        const isDisable = (comment && messagePositive && !errComment.length && !errMessagePositive.length) ? false : true;
+        const isDisable = (comment && messagePositive && !errComment?.length && !errMessagePositive?.length) ? false : true;
         setIsDisabled(isDisable);
     }, [comment, messagePositive, setIsDisabled]);
 
@@ -82,7 +82,7 @@ const Step2_2 = (props: Step2_2Props) => {
                             style={[styles.input, { height: 120 }]}
                             onChangeText={(text) => {
                                 setErrComment("");
-                                if (text.trim().length === 0) {
+                                if (text?.trim()?.length === 0) {
                                     setErrComment(t("placeholder.err.invalidInput"));
                                     setComment("")
                                     user === 1 ? dispatch(setClosePerson1EvaluationRedux("")) : dispatch(setClosePerson2EvaluationRedux(""))
@@ -105,7 +105,7 @@ const Step2_2 = (props: Step2_2Props) => {
                             textAlignVertical='top'
                             onChangeText={(text) => {
                                 setErrMessagePositive("");
-                                if (text.trim().length === 0) {
+                                if (text?.trim()?.length === 0) {
                                     setErrMessagePositive(t("placeholder.err.invalidInput"));
                                     setMessagePositive("")
                                     user === 1 ? dispatch(setClosePerson1MessageRedux("")) : dispatch(setClosePerson2MessageRedux(""))

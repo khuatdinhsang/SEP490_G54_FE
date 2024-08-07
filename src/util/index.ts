@@ -18,6 +18,7 @@ import { satEvaluateRes, sfEvaluateRes } from '../constant/type/question';
 import colors from '../constant/color';
 import { offsetTime } from '../constant';
 import CounterStepModule from '../native-module/counter-step.module';
+import { LANG } from '../page/home/const';
 interface OutputData {
   id: number;
   name: string;
@@ -45,7 +46,7 @@ export const transformData = (
   }, []);
 };
 
-export const twoDigit = (num: number) => num.toString().padStart(2, '0');
+export const twoDigit = (num: number) => num?.toString()?.padStart(2, '0');
 export const getISO8601ForSelectedDays = (
   hours: string,
   minutes: string,
@@ -59,7 +60,7 @@ export const getISO8601ForSelectedDays = (
     dt = dt
       .plus({ days: day - dt.weekday })
       .setZone('UTC-7', { keepLocalTime: true });
-    return dt.toISO({ suppressMilliseconds: true }).split('.')[0];
+    return dt.toISO({ suppressMilliseconds: true })?.split('.')[0];
   });
 };
 export const removeAsyncStorageWhenLogout = async () => {
@@ -67,6 +68,7 @@ export const removeAsyncStorageWhenLogout = async () => {
     await AsyncStorage.removeItem('refreshToken');
     await AsyncStorage.removeItem('accessToken');
     await AsyncStorage.removeItem('deviceToken');
+    await AsyncStorage.removeItem('language');
     await CounterStepModule.setUserIdCounterStep(-1);
     // await AsyncStorage.removeItem('idUser');
   } catch (error) {
@@ -139,12 +141,12 @@ export const transformDataToChartWeight = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueWeight, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.value,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.value} ${unitLabel}`,
       }),
     };
@@ -161,12 +163,12 @@ export const transformDataToChartStep = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueSteps, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.valuePercent > 100 ? 100 : input.valuePercent,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.valuePercent > 100 ? 100 : input.valuePercent
           } ${unitLabel}`,
       }),
@@ -179,8 +181,8 @@ export const transformDataToChartActivity = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueActivity) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: convertMinutesToHours(input.duration),
@@ -214,12 +216,12 @@ export const transformDataToChartMental = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueMental, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.point,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.point} ${unitLabel}`,
       }),
     };
@@ -231,12 +233,12 @@ export const transformDataToChartHBA1C = (
 ): OutputDataChart[] => {
   return inputArray.map((input: valueCardinal, index: number) => {
     const date = new Date(input.date);
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const month = (date.getMonth() + 1)?.toString();
+    const day = date.getDate()?.toString();
     return {
       x: `${month}/${day}`,
       y: input.data,
-      ...(index === inputArray.length - 1 && {
+      ...(index === inputArray?.length - 1 && {
         label: `${input.data} ${unitLabel}`,
       }),
     };
@@ -275,31 +277,63 @@ export const renderIconWeeklyReview = (a: number): ImageProps => {
     return IMAGE.EVALUATE.CONG1;
   }
 };
-export const renderTextWeeklyReview = (a: number): string => {
-  if (a === 0) {
-    return 'common.text.noData';
+export const renderTextTitle1WeeklyReview = (a: number, t: any): string => {
+  if (a < 0) {
+    return t("evaluate.useAppMore")
   }
   if (a < 50) {
-    return 'common.text.low';
+    return t("evaluate.useAppMore")
   } else if (a >= 50 && a < 90) {
-    return 'common.text.medium';
+    return t("evaluate.disappointWeek")
   } else if (a >= 90 && a < 100) {
-    return 'common.text.high';
+    return t("evaluate.workedHard")
   } else if (a === 100) {
-    return 'common.text.excellent';
+    return t("evaluate.congratulation")
   } else {
-    return 'common.text.noData';
+    return t("evaluate.congratulation")
   }
 };
-export const convertMinutesToHoursAndMinutes = (minutes: number): string => {
+export const renderTextTitle2WeeklyReview = (a: number, t: any): string => {
+  if (a < 0) {
+    return ""
+  }
+  if (a < 50) {
+    return ""
+  } else if (a >= 50 && a < 90) {
+    return t("evaluate.tryHarder")
+  } else if (a >= 90 && a < 100) {
+    return t("evaluate.doBetter")
+  } else if (a === 100) {
+    return t("evaluate.successfulWeek")
+  } else {
+    return t("evaluate.successfulWeek")
+  }
+};
+export const renderTextMainWeeklyReview = (a: number): string => {
+  if (a === 0) {
+    return '없음';
+  }
+  if (a < 50) {
+    return '하';
+  } else if (a >= 50 && a < 90) {
+    return '중';
+  } else if (a >= 90 && a < 100) {
+    return '상';
+  } else if (a === 100) {
+    return '최고';
+  } else {
+    return '없음';
+  }
+};
+export const convertMinutesToHoursAndMinutes = (minutes: number, t: any): string => {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   if (hours > 0 && remainingMinutes > 0) {
-    return `${hours}시간 ${remainingMinutes}분`;
+    return `${hours}${t("common.text.hours")} ${remainingMinutes}${t("common.text.minutes")}`;
   } else if (hours > 0) {
-    return `${hours}시간`;
+    return `${hours}${t("common.text.hours")}`;
   } else {
-    return `${remainingMinutes}분`;
+    return `${remainingMinutes}${t("common.text.minutes")}`;
   }
 };
 export const convertMinutesToHours = (minutes: number): number => {
@@ -312,9 +346,9 @@ interface DataPoint {
 }
 export const transformDataToChartNoX = (values: number[]): DataPoint[] => {
   const transformedData: DataPoint[] = values.map(value => ({ y: value }));
-  if (transformedData.length > 0) {
-    const lastValue = transformedData[transformedData.length - 1].y;
-    transformedData[transformedData.length - 1] = {
+  if (transformedData?.length > 0) {
+    const lastValue = transformedData[transformedData?.length - 1].y;
+    transformedData[transformedData?.length - 1] = {
       y: lastValue,
       label: `${lastValue}%`,
     };
@@ -326,7 +360,7 @@ export const generateRandomId = (length: number): string => {
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
+    result += characters.charAt(Math.floor(Math.random() * characters?.length));
   }
   return result;
 };
@@ -398,11 +432,11 @@ export const getWeekTimeForCurrentWeek = (
       const targetDay = weekdaysMap[day];
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + targetDay - 1);
-      return `${date.toISOString().split('T')[0]}T${time}`;
+      return `${date.toISOString()?.split('T')[0]}T${time}`;
     });
 
     return {
-      weekStart: startOfWeek.toISOString().split('T')[0],
+      weekStart: startOfWeek.toISOString()?.split('T')[0],
       schedule: weekTimes,
       medicineTypeId: medicineTypeId,
     };
@@ -411,7 +445,7 @@ export const getWeekTimeForCurrentWeek = (
 
 
 export const padNumber = (num: number): string => {
-  return num < 10 ? `0${num}` : num.toString();
+  return num < 10 ? `0${num}` : num?.toString();
 };
 
 export interface TransformedData {
@@ -433,25 +467,26 @@ type DataTypeChart = {
   }>;
 };
 export const convertToChart1Monthly = (
-  data: DataTypeChart,
+  data: DataTypeChart, t: any, lang: string
 ): TransformedData[] => {
+  console.log("472", lang)
   const result = [
     {
-      x: '핵심 역량',
+      x: lang === 'en' ? "CC" : t("evaluate.coreCompetencies"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_c_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_c_total ?? 0,
     },
     {
-      x: '준비 역량',
+      x: lang === 'en' ? "PC" : t("evaluate.preparationCompetencies"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_p_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_p_total ?? 0,
     },
     {
-      x: '실행 전략',
+      x: lang === 'en' ? "ES" : t("evaluate.executionStrategy"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_i_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_i_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
@@ -461,32 +496,32 @@ export const convertToChart1Monthly = (
   return result;
 };
 export const convertToChart2Monthly = (
-  data: DataTypeChart,
+  data: DataTypeChart, t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '긍정적 마음',
+      x: lang === 'en' ? "PM" : t("evaluate.positiveMind"),
       y1: data.firstWeek?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
     },
     {
-      x: '운동',
+      x: lang === 'en' ? "E" : t("planManagement.text.workout"),
       y1: data.firstWeek?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
     },
     {
-      x: '식이',
+      x: lang === 'en' ? "D" : t("recordHealthData.diet"),
       y1: data.firstWeek?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
     },
     {
-      x: '약물복용',
+      x: lang === 'en' ? "MU" : t("evaluate.medicationUse"),
       y1: data.firstWeek?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
@@ -500,54 +535,54 @@ export const dateNow = (date: Date) => {
   // Cộng thêm 7 giờ (7 * 60 * 60 * 1000 milliseconds) để chuyển sang UTC+7
   const vietnamTime = new Date(utcTime + offsetTime * 60 * 60 * 1000);
   const year = vietnamTime.getUTCFullYear();
-  const month = String(vietnamTime.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(vietnamTime.getUTCDate()).padStart(2, '0');
-  const hours = String(vietnamTime.getUTCHours()).padStart(2, '0');
-  const minutes = String(vietnamTime.getUTCMinutes()).padStart(2, '0');
+  const month = String(vietnamTime.getUTCMonth() + 1)?.padStart(2, '0');
+  const day = String(vietnamTime.getUTCDate())?.padStart(2, '0');
+  const hours = String(vietnamTime.getUTCHours())?.padStart(2, '0');
+  const minutes = String(vietnamTime.getUTCMinutes())?.padStart(2, '0');
 
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 export const convertToChart1SAT = (
-  data: satEvaluateRes[],
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '핵심역량',
+      x: lang === 'en' ? "CC" : t("evaluate.coreCompetencies"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_total ?? 0,
     },
     {
-      x: '준비역량',
+      x: lang === 'en' ? "PC" : t("evaluate.preparationCompetencies"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_total ?? 0,
     },
     {
-      x: '실행전략',
+      x: lang === 'en' ? "ES" : t("evaluate.executionStrategy"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_total ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart1SF = (data: sfEvaluateRes[]): TransformedData[] => {
+export const convertToChart1SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: '긍정적마음',
+      x: lang === 'en' ? "PM" : t("evaluate.positiveMind"),
       y1: data[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
     },
     {
-      x: '운동',
+      x: lang === 'en' ? "E" : t("planManagement.text.workout"),
       y1: data[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
     },
     {
-      x: '식이',
+      x: lang === 'en' ? "D" : t("recordHealthData.diet"),
       y1: data[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
     },
     {
-      x: '약물복용',
+      x: lang === 'en' ? "MU" : t("evaluate.medicationUse"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
     },
@@ -555,36 +590,36 @@ export const convertToChart1SF = (data: sfEvaluateRes[]): TransformedData[] => {
   return result;
 };
 export const convertToChart2SAT = (
-  data: satEvaluateRes[],
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '자기주도성',
+      x: lang === 'en' ? "SD" : t("evaluate.selfDirectedness"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
     },
     {
-      x: '긍정적사고',
+      x: lang === 'en' ? "ST" : t("evaluate.positiveThinking"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
     },
     {
-      x: '지지관계형성',
+      x: lang === 'en' ? "FSR" : t("evaluate.formSupport"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
     },
     {
-      x: '비슷한경험공유',
+      x: lang === 'en' ? "SSE" : t("evaluate.shareExperience"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart2SF = (data: sfEvaluateRes[]): TransformedData[] => {
+export const convertToChart2SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: '긍정적인마음',
+      x: lang === 'en' ? "PM" : t("planManagement.text.positiveMind"),
       y1: data[1]?.sfResponseDTO?.sf_mentalPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_mentalPoint ?? 0,
     },
@@ -592,46 +627,46 @@ export const convertToChart2SF = (data: sfEvaluateRes[]): TransformedData[] => {
   return result;
 };
 export const convertToChart3SAT = (
-  data: satEvaluateRes[],
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '삶의가치추구',
+      x: lang === 'en' ? "PLV" : t("evaluate.pursingLife"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
     },
     {
-      x: '목표/행동설정',
+      x: lang === 'en' ? "SG/A" : t("evaluate.settingGoal"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
     },
     {
-      x: '합리적의사결정',
+      x: lang === 'en' ? "RDM" : t("evaluate.rational"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_decision ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_decision ?? 0,
     },
     {
-      x: '우선순위중심계획',
+      x: lang === 'en' ? "PCP" : t("evaluate.priority"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
     },
     {
-      x: '건강한환경조성',
+      x: lang === 'en' ? "CHE" : t("evaluate.create"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart3SF = (data: sfEvaluateRes[]): TransformedData[] => {
+export const convertToChart3SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: '운동점검 및 계획',
+      x: lang === 'en' ? "ECP" : t("evaluate.exercise"),
       y1: data[1]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
     },
     {
-      x: '운동일상화',
+      x: lang === 'en' ? "ER" : t("evaluate.exerciseRoutine"),
       y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
     },
@@ -639,41 +674,41 @@ export const convertToChart3SF = (data: sfEvaluateRes[]): TransformedData[] => {
   return result;
 };
 export const convertToChart4SAT = (
-  data: satEvaluateRes[],
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '자기주도',
+      x: lang === 'en' ? "SD" : t("evaluate.selfDirection"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
     },
     {
-      x: '스트레스대처',
+      x: lang === 'en' ? "SM" : t("evaluate.stressManagement"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
     },
     {
-      x: '끈기있는실행',
+      x: lang === 'en' ? "PE" : t("evaluate.persistent"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart4SF = (data: sfEvaluateRes[]): TransformedData[] => {
+export const convertToChart4SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: '건강한식이패턴',
+      x: lang === 'en' ? "HEP" : t("evaluate.eatPattern"),
       y1: data[1]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
     },
     {
-      x: '야채/과일위주 선택',
+      x: lang === 'en' ? "VFS" : t("evaluate.choose"),
       y1: data[1]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
     },
     {
-      x: '건강한 식이습관 형성',
+      x: lang === 'en' ? "FHEH" : t("evaluate.form"),
       y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
     },
@@ -681,36 +716,36 @@ export const convertToChart4SF = (data: sfEvaluateRes[]): TransformedData[] => {
   return result;
 };
 export const convertToChart5SAT = (
-  data: satEvaluateRes[],
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: '에너지보존',
+      x: lang === 'en' ? "EC" : t("evaluate.energy"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
     },
     {
-      x: '자기동기부여',
+      x: lang === 'en' ? "SM" : t("evaluate.selfMotivation"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
     },
     {
-      x: '점검',
+      x: lang === 'en' ? "CU" : t("evaluate.checkUp"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
+export const convertToChart5SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: '약물 순응도',
+      x: lang === 'en' ? "MC" : t("evaluate.compliance"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
     },
     {
-      x: '약물효과',
+      x: lang === 'en' ? "DE" : t("evaluate.drugEffect"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
     },
@@ -718,18 +753,18 @@ export const convertToChart5SF = (data: sfEvaluateRes[]): TransformedData[] => {
   return result;
 };
 export const listDay = ["월", "화", "수", "목", "금", "토", "일"]
-export const convertDay = (day: string): string => {
-  if (listDay.includes(day)) {
+export const convertDay = (day: string, t: any): string => {
+  if (listDay?.includes(day)) {
     return day;
   }
   const dayMapping: { [key: string]: string } = {
-    Monday: "월",
-    Tuesday: "화",
-    Wednesday: "수",
-    Thursday: "목",
-    Friday: "금",
-    Saturday: "토",
-    Sunday: "일"
+    Monday: t("common.text.monday"),
+    Tuesday: t("common.text.tuesday"),
+    Wednesday: t("common.text.wednesday"),
+    Thursday: t("common.text.thursday"),
+    Friday: t("common.text.friday"),
+    Saturday: t("common.text.saturday"),
+    Sunday: t("common.text.sunday"),
   };
 
   return dayMapping[day] || "";

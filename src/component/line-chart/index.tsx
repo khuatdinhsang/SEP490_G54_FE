@@ -75,7 +75,7 @@ const LineChart = (props: LineChartProps) => {
   };
   const CustomScatterPoint = useCallback(
     (props: any) => {
-      const isLastPoint = props.index === data.length - 1;
+      const isLastPoint = props.index === data?.length - 1;
       const fillColor = isLastPoint ? colors.white : colors.primary;
       const strokeColor = isLastPoint ? colors.primary : colors.primary;
 
@@ -131,14 +131,14 @@ const LineChart = (props: LineChartProps) => {
             axis: { stroke: colors.gray_G03 },
             grid: {
               stroke: (props: any) => {
-                return props.index === data.length - 1
+                return props.index === data?.length - 1
                   ? colors.primary
                   : 'transparent';
               },
             },
             tickLabels: {
               fill: (fill: any) => {
-                return fill.index === data.length - 1
+                return fill.index === data?.length - 1
                   ? colors.black
                   : colors.gray_G05;
               },
@@ -207,9 +207,9 @@ const CustomLabelComponent = (props: any) => (
       </LinearGradient>
     </Defs>
     <Rect
-      x={props.x - 12 - props.text.length * 5}
+      x={props.x - 12 - props.text?.length * 5}
       y={props.y - 35}
-      width={props.text.length * 8 + 8 * 2}
+      width={props.text?.length * 8 + 8 * 2}
       height={28}
       fill="url(#grad)" // Apply gradient here
       rx="8"

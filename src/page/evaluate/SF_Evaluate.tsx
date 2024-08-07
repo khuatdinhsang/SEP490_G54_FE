@@ -18,6 +18,7 @@ import { chartService } from '../../services/charts';
 import { convertToChart1Monthly, convertToChart1SAT, convertToChart1SF, convertToChart2Monthly, convertToChart2SAT, convertToChart2SF, convertToChart3SAT, convertToChart3SF, convertToChart4SAT, convertToChart4SF, convertToChart5SAT, convertToChart5SF, TransformedData } from '../../util';
 import DescriptionColor from './conponent/descriptionColor';
 import MonthlyChartEvaluate from './conponent/chart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SF_Evaluate = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -30,6 +31,8 @@ const SF_Evaluate = ({ route }: any) => {
     const [chartThree, setChartThree] = useState<TransformedData[]>([])
     const [chartFour, setChartFour] = useState<TransformedData[]>([])
     const [chartFive, setChartFive] = useState<TransformedData[]>([])
+    const [lang, setLang] = useState<string>("")
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -39,15 +42,17 @@ const SF_Evaluate = ({ route }: any) => {
     const getListNumber = async () => {
         setIsLoading(true)
         try {
+            const langAys = await AsyncStorage.getItem("language") ?? "en"
+            setLang(langAys)
             const res = await monthlyQuestionService.getChartSF(time)
             if (res.code === 200) {
                 setErrorMessage("");
                 setIsLoading(false)
-                setChartOne(convertToChart1SF(res.result))
-                setChartTwo(convertToChart2SF(res.result))
-                setChartThree(convertToChart3SF(res.result))
-                setChartFour(convertToChart4SF(res.result))
-                setChartFive(convertToChart5SF(res.result))
+                setChartOne(convertToChart1SF(res.result, t, langAys))
+                setChartTwo(convertToChart2SF(res.result, t, langAys))
+                setChartThree(convertToChart3SF(res.result, t, langAys))
+                setChartFour(convertToChart4SF(res.result, t, langAys))
+                setChartFive(convertToChart5SF(res.result, t, langAys))
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
@@ -65,14 +70,25 @@ const SF_Evaluate = ({ route }: any) => {
     useEffect(() => {
         getListNumber()
     }, [])
-    console.log("d1", chartFour)
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconXRight={true}
                     isIconLeft={true}
-                    text={`${time}월 결과`}
+                    text={convertTime()}
                     handleClickIconRight={() => navigation.navigate(SCREENS_NAME.EVALUATE.MONTHLY)}
                     handleClickArrowLeft={goBackPreviousPage}
                 />
@@ -83,6 +99,25 @@ const SF_Evaluate = ({ route }: any) => {
                         <Text style={styles.textTitle}>{t("evaluate.managementStrategy")}</Text>
                         <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.synthesis")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.positiveMind")}{" "}:{" "}{"PM"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("planManagement.text.workout")}{" "}:{" "}{"E"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("recordHealthData.diet")}{" "}:{" "}{"D"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.medicationUse")}{" "}:{" "}{"MU"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartOne}
                             tickValues={[0, 33, 67, 100]}
@@ -92,6 +127,13 @@ const SF_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10 }]}>{t("planManagement.text.positiveMind")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate1")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("planManagement.text.positiveMind")}{" "}:{" "}{"PM"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartTwo}
                             tickValues={[0, 33, 67, 100]}
@@ -101,6 +143,17 @@ const SF_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.workout")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate2")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.exercise")}{" "}:{" "}{"ECP"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.exerciseRoutine")}{" "}:{" "}{"ER"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartThree}
                             tickValues={[0, 33, 67, 100]}
@@ -110,6 +163,21 @@ const SF_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.diet")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate3")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.eatPattern")}{" "}:{" "}{"HEP"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.choose")}{" "}:{" "}{"VFS"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.form")}{" "}:{" "}{"FHEH"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartFour}
                             tickValues={[0, 33, 67, 100]}
@@ -119,6 +187,17 @@ const SF_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10, }]}>{t("planManagement.text.drug")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.sfEvaluate4")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.compliance")}{" "}:{" "}{"MC"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.drugEffect")}{" "}:{" "}{"DE"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartFive}
                             tickValues={[0, 33, 67, 100]}
@@ -212,6 +291,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '500',
         fontSize: 18,
+    },
+    legendItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    des: {
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        marginRight: 5,
+    },
+    textDes: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: colors.gray_G08,
     },
 });
 

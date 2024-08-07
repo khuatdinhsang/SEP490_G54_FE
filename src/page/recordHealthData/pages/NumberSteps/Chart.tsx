@@ -55,22 +55,22 @@ const NumberStepsChart = () => {
     // }
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <HeaderNavigatorComponent
+                    isIconLeft={true}
+                    text={t('planManagement.text.numberSteps')}
+                    handleClickArrowLeft={goBackPreviousPage}
+                />
+            </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <View style={styles.header}>
-                    <HeaderNavigatorComponent
-                        isIconLeft={true}
-                        text={t('planManagement.text.numberSteps')}
-                        handleClickArrowLeft={goBackPreviousPage}
-                    />
-                </View>
                 {
-                    dataChart.length > 0 ?
+                    dataChart?.length > 0 ?
                         <View style={styles.chart}>
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.SHOES}
                                 textTitleMedium={t("evaluate.myStepToday")}
                                 unit={t("evaluate.step")}
-                                valueMedium={dataToday.toString()}
+                                valueMedium={dataToday?.toString()}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartStep")}
                                 data={transformDataToChartStep(dataChart, "%")}
@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
     },
     scrollView: {
-        height: HeightDevice,
-        flexGrow: 1
+        flex: 1,
+        backgroundColor: colors.background
     }, navigate: {
         height: 48,
         width: '50%'

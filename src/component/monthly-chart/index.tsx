@@ -10,6 +10,7 @@ import {
 } from 'victory-native';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../constant/color';
+import { useTranslation } from 'react-i18next';
 
 interface MonthlyChartProps {
     tickValues: number[];
@@ -22,6 +23,15 @@ interface MonthlyChartProps {
         y3?: number;
         y4?: number;
     }>;
+    text1?: string;
+    text2?: string;
+    text3?: string;
+    text4?: string;
+    note1?: string;
+    note2?: string;
+    note3?: string;
+    note4?: string;
+    language: string
 }
 
 const CustomLabelComponent = (props: any) => (
@@ -33,7 +43,7 @@ const CustomLabelComponent = (props: any) => (
             </LinearGradient>
         </Defs>
         <Rect
-            x={props.x - 12 - props.text.length * 5}
+            x={props.x - 12 - props.text?.length * 5}
             y={props.y - 35}
             width={45}
             height={28}
@@ -66,7 +76,7 @@ const wrapLabel = (text: string) => {
     const lines = [];
 
     for (const word of words) {
-        if ((currentLine + word).length > maxLineLength) {
+        if ((currentLine + word)?.length > maxLineLength) {
             lines.push(currentLine);
             currentLine = word;
         } else {
@@ -79,15 +89,18 @@ const wrapLabel = (text: string) => {
     return lines.join('\n');
 };
 
-const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data }) => {
+const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle,
+    data, text1, text2, text3, text4, language, note1, note2, note3, note4 }) => {
+    const { t } = useTranslation()
+    console.log("a", language)
     const filteredDataY1 = data.filter((d) => d.y1 !== 0);
     const filteredDataY2 = data.filter((d) => d.y2 !== 0);
     const filteredDataY3 = data.filter((d) => d.y3 !== 0);
     const filteredDataY4 = data.filter((d) => d.y4 !== 0);
 
-    const hasY4 = filteredDataY4.length > 0;
-    const hasY3 = filteredDataY3.length > 0;
-    const hasY2 = filteredDataY2.length > 0;
+    const hasY4 = filteredDataY4?.length > 0;
+    const hasY3 = filteredDataY3?.length > 0;
+    const hasY2 = filteredDataY2?.length > 0;
 
     return (
         <View style={[styles.container, styles.shadowBox]}>
@@ -97,20 +110,42 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
             <View style={[styles.legendContainer, { marginTop: 10 }]}>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
-                    <Text style={styles.textDes}>1주차</Text>
+                    <Text style={styles.textDes}>{t("lesson.week1")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.orange_04 }]} />
-                    <Text style={styles.textDes}>1개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month1")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.green }]} />
-                    <Text style={styles.textDes}>2개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month2")}</Text>
                 </View>
                 <View style={[styles.legendItem, { marginRight: 10 }]}>
                     <View style={[styles.des, { backgroundColor: colors.blue_01 }]} />
-                    <Text style={styles.textDes}>3개월차</Text>
+                    <Text style={styles.textDes}>{t("lesson.month3")}</Text>
                 </View>
+            </View>
+            <View>
+                {text1 && note1 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text1}{" "}:{" "}{note1}</Text>
+                </View>
+                }
+                {text2 && note2 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text2}{" "}:{" "}{note2}</Text>
+                </View>
+                }
+                {text3 && note3 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text3}{" "}:{" "}{note3}</Text>
+                </View>
+                }
+                {text4 && note4 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text4}{" "}:{" "}{note4}</Text>
+                </View>
+                }
             </View>
             <VictoryChart
                 height={250}

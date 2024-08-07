@@ -49,7 +49,7 @@ const TwoLineChart = (props: LineChartProps) => {
 
   const CustomScatterPoint1 = useCallback(
     (props: any) => {
-      const isLastPoint = props.index === data1.length - 1;
+      const isLastPoint = props.index === data1?.length - 1;
       const fillColor = isLastPoint ? colors.white : color1;
       const strokeColor = isLastPoint ? color1 : color1;
       return (
@@ -68,7 +68,7 @@ const TwoLineChart = (props: LineChartProps) => {
 
   const CustomScatterPoint2 = useCallback(
     (props: any) => {
-      const isLastPoint = props.index === data2.length - 1;
+      const isLastPoint = props.index === data2?.length - 1;
       const fillColor = isLastPoint ? colors.white : color2;
       const strokeColor = isLastPoint ? color2 : color2;
 
@@ -149,7 +149,7 @@ const TwoLineChart = (props: LineChartProps) => {
             axis: { stroke: colors.gray_G03 },
             tickLabels: {
               fill: (fill: any) => {
-                return fill.index === data1.length - 1
+                return fill.index === data1?.length - 1
                   ? colors.black
                   : colors.gray_G05;
               },
@@ -170,7 +170,7 @@ const TwoLineChart = (props: LineChartProps) => {
             },
           }}
           tickValues={tickValues}
-          tickFormat={(tick) => (tick === 89 || tick === 139 ? tick.toString() : '')}
+          tickFormat={(tick) => (tick === 89 || tick === 139 ? tick?.toString() : '')}
         />
 
         <VictoryLine
@@ -228,9 +228,9 @@ const CustomLabelComponent = (props: any) => (
       </LinearGradient>
     </Defs>
     <Rect
-      x={props.x - 12 - props.text.length * 5}
+      x={props.x - 12 - props.text?.length * 5}
       y={props.y - 35}
-      width={props.text.length * 8 + 8 * 2}
+      width={props.text?.length * 8 + 8 * 2}
       height={28}
       fill="url(#grad)"
       rx="8"

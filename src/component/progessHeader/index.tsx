@@ -15,7 +15,7 @@ const ProgressHeader: React.FC<ProgressHeaderComponentProps> = ({ index, style, 
                     style={{
                         width: '20%',
                         backgroundColor:
-                            index.includes(i) ? colors.primary : colors.gray,
+                            index?.includes(i) ? colors.primary : colors.gray,
                         height: 3,
                     }}
                 />

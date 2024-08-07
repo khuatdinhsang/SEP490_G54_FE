@@ -78,8 +78,8 @@ const InformationHealth = () => {
             </View>
             <WeekComponent />
             <View style={{ marginTop: 28 }} />
-            <View style={[flexRowCenter]}>
-                <Text style={styles.title}>{t("lesson.healthManagementStrategies")}</Text>
+            <View >
+                <Text style={[styles.title, { paddingHorizontal: 20 }]}>{t("lesson.healthManagementStrategies")}</Text>
             </View>
             <View style={{ marginTop: 24 }} />
             <View style={[flexRowSpaceEvenly]}>
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         lineHeight: 28,
         color: colors.black,
+        textAlign: 'center'
     },
     textDay: {
         marginTop: 10,

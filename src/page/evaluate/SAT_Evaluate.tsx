@@ -18,6 +18,7 @@ import { chartService } from '../../services/charts';
 import { convertToChart1Monthly, convertToChart1SAT, convertToChart2Monthly, convertToChart2SAT, convertToChart3SAT, convertToChart4SAT, convertToChart5SAT, TransformedData } from '../../util';
 import DescriptionColor from './conponent/descriptionColor';
 import MonthlyChartEvaluate from './conponent/chart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SAT_Evaluate = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -30,6 +31,8 @@ const SAT_Evaluate = ({ route }: any) => {
     const [chartThree, setChartThree] = useState<TransformedData[]>([])
     const [chartFour, setChartFour] = useState<TransformedData[]>([])
     const [chartFive, setChartFive] = useState<TransformedData[]>([])
+    const [lang, setLang] = useState<string>("")
+    console.log("35", chartFive)
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -39,15 +42,18 @@ const SAT_Evaluate = ({ route }: any) => {
     const getListNumber = async () => {
         setIsLoading(true)
         try {
+            const langAys = await AsyncStorage.getItem("language") ?? "en"
+            setLang(langAys)
             const res = await monthlyQuestionService.getChartSAT(time)
             if (res.code === 200) {
                 setErrorMessage("");
                 setIsLoading(false)
-                setChartOne(convertToChart1SAT(res.result))
-                setChartTwo(convertToChart2SAT(res.result))
-                setChartThree(convertToChart3SAT(res.result))
-                setChartFour(convertToChart4SAT(res.result))
-                setChartFive(convertToChart5SAT(res.result))
+                setChartOne(convertToChart1SAT(res.result, t, langAys))
+                setChartTwo(convertToChart2SAT(res.result, t, langAys))
+                setChartThree(convertToChart3SAT(res.result, t, langAys))
+                setChartFour(convertToChart4SAT(res.result, t, langAys))
+                setChartFive(convertToChart5SAT(res.result, t, langAys))
+
             } else {
                 setErrorMessage("Unexpected error occurred.");
             }
@@ -65,13 +71,24 @@ const SAT_Evaluate = ({ route }: any) => {
     useEffect(() => {
         getListNumber()
     }, [])
-    console.log("d", chartFour)
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconXRight={true}
-                    text={`${time}월 결과`}
+                    text={convertTime()}
                     handleClickIconRight={goBackPreviousPage}
                 />
             </View>
@@ -81,6 +98,21 @@ const SAT_Evaluate = ({ route }: any) => {
                         <Text style={styles.textTitle}>{t("evaluate.managementStrategy")}</Text>
                         <Text style={[styles.textAva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.synthesis")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.coreCompetencies")}{" "}:{" "}{"CC"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.preparationCompetencies")}{" "}:{" "}{"PC"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.executionStrategy")}{" "}:{" "}{"ES"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartOne}
                             tickValues={[0, 33, 67, 100]}
@@ -90,6 +122,25 @@ const SAT_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10 }]}>{t("evaluate.coreCompetencies")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.coreStrategies")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.selfDirectedness")}{" "}:{" "}{"SD"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.positiveThinking")}{" "}:{" "}{"ST"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.formSupport")}{" "}:{" "}{"FSR"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.shareExperience")}{" "}:{" "}{"SSE"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartTwo}
                             tickValues={[0, 33, 67, 100]}
@@ -99,6 +150,29 @@ const SAT_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10, }]}>{t("evaluate.coreCompetencies")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.proactivelyOvercome")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.pursingLife")}{" "}:{" "}{"PLV"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.settingGoal")}{" "}:{" "}{"SG/A"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.rational")}{" "}:{" "}{"RDM"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.priority")}{" "}:{" "}{"PCP"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.create")}{" "}:{" "}{"CHE"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartThree}
                             tickValues={[0, 33, 67, 100]}
@@ -108,10 +182,40 @@ const SAT_Evaluate = ({ route }: any) => {
                         <Text style={[styles.textAva, { marginTop: 10, }]}>{t("evaluate.executionStrategy")}</Text>
                         <Text style={[styles.textBva, { marginTop: 10, marginBottom: 20 }]}>{t("evaluate.plansAction")}</Text>
                         <DescriptionColor />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.selfDirection")}{" "}:{" "}{"SD"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.stressManagement")}{" "}:{" "}{"SM"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.persistent")}{" "}:{" "}{"PE"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartFour}
                             tickValues={[0, 33, 67, 100]}
                         />
+                        {lang === 'en' && <View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.energy")}{" "}:{" "}{"EC"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.selfMotivation")}{" "}:{" "}{"SM"}</Text>
+                            </View>
+                            <View style={[styles.legendItem, { marginRight: 10 }]}>
+                                <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                                <Text style={styles.textDes}>{t("evaluate.checkUp")}{" "}:{" "}{"CU"}</Text>
+                            </View>
+                        </View>
+                        }
                         <MonthlyChartEvaluate
                             data={chartFive}
                             tickValues={[0, 33, 67, 100]}
@@ -173,7 +277,6 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         fontSize: 20,
         color: colors.gray_G10,
-        textAlign: 'center'
     },
     textAva: {
         fontWeight: "700",
@@ -205,6 +308,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '500',
         fontSize: 18,
+    },
+    legendItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    des: {
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        marginRight: 5,
+    },
+    textDes: {
+        fontSize: 14,
+        fontWeight: '400',
+        color: colors.gray_G08,
     },
 });
 

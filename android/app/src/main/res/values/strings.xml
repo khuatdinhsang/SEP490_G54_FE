@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SMASH_HEALTH</string>
+    <string name="notification_title">App will run in the background</string>
+    <string name="notification_text">Counting your steps...</string>
 </resources>

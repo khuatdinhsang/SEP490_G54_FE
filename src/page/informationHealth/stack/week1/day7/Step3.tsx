@@ -20,7 +20,7 @@ const Step3 = (props: Step2Props) => {
   const { t } = useTranslation()
   useEffect(() => {
     onSubmit(text)
-    if (text?.trim().length > 0) {
+    if (text?.trim()?.length > 0) {
       setIsDisabled(false)
     } else {
       setIsDisabled(true)
@@ -65,7 +65,7 @@ const Step3 = (props: Step2Props) => {
         <InputComponent
           value={text}
           onChangeText={(value) => {
-            if (value?.trim().length === 0) {
+            if (value?.trim()?.length === 0) {
               setText("")
             }
             setText(value)

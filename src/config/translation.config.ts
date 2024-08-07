@@ -10,7 +10,8 @@ const resources = {
 
 i18next.use(initReactI18next).init({
     compatibilityJSON: 'v3',
-    lng: 'ko', // if you're using a language detector, do not define the lng option
+    // lng: 'ko',
+    lng: 'en',
     debug: true,
     resources,
     interpolation: {

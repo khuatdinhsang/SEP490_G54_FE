@@ -25,7 +25,7 @@ const Step3_2 = (props: Step3Props) => {
 
   useEffect(() => {
     onSubmit({ address, time })
-    const isDisabled = (address && time && !errAddress.length && !errTime.length) ? false : true
+    const isDisabled = (address && time && !errAddress?.length && !errTime?.length) ? false : true
     setIsDisabled(isDisabled)
   }, [time, address, setIsDisabled])
   useEffect(() => {
@@ -79,7 +79,7 @@ const Step3_2 = (props: Step3Props) => {
           value={address}
           onChangeText={(value) => {
             setErrAddress("")
-            if (value.trim().length === 0) {
+            if (value?.trim()?.length === 0) {
               setErrAddress(t("placeholder.err.invalidInput"))
               setAddress("")
             }
@@ -95,7 +95,7 @@ const Step3_2 = (props: Step3Props) => {
           value={time}
           onChangeText={(value) => {
             setErrTime("")
-            if (value.trim().length === 0) {
+            if (value?.trim()?.length === 0) {
               setErrTime(t("placeholder.err.invalidInput"))
               setTime("")
             }

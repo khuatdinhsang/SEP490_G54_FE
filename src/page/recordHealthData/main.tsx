@@ -18,7 +18,7 @@ const MainIndexRecordHealthData = () => {
         const getMadePlan = async () => {
             setIsLoading(true)
             try {
-                const res = await weeklyReviewService.getMadePlan(getMondayOfCurrentWeek().split("T")[0])
+                const res = await weeklyReviewService.getMadePlan(getMondayOfCurrentWeek()?.split("T")[0])
                 if (res.code === 200) {
                     setIsLoading(false)
                     if (res.result === 5) {

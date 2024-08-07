@@ -11,6 +11,8 @@ import { questionRes, resultQuestionRes } from '../../constant/type/question';
 import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { TypeQuestion } from '../../constant';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 interface questionType {
     id: number,
@@ -28,6 +30,8 @@ const SF_ACTIVITY = ({ route }: any) => {
     const [listQuestionsResult, setListQuestionsResult] = useState<resultQuestionRes[]>([])
     const [listQuestions, setListQuestions] = useState<questionRes[]>([])
     const [answers, setAnswers] = useState<{ [key: number]: number | null }>({});
+    const [lang, setLang] = useState<string>("")
+
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -35,12 +39,16 @@ const SF_ACTIVITY = ({ route }: any) => {
         const getListQuestion = async () => {
             setIsLoading(true)
             try {
-                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SF_ACTIVITY)
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SF_ACTIVITY, lang)
                 if (res.code === 200) {
                     setErrorMessage("");
                     setIsLoading(false)
                     setListQuestions(res.result.formMonthlyQuestionDTOList)
                     setType(res.result.type)
+                    const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                    setLang(langAsy)
                 } else {
                     setErrorMessage("Unexpected error occurred.");
                 }
@@ -58,11 +66,15 @@ const SF_ACTIVITY = ({ route }: any) => {
         const getListQuestionResult = async () => {
             setIsLoading(true);
             try {
-                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SF_ACTIVITY);
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SF_ACTIVITY, lang);
                 if (res.code === 200) {
                     setErrorMessage("");
                     setListQuestionsResult(res.result)
                     setType(res.result[0].type)
+                    const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                    setLang(langAsy)
                 } else {
                     setErrorMessage("Unexpected error occurred.");
                 }
@@ -101,12 +113,24 @@ const SF_ACTIVITY = ({ route }: any) => {
             navigation.navigate(SCREENS_NAME.EVALUATE.SF_DIET, { time, data: [...dataSF_MENTAL, ...data] })
         }
     }
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconLeft={true}
-                    text={`${time}월 실천평가`}
+                    text={convertTime()}
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>
@@ -143,10 +167,10 @@ const SF_ACTIVITY = ({ route }: any) => {
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={Object.keys(answers).length !== listQuestions.length}
+                    disabled={Object.keys(answers)?.length !== listQuestions?.length}
                     onPress={nextPage}
-                    style={[styles.button, { backgroundColor: Object.keys(answers).length === listQuestions.length ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: Object.keys(answers).length === listQuestions.length ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
+                    style={[styles.button, { backgroundColor: Object.keys(answers)?.length === listQuestions?.length ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: Object.keys(answers)?.length === listQuestions?.length ? colors.white : colors.gray_G04 }]}>{t('common.text.next')}</Text>
                 </Pressable>
             </View>
             {isLoading && <LoadingScreen />}

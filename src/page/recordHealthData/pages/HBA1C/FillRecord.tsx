@@ -55,8 +55,8 @@ const FillRecord = ({ route }: any) => {
         // setIsLoading(true)
         const dataSubmit = {
             timeMeasure: selectedItem.value,
-            weekStart: getMondayOfCurrentWeek().split("T")[0],
-            date: DateTime.local().toString().split("T")[0],
+            weekStart: getMondayOfCurrentWeek()?.split("T")[0],
+            date: DateTime.local()?.toString()?.split("T")[0],
             cholesterol: Number(choresterol) || null,
             bloodSugar: Number(choresterol) || null,
             hba1c: Number(glycemic) || null
@@ -87,7 +87,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 3) {
+        if (numericRegex.test(value) && value?.length <= 3) {
             setGlycemic(value);
             setIsCheckedGlycemic(false)
         }
@@ -99,7 +99,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 5) {
+        if (numericRegex.test(value) && value?.length <= 5) {
             setChoresterol(value);
             setIsCheckedChoresterol(false)
         }
@@ -111,7 +111,7 @@ const FillRecord = ({ route }: any) => {
             return
         }
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value.length <= 5) {
+        if (numericRegex.test(value) && value?.length <= 5) {
             setGlucozer(value);
             setIsCheckedGlucozer(false)
         }

@@ -27,7 +27,7 @@ const FoodIntake = () => {
     const dispatch = useDispatch();
     const handleSetSizeDisk = (value: string) => {
         const numericRegex = /^[0-9]*$/;
-        if (numericRegex.test(value) && value.length <= 2) {
+        if (numericRegex.test(value) && value?.length <= 2) {
             setSizeDisk(value);
         }
     }
@@ -41,7 +41,7 @@ const FoodIntake = () => {
             try {
                 const data = {
                     dishPerDay: Number(sizeDisk),
-                    weekStart: getMondayOfCurrentWeek().split("T")[0],
+                    weekStart: getMondayOfCurrentWeek()?.split("T")[0],
                 }
                 const res = await planService.postDiet(data)
                 if (res.code === 200) {

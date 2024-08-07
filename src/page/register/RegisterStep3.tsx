@@ -14,6 +14,8 @@ import { HistoryMedicalResponse } from '../../constant/type/medical';
 import { medicalService } from '../../services/medicalHistory';
 import { transformData } from '../../util';
 import LoadingScreen from '../../component/loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 const RegisterStep3 = ({ route }: any) => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const { t } = useTranslation();
@@ -56,7 +58,9 @@ const RegisterStep3 = ({ route }: any) => {
         const fetchMedicalHistory = async () => {
             setIsLoading(true)
             try {
-                const res = await medicalService.getMedicalHistory();
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await medicalService.getMedicalHistory(lang);
                 if (res.code == 200 && Array.isArray(res.result)) {
                     setIsLoading(false)
                     setData(transformData(res.result))
@@ -81,7 +85,7 @@ const RegisterStep3 = ({ route }: any) => {
     };
     const handleSelectItem = (itemId: number) => {
         setSelectedItems((prevSelectedItems) => {
-            if (prevSelectedItems.includes(itemId)) {
+            if (prevSelectedItems?.includes(itemId)) {
                 return prevSelectedItems.filter(item => item !== itemId);
             } else {
                 return [...prevSelectedItems, itemId];
@@ -89,7 +93,7 @@ const RegisterStep3 = ({ route }: any) => {
         });
     };
     const handleSubmit = () => {
-        if (selectedItems.length > 0) {
+        if (selectedItems?.length > 0) {
             navigation.navigate(SCREENS_NAME.REGISTER.STEP4, { valuesStep3: { ...valuesStep2, listMedicalHistory: selectedItems }, dataMedical: data.slice(3) });
         }
     };
@@ -131,7 +135,7 @@ const RegisterStep3 = ({ route }: any) => {
                     onPress={handleSubmit}
                     style={[
                         styles.button,
-                        { backgroundColor: selectedItems.length !== 0 ? colors.primary : colors.gray },
+                        { backgroundColor: selectedItems?.length !== 0 ? colors.primary : colors.gray },
                     ]}>
                     <Text style={styles.text}>{t("common.text.next")}</Text>
                 </Pressable>

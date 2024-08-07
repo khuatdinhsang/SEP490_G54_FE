@@ -10,6 +10,8 @@ import {
 } from 'victory-native';
 import colors from '../../constant/color';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { flexRow } from '../../styles/flex';
 
 interface LineChartProps {
   data: Array<{ y: number, label?: string }>;
@@ -21,7 +23,7 @@ interface LineChartProps {
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
   const { data, textTitle, tickValues, labelElement } = props;
-
+  const { t } = useTranslation()
   const dataScatter = data.map((item, index) => ({
     x: index + 1,
     y: item.y,
@@ -30,15 +32,12 @@ const LineChart = (props: LineChartProps) => {
 
   const yTickFormat = (y: number) => {
     if (y === 0) return '';
-    if (y === 33) return '하';
-    if (y === 67) return '중';
-    if (y === 100) return '상';
     return y;
   };
 
   const CustomScatterPoint = useCallback(
     (props: any) => {
-      const isLastPoint = props.index === data.length - 1;
+      const isLastPoint = props.index === data?.length - 1;
       const fillColor = isLastPoint ? colors.white : colors.primary;
       const strokeColor = isLastPoint ? colors.primary : colors.primary;
       return (
@@ -58,7 +57,7 @@ const LineChart = (props: LineChartProps) => {
   );
 
   const CustomLabelComponent = (props: any) => {
-    const isLastPoint = data.length > 0 && props.index === data.length - 1;
+    const isLastPoint = data?.length > 0 && props.index === data?.length - 1;
     if (!isLastPoint) return null;
 
     const label = data[props.index]?.label || '';
@@ -71,9 +70,9 @@ const LineChart = (props: LineChartProps) => {
           </LinearGradient>
         </Defs>
         <Rect
-          x={props.x - 12 - label.length * 5}
+          x={props.x - 12 - label?.length * 5}
           y={props.y - 35}
-          width={label.length * 8 + 8 * 2}
+          width={label?.length * 8 + 8 * 2}
           height={28}
           fill="url(#grad)"
           rx="8"
@@ -114,7 +113,13 @@ const LineChart = (props: LineChartProps) => {
           crossAxis
           style={{
             axis: { stroke: colors.gray_G03 },
-            grid: { stroke: 'transparent' },
+            grid: {
+              stroke: (props: any) => {
+                return props.index === data?.length - 1
+                  ? colors.primary
+                  : 'transparent';
+              },
+            },
             tickLabels: { fill: 'transparent' },
           }}
           tickValues={dataScatter.map((_, index) => index + 1)}
@@ -177,6 +182,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.gray_G08,
   },
+  note: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.gray_G03,
+    marginRight: 10
+  }
 });
 
 export default LineChart;

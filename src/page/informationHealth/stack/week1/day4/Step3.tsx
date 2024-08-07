@@ -86,7 +86,7 @@ const Step3 = ({
             value={recentValues}
             onChangeText={(text: string) => {
               setErr1("")
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErr1(t("placeholder.err.invalidInput"))
                 setRecentValues("")
               }
@@ -103,7 +103,7 @@ const Step3 = ({
             value={influenceOnLife}
             onChangeText={(text: string) => {
               setErr2("")
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErr2(t("placeholder.err.invalidInput"))
                 setInfluenceOnLife("")
               }
@@ -120,7 +120,7 @@ const Step3 = ({
             value={newValues}
             onChangeText={(text: string) => {
               setErr3("")
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErr3(t("placeholder.err.invalidInput"))
                 setNewValues("")
               }
@@ -137,7 +137,7 @@ const Step3 = ({
             value={reasonForChanging}
             onChangeText={(text: string) => {
               setErr4("")
-              if (text.trim().length === 0) {
+              if (text?.trim()?.length === 0) {
                 setErr4(t("placeholder.err.invalidInput"))
                 setReasonForChanging("")
               }

@@ -3,6 +3,7 @@ import colors from '../../../constant/color';
 import { IMAGE } from '../../../constant/image';
 import { flexCenter } from '../../../styles/flex';
 import { TypeMakeHospitalSchedule } from '../const';
+import { useTranslation } from 'react-i18next';
 
 interface HospitalTypeComponentProps {
   state: TypeMakeHospitalSchedule | undefined;
@@ -12,7 +13,7 @@ interface HospitalTypeComponentProps {
 
 const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
   const { state, handleOnPress, type } = props;
-
+  const { t } = useTranslation()
   const isActive = state === type;
   const backgroundColor = isActive ? colors.orange_01 : 'transparent';
   const color = isActive ? colors.primary : colors.gray_G05;
@@ -37,7 +38,7 @@ const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
         }
       />
       <View style={{ marginVertical: 5 }} />
-      <Text style={[styles.textType, { color }]}>진료</Text>
+      <Text style={[styles.textType, { color }]}>{t("hospital.diagnosis")}</Text>
     </Pressable>
   );
 };

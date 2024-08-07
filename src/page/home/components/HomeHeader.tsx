@@ -40,7 +40,7 @@ const HomeHeader = ({ guide, visible, handleShowSidebar, name }: HomeHeaderProps
             <Image source={IMAGE.ICON_SIDEBAR} style={styles.iconSidebar} />
           </Pressable>
           <Text style={styles.headerText}>Smart Healthing</Text>
-          <View style={[flexRow, styles.iconsRight]}>
+          <View style={[styles.iconsRight]}>
             <Pressable style={flexCenter} onPress={handlePressProfile}>
               <Image source={IMAGE.ICON_INFOR} style={styles.iconInfor} />
               <Text style={styles.headerTextIcon}>{t("home.myInfo")}</Text>
@@ -55,7 +55,7 @@ const HomeHeader = ({ guide, visible, handleShowSidebar, name }: HomeHeaderProps
         <View style={styles.section}>
           <Text style={styles.sectionTextTop}>{t("home.wordsEncouragement")}</Text>
           <Text style={styles.sectionTextBottom}>
-            {t("home.mr")}, {name}{'\n'}{t("home.today")}{' '}
+            {name}{'\n'}{t("home.today")}{' '}
             <Text style={{ color: colors.primary }}>{t("home.forHealthCare")}</Text>
             {t("home.tryYourBest")} 💪
           </Text>
@@ -125,9 +125,12 @@ const styles = StyleSheet.create({
     height: 24,
   },
   iconsRight: {
-    paddingTop: 5,
+    paddingTop: 20,
     position: 'absolute',
     right: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   iconInfor: {
     width: 24,

@@ -1,7 +1,6 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import colors from '../../constant/color';
@@ -12,19 +11,67 @@ import { SCREENS_NAME } from '../../navigator/const';
 import RangeBlock from '../../component/range-block';
 import BarChart from '../../component/bar-chart';
 import LineChart from '../../component/line-chart';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingScreen from '../../component/loading';
+import { authService } from '../../services/auth';
+import { LANG } from '../home/const';
 
 const Setting = () => {
-  const { t, i18n } = useTranslation();
-
-  const [isShowDialog, setIsShowDialog] = useState<boolean>(true);
-  const [notificationAllowed, setNotificationAllowed] = useState<boolean>(true);
+  const { t, i18n } = useTranslation()
+  // const [isShowDialog, setIsShowDialog] = useState<boolean>(true);
+  // const [notificationAllowed, setNotificationAllowed] = useState<boolean>(true);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const [lang, setLang] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const handleClickDialog = () => {
+  //   console.log('YES');
+  //   setIsShowDialog(false);
+  // };
+  useEffect(() => {
+    setIsLoading(true)
+    const changeLanguage = async () => {
+      if (lang) {
+        try {
+          const deviceToken = await AsyncStorage.getItem("deviceToken");
+          const data = {
+            deviceToken: deviceToken ?? "",
+            language: lang === "ko" ? LANG.KR : LANG.EN
+          }
+          const res = await authService.changeLanguage(data);
+          console.log("43", res)
+          if (res.code === 200) {
+            i18n.changeLanguage(lang);
+            await AsyncStorage.setItem('language', lang);
+          }
+        } catch (error: any) {
+          if (error?.response?.status === 400) {
+            console.log(error.response.data.message)
+          }
+        } finally {
+          setIsLoading(false);
+        }
 
-  const handleClickDialog = () => {
-    console.log('YES');
-    setIsShowDialog(false);
-  };
-
+      }
+    };
+    changeLanguage();
+  }, [lang]);
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const storedLang = await AsyncStorage.getItem('language');
+        if (storedLang) {
+          setLang(storedLang);
+        } else {
+          setLang('en');
+        }
+      } catch (error) {
+        console.error('Failed to fetch language from AsyncStorage:', error);
+      }
+    };
+    fetchLanguage();
+  }, []);
+  console.log("lang11111", lang)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -50,7 +97,7 @@ const Setting = () => {
           }}
         />
         <View style={styles.divide} />
-        <CategoryComponent text={t("setting.appInfo")} handleOnPress={() => { }} />
+        <CategoryComponent text={t("setting.language")} setLang={setLang} lang={lang} handleOnPress={() => { }} />
         <View style={styles.divide} />
         <CategoryComponent
           text={t("setting.logout")}
@@ -59,6 +106,7 @@ const Setting = () => {
           }}
         />
       </View>
+      {isLoading && <LoadingScreen />}
     </SafeAreaView>
   );
 };

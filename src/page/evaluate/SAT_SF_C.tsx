@@ -11,6 +11,8 @@ import { monthlyQuestionService } from '../../services/monthlyQuestion';
 import { TypeQuestion } from '../../constant';
 import { listQuestionRes, postQuestionData, questionRes, resultQuestionRes } from '../../constant/type/question';
 import Question from './conponent/Question';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 interface questionType {
     id: number,
@@ -28,12 +30,16 @@ const SAT_SF_C = ({ route }: any) => {
     const [answers, setAnswers] = useState<{ [key: number]: number | null }>({});
     const [type, setType] = useState<TypeQuestion>(TypeQuestion.SAT_SF_C);
     const [listQuestionsResult, setListQuestionsResult] = useState<resultQuestionRes[]>([])
-    console.log("31", listQuestionsResult)
+    const [lang, setLang] = useState<string>("")
     useEffect(() => {
         const getListQuestion = async () => {
             setIsLoading(true);
             try {
-                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SAT_SF_C);
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getListQuestion(TypeQuestion.SAT_SF_C, lang);
+                const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                setLang(langAsy)
                 if (res.code === 200) {
                     setErrorMessage("");
                     setListQuestions(res.result.formMonthlyQuestionDTOList);
@@ -54,7 +60,11 @@ const SAT_SF_C = ({ route }: any) => {
         const getListQuestionResult = async () => {
             setIsLoading(true);
             try {
-                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SAT_SF_C);
+                const langAys = await AsyncStorage.getItem("language")
+                const lang = langAys === 'en' ? LANG.EN : LANG.KR
+                const res = await monthlyQuestionService.getResultListQuestion(time, TypeQuestion.SAT_SF_C, lang);
+                const langAsy = await AsyncStorage.getItem("language") ?? "en"
+                setLang(langAsy)
                 if (res.code === 200) {
                     setErrorMessage("");
                     setListQuestionsResult(res.result)
@@ -103,13 +113,24 @@ const SAT_SF_C = ({ route }: any) => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.EVALUATE.MONTHLY);
     };
-
+    const convertTime = () => {
+        let text = ""
+        switch (time) {
+            case 0:
+                text = `${t("lesson.week1")} ${t("evaluate.results")}`
+                break;
+            default:
+                text = `${lang === 'en' ? '#' : ''}${time}${t("evaluate.monthlyResults")}`
+                break;
+        }
+        return text
+    }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <HeaderNavigatorComponent
                     isIconLeft={true}
-                    text={`${time}월 실천평가`}
+                    text={convertTime()}
                     handleClickArrowLeft={goBackPreviousPage}
                 />
             </View>
@@ -146,10 +167,10 @@ const SAT_SF_C = ({ route }: any) => {
             </ScrollView>
             <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={Object.keys(answers).length !== listQuestions.length}
+                    disabled={Object.keys(answers)?.length !== listQuestions?.length}
                     onPress={nextPage}
-                    style={[styles.button, { backgroundColor: Object.keys(answers).length === listQuestions.length ? colors.primary : colors.gray_G02 }]}>
-                    <Text style={[styles.textButton, { color: Object.keys(answers).length === listQuestions.length ? colors.white : colors.gray_G04 }]}>
+                    style={[styles.button, { backgroundColor: Object.keys(answers)?.length === listQuestions?.length ? colors.primary : colors.gray_G02 }]}>
+                    <Text style={[styles.textButton, { color: Object.keys(answers)?.length === listQuestions?.length ? colors.white : colors.gray_G04 }]}>
                         {t('common.text.next')}
                     </Text>
                 </Pressable>

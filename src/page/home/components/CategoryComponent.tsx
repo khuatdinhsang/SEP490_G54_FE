@@ -56,7 +56,7 @@ const CategoryComponent = ({ guide }: CategoryProps) => {
               source={IMAGE.HOME.CATEGORY3}
               style={styles.categoryItemIcon}
             />
-            <Text style={styles.categoryItemText}>{t("home.evaluation")}/{t("home.viewResult")}</Text>
+            <Text style={styles.categoryItemText}>{t("home.evaluation")}</Text>
           </Pressable>
         </View>
         <View style={[flexRowSpaceAround, styles.categoryItemRow]}>

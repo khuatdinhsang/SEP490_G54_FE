@@ -29,7 +29,7 @@ const CategoryDisease: React.FC<CategoryDiseaseProps> = ({
             <Text style={styles.sectionTitle}>{section.type}</Text>
             <View style={[flexRow, { flexWrap: 'wrap' }]}>
                 {section.data && section.data.map((item: ItemType) => {
-                    const isSelected = selectedItems.includes(item.id);
+                    const isSelected = selectedItems?.includes(item.id);
                     return (<ItemDisease item={item} key={item.id} isSelected={isSelected} handleSelectItem={handleSelectItem} />)
                 })}
             </View>

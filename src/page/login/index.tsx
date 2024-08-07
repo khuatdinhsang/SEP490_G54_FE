@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import InputComponent from '../../component/input';
-import { flexRowCenter } from '../../styles/flex';
+import { flexRow, flexRowCenter } from '../../styles/flex';
 import { useAppDispatch } from '../../store/store';
 import { loginUser } from '../../store/user.slice';
 import { ResponseForm } from '../../constant/type';
@@ -18,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
 import NotificationModule from '../../native-module/NotificationModule';
 import { getToken } from '../../config/firebase.config';
+import { LANG } from '../home/const';
+import RadioButton from '../../component/radio';
 
 interface LoginValues {
     email: string;
@@ -25,12 +27,25 @@ interface LoginValues {
 }
 const Login = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false)
     const [messageError, setMessageError] = useState<string>('')
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    console.log("32", isLoggedIn)
+    const [lang, setLang] = useState<LANG>(LANG.KR)
+    const options = [
+        { label: 'Korean', value: LANG.KR },
+        { label: 'English', value: LANG.EN },
+    ];
+    useEffect(() => {
+        const changeLanguage = async () => {
+            const langAys = lang === LANG.KR ? 'ko' : 'en'
+            i18n.changeLanguage(langAys);
+            await AsyncStorage.setItem('language', langAys);
+        };
+        changeLanguage();
+    }, [lang]);
+    console.log("d", lang)
     useEffect(() => {
         const backAction = () => {
             if (isLoggedIn) {
@@ -78,12 +93,12 @@ const Login = () => {
             await getToken();
             const deviceToken = await AsyncStorage.getItem('deviceToken');
             console.log("80", deviceToken);
-            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "" })).unwrap()
+            const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "", language: lang })).unwrap()
             if (res.code == 200) {
                 setIsLoggedIn(true)
                 setIsLoading(false);
                 resetForm()
-                navigation.navigate(SCREENS_NAME.HOME.MAIN)
+                navigation.replace(SCREENS_NAME.HOME.MAIN)
             }
         } catch (error: any) {
             if (error.code == 400) {
@@ -145,8 +160,18 @@ const Login = () => {
                                         />
                                     </View>
                                 </View>
-
                                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
+                                <View style={[flexRow, { marginTop: 20 }]}>
+                                    {options.map((option) => (
+                                        <RadioButton
+                                            key={option.value}
+                                            label={option.label}
+                                            value={option.value}
+                                            selected={lang === option.value}
+                                            onPress={() => setLang(option.value)}
+                                        />
+                                    ))}
+                                </View>
                                 <View style={{ marginTop: 30 }}>
                                     <Pressable onPress={() => handleSubmit()} style={[styles.button, { backgroundColor: colors.primary }]}>
                                         <Text style={styles.text}>{t("authentication.login")}</Text>
@@ -177,7 +202,7 @@ const styles = StyleSheet.create({
     },
     firstStep: {
         fontWeight: '700',
-        width: 240,
+        width: "80%",
         fontSize: 28,
         lineHeight: 40,
         marginTop: 80,

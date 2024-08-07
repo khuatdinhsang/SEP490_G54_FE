@@ -152,11 +152,12 @@ const ListRegisterMedication = ({ route }: any) => {
         <ScrollView contentContainerStyle={{ paddingBottom: 0 }}>
           <View>
             <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
-              <Text style={[styles.textPlan, { marginBottom: 20 }]}>
+              <Text style={[styles.textPlan, { marginBottom: 20, textAlign: 'center' }]}>
                 {t('planManagement.text.registerMedication')}
               </Text>
               {listRegisterMedicationInterface &&
                 listRegisterMedicationInterface.map((item, index) => {
+                  console.log("160", item.weekday)
                   return (
                     <View
                       key={index}
@@ -176,7 +177,7 @@ const ListRegisterMedication = ({ route }: any) => {
                             {item.medicineTitle}
                           </Text>
                           <Text style={styles.textChooseDay}>
-                            {item.weekday?.map((item: any) => convertDay(item)).join(', ')} | {item.time}
+                            {item.weekday?.map((item: any) => convertDay(item, t)).join(', ')} | {item.time}
                           </Text>
                         </View>
                       </View>
@@ -242,7 +243,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 17,
     color: colors.gray_G07,
-    textAlign: 'center',
   },
   textChooseMedication: {
     fontWeight: '400',

@@ -11,12 +11,12 @@ interface ClockProps {
 }
 
 const ClockComponent = ({ guide }: ClockProps) => {
-  const { t } = useTranslation("")
+  const { t } = useTranslation()
   return (
     <View style={[guide ? styles.guideSpecial : {}, styles.container]}>
       {guide && (
         <Guide
-          title={'오늘의 해야 할 일'}
+          title={t("home.thingsTodo")}
           // description={
           //   '스마트 헬싱으로 해야하는 것들을 보여줍니다.바로가기를 누르면 메뉴로 바로 이동합니다.만일 할일을 하나 달성할 경우 할일 완료로 변경되게 됩니다.'
           description={'오늘의 해야 할 일'}

@@ -81,7 +81,7 @@ const ProfileNewHospitalSchedule = () => {
       return 29; // Leap year February
     } else if (month === 2) {
       return 28; // Regular February
-    } else if ([4, 6, 9, 11].includes(month)) {
+    } else if ([4, 6, 9, 11]?.includes(month)) {
       return 30; // Months with 30 days
     } else {
       return 31; // Months with 31 days
@@ -219,7 +219,7 @@ const ProfileNewHospitalSchedule = () => {
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
                 setAddressError("")
-                if (text.trim().length === 0) {
+                if (text?.trim()?.length === 0) {
                   setAddressError(t("placeholder.err.invalidInput"))
                   setAddress("")
                 }
@@ -239,7 +239,7 @@ const ProfileNewHospitalSchedule = () => {
               placeholderTextColor={colors.gray_G04}
               onChangeText={text => {
                 setNoteError("")
-                if (text.trim().length === 0) {
+                if (text?.trim()?.length === 0) {
                   setNoteError(t("placeholder.err.invalidInput"))
                   setNote("")
                 }

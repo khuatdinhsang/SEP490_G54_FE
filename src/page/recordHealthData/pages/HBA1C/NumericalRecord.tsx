@@ -132,7 +132,7 @@ const NumericalRecord = ({ route }: any) => {
                                     </Text>
                                     {isCompleted && (
                                         <View style={styles.itemChoose}>
-                                            <Text style={styles.textItemChoose}>{item.name}</Text>
+                                            <Text style={styles.textItemChoose}>{t("recordHealthData.recordComplete")}</Text>
                                         </View>
                                     )}
                                 </View>
