@@ -20,6 +20,7 @@ import NotificationModule from '../../native-module/NotificationModule';
 import { getToken } from '../../config/firebase.config';
 import { LANG } from '../home/const';
 import RadioButton from '../../component/radio';
+import LanguageModule from '../../native-module/language';
 
 interface LoginValues {
     email: string;
@@ -95,6 +96,9 @@ const Login = () => {
             console.log("80", deviceToken);
             const res = await dispatch(loginUser({ email: values.email, password: values.password, deviceToken: deviceToken ?? "", language: lang })).unwrap()
             if (res.code == 200) {
+                LanguageModule.setLanguage(lang === LANG.KR ? 'ko' : 'en', (response: string) => {
+                    console.log(response);
+                });
                 setIsLoggedIn(true)
                 setIsLoading(false);
                 resetForm()

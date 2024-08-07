@@ -164,26 +164,24 @@ const Profile = () => {
             </View>
           )}
           <Text style={styles.labelSection}>{t("hospital.myBiometricData")}</Text>
-          <ScrollView  >
-            <View style={[styles.sectionContainer, flexRowSpaceBetween]}>
-              <View style={[flexCenter]}>
-                <Text style={styles.nameSection}>{t("hospital.high")}</Text>
-                <Text style={styles.valueSection}>{height}cm</Text>
-              </View>
-              <View style={[flexCenter]}>
-                <Text style={styles.nameSection}>{t("hospital.weight")}</Text>
-                <Text style={styles.valueSection}>{weight}kg</Text>
-              </View>
-              <View style={[flexCenter]}>
-                <Text style={styles.nameSection}>{t("hospital.carcinoma")}</Text>
-                <Text style={styles.valueSection}>{t("hospital.colonCancer")}</Text>
-              </View>
-              <View style={[flexCenter]}>
-                <Text style={styles.nameSection}>{t("hospital.chronicDisease")}</Text>
-                <Text style={styles.valueSection}>{medical}</Text>
-              </View>
+          <View style={styles.sectionContainer}>
+            <View style={{ display: 'flex', marginRight: 10 }}>
+              <Text style={styles.nameSection}>{t("hospital.high")}</Text>
+              <Text style={styles.valueSection}>{height}cm</Text>
             </View>
-          </ScrollView>
+            <View style={{ display: 'flex', marginRight: 10 }}>
+              <Text style={styles.nameSection}>{t("hospital.weight")}</Text>
+              <Text style={styles.valueSection}>{weight}kg</Text>
+            </View>
+            <View style={{ display: 'flex', marginRight: 10 }}>
+              <Text style={styles.nameSection}>{t("hospital.carcinoma")}</Text>
+              <Text style={styles.valueSection}>{t("hospital.colonCancer")}</Text>
+            </View>
+            <View style={{ display: 'flex' }}>
+              <Text style={styles.nameSection}>{t("hospital.chronicDisease")}</Text>
+              <Text style={styles.valueSection}>{medical}</Text>
+            </View>
+          </View>
           {lesson2?.strength?.length > 0 &&
             lesson2?.weakness?.length > 0 &&
             (
@@ -248,6 +246,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 20,
     paddingHorizontal: 24,
+    flexWrap: 'wrap',
+    display: 'flex',
+    flexDirection: 'row'
   },
   nameSection: {
     fontWeight: '400',
@@ -262,8 +263,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: colors.black,
     textAlign: 'center',
-    flexWrap: 'wrap',
-    maxWidth: 100
   },
   divide: {
     height: 8,

@@ -151,8 +151,8 @@ const BloodPressureChart = ({ route }: any) => {
                                 tickValues={[0, 70, 100, 140, 200]}
                                 backgroundProps={{
                                     color: colors.primary,
-                                    height: 32, //100 -140
-                                    y: 72,
+                                    min: 100,
+                                    max: 140 //100 -140
                                 }}
                             />
                             <View style={{ marginTop: 20 }}>
@@ -168,8 +168,8 @@ const BloodPressureChart = ({ route }: any) => {
                                     tickValues={[0, 60, 90, 150]}
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 33,//60-90
-                                        y: 55,
+                                        min: 60,
+                                        max: 90,
                                     }}
                                 />
                             </View>

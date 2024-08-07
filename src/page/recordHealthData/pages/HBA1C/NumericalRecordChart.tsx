@@ -132,11 +132,10 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={transformDataToChartHBA1C(dataChartHBA1C, "%")}
                                     tickValues={[0, 2, 4, 6, 8, 10]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 35,//chưa biết đang fix theo figma
-                                        y: 70,
+                                        min: 5,
+                                        max: 7
                                     }}
                                 />
                             </View>
@@ -151,11 +150,10 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={transformDataToChartHBA1C(dataChartCholesterol, "mg/DL")}
                                     tickValues={[100, 150, 200, 250, 300]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 60,//chưa biết đang fix theo figma
-                                        y: 23,
+                                        min: 0,
+                                        max: 175
                                     }}
                                 />
                             </View>
@@ -173,8 +171,8 @@ const NumericalRecordChart = ({ route }: any) => {
                                     // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 20,//chưa biết đang fix theo figma
-                                        y: 80,
+                                        min: 120,//chưa biết đang fix theo figma
+                                        max: 140,
                                     }}
                                 />
                             </View>
@@ -192,8 +190,8 @@ const NumericalRecordChart = ({ route }: any) => {
                                     // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 30,//chưa biết đang fix theo figma
-                                        y: 65,
+                                        min: 140,//chưa biết đang fix theo figma
+                                        max: 160,
                                     }}
                                 />
                             </View>

@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import {
-  Background,
-  Circle,
   VictoryAxis,
   VictoryChart,
   VictoryLabel,
   VictoryLine,
   VictoryScatter,
+  VictoryArea,
+  Circle
 } from 'victory-native';
 import colors from '../../constant/color';
 import { Image, ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
@@ -15,64 +15,42 @@ import { flexRow } from '../../styles/flex';
 
 interface LineChartProps {
   data: Array<{ x: string; y: number; label?: string }>;
-  icon?: ImageSourcePropType,
-  textTitle: string,
-  unit?: string,
-  textTitleToday?: string,
-  valueToday?: string,
-  textTitleMedium?: string,
-  valueMedium?: string,
-  backgroundProps?: { y: number; height: number; color: string };
-  // domainY: [number, number];
-  labelElement: string,
-  textInfo?: string,
-  tickValues: number[]
+  icon?: ImageSourcePropType;
+  textTitle: string;
+  unit?: string;
+  textTitleToday?: string;
+  valueToday?: string;
+  textTitleMedium?: string;
+  valueMedium?: string;
+  backgroundProps?: { color: string; min: number; max: number };
+  labelElement: string;
+  textInfo?: string;
+  tickValues: number[];
 }
 
-// Example props:
-/* <LineChart
-  data={[
-    {x: '9/11', y: 12.5},
-    {x: '9/15', y: 10},
-    {x: '9/20', y: 15},
-    {x: '10/4', y: 8},
-    {x: '10/5', y: 13, label: '8접시'},
-  ]}
-/>; */
-
-/* <LineChart
-  data={[
-    {x: '9/11', y: 70},
-    {x: '9/15', y: 60},
-    {x: '9/20', y: 80},
-    {x: '10/4', y: 50},
-    {x: '10/5', y: 60, label: '60kg'},
-  ]}
-  backgroundProps={{
-    color: colors.primary,
-    height: 20,
-    y: 40,
-  }}
-  domainY={[0, 100]}
-/>; */
+const getGradientColors = () => {
+  return {
+    colorStart: colors.orange_04, // Orange color for the background
+    colorEnd: colors.orange_04    // Same orange color for a solid gradient
+  };
+};
 
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
   const { data, backgroundProps, tickValues, textTitleMedium, valueMedium, textInfo, icon, textTitle, textTitleToday, labelElement, valueToday, unit } = props;
-  const dataScatter = data.map(item => {
-    return {
-      x: item.x,
-      y: item.y,
-      label: item?.label
-    };
-  });
-  console.log("aaa", dataScatter)
+
+  // Define the range for the gradient
+  const gradientMin = backgroundProps?.min;
+  const gradientMax = backgroundProps?.max;
+
+  const gradientColors = getGradientColors();
 
   const textLabel = {
     fontWeight: '400',
     fontSize: 14,
     lineHeight: 20,
   };
+
   const CustomScatterPoint = useCallback(
     (props: any) => {
       const isLastPoint = props.index === data?.length - 1;
@@ -92,39 +70,54 @@ const LineChart = (props: LineChartProps) => {
         </Svg>
       );
     },
-    [dataScatter],
+    [data],
   );
+
   return (
     <View style={[styles.container, styles.shadowBox]}>
       <View style={flexRow}>
         <Image source={icon} />
         <Text style={styles.textTitle}>{textTitle}</Text>
       </View>
-      {backgroundProps && (
+      {textInfo && (
         <View style={[flexRow, { marginTop: 5 }]}>
           <View style={styles.infoColor}></View>
           <Text style={styles.textColorInfo}>{textInfo}</Text>
         </View>
       )}
       <VictoryChart
-        // domain={{ y: domainY }}
         height={HEIGHT}
         style={{
           parent: {
             marginLeft: -20,
           },
-          background: backgroundProps && { fill: colors.primary, opacity: '0.15' },
+          background: { fill: colors.white },
         }}
         domainPadding={{ x: 20 }}
-        backgroundComponent={
-          backgroundProps && (
-            <Background
-              y={HEIGHT - backgroundProps.y - 85}
-              height={backgroundProps.height}
-            />
-          )
+        containerComponent={
+          <Svg>
+            <Defs>
+              <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <Stop offset="0%" stopColor={gradientColors.colorStart} stopOpacity="0.5" />
+                <Stop offset="100%" stopColor={gradientColors.colorEnd} stopOpacity="0.5" />
+              </LinearGradient>
+            </Defs>
+          </Svg>
         }
       >
+        {/* Area representing the gradient from min to max */}
+        <VictoryArea
+          style={{
+            data: { fill: backgroundProps?.color, opacity: 0.3 },
+          }}
+          data={[
+            { x: 0, y: gradientMax, y0: gradientMin },
+            { x: 0, y: gradientMax, y0: gradientMin },
+            { x: data.length, y: gradientMax, y0: gradientMin },
+            { x: data.length, y: gradientMax, y0: gradientMin }
+          ]}
+          interpolation="step"
+        />
         <VictoryAxis
           crossAxis
           style={{
@@ -165,13 +158,11 @@ const LineChart = (props: LineChartProps) => {
           style={{ data: { stroke: colors.primary } }}
           width={2}
           data={data}
-        // labelComponent={<CustomLabelComponent />}
         />
         <VictoryScatter
-          data={dataScatter}
+          data={data}
           style={{ data: { fill: colors.primary } }}
           size={5}
-          // labelComponent={<CustomLabelComponent />}
           dataComponent={<CustomScatterPoint />}
         />
         <VictoryLabel
@@ -236,7 +227,6 @@ const CustomLabelComponent = (props: any) => (
 const styles = StyleSheet.create({
   container: {
     borderRadius: 16,
-
   },
   shadowBox: {
     backgroundColor: '#FFFFFF',
@@ -286,4 +276,5 @@ const styles = StyleSheet.create({
     color: colors.gray_G06
   }
 });
+
 export default LineChart;

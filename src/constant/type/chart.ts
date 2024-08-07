@@ -4,7 +4,9 @@ import { TypeTimeMeasure } from "../../page/recordHealthData/contant"
 export interface dataChartWeightResponse {
     avgValue: number,
     valueToday: number,
-    weightResponseList: valueWeight[]
+    weightResponseList: valueWeight[],
+    maxSafeWeight: number,
+    minSafeWeight: number
 }
 export interface valueWeight {
     value: number,

@@ -141,10 +141,10 @@ const FoodIntakeRecord = ({ route }: any) => {
                 </View>
                 {isEdit ?
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
-                        <View style={flexRow}>
-                            <Text style={styles.text}>오늘은</Text>
-                            <Text style={[styles.text, { color: colors.orange_04 }]}>{boldOfRice}접시</Text>
-                            <Text style={styles.text}>를 먹었나요?</Text>
+                        <View style={[flexRow, { flexWrap: 'wrap' }]}>
+                            <Text style={styles.text}>{t("planManagement.text.today")}</Text>
+                            <Text style={[styles.text, { color: colors.orange_04 }]}>{boldOfRice}{" "}{t("planManagement.text.disk")}(s){" "}</Text>
+                            <Text style={styles.text}>{t("planManagement.text.vegetable")}.</Text>
                         </View>
                         <View style={[flexRowSpaceBetween, { width: '100%', marginTop: 10 }]}>
                             <Pressable

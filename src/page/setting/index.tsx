@@ -1,7 +1,7 @@
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { NativeEventEmitter, Platform, SafeAreaView, StyleSheet, ToastAndroid, View } from 'react-native';
 import HeaderNavigatorComponent from '../../component/header-navigator';
 import colors from '../../constant/color';
 import CategoryComponent from '../../component/category';
@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../component/loading';
 import { authService } from '../../services/auth';
 import { LANG } from '../home/const';
+import LanguageModule from '../../native-module/language';
 
 const Setting = () => {
   const { t, i18n } = useTranslation()
@@ -41,6 +42,9 @@ const Setting = () => {
           const res = await authService.changeLanguage(data);
           console.log("43", res)
           if (res.code === 200) {
+            LanguageModule.setLanguage(lang, (response: string) => {
+              console.log(response);
+            });
             i18n.changeLanguage(lang);
             await AsyncStorage.setItem('language', lang);
           }

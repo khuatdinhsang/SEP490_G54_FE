@@ -43,6 +43,7 @@ import { SCREENS_NAME } from '../../navigator/const';
 import { authService } from '../../services/auth';
 import LoadingScreen from '../../component/loading';
 import { useTranslation } from 'react-i18next';
+import LanguageModule from '../../native-module/language';
 
 const widthSidebar = WidthDevice - 20;
 
@@ -167,6 +168,11 @@ const Home = () => {
       const langAys = await AsyncStorage.getItem("language")
       const lang = langAys === 'en' ? LANG.EN : LANG.KR
       const res = await authService.getHeightWeight(lang);
+      console.log("171")
+      // test
+      LanguageModule.getLanguage((language: string) => {
+        console.log("Current language:", language);
+      });
       if (res.code === 200) {
         console.log("re", res.result)
         setName(res.result.name);

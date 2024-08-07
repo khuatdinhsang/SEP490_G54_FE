@@ -73,12 +73,14 @@ const BloodPressure = ({ route }: any) => {
         }
     }
     const handleSetMaxBloodPressure = (value: string) => {
+        setBloodMaxError("")
         const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value) && value?.length <= 5) {
             setMaxBloodPressure(value);
         }
     }
     const handleSetMinBloodPressure = (value: string) => {
+        setBloodMinError("")
         const numericRegex = /^(\d*\.?\d*)$/;
         if (numericRegex.test(value) && value?.length <= 5) {
             setMinBloodPressure(value);

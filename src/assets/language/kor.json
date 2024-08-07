@@ -216,7 +216,9 @@
       "gotoHome": "홈으로 돌아가기",
       "questionMedicationNotChange": "약물복용 내용이 달라지지 않았다면",
       "retrieveHistoryLastWeek": "지난주 내역을 불러올까요?",
-      "drugHistoryLastWeek": "지난주 약물기록"
+      "drugHistoryLastWeek": "지난주 약물기록",
+      "today": "오늘은",
+      "vegetable": "를 먹었나요?"
     },
     "advice": {
       // page 2

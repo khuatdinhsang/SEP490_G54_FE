@@ -89,7 +89,7 @@
     "diseases": {
       "chronic": "만성질환",
       "cholesterol": "고지혈증",
-      "highBlood": "고혈압",
+      "highBlood": "Blood Pressure",
       "highBloodEvl": "Blood Pressure",
       "diabetes": "당뇨",
       "osteoporosis": "골다고증",
@@ -216,7 +216,9 @@
       "gotoHome": "Back to Home",
       "questionMedicationNotChange": "If the medication regimen has not changed",
       "retrieveHistoryLastWeek": "Would you like to reuse last week's schedule?",
-      "drugHistoryLastWeek": "Last week's schedule"
+      "drugHistoryLastWeek": "Last week's schedule",
+      "today": "Today, have you eaten",
+      "vegetable": "of vegetables"
     },
     "advice": {
       // page 2
