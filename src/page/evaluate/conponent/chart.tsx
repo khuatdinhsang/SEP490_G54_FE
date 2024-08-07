@@ -84,7 +84,8 @@ const wrapLabel = (text: string) => {
     return lines.join('\n');
 };
 
-const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data }) => {
+const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues,
+    data }) => {
     const filteredDataY1 = data.filter((d) => d.y1 !== 0);
     const filteredDataY2 = data.filter((d) => d.y2 !== 0);
     const { t } = useTranslation()

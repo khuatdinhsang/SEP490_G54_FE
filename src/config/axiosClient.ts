@@ -6,7 +6,7 @@ import { createNavigationContainerRef, useNavigation } from '@react-navigation/n
 import { SCREENS_NAME } from '../navigator/const';
 import { navigate, navigationRef } from '../util/navigation';
 import { jwtDecode } from 'jwt-decode';
-export const baseURL = 'http://54.179.151.16:8080/api';
+export const baseURL = 'http://54.179.151.16/api';
 // export const baseURL = 'http://10.0.2.2:8080/api';
 const axiosClient = axios.create({
   baseURL: baseURL,

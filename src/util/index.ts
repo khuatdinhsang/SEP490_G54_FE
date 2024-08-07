@@ -18,6 +18,7 @@ import { satEvaluateRes, sfEvaluateRes } from '../constant/type/question';
 import colors from '../constant/color';
 import { offsetTime } from '../constant';
 import CounterStepModule from '../native-module/counter-step.module';
+import { LANG } from '../page/home/const';
 interface OutputData {
   id: number;
   name: string;
@@ -466,25 +467,26 @@ type DataTypeChart = {
   }>;
 };
 export const convertToChart1Monthly = (
-  data: DataTypeChart, t: any
+  data: DataTypeChart, t: any, lang: string
 ): TransformedData[] => {
+  console.log("472", lang)
   const result = [
     {
-      x: t("evaluate.coreCompetencies"),
+      x: lang === 'en' ? "CC" : t("evaluate.coreCompetencies"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_c_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_c_total ?? 0,
     },
     {
-      x: t("evaluate.preparationCompetencies"),
+      x: lang === 'en' ? "PC" : t("evaluate.preparationCompetencies"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_p_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y4: data.chart3Month[0]?.satResponseDTO?.sat_sf_p_total ?? 0,
     },
     {
-      x: t("evaluate.executionStrategy"),
+      x: lang === 'en' ? "ES" : t("evaluate.executionStrategy"),
       y1: data.firstWeek?.satResponseDTO?.sat_sf_i_total ?? 0,
       y2: data.chart3Month[2]?.satResponseDTO?.sat_sf_i_total ?? 0,
       y3: data.chart3Month[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
@@ -494,32 +496,32 @@ export const convertToChart1Monthly = (
   return result;
 };
 export const convertToChart2Monthly = (
-  data: DataTypeChart, t: any
+  data: DataTypeChart, t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.positiveMind"),
+      x: lang === 'en' ? "PM" : t("evaluate.positiveMind"),
       y1: data.firstWeek?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
     },
     {
-      x: t("planManagement.text.workout"),
+      x: lang === 'en' ? "E" : t("planManagement.text.workout"),
       y1: data.firstWeek?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
     },
     {
-      x: t("recordHealthData.diet"),
+      x: lang === 'en' ? "D" : t("recordHealthData.diet"),
       y1: data.firstWeek?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y4: data.chart3Month[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
     },
     {
-      x: t("evaluate.medicationUse"),
+      x: lang === 'en' ? "MU" : t("evaluate.medicationUse"),
       y1: data.firstWeek?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y2: data.chart3Month[2]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y3: data.chart3Month[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
@@ -541,46 +543,46 @@ export const dateNow = (date: Date) => {
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 export const convertToChart1SAT = (
-  data: satEvaluateRes[], t: any
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.coreCompetencies"),
+      x: lang === 'en' ? "CC" : t("evaluate.coreCompetencies"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_total ?? 0,
     },
     {
-      x: t("evaluate.preparationCompetencies"),
+      x: lang === 'en' ? "PC" : t("evaluate.preparationCompetencies"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_total ?? 0,
     },
     {
-      x: t("evaluate.executionStrategy"),
+      x: lang === 'en' ? "ES" : t("evaluate.executionStrategy"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_total ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_total ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart1SF = (data: sfEvaluateRes[], t: any): TransformedData[] => {
+export const convertToChart1SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.positiveMind"),
+      x: lang === 'en' ? "PM" : t("evaluate.positiveMind"),
       y1: data[1]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_mental_modelPoint ?? 0,
     },
     {
-      x: t("planManagement.text.workout"),
+      x: lang === 'en' ? "E" : t("planManagement.text.workout"),
       y1: data[1]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_activity_modelPoint ?? 0,
     },
     {
-      x: t("recordHealthData.diet"),
+      x: lang === 'en' ? "D" : t("recordHealthData.diet"),
       y1: data[1]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_modelPoint ?? 0,
     },
     {
-      x: t("evaluate.medicationUse"),
+      x: lang === 'en' ? "MU" : t("evaluate.medicationUse"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_modelPoint ?? 0,
     },
@@ -588,36 +590,36 @@ export const convertToChart1SF = (data: sfEvaluateRes[], t: any): TransformedDat
   return result;
 };
 export const convertToChart2SAT = (
-  data: satEvaluateRes[], t: any
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.selfDirectedness"),
+      x: lang === 'en' ? "SD" : t("evaluate.selfDirectedness"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_activityPoint ?? 0,
     },
     {
-      x: t("evaluate.positiveThinking"),
+      x: lang === 'en' ? "ST" : t("evaluate.positiveThinking"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_positivityPoint ?? 0,
     },
     {
-      x: t("evaluate.formSupport"),
+      x: lang === 'en' ? "FSR" : t("evaluate.formSupport"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_supportPoint ?? 0,
     },
     {
-      x: t("evaluate.shareExperience"),
+      x: lang === 'en' ? "SSE" : t("evaluate.shareExperience"),
       y1: data[1]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_c_experiencePoint ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart2SF = (data: sfEvaluateRes[], t: any): TransformedData[] => {
+export const convertToChart2SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: t("planManagement.text.positiveMind"),
+      x: lang === 'en' ? "PM" : t("planManagement.text.positiveMind"),
       y1: data[1]?.sfResponseDTO?.sf_mentalPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_mentalPoint ?? 0,
     },
@@ -625,46 +627,46 @@ export const convertToChart2SF = (data: sfEvaluateRes[], t: any): TransformedDat
   return result;
 };
 export const convertToChart3SAT = (
-  data: satEvaluateRes[], t: any
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.pursingLife"),
+      x: lang === 'en' ? "PLV" : t("evaluate.pursingLife"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_lifeValue ?? 0,
     },
     {
-      x: t("evaluate.settingGoal"),
+      x: lang === 'en' ? "SG/A" : t("evaluate.settingGoal"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_targetAndAction ?? 0,
     },
     {
-      x: t("evaluate.rational"),
+      x: lang === 'en' ? "RDM" : t("evaluate.rational"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_decision ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_decision ?? 0,
     },
     {
-      x: t("evaluate.priority"),
+      x: lang === 'en' ? "PCP" : t("evaluate.priority"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_buildPlan ?? 0,
     },
     {
-      x: t("evaluate.create"),
+      x: lang === 'en' ? "CHE" : t("evaluate.create"),
       y1: data[1]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_p_healthyEnvironment ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart3SF = (data: sfEvaluateRes[], t: any): TransformedData[] => {
+export const convertToChart3SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.exercise"),
+      x: lang === 'en' ? "ECP" : t("evaluate.exercise"),
       y1: data[1]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_activity_planPoint ?? 0,
     },
     {
-      x: t("evaluate.exerciseRoutine"),
+      x: lang === 'en' ? "ER" : t("evaluate.exerciseRoutine"),
       y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
     },
@@ -672,41 +674,41 @@ export const convertToChart3SF = (data: sfEvaluateRes[], t: any): TransformedDat
   return result;
 };
 export const convertToChart4SAT = (
-  data: satEvaluateRes[], t: any
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.selfDirection"),
+      x: lang === 'en' ? "SD" : t("evaluate.selfDirection"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityPoint ?? 0,
     },
     {
-      x: t("evaluate.stressManagement"),
+      x: lang === 'en' ? "SM" : t("evaluate.stressManagement"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activityStressPoint ?? 0,
     },
     {
-      x: t("evaluate.persistent"),
+      x: lang === 'en' ? "PE" : t("evaluate.persistent"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_activitySubstantialPoint ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart4SF = (data: sfEvaluateRes[], t: any): TransformedData[] => {
+export const convertToChart4SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.eatPattern"),
+      x: lang === 'en' ? "HEP" : t("evaluate.eatPattern"),
       y1: data[1]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_healthyPoint ?? 0,
     },
     {
-      x: t("evaluate.choose"),
+      x: lang === 'en' ? "VFS" : t("evaluate.choose"),
       y1: data[1]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_vegetablePoint ?? 0,
     },
     {
-      x: t("evaluate.form"),
+      x: lang === 'en' ? "FHEH" : t("evaluate.form"),
       y1: data[1]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_diet_habitPoint ?? 0,
     },
@@ -714,36 +716,36 @@ export const convertToChart4SF = (data: sfEvaluateRes[], t: any): TransformedDat
   return result;
 };
 export const convertToChart5SAT = (
-  data: satEvaluateRes[], t: any
+  data: satEvaluateRes[], t: any, lang: string
 ): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.energy"),
+      x: lang === 'en' ? "EC" : t("evaluate.energy"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_energy ?? 0,
     },
     {
-      x: t("evaluate.selfMotivation"),
+      x: lang === 'en' ? "SM" : t("evaluate.selfMotivation"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_motivation ?? 0,
     },
     {
-      x: t("evaluate.checkUp"),
+      x: lang === 'en' ? "CU" : t("evaluate.checkUp"),
       y1: data[1]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
       y2: data[0]?.satResponseDTO?.sat_sf_i_e_planCheck ?? 0,
     },
   ];
   return result;
 };
-export const convertToChart5SF = (data: sfEvaluateRes[], t: any): TransformedData[] => {
+export const convertToChart5SF = (data: sfEvaluateRes[], t: any, lang: string): TransformedData[] => {
   const result = [
     {
-      x: t("evaluate.compliance"),
+      x: lang === 'en' ? "MC" : t("evaluate.compliance"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_followPlanPoint ?? 0,
     },
     {
-      x: t("evaluate.drugEffect"),
+      x: lang === 'en' ? "DE" : t("evaluate.drugEffect"),
       y1: data[1]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
       y2: data[0]?.sfResponseDTO?.sf_medicine_habitPoint ?? 0,
     },

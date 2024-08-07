@@ -23,6 +23,15 @@ interface MonthlyChartProps {
         y3?: number;
         y4?: number;
     }>;
+    text1?: string;
+    text2?: string;
+    text3?: string;
+    text4?: string;
+    note1?: string;
+    note2?: string;
+    note3?: string;
+    note4?: string;
+    language: string
 }
 
 const CustomLabelComponent = (props: any) => (
@@ -80,8 +89,10 @@ const wrapLabel = (text: string) => {
     return lines.join('\n');
 };
 
-const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data }) => {
+const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle,
+    data, text1, text2, text3, text4, language, note1, note2, note3, note4 }) => {
     const { t } = useTranslation()
+    console.log("a", language)
     const filteredDataY1 = data.filter((d) => d.y1 !== 0);
     const filteredDataY2 = data.filter((d) => d.y2 !== 0);
     const filteredDataY3 = data.filter((d) => d.y3 !== 0);
@@ -113,6 +124,28 @@ const MonthlyChart: React.FC<MonthlyChartProps> = ({ tickValues, textTitle, data
                     <View style={[styles.des, { backgroundColor: colors.blue_01 }]} />
                     <Text style={styles.textDes}>{t("lesson.month3")}</Text>
                 </View>
+            </View>
+            <View>
+                {text1 && note1 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text1}{" "}:{" "}{note1}</Text>
+                </View>
+                }
+                {text2 && note2 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text2}{" "}:{" "}{note2}</Text>
+                </View>
+                }
+                {text3 && note3 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text3}{" "}:{" "}{note3}</Text>
+                </View>
+                }
+                {text4 && note4 && language === 'en' && <View style={[styles.legendItem, { marginRight: 10 }]}>
+                    <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+                    <Text style={styles.textDes}>{text4}{" "}:{" "}{note4}</Text>
+                </View>
+                }
             </View>
             <VictoryChart
                 height={250}

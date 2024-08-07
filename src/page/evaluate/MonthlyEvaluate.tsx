@@ -16,6 +16,7 @@ import { listMonthNumberRes } from '../../constant/type/question';
 import MonthlyChart from '../../component/monthly-chart';
 import { chartService } from '../../services/charts';
 import { convertToChart1Monthly, convertToChart2Monthly, TransformedData } from '../../util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MonthEvaluate = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -29,11 +30,13 @@ const MonthEvaluate = () => {
     console.log("29", data)
     const [chartOne, setChartOne] = useState<TransformedData[]>([])
     const [chartTwo, setChartTwo] = useState<TransformedData[]>([])
+    const [lang, setLang] = useState<string>("")
     const getListNumber = async () => {
         setIsLoading(true)
         try {
+            const langAys = await AsyncStorage.getItem("language") ?? "en"
+            setLang(langAys)
             const res = await monthlyQuestionService.getListMonthNumber()
-            console.log("31", res)
             if (res.code === 200) {
                 setErrorMessage("");
                 setIsLoading(false)
@@ -41,8 +44,8 @@ const MonthEvaluate = () => {
                 try {
                     const resData = await chartService.monthlyQuestionChart();
                     if (resData.code === 200) {
-                        setChartOne(convertToChart1Monthly(resData.result, t))
-                        setChartTwo(convertToChart2Monthly(resData.result, t))
+                        setChartOne(convertToChart1Monthly(resData.result, t, langAys))
+                        setChartTwo(convertToChart2Monthly(resData.result, t, langAys))
                     } else {
                         setErrorMessage("Unexpected error occurred.");
                     }
@@ -109,6 +112,13 @@ const MonthEvaluate = () => {
                             textTitle={t('evaluate.graphHealthManagement')}
                             data={chartOne}
                             tickValues={[0, 20, 40, 60, 80, 100]}
+                            language={lang}
+                            text1={t("evaluate.coreCompetencies")}
+                            text2={t("evaluate.preparationCompetencies")}
+                            text3={t("evaluate.executionStrategy")}
+                            note1={"CC"}
+                            note2={"PC"}
+                            note3={"ES"}
                         />
                     </View>
                     <View style={{ paddingTop: 20 }}>
@@ -116,6 +126,15 @@ const MonthEvaluate = () => {
                             textTitle={t('evaluate.graphHealthManagement')}
                             data={chartTwo}
                             tickValues={[0, 20, 40, 60, 80, 100]}
+                            language={lang}
+                            text1={t("evaluate.positiveMind")}
+                            text2={t("planManagement.text.workout")}
+                            text3={t("recordHealthData.diet")}
+                            text4={t("evaluate.medicationUse")}
+                            note1={"PM"}
+                            note2={"E"}
+                            note3={"D"}
+                            note4={"MU"}
                         />
                     </View>
                     <View style={styles.content}>
