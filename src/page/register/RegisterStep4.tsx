@@ -47,7 +47,7 @@ const RegisterStep4 = ({ route }: any) => {
             return prevSelectedItems;
         });
     };
-
+    console.log("50", dataMedical)
     return (
         <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
@@ -65,9 +65,9 @@ const RegisterStep4 = ({ route }: any) => {
                             <Text style={[styles.hightLight, { color: colors.black }]}>{t("common.text.fillIllness")}</Text>
                         </View>
                     </View>
-                    <Text style={styles.textField}>{dataMedical[0].type}</Text>
+                    <Text style={styles.textField}>{dataMedical[4].type}</Text>
                     <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
-                        {dataMedical && dataMedical.slice(0, 1).map((item: ItemType) => {
+                        {dataMedical && dataMedical.slice(4).map((item: ItemType) => {
                             return item.data.map((itemChild: ItemTypeChild) => {
                                 const isSelected = selectedItems?.includes(itemChild.id);
                                 return (
@@ -82,8 +82,8 @@ const RegisterStep4 = ({ route }: any) => {
                         })}
                     </View>
                     <View style={{ marginBottom: 20 }}>
-                        <Text style={styles.textField}>{dataMedical[1].type}</Text>
-                        {dataMedical && dataMedical.slice(1).map((item: ItemType) => {
+                        <Text style={styles.textField}>{dataMedical[0].type}</Text>
+                        {dataMedical && dataMedical.slice(0, 1).map((item: ItemType) => {
                             return item.data.map((itemChild) => {
                                 const isSelected = selectedItems?.includes(itemChild.id);
                                 return (

@@ -33,7 +33,7 @@ import GuideModalReady from './components/GuideModalReady';
 import GuideTop from './components/GuideTop';
 import HomeHeader from './components/HomeHeader';
 import ShoesComponent from './components/ShoesComponent';
-import { GuideStep, SCROLL_VALUE } from './const';
+import { GuideStep, LANG, SCROLL_VALUE } from './const';
 import PermissionRequest from '../../util/Permission';
 import TimerModule, { TimerItem } from '../../native-module/timer.module';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -164,7 +164,9 @@ const Home = () => {
   const fetchWeightAndHeight = async () => {
     setIsLoading(true);
     try {
-      const res = await authService.getHeightWeight();
+      const langAys = await AsyncStorage.getItem("language")
+      const lang = langAys === 'en' ? LANG.EN : LANG.KR
+      const res = await authService.getHeightWeight(lang);
       if (res.code === 200) {
         console.log("re", res.result)
         setName(res.result.name);

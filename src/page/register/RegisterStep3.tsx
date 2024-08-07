@@ -94,9 +94,10 @@ const RegisterStep3 = ({ route }: any) => {
     };
     const handleSubmit = () => {
         if (selectedItems?.length > 0) {
-            navigation.navigate(SCREENS_NAME.REGISTER.STEP4, { valuesStep3: { ...valuesStep2, listMedicalHistory: selectedItems }, dataMedical: data.slice(3) });
+            navigation.navigate(SCREENS_NAME.REGISTER.STEP4, { valuesStep3: { ...valuesStep2, listMedicalHistory: selectedItems }, dataMedical: data });
         }
     };
+    console.log("100", data)
     return (
         <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
@@ -107,7 +108,7 @@ const RegisterStep3 = ({ route }: any) => {
                             source={require('../../assets/image/register/icon_X.png')}
                         />
                     </Pressable>
-                    <ProgressHeader index={[0, 1, 2]} length={4} style={{ marginTop: 45 }} />
+                    <ProgressHeader index={[0, 1, 2, 3]} length={4} style={{ marginTop: 45 }} />
                     <View style={{ marginTop: 20 }}>
                         <View style={[flexRow, { marginBottom: 30, width: 200, alignItems: 'flex-start' }]}>
                             <Text style={[styles.hightLight, { color: colors.primary }]}>03.</Text>
@@ -118,7 +119,7 @@ const RegisterStep3 = ({ route }: any) => {
                     </View>
                     <View>
                         {data &&
-                            data.slice(0, 3).map((section: any) => (
+                            data.slice(1, 4).map((section: any) => (
                                 <CategoryDisease
                                     key={section.type}
                                     section={section}
