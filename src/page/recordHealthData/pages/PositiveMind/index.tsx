@@ -150,14 +150,14 @@ const PositiveMindRecord = ({ route }: any) => {
                 :
                 <View style={[flexCenter, { marginTop: 100 }]}>
                     <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                    <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                    <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                    <Text style={styles.textTitle}>{t('recordHealthData.recordFound')}</Text>
+                    <Text style={styles.textDesc}>{t('recordHealthData.comeback')}</Text>
                     <Pressable
                         onPress={() => {
                             navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.POSITIVE_MIND_CHART, { isEditable: false });
                         }}
                         style={styles.buttonChart}>
-                        <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                        <Text style={styles.textButtonChart}>{t('recordHealthData.viewChart')}</Text>
                     </Pressable>
                 </View>
             }

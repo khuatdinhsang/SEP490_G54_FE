@@ -89,6 +89,7 @@ const FoodInTakeChart = ({ route }: any) => {
                                 textTitle={t("evaluate.chartDiet")}
                                 data={transformDataToChartWeight(dataChart, t("planManagement.text.disk"))}
                                 tickValues={[0, 5, 15, 20]}
+
                             />
                         </View>
                         :

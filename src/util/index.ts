@@ -13,7 +13,7 @@ import {
   WeekData,
 } from '../constant/type/chart';
 import { IMAGE } from '../constant/image';
-import { ImageProps } from 'react-native';
+import { ImageProps, ImageSourcePropType } from 'react-native';
 import { satEvaluateRes, sfEvaluateRes } from '../constant/type/question';
 import colors from '../constant/color';
 import { offsetTime } from '../constant';
@@ -22,6 +22,7 @@ import { LANG } from '../page/home/const';
 interface OutputData {
   id: number;
   name: string;
+  img: string;
 }
 
 interface TransformedItem {
@@ -34,11 +35,11 @@ export const transformData = (
   return data.reduce<TransformedItem[]>((acc, item) => {
     const typeObject = acc.find(obj => obj.type === item.type);
     if (typeObject) {
-      typeObject.data.push({ id: item.id, name: item.name });
+      typeObject.data.push({ id: item.id, name: item.name, img: item.imageUrl });
     } else {
       acc.push({
         type: item.type,
-        data: [{ id: item.id, name: item.name }],
+        data: [{ id: item.id, name: item.name, img: item.imageUrl }],
       });
     }
 
@@ -177,7 +178,7 @@ export const transformDataToChartStep = (
 };
 
 export const transformDataToChartActivity = (
-  inputArray: valueActivity[],
+  inputArray: valueActivity[], lang: string
 ): OutputDataChart[] => {
   return inputArray.map((input: valueActivity) => {
     const date = new Date(input.date);
@@ -186,11 +187,12 @@ export const transformDataToChartActivity = (
     return {
       x: `${month}/${day}`,
       y: convertMinutesToHours(input.duration),
-      label: getType(input.type),
+      label: getType(input.type, lang),
     };
   });
 };
-export const getType = (inputType: string) => {
+export const getType = (inputType: string, lang: string) => {
+  if (!inputType) return ""
   let type: string = ""
   switch (inputType) {
     case 'HEAVY':
@@ -206,8 +208,25 @@ export const getType = (inputType: string) => {
       type = "";
       break;
   }
-  return type
-
+  return lang === 'en' ? inputType?.slice(0, 1) : type
+}
+export const setType = (inputType: string, lang: string) => {
+  let type: string = ""
+  switch (inputType) {
+    case 'H':
+      type = 'HEAVY'
+      break;
+    case 'M':
+      type = 'MEDIUM'
+      break;
+    case 'L':
+      type = 'LIGHT'
+      break;
+    default:
+      type = "";
+      break;
+  }
+  return lang === 'en' ? type : inputType
 }
 
 export const transformDataToChartMental = (
@@ -329,11 +348,11 @@ export const convertMinutesToHoursAndMinutes = (minutes: number, t: any): string
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   if (hours > 0 && remainingMinutes > 0) {
-    return `${hours}${t("common.text.hours")} ${remainingMinutes}${t("common.text.minutes")}`;
+    return `${hours} ${t("common.text.hours")} ${remainingMinutes}${t("common.text.minutes")}`;
   } else if (hours > 0) {
-    return `${hours}${t("common.text.hours")}`;
+    return `${hours} ${t("common.text.hours")}`;
   } else {
-    return `${remainingMinutes}${t("common.text.minutes")}`;
+    return `${remainingMinutes} ${t("common.text.minutes")}`;
   }
 };
 export const convertMinutesToHours = (minutes: number): number => {

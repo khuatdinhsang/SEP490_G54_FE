@@ -141,7 +141,7 @@ const WorkOut = () => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND);
     };
-    const isNextButtonDisabled = !(minute && selectedDays?.length > 0 && selectedItem);
+    const isNextButtonDisabled = !(minute || hour && selectedDays?.length > 0 && selectedItem);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

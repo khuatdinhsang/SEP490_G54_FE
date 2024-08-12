@@ -58,7 +58,7 @@ const FillRecord = ({ route }: any) => {
             weekStart: getMondayOfCurrentWeek()?.split("T")[0],
             date: DateTime.local()?.toString()?.split("T")[0],
             cholesterol: Number(choresterol) || null,
-            bloodSugar: Number(choresterol) || null,
+            bloodSugar: Number(glucozer) || null,
             hba1c: Number(glycemic) || null
         }
         try {
@@ -161,11 +161,11 @@ const FillRecord = ({ route }: any) => {
                 </View>
                 <View style={{ paddingTop: 30, paddingHorizontal: 20 }}>
                     <View style={{ marginBottom: 30 }}>
-                        <Text style={styles.textTitle}>당화혈색소(HbA1c)를 입력해주세요</Text>
+                        <Text style={styles.textTitle}>{t('recordHealthData.enterHBA1C')}</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
-                            <View style={[flexRow]}>
+                            <View style={[flexRow, { flex: 1 }]}>
                                 <Text style={styles.itemText}>{selectedItem.name}</Text>
-                                <View style={{ width: '50%', marginLeft: 10 }}>
+                                <View style={{ width: '55%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='%'
                                         value={glycemic}
@@ -176,7 +176,7 @@ const FillRecord = ({ route }: any) => {
                                     />
                                 </View>
                             </View>
-                            <Pressable style={flexRow}>
+                            <Pressable style={[flexRow]}>
                                 <CheckBox
                                     disabled={false}
                                     value={isCheckedGlycemic}
@@ -188,11 +188,11 @@ const FillRecord = ({ route }: any) => {
                         </View>
                     </View>
                     <View style={{ marginBottom: 30 }}>
-                        <Text style={styles.textTitle}>콜레스테롤을 입력해주세요</Text>
+                        <Text style={styles.textTitle}>{t("recordHealthData.enterCholesterol")}</Text>
                         <View style={[flexRowSpaceBetween, styles.item]}>
-                            <View style={[flexRow]}>
+                            <View style={[flexRow, { flex: 1 }]}>
                                 <Text style={styles.itemText}>{selectedItem.name}</Text>
-                                <View style={{ width: '50%', marginLeft: 10 }}>
+                                <View style={{ width: '55%', marginLeft: 10 }}>
                                     <InputNumber
                                         textRight='mg/DL'
                                         value={choresterol}
@@ -203,7 +203,7 @@ const FillRecord = ({ route }: any) => {
                                     />
                                 </View>
                             </View>
-                            <Pressable style={flexRow}>
+                            <Pressable style={[flexRow]}>
                                 <CheckBox
                                     disabled={false}
                                     value={isCheckedChoresterol}
@@ -214,13 +214,13 @@ const FillRecord = ({ route }: any) => {
                             </Pressable>
                         </View>
                     </View>
-                    <View>
-                        <Text style={styles.textTitle}>혈당을 입력해주세요</Text>
+                    <View >
+                        <Text style={styles.textTitle}>{t('recordHealthData.enterBlood')}</Text>
                         <View style={styles.item}>
                             <View style={flexRowSpaceBetween}>
-                                <View style={[flexRow]}>
+                                <View style={[flexRow, { flex: 1 }]}>
                                     <Text style={styles.itemText}>{selectedItem.name}</Text>
-                                    <View style={{ width: '50%', marginLeft: 10 }}>
+                                    <View style={{ width: '55%', marginLeft: 10 }}>
                                         <InputNumber
                                             textRight='mg/DL'
                                             value={glucozer}
@@ -232,7 +232,7 @@ const FillRecord = ({ route }: any) => {
                                     </View>
 
                                 </View>
-                                <Pressable style={flexRow}>
+                                <Pressable style={[flexRow]}>
                                     <CheckBox
                                         disabled={false}
                                         value={isCheckedGlucozer}
@@ -256,7 +256,7 @@ const FillRecord = ({ route }: any) => {
                 </Pressable>
             </View>
             {isLoading && <LoadingScreen />}
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 const styles = StyleSheet.create({
@@ -313,12 +313,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         backgroundColor: colors.gray_G01,
         borderRadius: 12,
-        marginTop: 10
+        marginTop: 10,
     },
     itemText: {
         fontWeight: "500",
         fontSize: 18,
-        color: colors.gray_G09
+        color: colors.gray_G09,
+        flex: 1,
+        flexShrink: 1
     },
     textUnKnown: {
         fontWeight: "400",

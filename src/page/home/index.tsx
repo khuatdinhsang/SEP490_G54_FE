@@ -170,9 +170,12 @@ const Home = () => {
       const res = await authService.getHeightWeight(lang);
       console.log("171")
       // test
-      LanguageModule.getLanguage((language: string) => {
-        console.log("Current language:", language);
-      });
+      // LanguageModule.getLanguage((language: string) => {
+      //   console.log("Current language:", language);
+      // });
+      // LanguageModule.setLanguage(langAys, (response: string) => {
+      //   console.log(response);
+      // });
       if (res.code === 200) {
         console.log("re", res.result)
         setName(res.result.name);

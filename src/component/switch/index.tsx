@@ -1,7 +1,7 @@
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {Switch} from 'react-native-switch';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Switch } from 'react-native-switch';
 import colors from '../../constant/color';
-import {flexRow} from '../../styles/flex';
+import { flexRow } from '../../styles/flex';
 
 interface SwitchComponentProps {
   text: string;
@@ -11,7 +11,7 @@ interface SwitchComponentProps {
 }
 
 const SwitchComponent = (props: SwitchComponentProps) => {
-  const {value, onChangeValue, text, style} = props;
+  const { value, onChangeValue, text, style } = props;
 
   return (
     <View style={style}>
@@ -47,19 +47,19 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
-    height: 40,
+    minHeight: 40,
   },
   text: {
     fontWeight: '500',
     fontSize: 18,
     lineHeight: 28,
     color: colors.black,
-    position: 'absolute',
-    left: 16,
+    flex: 1,
+    flexWrap: 'wrap'
   },
   right: {
-    position: 'absolute',
-    right: 16,
+    marginLeft: 10,
   },
 });
+
 export default SwitchComponent;

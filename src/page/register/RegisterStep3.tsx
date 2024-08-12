@@ -119,7 +119,7 @@ const RegisterStep3 = ({ route }: any) => {
                     </View>
                     <View>
                         {data &&
-                            data.slice(1, 4).map((section: any) => (
+                            data?.slice(1, 4).map((section: any) => (
                                 <CategoryDisease
                                     key={section.type}
                                     section={section}

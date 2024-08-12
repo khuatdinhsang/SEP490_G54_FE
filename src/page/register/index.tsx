@@ -69,7 +69,7 @@ const Register = () => {
                 validationSchema={registerSchema}
                 onSubmit={handleSubmit}
             >
-                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+                {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched, isValid, dirty }) => (
                     <View style={{ flex: 1 }}>
                         <ScrollView contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
                             <View style={{ marginTop: 20 }}>
@@ -141,11 +141,10 @@ const Register = () => {
                                 style={[
                                     styles.button,
                                     {
-                                        backgroundColor: (errors.phoneNumber || errors.name || errors.password || errors.confirmPassword || errors.numberRegHospital)
-                                            ? colors.gray
-                                            : colors.primary
+                                        backgroundColor: !isValid || !dirty ? colors.gray : colors.primary
                                     }
                                 ]}
+                                disabled={!isValid || !dirty}
                             >
                                 <Text style={styles.text}>{t("common.text.next")}</Text>
                             </Pressable>
@@ -153,6 +152,7 @@ const Register = () => {
                     </View>
                 )}
             </Formik>
+
         </SafeAreaView>
     );
 };

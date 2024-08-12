@@ -20,7 +20,7 @@ const RegisterRules = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t, i18n } = useTranslation();
     const [checked, setChecked] = useState<boolean>(false)
-    const { data } = route.params;
+    const data = route?.params?.data;
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [messageError, setMessageError] = useState<string>("")
     const loginPage = () => {
@@ -52,6 +52,9 @@ const RegisterRules = ({ route }: any) => {
                 setIsLoading(false)
             }
         }
+    }
+    const handleViewRules = () => {
+        navigation.navigate(SCREENS_NAME.REGISTER.RULES_DETAIL)
     }
     return (
         <ScrollView>
@@ -86,17 +89,9 @@ const RegisterRules = ({ route }: any) => {
                                 <Text style={styles.textfield}>{t("common.text.acceptTerms")}</Text>
                             </View>
                         </View>
-                        <Text>{t("common.text.view")}</Text>
-                    </View>
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <Image tintColor={checked ? colors.primary : colors.gray} source={IMAGE.ICON_CHECK} />
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={[styles.textfield, { color: colors.primary }]}>{t("common.text.force")}</Text>
-                                <Text style={styles.textfield}>{t("common.text.acceptTerms")}</Text>
-                            </View>
-                        </View>
-                        <Text>{t("common.text.view")}</Text>
+                        <Pressable onPress={handleViewRules}>
+                            <Text>{t("common.text.view")}</Text>
+                        </Pressable>
                     </View>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -106,7 +101,9 @@ const RegisterRules = ({ route }: any) => {
                                 <Text style={styles.textfield}>{t("common.text.personalPolicy")}</Text>
                             </View>
                         </View>
-                        <Text>{t("common.text.view")}</Text>
+                        <Pressable onPress={handleViewRules}>
+                            <Text>{t("common.text.view")}</Text>
+                        </Pressable>
                     </View>
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -116,7 +113,9 @@ const RegisterRules = ({ route }: any) => {
                                 <Text style={styles.textfield}>{t("common.text.sensitiveInfo")}</Text>
                             </View>
                         </View>
-                        <Text>{t("common.text.view")}</Text>
+                        <Pressable onPress={handleViewRules}>
+                            <Text>{t("common.text.view")}</Text>
+                        </Pressable>
                     </View>
                 </View>
                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}

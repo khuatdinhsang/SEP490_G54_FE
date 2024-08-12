@@ -63,7 +63,7 @@ const WorkOutRecord = ({ route }: any) => {
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable)
     const handleViewChart = () => {
-        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART)
+        navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: isEdit })
     }
     const goBackPreviousPage = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
@@ -102,7 +102,7 @@ const WorkOutRecord = ({ route }: any) => {
         const activityChoose = initDataWorkOut.find((item) => item.id === itemId)
         setSelectedItem(activityChoose?.planType);
     };
-    const isDisable = minute && selectedItem ? true : false
+    const isDisable = (hour || minute) && selectedItem ? true : false
 
     return (
         <SafeAreaView style={styles.container}>
@@ -178,14 +178,14 @@ const WorkOutRecord = ({ route }: any) => {
                     </View>
                     : <View style={[flexCenter, { marginTop: 100 }]}>
                         <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Text style={styles.textTitle}>{t('recordHealthData.recordFound')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.comeback')}</Text>
                         <Pressable
                             onPress={() => {
                                 navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WORD_OUT_CHART, { isEditable: false });
                             }}
                             style={styles.buttonChart}>
-                            <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                            <Text style={styles.textButtonChart}>{t('recordHealthData.viewChart')}</Text>
                         </Pressable>
                     </View>}
             </ScrollView>

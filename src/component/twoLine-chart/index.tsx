@@ -20,32 +20,55 @@ interface LineChartProps {
   color2: string;
   icon: ImageSourcePropType;
   textTitle: string;
-  backgroundProps1?: { y: number; height: number; color: string };
-  backgroundProps2?: { y: number; height: number; color: string };
+  backgroundProps1?: { min: number; max: number; color: string };
+  backgroundProps2?: { min: number; max: number; color: string };
   labelElement: string;
   textInfoColor1?: string;
   textInfoColor2?: string;
-  tickValues: number[],
-  textDescription?: string
-  valueDescription1?: number
-  valueDescription2?: number
-  unitDescription?: string
+  tickValues: number[];
+  textDescription?: string;
+  valueDescription1?: number;
+  valueDescription2?: number;
+  unitDescription?: string;
+  detail: boolean
 }
 
 const TwoLineChart = (props: LineChartProps) => {
-  const { data1, data2, color1, color2, tickValues, backgroundProps1,
-    backgroundProps2, textInfoColor1, textInfoColor2, icon,
-    textTitle, labelElement,
-    textDescription, valueDescription1, valueDescription2, unitDescription
+  const {
+    detail,
+    data1,
+    data2,
+    color1,
+    color2,
+    tickValues,
+    backgroundProps1,
+    backgroundProps2,
+    textInfoColor1,
+    textInfoColor2,
+    icon,
+    textTitle,
+    labelElement,
+    textDescription,
+    valueDescription1,
+    valueDescription2,
+    unitDescription
   } = props;
+  console.log("data1", data1)
+  console.log("data2", data2)
   const HEIGHT = 250;
-  const dataScatter1 = data1.map(item => ({ x: item.x, y: item.y }));
-  const dataScatter2 = data2.map(item => ({ x: item.x, y: item.y }));
+  const dataScatter1 = data1.map(item => ({ x: item.x, y: item.y, label: item.label }));
+  const dataScatter2 = data2.map(item => ({ x: item.x, y: item.y, label: item.label }));
+
   const textLabel = {
     fontWeight: '400',
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 20
   };
+
+  const gradientMin1 = backgroundProps1?.min;
+  const gradientMin2 = backgroundProps2?.min;
+  const gradientMax1 = backgroundProps1?.max;
+  const gradientMax2 = backgroundProps2?.max;
 
   const CustomScatterPoint1 = useCallback(
     (props: any) => {
@@ -110,49 +133,45 @@ const TwoLineChart = (props: LineChartProps) => {
           parent: {
             marginLeft: -20,
           },
-          background: backgroundProps1 && { fill: colors.primary, opacity: '0.15' },
         }}
         domainPadding={{ x: 20 }}
-        backgroundComponent={
-          backgroundProps1 && (
-            <Background
-              y={HEIGHT - backgroundProps1.y - 85}
-              height={backgroundProps1.height}
-              style={{ fill: backgroundProps1.color, opacity: 0.15 }}
-            />
-          )
-
-        }
-      // backgroundComponent={
-      //   <>
-      //     {backgroundProps1 && (
-      //       <Background
-      //         y={HEIGHT - backgroundProps1.y - 85}
-      //         height={backgroundProps1.height}
-      //         style={{ fill: backgroundProps1.color, opacity: 0.15 }}
-      //       />
-      //     )}
-      //     {backgroundProps2 && (
-      //       <Background
-      //         y={HEIGHT - backgroundProps2.y - 85}
-      //         height={backgroundProps2.height}
-      //         style={{ fill: backgroundProps2.color, opacity: 0.15 }}
-      //       />
-      //     )}
-      //   </>
-      // }
       >
-
+        <Defs>
+          <LinearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <Stop offset="0%" stopColor={colors.orange_04} stopOpacity="0.5" />
+            <Stop offset="100%" stopColor={colors.orange_04} stopOpacity="0.5" />
+          </LinearGradient>
+          <LinearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <Stop offset="0%" stopColor={colors.orange_04} stopOpacity="0.5" />
+            <Stop offset="100%" stopColor={colors.orange_04} stopOpacity="0.5" />
+          </LinearGradient>
+        </Defs>
+        <VictoryArea
+          style={{
+            data: { fill: backgroundProps1?.color, opacity: 0.3 },
+          }}
+          data={[
+            { x: 0, y: gradientMax1, y0: gradientMin1 },
+            { x: data1.length + 1, y: gradientMax1, y0: gradientMin1 },
+          ]}
+          interpolation="step"
+        />
+        <VictoryArea
+          style={{
+            data: { fill: backgroundProps2?.color, opacity: 0.3 },
+          }}
+          data={[
+            { x: 0, y: gradientMax2, y0: gradientMin2 },
+            { x: data2.length + 1, y: gradientMax2, y0: gradientMin2 },
+          ]}
+          interpolation="step"
+        />
         <VictoryAxis
           crossAxis
           style={{
             axis: { stroke: colors.gray_G03 },
             tickLabels: {
-              fill: (fill: any) => {
-                return fill.index === data1?.length - 1
-                  ? colors.black
-                  : colors.gray_G05;
-              },
+              fill: colors.gray_G05,
               ...textLabel,
             },
           }}
@@ -170,20 +189,15 @@ const TwoLineChart = (props: LineChartProps) => {
             },
           }}
           tickValues={tickValues}
-          tickFormat={(tick) => (tick === 89 || tick === 139 ? tick?.toString() : '')}
+          tickFormat={(tick) => (tick === 89 || tick === 139 || tick === 129 || tick === 179 ? tick?.toString() : '')}
         />
-
         <VictoryLine
           style={{ data: { stroke: color1 } }}
-          width={2}
           data={data1}
-          labelComponent={<CustomLabelComponent />}
         />
         <VictoryLine
           style={{ data: { stroke: color2 } }}
-          width={2}
           data={data2}
-          labelComponent={<CustomLabelComponent />}
         />
         <VictoryScatter
           data={dataScatter1}
@@ -204,17 +218,18 @@ const TwoLineChart = (props: LineChartProps) => {
           textAnchor="middle"
           style={{ fill: colors.gray_G05, fontSize: 14, fontWeight: '400' }}
         />
-
       </VictoryChart>
-      {valueDescription1 !== null && <View>
-        <Text style={styles.textTitleMedium}>{textDescription}</Text>
-        <View style={styles.value}>
-          <Text style={styles.textValue}>{valueDescription1} {unitDescription}</Text>
+      {(valueDescription1 !== null) && detail && (
+        <View>
+          <Text style={styles.textTitleMedium}>{textDescription}</Text>
+          <View style={styles.value}>
+            <Text style={styles.textValue}>{valueDescription1} {unitDescription}</Text>
+          </View>
+          <View style={styles.value}>
+            <Text style={styles.textValue}>{valueDescription2} {unitDescription}</Text>
+          </View>
         </View>
-        <View style={styles.value}>
-          <Text style={styles.textValue}>{valueDescription2} {unitDescription}</Text>
-        </View>
-      </View>}
+      )}
     </View>
   );
 };
@@ -269,12 +284,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   textTitle: {
-    fontWeight: "700",
+    fontWeight: '700',
     fontSize: 18,
     color: colors.gray_G08
   },
   textTitleMedium: {
-    fontWeight: "500",
+    fontWeight: '500',
     fontSize: 16,
     color: colors.gray_G07,
     paddingLeft: 10,
@@ -288,10 +303,10 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   textValue: {
-    fontWeight: "700",
+    fontWeight: '700',
     fontSize: 18,
     color: colors.gray_G09,
-    textAlign: "center",
+    textAlign: 'center',
   },
   infoColor: {
     height: 20,
@@ -301,7 +316,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   textColorInfo: {
-    fontWeight: "400",
+    fontWeight: '400',
     fontSize: 14,
     color: colors.gray_G06
   }

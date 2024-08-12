@@ -143,7 +143,7 @@ const FoodIntakeRecord = ({ route }: any) => {
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                         <View style={[flexRow, { flexWrap: 'wrap' }]}>
                             <Text style={styles.text}>{t("planManagement.text.today")}</Text>
-                            <Text style={[styles.text, { color: colors.orange_04 }]}>{boldOfRice}{" "}{t("planManagement.text.disk")}(s){" "}</Text>
+                            <Text style={[styles.text, { color: colors.orange_04 }]}>{boldOfRice}{" "}{t("planManagement.text.disk")}{" "}</Text>
                             <Text style={styles.text}>{t("planManagement.text.vegetable")}.</Text>
                         </View>
                         <View style={[flexRowSpaceBetween, { width: '100%', marginTop: 10 }]}>
@@ -211,14 +211,14 @@ const FoodIntakeRecord = ({ route }: any) => {
                     </View>
                     : <View style={[flexCenter, { marginTop: 100 }]}>
                         <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                        <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                        <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                        <Text style={styles.textTitle}>{t('recordHealthData.recordFound')}</Text>
+                        <Text style={styles.textDesc}>{t('recordHealthData.comeback')}</Text>
                         <Pressable
                             onPress={() => {
                                 navigation.navigate(SCREENS_NAME.RECORD_HEALTH_DATA.FOOD_INTAKE_CHART, { isEditable: false });
                             }}
                             style={styles.buttonChart}>
-                            <Text style={styles.textButtonChart}>{t('recordHealthData.enterRecord')}</Text>
+                            <Text style={styles.textButtonChart}>{t('recordHealthData.viewChart')}</Text>
                         </Pressable>
                     </View>
                 }

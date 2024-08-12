@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, Image, ImageSourcePropType, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SCREENS_NAME } from '../../navigator/const';
@@ -19,6 +19,7 @@ type ItemType = {
 type ItemTypeChild = {
     id: number;
     name: string,
+    img: string;
 };
 
 const RegisterStep4 = ({ route }: any) => {
@@ -67,14 +68,15 @@ const RegisterStep4 = ({ route }: any) => {
                     </View>
                     <Text style={styles.textField}>{dataMedical[4].type}</Text>
                     <View style={[flexRowSpaceBetween, { flexWrap: 'wrap' }]}>
-                        {dataMedical && dataMedical.slice(4).map((item: ItemType) => {
+                        {dataMedical && dataMedical?.slice(4).map((item: ItemType) => {
                             return item.data.map((itemChild: ItemTypeChild) => {
+                                console.log("12", itemChild)
                                 const isSelected = selectedItems?.includes(itemChild.id);
                                 return (
                                     <Pressable key={itemChild.id} style={styles.box} onPress={() => handleSelectItem(itemChild.id, !isSelected)}>
                                         <View style={[flexRowCenter, styles.boxItem, { borderColor: isSelected ? colors.primary : colors.gray, flexDirection: 'column' }]}>
-                                            <Image source={IMAGE.REGISTER.BRAIN} />
-                                            <Text style={[styles.nameItemBox, { color: isSelected ? colors.primary : colors.gray }]}>{itemChild.name}</Text>
+                                            <Image style={{ width: 25, height: 25 }} source={{ uri: itemChild.img }} />
+                                            <Text style={[styles.nameItemBox, { color: isSelected ? colors.primary : colors.gray, textAlign: 'center' }]}>{itemChild.name}</Text>
                                         </View>
                                     </Pressable>
                                 );
@@ -83,7 +85,7 @@ const RegisterStep4 = ({ route }: any) => {
                     </View>
                     <View style={{ marginBottom: 20 }}>
                         <Text style={styles.textField}>{dataMedical[0].type}</Text>
-                        {dataMedical && dataMedical.slice(0, 1).map((item: ItemType) => {
+                        {dataMedical && dataMedical?.slice(0, 1).map((item: ItemType) => {
                             return item.data.map((itemChild) => {
                                 const isSelected = selectedItems?.includes(itemChild.id);
                                 return (

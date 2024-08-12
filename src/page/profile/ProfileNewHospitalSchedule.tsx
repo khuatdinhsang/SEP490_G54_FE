@@ -68,7 +68,7 @@ const ProfileNewHospitalSchedule = () => {
   //   setIsValidDate(isValid);
   // }, [year, month, day]);
   useEffect(() => {
-    setDate(`${year}-${padNumber(month)}-${day}`)
+    setDate(`${year}-${padNumber(month)}-${padNumber(day)}`)
     const localDate = new Date(Date.UTC(year, month - 1, day));
     setCheckDate(localDate);
   }, [day, month, year]);
@@ -110,7 +110,6 @@ const ProfileNewHospitalSchedule = () => {
       date,
       type: typeMakeHospitalSchedule
     }
-
     try {
       const res = await medicalAppointmentService.create(transformData)
       if (res.code === 201) {

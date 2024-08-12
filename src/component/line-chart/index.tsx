@@ -26,6 +26,10 @@ interface LineChartProps {
   labelElement: string;
   textInfo?: string;
   tickValues: number[];
+  note1?: { text: string, des: string }
+  note2?: { text: string, des: string }
+  note3?: { text: string, des: string },
+  lang?: string
 }
 
 const getGradientColors = () => {
@@ -37,7 +41,7 @@ const getGradientColors = () => {
 
 const LineChart = (props: LineChartProps) => {
   const HEIGHT = 250;
-  const { data, backgroundProps, tickValues, textTitleMedium, valueMedium, textInfo, icon, textTitle, textTitleToday, labelElement, valueToday, unit } = props;
+  const { data, lang, note1, note2, note3, backgroundProps, tickValues, textTitleMedium, valueMedium, textInfo, icon, textTitle, textTitleToday, labelElement, valueToday, unit } = props;
 
   // Define the range for the gradient
   const gradientMin = backgroundProps?.min;
@@ -85,6 +89,20 @@ const LineChart = (props: LineChartProps) => {
           <Text style={styles.textColorInfo}>{textInfo}</Text>
         </View>
       )}
+      {note1 && note2 && note3 && lang === 'en' && <View>
+        <View style={[styles.legendItem, { marginRight: 10 }]}>
+          <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+          <Text style={styles.textDes}>{note1.text}{" "}:{" "}{note1.des}</Text>
+        </View>
+        <View style={[styles.legendItem, { marginRight: 10 }]}>
+          <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+          <Text style={styles.textDes}>{note2.text}{" "}:{" "}{note2.des}</Text>
+        </View>
+        <View style={[styles.legendItem, { marginRight: 10 }]}>
+          <View style={[styles.des, { backgroundColor: colors.gray_G03 }]} />
+          <Text style={styles.textDes}>{note3.text}{" "}:{" "}{note3.des}</Text>
+        </View>
+      </View>}
       <VictoryChart
         height={HEIGHT}
         style={{
@@ -106,18 +124,17 @@ const LineChart = (props: LineChartProps) => {
         }
       >
         {/* Area representing the gradient from min to max */}
-        <VictoryArea
+        {backgroundProps && <VictoryArea
           style={{
             data: { fill: backgroundProps?.color, opacity: 0.3 },
           }}
           data={[
             { x: 0, y: gradientMax, y0: gradientMin },
-            { x: 0, y: gradientMax, y0: gradientMin },
-            { x: data.length, y: gradientMax, y0: gradientMin },
-            { x: data.length, y: gradientMax, y0: gradientMin }
+            { x: data.length + 1, y: gradientMax, y0: gradientMin },
           ]}
           interpolation="step"
         />
+        }
         <VictoryAxis
           crossAxis
           style={{
@@ -274,7 +291,22 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 14,
     color: colors.gray_G06
-  }
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  des: {
+    height: 8,
+    width: 8,
+    borderRadius: 4,
+    marginRight: 5,
+  },
+  textDes: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: colors.gray_G08,
+  },
 });
 
 export default LineChart;

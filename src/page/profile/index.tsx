@@ -221,7 +221,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: paddingHorizontalScreen * 2,
-    paddingBottom: 20, // Ensure bottom padding for scroll view
+    paddingBottom: 20,
   },
   scrollView: {
     flex: 1,
@@ -248,7 +248,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     flexWrap: 'wrap',
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   nameSection: {
     fontWeight: '400',
@@ -262,7 +263,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: colors.black,
-    textAlign: 'center',
   },
   divide: {
     height: 8,

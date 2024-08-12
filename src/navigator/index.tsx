@@ -57,7 +57,6 @@ const Navigator: React.FC = () => {
   if (isLoading) {
     return <LoadingScreen />;
   }
-
   return (
     <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
       {SCREENS_STACK.map(screen => (

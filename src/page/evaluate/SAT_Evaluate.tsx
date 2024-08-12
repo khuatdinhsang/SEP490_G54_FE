@@ -32,7 +32,6 @@ const SAT_Evaluate = ({ route }: any) => {
     const [chartFour, setChartFour] = useState<TransformedData[]>([])
     const [chartFive, setChartFive] = useState<TransformedData[]>([])
     const [lang, setLang] = useState<string>("")
-    console.log("35", chartFive)
     const goBackPreviousPage = () => {
         navigation.goBack();
     };
@@ -46,6 +45,7 @@ const SAT_Evaluate = ({ route }: any) => {
             setLang(langAys)
             const res = await monthlyQuestionService.getChartSAT(time)
             if (res.code === 200) {
+                console.log("3", res.result)
                 setErrorMessage("");
                 setIsLoading(false)
                 setChartOne(convertToChart1SAT(res.result, t, langAys))
@@ -83,6 +83,7 @@ const SAT_Evaluate = ({ route }: any) => {
         }
         return text
     }
+    console.log("1", chartOne)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>

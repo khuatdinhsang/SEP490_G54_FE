@@ -46,6 +46,7 @@ const SF_Evaluate = ({ route }: any) => {
             setLang(langAys)
             const res = await monthlyQuestionService.getChartSF(time)
             if (res.code === 200) {
+                console.log("3", res.result)
                 setErrorMessage("");
                 setIsLoading(false)
                 setChartOne(convertToChart1SF(res.result, t, langAys))

@@ -163,7 +163,7 @@ const PositiveMind: React.FC = () => {
                             <View style={[flexRowCenter, { marginBottom: 20 }]}>
                                 <View style={styles.chooseThree}>
                                     <Text style={styles.textChooseThree}>
-                                        {t('planManagement.text.bottom')}
+                                        {t('planManagement.text.bottom')}{" "}
                                         <Text style={styles.highlight}>
                                             {t('planManagement.text.three')}{' '}
                                         </Text>
