@@ -18,7 +18,7 @@ const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
   const backgroundColor = isActive ? colors.orange_01 : 'transparent';
   const color = isActive ? colors.primary : colors.gray_G05;
   const borderColor = isActive ? colors.primary : colors.gray_G03;
-
+  const text = type === TypeMakeHospitalSchedule.DIAGNOSIS ? t("hospital.diagnosis") : t("hospital.healthCheck")
   return (
     <Pressable
       style={[
@@ -38,7 +38,7 @@ const HospitalTypeComponent = (props: HospitalTypeComponentProps) => {
         }
       />
       <View style={{ marginVertical: 5 }} />
-      <Text style={[styles.textType, { color }]}>{t("hospital.diagnosis")}</Text>
+      <Text style={[styles.textType, { color }]}>{text}</Text>
     </Pressable>
   );
 };

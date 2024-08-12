@@ -30,16 +30,21 @@ const WeightChart = ({ route }: any) => {
     const [dataChart, setDataChart] = useState<valueWeight[]>([]);
     const [mediumData, setMediumData] = useState<number>(0);
     const [dataToday, setDataToday] = useState<number>(0);
+    const [maxWeight, setMaxWeight] = useState<number>(0)
+    const [minWeight, setMinWeight] = useState<number>(0)
     useEffect(() => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
                 const resData = await chartService.getDataWeight();
+                console.log("r", resData)
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setDataChart(resData.result.weightResponseList);
                     setMediumData(resData.result.avgValue);
                     setDataToday(resData.result.valueToday)
+                    setMaxWeight(resData.result.maxSafeWeight)
+                    setMinWeight(resData.result.minSafeWeight)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -103,8 +108,8 @@ const WeightChart = ({ route }: any) => {
                                 // chua xets theo figma
                                 backgroundProps={{
                                     color: colors.primary,
-                                    height: 40,
-                                    y: 70,
+                                    min: minWeight,
+                                    max: maxWeight,
                                 }}
                             />
                         </View>

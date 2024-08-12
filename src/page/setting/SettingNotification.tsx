@@ -2,7 +2,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import ButtonComponent from '../../component/button';
 import DialogSingleComponent from '../../component/dialog-single';
 import HeaderNavigatorComponent from '../../component/header-navigator';
@@ -187,58 +187,59 @@ const SettingNotification = () => {
           navigation.goBack();
         }}
       />
-      <View style={{ marginTop: 30 }} />
-      <View style={{ flex: 1 }}>
-        <SwitchComponent
-          text={t("setting.puNotification")}
-          value={notificationAllowed}
-          onChangeValue={toggleMainSwitch}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.usageNotification")}
-          value={notificationUseApp}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationUseApp, value)}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.healthCheckUp")}
-          value={notificationScheduleHealthCheck}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationScheduleHealthCheck, value)}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.actionPlan")}
-          value={notificationPlanManagement}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationPlanManagement, value)}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.monthLyEvaluation")}
-          value={notificationReviewMonthly}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewMonthly, value)}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.weeklyEvaluation")}
-          value={notificationReviewWeekly}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewWeekly, value)}
-          style={styles.switch}
-        />
-        <SwitchComponent
-          text={t("setting.contactUs")}
-          value={notificationQA}
-          onChangeValue={(value) => toggleIndividualSwitch(setNotificationQA, value)}
-          style={styles.switch}
-        />
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ flex: 1 }}>
+          <SwitchComponent
+            text={t("setting.puNotification")}
+            value={notificationAllowed}
+            onChangeValue={toggleMainSwitch}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.usageNotification")}
+            value={notificationUseApp}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationUseApp, value)}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.healthCheckUp")}
+            value={notificationScheduleHealthCheck}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationScheduleHealthCheck, value)}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.actionPlan")}
+            value={notificationPlanManagement}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationPlanManagement, value)}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.monthLyEvaluation")}
+            value={notificationReviewMonthly}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewMonthly, value)}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.weeklyEvaluation")}
+            value={notificationReviewWeekly}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationReviewWeekly, value)}
+            style={styles.switch}
+          />
+          <SwitchComponent
+            text={t("setting.contactUs")}
+            value={notificationQA}
+            onChangeValue={(value) => toggleIndividualSwitch(setNotificationQA, value)}
+            style={styles.switch}
+          />
+        </View>
+      </ScrollView>
       <ButtonComponent text={t("common.text.confirm")} handleClick={handleOnPressButton} />
       <DialogSingleComponent
         isOverlay={true}
         isActive={isShowDialog}
         handleClickButton={handleClickDialog}
-        title={t("common.text.passwordChanged")}
-        content={t("common.text.useChangedPassword")}
+        title={t("setting.passwordChanged")}
+        content={t("setting.useChangedPassword")}
         imageSource={IMAGE.ICON_CHECK_COLOR}
         buttonText={t("common.text.confirm")}
       />

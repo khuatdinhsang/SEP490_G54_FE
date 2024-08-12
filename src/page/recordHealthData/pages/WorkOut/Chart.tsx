@@ -13,7 +13,8 @@ import { chartService } from '../../../../services/charts';
 import LoadingScreen from '../../../../component/loading';
 import LineChart from '../../../../component/line-chart';
 import { valueActivity, valueSteps } from '../../../../constant/type/chart';
-import { convertMinutesToHours, transformDataToChartActivity } from '../../../../util';
+import { convertMinutesToHours, getType, setType, transformDataToChartActivity } from '../../../../util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WorkOutChart = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -23,6 +24,7 @@ const WorkOutChart = ({ route }: any) => {
     const [dataChart, setDataChart] = useState<valueActivity[]>([])
     const [dataToday, setDataToday] = useState<number>(0)
     const isEditable = route?.params?.isEditable;
+    const [lang, setLang] = useState<string>("")
     const goBackPreviousPage = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.MAIN);
     }
@@ -34,12 +36,14 @@ const WorkOutChart = ({ route }: any) => {
         const getDataChart = async (): Promise<void> => {
             setIsLoading(true);
             try {
+                const langAys = await AsyncStorage.getItem("language") ?? "en"
+                setLang(langAys)
                 const resData = await chartService.getDataActivity();
                 if (resData.code === 200) {
                     setIsLoading(false);
                     setDataChart(resData.result.activityResponseList)
                     setDataToday(resData.result.durationToday)
-                    setTypeToday(resData.result.typeToDay)
+                    setTypeToday(resData.result.typeToDay ?? 0)
                 } else {
                     setMessageError("Unexpected error occurred.");
                 }
@@ -92,12 +96,16 @@ const WorkOutChart = ({ route }: any) => {
                             <LineChart
                                 icon={IMAGE.PLAN_MANAGEMENT.HUMAN}
                                 textTitleMedium={t("evaluate.resultActivityToday")}
-                                unit={t("common.text.minutes")}
-                                valueMedium={` ${typeToday}/${convertMinutesToHours(dataToday)?.toString()}`}
-                                labelElement={t("common.text.minutes")}
-                                textTitle={t("evaluate.chartMedicine")}
-                                data={transformDataToChartActivity(dataChart)}
+                                unit={t("common.text.hours")}
+                                valueMedium={`${setType(getType(typeToday, lang), lang)}/${convertMinutesToHours(dataToday)?.toString()}`}
+                                labelElement={t("common.text.hours")}
+                                textTitle={t("evaluate.chartActivity")}
+                                data={transformDataToChartActivity(dataChart, lang)}
                                 tickValues={tickValues}
+                                note1={{ text: "LIGHT", des: "L" }}
+                                note2={{ text: "MEDIUM", des: "M" }}
+                                note3={{ text: "HEAVY", des: "H" }}
+                                lang={lang}
                             />
                         </View>
                         :

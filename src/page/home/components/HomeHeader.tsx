@@ -55,7 +55,7 @@ const HomeHeader = ({ guide, visible, handleShowSidebar, name }: HomeHeaderProps
         <View style={styles.section}>
           <Text style={styles.sectionTextTop}>{t("home.wordsEncouragement")}</Text>
           <Text style={styles.sectionTextBottom}>
-            {name}{'\n'}{t("home.today")}{' '}
+            {name},{'\n'}{t("home.today")}{' '}
             <Text style={{ color: colors.primary }}>{t("home.forHealthCare")}</Text>
             {t("home.tryYourBest")} 💪
           </Text>
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   section: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 20,
     backgroundColor: colors.white,
     borderRadius: 16,

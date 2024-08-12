@@ -16,6 +16,7 @@ import { extractDayAndMonth, getMondayOfCurrentWeek, transformDataToChartHBA1C }
 import LoadingScreen from '../../../../component/loading';
 import { BloodSugarDetails, valueBloodSugar, valueCardinal } from '../../../../constant/type/chart';
 import { TypeTimeMeasure } from '../../contant';
+import TwoLineChart from '../../../../component/twoLine-chart';
 
 interface dataTypes {
     x: string,
@@ -132,15 +133,14 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={transformDataToChartHBA1C(dataChartHBA1C, "%")}
                                     tickValues={[0, 2, 4, 6, 8, 10]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 35,//chưa biết đang fix theo figma
-                                        y: 70,
+                                        min: 4.5,
+                                        max: 6.5
                                     }}
                                 />
                             </View>
-                            <View style={{ marginTop: 20 }}>
+                            <View style={{ marginTop: 20, marginBottom: 20 }}>
                                 <LineChart
                                     icon={IMAGE.RECORD_DATA.BLOOD}
                                     textTitle={t("evaluate.chartCholesterol")}
@@ -151,15 +151,38 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={transformDataToChartHBA1C(dataChartCholesterol, "mg/DL")}
                                     tickValues={[100, 150, 200, 250, 300]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 60,//chưa biết đang fix theo figma
-                                        y: 23,
+                                        min: 0,
+                                        max: 200
                                     }}
                                 />
                             </View>
-                            <View style={{ marginTop: 20 }}>
+                            <TwoLineChart
+                                icon={IMAGE.RECORD_DATA.BLOOD}
+                                labelElement="%"
+                                textTitle={t("evaluate.chartBloodSugar")}
+                                textInfoColor1={t("evaluate.safeBeforeMeal")}
+                                textInfoColor2={t("evaluate.safeAfterMeal")}
+                                detail={false}
+                                data1={beforeEat}
+                                data2={afterEat}
+                                color1={colors.green}
+                                color2={colors.orange_04}
+                                tickValues={[0, 129, 159, 179, 199]}
+                                unitDescription="mg/DL"
+                                backgroundProps1={{
+                                    color: colors.green,
+                                    min: 70,
+                                    max: 99,
+                                }}
+                                backgroundProps2={{
+                                    color: colors.orange_04,
+                                    min: 70,
+                                    max: 140,
+                                }}
+                            />
+                            {/* <View style={{ marginTop: 20 }}>
                                 <LineChart
                                     icon={IMAGE.RECORD_DATA.BLOOD}
                                     textTitle={t("evaluate.chartBloodSugar")}
@@ -170,11 +193,10 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={beforeEat}
                                     tickValues={[0, 129, 179, 229]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 20,//chưa biết đang fix theo figma
-                                        y: 80,
+                                        min: 120,//chưa biết đang fix theo figma
+                                        max: 140,
                                     }}
                                 />
                             </View>
@@ -189,31 +211,33 @@ const NumericalRecordChart = ({ route }: any) => {
                                     labelElement="%"
                                     data={afterEat}
                                     tickValues={[0, 129, 179, 229]}
-                                    // chưa xét
                                     backgroundProps={{
                                         color: colors.primary,
-                                        height: 30,//chưa biết đang fix theo figma
-                                        y: 65,
+                                        min: 140,//chưa biết đang fix theo figma
+                                        max: 160,
                                     }}
                                 />
-                            </View>
-                            <Text style={[styles.textTitleMedium, { marginTop: 20 }]}>{t("evaluate.bloodSugarToday")}</Text>
+                            </View> */}
+                            {detailBloodSugar && <Text style={[styles.textTitleMedium, { marginTop: 20 }]}>{t("evaluate.bloodSugarToday")}</Text>}
                             {(detailBloodSugar?.MORNING?.length ?? 0) > 0 &&
-                                <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
-                                    <Text style={{
-                                        fontWeight: "500", fontSize: 16,
-                                        color: colors.gray_G06,
-                                        width: "20%"
-                                    }}>
-                                        {t("evaluate.morning").charAt(0).toUpperCase() + t("evaluate.morning").slice(1)}
-                                    </Text>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_BREAKFAST ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.afterBreakfast")}</Text>
-                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[0]?.data}mg/DL</Text>
-                                    </View>
-                                    <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[1]?.typeTimeMeasure === TypeTimeMeasure.BEFORE_BREAKFAST ? 1 : 0 }]}>
-                                        <Text style={styles.textBloodDetail}>{t("recordHealthData.beforeBreakfast")}</Text>
-                                        <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[1]?.data}mg/DL</Text>
+                                <View>
+
+                                    <View style={[flexRowSpaceAround, { alignItems: 'center', marginTop: 20 }]}>
+                                        <Text style={{
+                                            fontWeight: "500", fontSize: 16,
+                                            color: colors.gray_G06,
+                                            width: "20%"
+                                        }}>
+                                            {t("evaluate.morning").charAt(0).toUpperCase() + t("evaluate.morning")?.slice(1)}
+                                        </Text>
+                                        <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_BREAKFAST ? 1 : 0 }]}>
+                                            <Text style={styles.textBloodDetail}>{t("recordHealthData.afterBreakfast")}</Text>
+                                            <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[0]?.data}mg/DL</Text>
+                                        </View>
+                                        <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.MORNING[1]?.typeTimeMeasure === TypeTimeMeasure.BEFORE_BREAKFAST ? 1 : 0 }]}>
+                                            <Text style={styles.textBloodDetail}>{t("recordHealthData.beforeBreakfast")}</Text>
+                                            <Text style={styles.textBloodDetail}>{detailBloodSugar?.MORNING[1]?.data}mg/DL</Text>
+                                        </View>
                                     </View>
                                 </View>
                             }
@@ -224,7 +248,7 @@ const NumericalRecordChart = ({ route }: any) => {
                                         color: colors.gray_G06,
                                         width: "20%"
                                     }}>
-                                        {t("evaluate.lunch").charAt(0).toUpperCase() + t("evaluate.lunch").slice(1)}
+                                        {t("evaluate.lunch").charAt(0).toUpperCase() + t("evaluate.lunch")?.slice(1)}
                                     </Text>
                                     <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.LUNCH[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_LUNCH ? 1 : 0 }]}>
                                         <Text style={styles.textBloodDetail}>{t("recordHealthData.afterLunch")}</Text>
@@ -243,7 +267,7 @@ const NumericalRecordChart = ({ route }: any) => {
                                         color: colors.gray_G06,
                                         width: "20%"
                                     }}>
-                                        {t("evaluate.dinner").charAt(0).toUpperCase() + t("evaluate.dinner").slice(1)}
+                                        {t("evaluate.dinner").charAt(0).toUpperCase() + t("evaluate.dinner")?.slice(1)}
                                     </Text>
                                     <View style={[flexCenter, styles.bloodDetail, { opacity: detailBloodSugar?.DINNER[0]?.typeTimeMeasure === TypeTimeMeasure.AFTER_DINNER ? 1 : 0 }]}>
                                         <Text style={styles.textBloodDetail}>{t("recordHealthData.afterDinner")}</Text>

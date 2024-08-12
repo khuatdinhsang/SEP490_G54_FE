@@ -6,7 +6,8 @@ export interface HistoryMedicalResponse {
     id: number;
     name: string;
     type: string,
-    deleted: boolean
+    deleted: boolean,
+    imageUrl: string
 }
 export interface medicalAppointmentData {
     location: string,

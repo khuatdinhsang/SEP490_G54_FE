@@ -83,32 +83,32 @@ const AddQuestion = () => {
                 >
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
                         <View style={{ flex: 1 }}>
-                            <ScrollView contentContainerStyle={styles.scrollView}>
-                                <View style={styles.header}>
-                                    <HeaderNavigatorComponent
-                                        isIconLeft={true}
-                                        textRight={t("common.text.next")}
-                                        text={t('questionManagement.makeQuestion')}
-                                        handleClickArrowLeft={goBackPreviousPage}
-                                    />
-                                </View>
-                                <View style={[flexRow, { backgroundColor: colors.white }]}>
-                                    <Pressable
-                                        onPress={navigateQuestion}
-                                        style={[styles.navigate, styles.active]}>
-                                        <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
-                                            {t('questionManagement.contactUs')}
-                                        </Text>
-                                    </Pressable>
-                                    <Pressable
-                                        onPress={navigateRegularQuestion}
-                                        style={styles.navigate}>
-                                        <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
-                                            {t('questionManagement.regularQuestion')}
-                                        </Text>
-                                    </Pressable>
-                                </View>
+                            <View style={styles.header}>
+                                <HeaderNavigatorComponent
+                                    isIconLeft={true}
+                                    textRight={t("common.text.next")}
+                                    text={t('questionManagement.makeQuestion')}
+                                    handleClickArrowLeft={goBackPreviousPage}
+                                />
+                            </View>
+                            <View style={[flexRow, { backgroundColor: colors.white }]}>
+                                <Pressable
+                                    onPress={navigateQuestion}
+                                    style={[styles.navigate, styles.active]}>
+                                    <Text style={[styles.textNavigate, { color: colors.gray_G10 }]}>
+                                        {t('questionManagement.contactUs')}
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={navigateRegularQuestion}
+                                    style={styles.navigate}>
+                                    <Text style={[styles.textNavigate, { color: colors.gray_G04 }]}>
+                                        {t('questionManagement.regularQuestion')}
+                                    </Text>
+                                </Pressable>
+                            </View>
 
+                            <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
                                 <View style={{ flex: 1, paddingTop: 20, paddingHorizontal: 20, }}>
                                     <Text style={{ fontWeight: "500", fontSize: 18, color: colors.black, marginBottom: 10 }}>{t('questionManagement.typeQuestion')}</Text>
                                     <View style={[flexRowSpaceBetween, { width: '100%', marginBottom: 20 }]}>

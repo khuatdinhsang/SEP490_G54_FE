@@ -37,7 +37,7 @@ const MonthComponent = (props: MonthLyComponentProps) => {
                 {data.monthNumber === 0 ?
                     <Text style={styles.textTime}>{t("lesson.week1")}</Text>
                     :
-                    <Text style={styles.textTime}>{data.monthNumber}{t("evaluate.monthlyEvaluate")}</Text>
+                    <Text style={styles.textTime}>#{data.monthNumber}{" "}{t("evaluate.monthlyEvaluate")}</Text>
                 }
             </View>
             <View style={flexRow}>

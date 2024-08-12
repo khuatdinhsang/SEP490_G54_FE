@@ -79,6 +79,7 @@ import FoodInTakeChart from '../page/recordHealthData/pages/FoodIntake/Chart';
 import Week1Day6 from '../page/informationHealth/stack/week1/day6';
 import Week1Day7 from '../page/informationHealth/stack/week1/day7';
 import MissionStatement from '../page/profile/MissionStatement';
+import RegisterRulesDetail from '../page/register/RegisterRulesDetail';
 export const SCREENS_NAME = {
   LOGIN: {
     MAIN: 'Main Login',
@@ -90,6 +91,7 @@ export const SCREENS_NAME = {
     STEP4: 'Register Step 4',
     RULES: 'Register Rules',
     SUCCESS: 'Register Success',
+    RULES_DETAIL: 'Register Rules detail'
   },
   HOME: {
     MAIN: 'Main Home',
@@ -215,6 +217,10 @@ const SCREENS_STACK_REGISTER = [
   {
     name: SCREENS_NAME.REGISTER.SUCCESS,
     component: RegisterSuccess,
+  },
+  {
+    name: SCREENS_NAME.REGISTER.RULES_DETAIL,
+    component: RegisterRulesDetail,
   },
 ];
 const SCREENS_STACK_HOME = [

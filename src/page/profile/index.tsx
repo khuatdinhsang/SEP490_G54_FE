@@ -17,6 +17,8 @@ import { authService } from '../../services/auth';
 import LoadingScreen from '../../component/loading';
 import { lessonService } from '../../services/lesson';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../home/const';
 
 const Profile = () => {
   const { t } = useTranslation()
@@ -33,7 +35,9 @@ const Profile = () => {
   const fetchWeightAndHeight = async () => {
     setIsLoading(true);
     try {
-      const res = await authService.getHeightWeight();
+      const langAys = await AsyncStorage.getItem("language")
+      const lang = langAys === 'en' ? LANG.EN : LANG.KR
+      const res = await authService.getHeightWeight(lang);
       if (res.code === 200) {
         console.log("re", res.result)
         setHeight(res.result.height);
@@ -160,20 +164,20 @@ const Profile = () => {
             </View>
           )}
           <Text style={styles.labelSection}>{t("hospital.myBiometricData")}</Text>
-          <View style={[styles.sectionContainer, flexRowSpaceBetween]}>
-            <View style={flexCenter}>
+          <View style={styles.sectionContainer}>
+            <View style={{ display: 'flex', marginRight: 10 }}>
               <Text style={styles.nameSection}>{t("hospital.high")}</Text>
               <Text style={styles.valueSection}>{height}cm</Text>
             </View>
-            <View style={flexCenter}>
+            <View style={{ display: 'flex', marginRight: 10 }}>
               <Text style={styles.nameSection}>{t("hospital.weight")}</Text>
               <Text style={styles.valueSection}>{weight}kg</Text>
             </View>
-            <View style={flexCenter}>
+            <View style={{ display: 'flex', marginRight: 10 }}>
               <Text style={styles.nameSection}>{t("hospital.carcinoma")}</Text>
               <Text style={styles.valueSection}>{t("hospital.colonCancer")}</Text>
             </View>
-            <View style={flexCenter}>
+            <View style={{ display: 'flex' }}>
               <Text style={styles.nameSection}>{t("hospital.chronicDisease")}</Text>
               <Text style={styles.valueSection}>{medical}</Text>
             </View>
@@ -202,10 +206,6 @@ const Profile = () => {
               handleOnPress={handleMyHealthMissionStatement}
             />
             <CategoryComponent
-              text={t("hospital.clinicalSurvey")}
-              handleOnPress={handleClinicalSurvey}
-            />
-            <CategoryComponent
               text={t("hospital.makeAHospital")}
               handleOnPress={handleMakeHospitalSchedule}
             />
@@ -221,7 +221,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: paddingHorizontalScreen * 2,
-    paddingBottom: 20, // Ensure bottom padding for scroll view
+    paddingBottom: 20,
   },
   scrollView: {
     flex: 1,
@@ -246,6 +246,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 20,
     paddingHorizontal: 24,
+    flexWrap: 'wrap',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   nameSection: {
     fontWeight: '400',

@@ -90,21 +90,21 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t('evaluate.relatedDiabetes')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.hba1cPoint ?? 0)} />
-                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
+                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
                                 <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.hba1cTotalRecord} {t("evaluate.recordGlycated")}</Text>
                                 <Text style={styles.textDesc}>{data?.hba1cSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.cholesterolPoint ?? 0)} />
-                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
+                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
                                 <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.cholesterolTotalRecord}{t("evaluate.recordGlycated")}</Text>
                                 <Text style={styles.textDesc}>{data?.cholesterolSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodSugarPoint ?? 0)} />
-                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
+                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
                                 <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.bloodSugarTotalRecord}{t("evaluate.recordGlycated")}</Text>
                                 <Text style={styles.textDesc}>{data?.bloodSugarSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
@@ -114,7 +114,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t("common.diseases.highBloodEvl")}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodPressurePoint ?? 0)} />
-                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start' }]} >
+                            <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
                                 <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.totalBloodPressureRecord}{t("evaluate.recordGlycated")}</Text>
                                 <Text style={styles.textDesc}>{data?.safeBloodPressureRecord} {t("evaluate.withinControl")}</Text>
                             </View>
@@ -140,7 +140,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <Text style={styles.text}>{t('planManagement.text.workout')}</Text>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.activityPoint ?? 0)} />
-                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("evaluate.highIntensity")} {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0, t)} / {t("planManagement.text.mediumIntensity")} {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0, t)}/ {t("planManagement.text.lowIntensity")} {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0, t)}</Text>
+                            <Text style={[styles.textDesc, { flex: 1 }]}>{t("planManagement.text.highIntensity")} {convertMinutesToHoursAndMinutes(data?.heavyActivity ?? 0, t)} / {t("planManagement.text.mediumIntensity")} {convertMinutesToHoursAndMinutes(data?.mediumActivity ?? 0, t)}/ {t("planManagement.text.lowIntensity")} {convertMinutesToHoursAndMinutes(data?.lightActivity ?? 0, t)}</Text>
                         </View>
                         {data?.heavyActivity === 0 && data?.mediumActivity === 0 &&
                             <View>

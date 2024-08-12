@@ -2,6 +2,7 @@ import axios from 'axios';
 import { axiosClient, baseURL } from '../config/axiosClient';
 import { ResponseForm } from '../constant/type';
 import { LoginData, LoginResponse, RegisterData, RegisterResponse, VerifyEmailResponse, VerifyForgetPassword, changeLanguage, changePassword, heightWeightResponse, refreshTokenResponse } from '../constant/type/auth';
+import { LANG } from '../page/home/const';
 
 const endpoint = '/auth';
 
@@ -33,8 +34,8 @@ export const authService = {
     changePassword(data: changePassword): Promise<VerifyEmailResponse> {
         return axiosClient.put(`accounts/change-password`, data);
     },
-    getHeightWeight(): Promise<ResponseForm<heightWeightResponse>> {
-        return axiosClient.get(`app-user/mobile/get-height-weight`);
+    getHeightWeight(lang: LANG): Promise<ResponseForm<heightWeightResponse>> {
+        return axiosClient.get(`app-user/mobile/get-height-weight/${lang}`);
     },
     refreshToken(refreshToken: string, accessToken: string): Promise<any> {
         return axios.get(`${baseURL}${endpoint}/refresh-token/${refreshToken}`, {

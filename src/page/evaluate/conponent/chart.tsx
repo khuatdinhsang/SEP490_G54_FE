@@ -84,11 +84,11 @@ const wrapLabel = (text: string) => {
     return lines.join('\n');
 };
 
-const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues,
-    data }) => {
-    const filteredDataY1 = data.filter((d) => d.y1 !== 0);
-    const filteredDataY2 = data.filter((d) => d.y2 !== 0);
-    const { t } = useTranslation()
+const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues, data }) => {
+    // Filter data where both y1 and y2 are not zero
+    const filteredData = data.filter((d) => d.y1 !== 0 || d.y2 !== 0);
+    const { t } = useTranslation();
+
     return (
         <VictoryChart
             height={250}
@@ -143,26 +143,30 @@ const MonthlyChartEvaluate: React.FC<MonthlyChartProps> = ({ tickValues,
                 }}
             />
             <VictoryGroup offset={10}>
-                <VictoryBar
-                    data={filteredDataY1}
-                    x="x"
-                    y="y1"
-                    style={{ data: { fill: colors.gray_G03 } }}
-                    cornerRadius={{ top: 5, bottom: 5 }}
-                    barWidth={10}
-                />
-                <VictoryBar
-                    data={filteredDataY2}
-                    x="x"
-                    y="y2"
-                    style={{
-                        data: {
-                            fill: ({ datum }) => getColorForValue(datum.y2),
-                        },
-                    }}
-                    cornerRadius={{ top: 5, bottom: 5 }}
-                    barWidth={10}
-                />
+                {filteredData.some(d => d.y1 !== 0) && (
+                    <VictoryBar
+                        data={filteredData}
+                        x="x"
+                        y="y1"
+                        style={{ data: { fill: colors.gray_G03 } }}
+                        cornerRadius={{ top: 5, bottom: 5 }}
+                        barWidth={10}
+                    />
+                )}
+                {filteredData.some(d => d.y2 !== 0) && (
+                    <VictoryBar
+                        data={filteredData}
+                        x="x"
+                        y="y2"
+                        style={{
+                            data: {
+                                fill: ({ datum }) => getColorForValue(datum.y2),
+                            },
+                        }}
+                        cornerRadius={{ top: 5, bottom: 5 }}
+                        barWidth={10}
+                    />
+                )}
             </VictoryGroup>
         </VictoryChart>
     );

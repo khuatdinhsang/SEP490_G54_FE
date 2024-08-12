@@ -85,7 +85,7 @@ const BloodPressureChart = ({ route }: any) => {
     const navigateNumericalRecord = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.BLOOD_PRESSURE, { isEditable: isEditable })
     }
-    console.log("88", dataDiastoleChart)
+    console.log("88", diastoleToday)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -112,79 +112,47 @@ const BloodPressureChart = ({ route }: any) => {
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {
                     dataSystoleChart?.length > 0 || dataDiastoleChart?.length > 0 ?
-                        <View style={styles.chart}>
-                            {/* <TwoLineChart
+                        (<View style={styles.chart}>
+                            <TwoLineChart
                                 icon={IMAGE.RECORD_DATA.THERMOMETER}
                                 labelElement="%"
                                 textTitle={t("evaluate.chartBlood")}
                                 textInfoColor1={t("evaluate.minBlood")}
                                 textInfoColor2={t("evaluate.maxBlood")}
-                                data1={data1}
-                                data2={data2}
+                                data1={dataDiastoleChart}
+                                data2={dataSystoleChart}
                                 color1={colors.green}
                                 color2={colors.orange_04}
-                                tickValues={[0, 49, 89, 139, 179]}
+                                detail={true}
+                                tickValues={[0, 89, 139, 199]}
                                 textDescription={t("evaluate.valueBloodToday")}
                                 valueDescription1={diastoleToday}
                                 valueDescription2={systoleToday}
                                 unitDescription="mg/DL"
                                 backgroundProps1={{
                                     color: colors.green,
-                                    height: 30,
-                                    y: 40,
+                                    min: 60,
+                                    max: 80,
                                 }}
                                 backgroundProps2={{
                                     color: colors.orange_04,
-                                    height: 20,
-                                    y: 40,
-                                }}
-                            /> */}
-                            <LineChart
-                                icon={IMAGE.RECORD_DATA.THERMOMETER}
-                                textTitleToday={t("evaluate.systoleToday")}
-                                unit="mg/DL"
-                                valueToday={systoleToday?.toString()}
-                                labelElement="%"
-                                textTitle={t("evaluate.chartBlood")}
-                                data={dataSystoleChart}
-                                textInfo={t("evaluate.maxBlood")}
-                                tickValues={[0, 70, 100, 140, 200]}
-                                backgroundProps={{
-                                    color: colors.primary,
-                                    height: 32, //100 -140
-                                    y: 72,
+                                    min: 90,
+                                    max: 120,
                                 }}
                             />
-                            <View style={{ marginTop: 20 }}>
-                                <LineChart
-                                    icon={IMAGE.RECORD_DATA.THERMOMETER}
-                                    textTitleToday={t("evaluate.diastoleToday")}
-                                    textInfo={t("evaluate.minBlood")}
-                                    unit="mg/DL"
-                                    valueToday={diastoleToday?.toString()}
-                                    labelElement="%"
-                                    textTitle={t("evaluate.chartBlood")}
-                                    data={dataDiastoleChart}
-                                    tickValues={[0, 60, 90, 150]}
-                                    backgroundProps={{
-                                        color: colors.primary,
-                                        height: 33,//60-90
-                                        y: 55,
-                                    }}
-                                />
+                        </View>)
+                        : (
+                            <View style={{ height: HeightDevice, display: 'flex', alignItems: 'center', marginTop: 100 }}>
+                                <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
+                                <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
+                                <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
+                                <Pressable
+                                    onPress={navigateNumericalRecord}
+                                    style={styles.button}>
+                                    <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
+                                </Pressable>
                             </View>
-                        </View>
-                        :
-                        <View style={{ height: HeightDevice, display: 'flex', alignItems: 'center', marginTop: 100 }}>
-                            <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
-                            <Text style={styles.textTitle}>{t('recordHealthData.haven\'tEnteredAnyNumbers')}</Text>
-                            <Text style={styles.textDesc}>{t('recordHealthData.enterNumberFirst')}</Text>
-                            <Pressable
-                                onPress={navigateNumericalRecord}
-                                style={styles.button}>
-                                <Text style={styles.textButton}>{t('recordHealthData.enterRecord')}</Text>
-                            </Pressable>
-                        </View>
+                        )
                 }
                 {messageError && !isLoading && <Text style={styles.textError}>{messageError}</Text>}
             </ScrollView>

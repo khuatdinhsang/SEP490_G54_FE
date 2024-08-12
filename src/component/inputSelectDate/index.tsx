@@ -47,7 +47,7 @@ const SelectDate = (props: InputComponentProps) => {
             <Pressable onPress={toggleModalScroll}>
                 <View style={styles.itemDate}>
                     <Text style={styles.date}>{value}</Text>
-                    <Text style={[styles.textDate, { color: value !== undefined ? colors.black : colors.gray_G04 }]}>{text.slice(0, 1)}</Text>
+                    <Text style={[styles.textDate, { color: value !== undefined ? colors.black : colors.gray_G04 }]}>{text?.slice(0, 1)}</Text>
                 </View>
             </Pressable>
             {showScroll && (

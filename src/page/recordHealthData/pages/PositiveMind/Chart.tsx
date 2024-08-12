@@ -85,10 +85,10 @@ const PositiveMindChart = ({ route }: any) => {
                             <BarChart
                                 icon={IMAGE.PLAN_MANAGEMENT.HEART}
                                 textTitleMedium={t("evaluate.mediumMental")}
-                                unit={t("evaluate.step")}
+                                unit={t('recordHealthData.time')}
                                 valueMedium={`${mediumData?.toString()}/3`}
                                 textTitle={t("evaluate.chartMental")}
-                                data={transformDataToChartMental(dataChart, "점")}
+                                data={transformDataToChartMental(dataChart, t('recordHealthData.time'))}
                             />
                         </View>
                         :
