@@ -117,6 +117,7 @@ const WorkOut = () => {
             planDuration: Number(convertTime),
             weekStart: getMondayOfCurrentWeek()?.split("T")[0]
         }
+        console.log("120", dataSubmit)
         try {
             const res = await planService.postActivity(dataSubmit)
             if (res.code === 200) {
@@ -141,7 +142,7 @@ const WorkOut = () => {
     const goBackPreviousPage = () => {
         navigation.navigate(SCREENS_NAME.PLAN_MANAGEMENT.POSITIVE_MIND);
     };
-    const isNextButtonDisabled = !(minute || hour && selectedDays?.length > 0 && selectedItem);
+    const isNextButtonDisabled = !((minute || hour) && selectedDays?.length > 0 && selectedItem);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
