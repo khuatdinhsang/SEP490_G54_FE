@@ -13,6 +13,8 @@ import { getMondayOfCurrentWeek } from '../../../../util';
 import { planService } from '../../../../services/plan';
 import { IMAGE } from '../../../../constant/image';
 import { DateTime } from 'luxon';
+import RangeBlock from '../../../../component/range-block';
+import { chartService } from '../../../../services/charts';
 
 const Weight = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -21,8 +23,32 @@ const Weight = ({ route }: any) => {
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const isEditable = route?.params?.isEditable;
-    const [isEdit, setIsEdit] = useState<boolean>(isEditable)
-    const [errorWeight, setErrorWeight] = useState<string>("")
+    const [isEdit, setIsEdit] = useState<boolean>(isEditable);
+    const [errorWeight, setErrorWeight] = useState<string>("");
+    const [maxWeight, setMaxWeight] = useState<number>(0);
+    const [minWeight, setMinWeight] = useState<number>(0);
+    useEffect(() => {
+        const getDataChart = async (): Promise<void> => {
+            setIsLoading(true);
+            try {
+                const resData = await chartService.getDataWeight();
+                if (resData.code === 200) {
+                    setMaxWeight(Math.ceil(resData.result.maxSafeWeight));
+                    setMinWeight(Math.ceil(resData.result.minSafeWeight));
+                    console.log(38, Math.ceil(resData.result.maxSafeWeight))
+                    console.log(39, Math.ceil(resData.result.minSafeWeight))
+                } else {
+                    setMessageError("Unexpected error occurred.");
+                }
+            } catch (error: any) {
+                setMessageError(error?.response?.data?.message || "Unexpected error occurred.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getDataChart();
+    }, []);
+
     const handleViewChart = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
     };
@@ -32,32 +58,28 @@ const Weight = ({ route }: any) => {
     };
 
     const nextPage = async (): Promise<void> => {
-        if (Number(weight) > 200) {
-            setErrorWeight("Invalid value")
-            return
+        const numericWeight = Number(weight);
+        if (isNaN(numericWeight) || numericWeight > 200) {
+            setErrorWeight("Invalid value");
+            return;
         }
         setIsLoading(true);
         const dataSubmit = {
             weekStart: getMondayOfCurrentWeek()?.split("T")[0],
-            date: DateTime.local()?.toString()?.split("T")[0],
-            weight: Number(weight)
+            date: DateTime.local()?.toISODate(),
+            weight: numericWeight
         };
         try {
             const res = await planService.postWeight(dataSubmit);
             if (res.code === 201) {
-                setIsLoading(false);
-                setIsEdit(false)
-                setWeight("")
+                setIsEdit(false);
+                setWeight("");
                 navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: false });
             } else {
                 setMessageError("Unexpected error occurred.");
             }
         } catch (error: any) {
-            if (error?.response?.status === 400) {
-                setMessageError(error.response.data.message);
-            } else {
-                setMessageError("Unexpected error occurred.");
-            }
+            setMessageError(error?.response?.data?.message || "Unexpected error occurred.");
         } finally {
             setIsLoading(false);
         }
@@ -65,7 +87,7 @@ const Weight = ({ route }: any) => {
 
     const handleSetWeight = (value: string) => {
         const numericRegex = /^(\d*\.?\d*)$/;
-        if (numericRegex.test(value) && value?.length <= 4) {
+        if (numericRegex.test(value) && value.length <= 4) {
             setWeight(value);
         }
     };
@@ -95,25 +117,34 @@ const Weight = ({ route }: any) => {
                         </Text>
                     </Pressable>
                 </View>
-                {isEdit ?
+                {isEdit ? (
                     <View style={{ paddingHorizontal: 20, marginTop: 30 }}>
                         <Text style={styles.title}>{t('recordHealthData.enterWeight')}</Text>
-                        <View style={[flexRowCenter, styles.item]}>
-                            <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('recordHealthData.weight')}</Text>
-                            <View style={{ width: "50%", marginLeft: 20 }}>
-                                <InputNumber
-                                    textRight='kg'
-                                    value={weight}
-                                    keyboardType={"numeric"}
-                                    handleSetValue={handleSetWeight}
-                                    styleInput={{ paddingLeft: 50 }}
-                                    error={errorWeight}
-                                />
+                        <View style={styles.item}>
+                            <View style={flexRowCenter}>
+                                <Text style={[styles.title, { color: colors.gray_G09 }]}>{t('recordHealthData.weight')}</Text>
+                                <View style={{ width: "50%", marginLeft: 20 }}>
+                                    <InputNumber
+                                        textRight='kg'
+                                        value={weight}
+                                        keyboardType={"numeric"}
+                                        handleSetValue={handleSetWeight}
+                                        styleInput={{ paddingLeft: 50 }}
+                                        error={errorWeight}
+                                    />
+                                </View>
                             </View>
+                            <Text style={[styles.title, { marginTop: 20, paddingHorizontal: 20 }]}>BMI</Text>
+                            {minWeight > 0 && maxWeight > 0 && (
+                                <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
+                                    <RangeBlock value={Number(weight)} minValue={minWeight} maxValue={maxWeight} />
+                                </View>
+                            )}
                         </View>
                         {messageError && !isLoading && <Text style={[styles.title, { color: colors.red }]}>{messageError}</Text>}
                     </View>
-                    : <View style={[flexCenter, { marginTop: 100 }]}>
+                ) : (
+                    <View style={[flexCenter, { marginTop: 100 }]}>
                         <Image source={IMAGE.RECORD_DATA.ICON_FACE_SMILES} />
                         <Text style={styles.textTitle}>{t('recordHealthData.recordFound')}</Text>
                         <Text style={styles.textDesc}>{t('recordHealthData.comeback')}</Text>
@@ -125,11 +156,12 @@ const Weight = ({ route }: any) => {
                             <Text style={styles.textButtonChart}>{t('recordHealthData.viewChart')}</Text>
                         </Pressable>
                     </View>
-                }
+                )}
+
             </ScrollView>
             {isEdit && <View style={styles.buttonContainer}>
                 <Pressable
-                    disabled={weight ? false : true}
+                    disabled={!weight}
                     onPress={nextPage}
                     style={[flexCenter, styles.button, { backgroundColor: weight ? colors.primary : colors.gray_G02 }]}>
                     <Text style={[styles.textButton, { color: weight ? colors.white : colors.gray_G04 }]}>{t('recordHealthData.goToViewChart')}</Text>

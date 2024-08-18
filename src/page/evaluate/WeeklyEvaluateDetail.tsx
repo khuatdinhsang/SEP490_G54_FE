@@ -79,7 +79,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         }
                         <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1, justifyContent: 'center' }]}>
                             <Text style={styles.textDesc}>{renderTextTitle1WeeklyReview(data?.totalPoint ?? 0, t)}</Text>
-                            {data?.totalPoint !== undefined && data?.totalPoint >= 50 && <Text style={styles.textDesc}>{renderTextTitle2WeeklyReview(data?.totalPoint ?? 0, t)}</Text>}
+                            {data?.totalPoint !== undefined && data?.totalPoint > 0 && <Text style={styles.textDesc}>{renderTextTitle2WeeklyReview(data?.totalPoint ?? 0, t)}</Text>}
                         </View>
                     </View>
                     <View style={[flexRowSpaceBetween, { marginTop: 30 }]}>
@@ -98,14 +98,14 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.cholesterolPoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
-                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.cholesterolTotalRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.cholesterolTotalRecord} {t("evaluate.recordCholesterol")}</Text>
                                 <Text style={styles.textDesc}>{data?.cholesterolSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodSugarPoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
-                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.bloodSugarTotalRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.bloodSugarTotalRecord} {t("evaluate.recordGlucozer")}</Text>
                                 <Text style={styles.textDesc}>{data?.bloodSugarSafeRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>
@@ -115,7 +115,7 @@ const WeeklyEvaluateDetail = ({ route }: any) => {
                         <View style={[flexRow, { marginTop: 10 }]}>
                             <Image style={{ marginRight: 10 }} source={renderIconWeeklyReview(data?.bloodPressurePoint ?? 0)} />
                             <View style={[flexRow, { flexDirection: 'column', alignItems: 'flex-start', flex: 1 }]} >
-                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.totalBloodPressureRecord}{t("evaluate.recordGlycated")}</Text>
+                                <Text style={styles.textDesc}>{t("common.text.thisWeek")} {data?.totalBloodPressureRecord} {t("evaluate.recordBlood")}</Text>
                                 <Text style={styles.textDesc}>{data?.safeBloodPressureRecord} {t("evaluate.withinControl")}</Text>
                             </View>
                         </View>

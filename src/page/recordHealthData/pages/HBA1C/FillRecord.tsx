@@ -172,7 +172,7 @@ const FillRecord = ({ route }: any) => {
                                         keyboardType={"numeric"}
                                         handleSetValue={handleSetGlycemic}
                                         error={glycemicError}
-                                        styleInput={{ marginLeft: 10 }}
+                                        styleInput={{ marginLeft: -10 }}
                                     />
                                 </View>
                             </View>

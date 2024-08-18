@@ -301,11 +301,11 @@ export const renderTextTitle1WeeklyReview = (a: number, t: any): string => {
     return t("evaluate.useAppMore")
   }
   if (a < 50) {
-    return t("evaluate.useAppMore")
-  } else if (a >= 50 && a < 90) {
     return t("evaluate.disappointWeek")
-  } else if (a >= 90 && a < 100) {
+  } else if (a >= 50 && a < 90) {
     return t("evaluate.workedHard")
+  } else if (a >= 90 && a < 100) {
+    return t("evaluate.congratulation")
   } else if (a === 100) {
     return t("evaluate.congratulation")
   } else {
@@ -317,11 +317,11 @@ export const renderTextTitle2WeeklyReview = (a: number, t: any): string => {
     return ""
   }
   if (a < 50) {
-    return ""
-  } else if (a >= 50 && a < 90) {
     return t("evaluate.tryHarder")
-  } else if (a >= 90 && a < 100) {
+  } else if (a >= 50 && a < 90) {
     return t("evaluate.doBetter")
+  } else if (a >= 90 && a < 100) {
+    return t("evaluate.successfulWeek")
   } else if (a === 100) {
     return t("evaluate.successfulWeek")
   } else {
