@@ -86,7 +86,7 @@ const RegisterRules = ({ route }: any) => {
                             <Image tintColor={checked ? colors.primary : colors.gray} source={IMAGE.ICON_CHECK} />
                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={[styles.textfield, { color: colors.primary }]}>{t("common.text.force")}</Text>
-                                <Text style={styles.textfield}>{t("common.text.acceptTerms")}</Text>
+                                <Text style={styles.textfield}>{t("common.text.acceptTermsAndPolicies")}</Text>
                             </View>
                         </View>
                         <Pressable onPress={handleViewRules}>
