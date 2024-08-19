@@ -35,7 +35,7 @@ const Step2 = ({
           {t("lesson.strengthsAndWeakness")}
         </Text>
         <View style={{ marginTop: 24 }}>
-          <Text style={styles.label}>{t("lesson.intermediateGoal")}</Text>
+          <Text style={styles.label}>{t("lesson.labelStrength")}</Text>
           <TextInput
             value={advantage}
             style={[styles.input, { height: 120 }]}
@@ -48,13 +48,13 @@ const Step2 = ({
               setAdvantage(text);
             }}
             textAlignVertical='top'
-            placeholder={t("lesson.example1")}
+            placeholder={t("lesson.exStrength")}
             multiline={true}
             maxLength={200}
           />
           {errAdvantage && <Text style={styles.textError}>{errAdvantage}</Text>}
           <View style={{ marginTop: 20 }} />
-          <Text style={styles.label}>{t("lesson.oneYearLater")}</Text>
+          <Text style={styles.label}>{t("lesson.labelWeakness")}</Text>
           <TextInput
             style={[styles.input, { height: 120 }]}
             value={defect}
@@ -67,7 +67,7 @@ const Step2 = ({
               }
               setDefect(text);
             }}
-            placeholder={t("lesson.example2")}
+            placeholder={t("lesson.exWeakness")}
             multiline={true}
             maxLength={200}
           />

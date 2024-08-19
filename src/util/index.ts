@@ -264,9 +264,10 @@ export const transformDataToChartHBA1C = (
   });
 };
 export const extractDayAndMonth = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = date.getUTCDate();
-  const month = date.getUTCMonth() + 1;
+  console.log("267", dateString)
+  const date = dateString.split("T")[0]
+  const month = Number(date.split("-")[1]);
+  const day = Number(date.split("-")[2])
   return `${month}/${day}`;
 };
 export const formatDateRange = (dateString: string) => {

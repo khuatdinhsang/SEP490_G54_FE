@@ -186,7 +186,7 @@ const Profile = () => {
             lesson2?.weakness?.length > 0 &&
             (
               <View>
-                <Text style={styles.labelSection}>{t("hospital.healthStrategy")}/{t("hospital.weakness")}</Text>
+                <Text style={styles.labelSection}>{t("hospital.healthStrategy")}</Text>
                 <View style={styles.lesson2}>
                   <View style={flexRow}>
                     <Text style={[styles.textLesson, { color: colors.orange_04 }]}>{t("hospital.strength")}</Text>
