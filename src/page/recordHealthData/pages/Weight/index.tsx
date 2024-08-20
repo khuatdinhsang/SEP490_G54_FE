@@ -15,40 +15,46 @@ import { IMAGE } from '../../../../constant/image';
 import { DateTime } from 'luxon';
 import RangeBlock from '../../../../component/range-block';
 import { chartService } from '../../../../services/charts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LANG } from '../../../home/const';
+import { authService } from '../../../../services/auth';
 
 const Weight = ({ route }: any) => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const { t } = useTranslation();
     const [weight, setWeight] = useState<string>("");
+    const [height, setHeight] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(false);
     const [messageError, setMessageError] = useState<string>("");
     const isEditable = route?.params?.isEditable;
     const [isEdit, setIsEdit] = useState<boolean>(isEditable);
     const [errorWeight, setErrorWeight] = useState<string>("");
-    const [maxWeight, setMaxWeight] = useState<number>(0);
-    const [minWeight, setMinWeight] = useState<number>(0);
-    useEffect(() => {
-        const getDataChart = async (): Promise<void> => {
-            setIsLoading(true);
-            try {
-                const resData = await chartService.getDataWeight();
-                if (resData.code === 200) {
-                    setMaxWeight(Math.ceil(resData.result.maxSafeWeight));
-                    setMinWeight(Math.ceil(resData.result.minSafeWeight));
-                    console.log(38, Math.ceil(resData.result.maxSafeWeight))
-                    console.log(39, Math.ceil(resData.result.minSafeWeight))
-                } else {
-                    setMessageError("Unexpected error occurred.");
-                }
-            } catch (error: any) {
-                setMessageError(error?.response?.data?.message || "Unexpected error occurred.");
-            } finally {
-                setIsLoading(false);
+    const fetchWeightAndHeight = async () => {
+        setIsLoading(true);
+        try {
+            const langAys = await AsyncStorage.getItem("language")
+            const lang = langAys === 'en' ? LANG.EN : LANG.KR
+            const res = await authService.getHeightWeight(lang);
+            if (res.code === 200) {
+                setHeight(res.result.height)
+                setMessageError("");
+            } else {
+                setMessageError("Failed to fetch questions.");
             }
-        };
-        getDataChart();
-    }, []);
-
+        } catch (error: any) {
+            if (error?.response?.status === 400) {
+                setMessageError(error.response.data.message);
+            } else {
+                setMessageError("Unexpected error occurred.");
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    console.log("1", height)
+    useEffect(() => {
+        fetchWeightAndHeight()
+    }, [])
     const handleViewChart = () => {
         navigation.replace(SCREENS_NAME.RECORD_HEALTH_DATA.WEIGHT_CHART, { isEditable: isEdit });
     };
@@ -91,7 +97,7 @@ const Weight = ({ route }: any) => {
             setWeight(value);
         }
     };
-
+    console.log("1111", Number(weight))
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollView}>
@@ -135,11 +141,9 @@ const Weight = ({ route }: any) => {
                                 </View>
                             </View>
                             <Text style={[styles.title, { marginTop: 20, paddingHorizontal: 20 }]}>BMI</Text>
-                            {minWeight > 0 && maxWeight > 0 && (
-                                <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
-                                    <RangeBlock value={Number(weight)} minValue={minWeight} maxValue={maxWeight} />
-                                </View>
-                            )}
+                            <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
+                                <RangeBlock value={Math.round(((Number(weight)) / ((height / 100) ** 2)) * 10) / 10} minValue={18.5} maxValue={25} />
+                            </View>
                         </View>
                         {messageError && !isLoading && <Text style={[styles.title, { color: colors.red }]}>{messageError}</Text>}
                     </View>
