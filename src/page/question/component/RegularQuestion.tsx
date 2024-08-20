@@ -25,7 +25,7 @@ const RegularQuestionComponent: React.FC<itemQuestion> = ({ question, handleDeta
                 // onPress={() => handleDetailQuestion(question.id)}
                 style={styles.question}>
                 <View style={styles.answer}>
-                    <Text>{t("common.text.next")}</Text>
+                    <Text>{t("questionManagement.answerResponse")}</Text>
                 </View>
                 <Text style={styles.questionText}>{question.answer}</Text>
             </Pressable>
@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 2,
         borderRadius: 4,
-        height: 24
+        height: 24,
+        marginRight: 10
     }
 })
 

@@ -210,8 +210,8 @@ const MedicationRecord = ({ route }: any) => {
                 isEdit && (
                     <View style={styles.buttonContainer}>
                         <Pressable
-                            disabled={!allItemsSelected}
-                            onPress={nextPage}
+                            disabled={!(allItemsSelected || dataListMedication.length === 0)}
+                            onPress={dataListMedication.length === 0 ? handleViewChart : nextPage}
                             style={[flexCenter, styles.button, { backgroundColor: allItemsSelected ? colors.primary : colors.gray_G02 }]}>
                             <Text style={[styles.textButton, { color: allItemsSelected ? colors.white : colors.gray_G04 }]}>
                                 {t('recordHealthData.goToViewChart')}
