@@ -32,7 +32,7 @@ const PlanManagement = () => {
         <View style={{ paddingHorizontal: 10 }}>
           <HeaderNavigatorComponent
             isIconLeft={true}
-            text={t("planManagement.text.positiveMind")}
+            text={t("planManagement.text.implementationPlan")}
             handleClickArrowLeft={goBackPreviousPage}
           />
         </View>
